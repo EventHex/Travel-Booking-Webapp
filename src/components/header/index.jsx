@@ -30,7 +30,7 @@ const index = () => {
                <div className="w-full md:w-[50%] flex justify-center md:justify-end mt-4 md:mt-0">
                  <div className="items-center gap-[14px] flex">
                    <div>
-                     <button className="text-[14px] font-[500] bg-[#EBF1FF] rounded-[10px] flex gap-4 py-1 px-3">
+                     <button className="text-[14px] font-[500] bg-[#EBF1FF] rounded-[10px] flex gap-4 py-2 px-3">
                        <img src={CreditCard} alt="credit" />
                        30,839
                      </button>

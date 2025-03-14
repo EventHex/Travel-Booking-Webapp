@@ -6,10 +6,10 @@ const index = () => {
     <div>
       <Header/>
       <div className="w-full max-w-[1300px] px-4 sm:px-5 flex flex-col">
-        <div className='w-[30%]'>
+        <div className='w-[30%] bg-red-300'>
             <SideBar/>
         </div>
-        <div className='w-[30%]'></div>
+        <div className='w-[70%]'></div>
       </div>
     </div>
   )
