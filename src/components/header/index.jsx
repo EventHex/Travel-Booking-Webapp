@@ -6,6 +6,7 @@ import {
     User,
     HeadSet,
   } from "../../assets";
+  import {Link} from 'react-router-dom'
 const index = () => {
   return (
     <div className="w-full  shadow-sm py-4 bg-white  justify-center flex">
@@ -18,7 +19,9 @@ const index = () => {
                  <div className="w-[70%] flex">
                    <ul className="flex items-center gap-4 justify-center">
                      <li className="hover:text-[#375DFB]">Apply</li>
+                     <Link to='/dashboard'>
                      <li className="hover:text-[#375DFB]">Dash Board</li>
+                     </Link>
                    </ul>
                  </div>
                </div>

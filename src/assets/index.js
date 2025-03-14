@@ -13,6 +13,9 @@ import Acitivty from './icons/sidebar/activity.svg'
 import Inurance from './icons/sidebar/insurence.svg'
 import Flight from './icons/sidebar/flight.svg'
 import Search from './icons/sidebar/Search.svg'
+import Home from './icons/menu/Home.svg'
+import CalenderDown from './icons/menu/calanderdown.svg'
+import CalenderUp from './icons/menu/calanderup.svg'
 export {
     Logo,
     Men,
@@ -28,5 +31,8 @@ export {
     Acitivty,
     Inurance,
     Flight,
-    Search
+    Search,
+    Home,
+    CalenderDown,
+    CalenderUp,
 }
