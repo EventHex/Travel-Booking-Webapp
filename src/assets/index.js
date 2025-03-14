@@ -7,7 +7,12 @@ import HeadSet from './header/headset.svg'
 import QuestionMark from './header/questionmark.svg'
 import CreditCard from './header/creditcard.svg'
 import User from './header/profile.svg'
-
+import Arrow from './image/arrow.svg'
+import Visa from './icons/sidebar/visa.svg'
+import Acitivty from './icons/sidebar/activity.svg'
+import Inurance from './icons/sidebar/insurence.svg'
+import Flight from './icons/sidebar/flight.svg'
+import Search from './icons/sidebar/Search.svg'
 export {
     Logo,
     Men,
@@ -17,5 +22,11 @@ export {
     HeadSet,
     QuestionMark,
     CreditCard,
-    User
+    User,
+    Arrow,
+    Visa,
+    Acitivty,
+    Inurance,
+    Flight,
+    Search
 }
