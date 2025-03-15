@@ -45,7 +45,7 @@ const Index = () => {
     >
       <div className="relative p-4">
         <input
-          className="rounded-[14px] border border-[#E2E4E9] py-3 pl-12 w-full focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-300 ease-in-out"
+          className="rounded-[14px] border border-[#E2E4E9] py-3 pl-12 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
           type="text"
           placeholder="Search..."
         />
