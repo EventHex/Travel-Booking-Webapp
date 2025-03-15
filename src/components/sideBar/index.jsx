@@ -36,12 +36,8 @@ const Index = () => {
 
   return (
     <div
-      style={{
-        backgroundImage: `url(${MainBackground})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-      className="w-full mt-10 rounded-xl overflow-hidden"
+    
+      className="w-full  rounded-xl overflow-hidden"
     >
       <div className="relative p-4">
         <input
