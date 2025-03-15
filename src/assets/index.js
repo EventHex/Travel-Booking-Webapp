@@ -20,7 +20,13 @@ import Filter from "./icons/sidebar/popular.svg";
 import Date from "./icons/sidebar/date.svg";
 import Location from "./icons/sidebar/location.svg";
 import Destination from "./icons/sidebar/destination.svg";
-import SearchGray from "./icons/sidebar/searchgray.svg"
+import SearchGray from "./icons/sidebar/searchgray.svg";
+import Allicon from "./icons/menu/all.svg";
+import Aproved from "./icons/menu/aproved.svg";
+import Rejection from "./icons/menu/reject.svg";
+import Submit from "./icons/menu/submitted.svg";
+import Pending from "./icons/menu/pending.svg";
+import Refuse from "./icons/menu/refunsed.svg";
 export {
   Logo,
   Men,
@@ -44,5 +50,11 @@ export {
   Date,
   Location,
   Destination,
-  SearchGray
+  SearchGray,
+  Refuse,
+  Pending,
+  Submit,
+  Rejection,
+  Aproved,
+  Allicon,
 };
