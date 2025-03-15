@@ -192,9 +192,7 @@ const HeroSection = () => {
                 className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white border border-[#A6BFFF82] border-solid rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm sm:text-base text-gray-600 placeholder-gray-400 transition-all duration-300 delay-150 hover:border-blue-500"
               />
             </div>
-            <div className="mt-4">
-              <h1 className="text-2xl font-bold text-center">Hi Flight</h1>
-            </div>
+           
           </>
         );
       default:
