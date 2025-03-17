@@ -16,6 +16,7 @@ import {
 
 const Index = ({ isNarrow, onClose }) => {
   const [isClicksideBar, setClicksideBar] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [selectedOption, setSelectedOption] = useState("departure");
   const sidebarRef = useRef(null);
 
@@ -42,9 +43,17 @@ const Index = ({ isNarrow, onClose }) => {
     
     if (isNarrow) {
       // Only toggle if in narrow mode
-      setTimeout(() => {
-        setClicksideBar(!isClicksideBar);
-      }, 200); // Reduced timeout for better responsiveness
+      if (isClicksideBar) {
+        // If sidebar is open, set closing state and wait for animation
+        setIsClosing(true);
+        setTimeout(() => {
+          setClicksideBar(false);
+          setIsClosing(false);
+        }, 300); // Match animation duration
+      } else {
+        // If sidebar is closed, open it
+        setClicksideBar(true);
+      }
     }
   };
   
@@ -54,7 +63,12 @@ const Index = ({ isNarrow, onClose }) => {
       // Only run if sidebar is expanded in narrow mode
       if (isNarrow && isClicksideBar && sidebarRef.current) {
         if (!sidebarRef.current.contains(event.target)) {
-          setClicksideBar(false);
+          // Apply closing animation
+          setIsClosing(true);
+          setTimeout(() => {
+            setClicksideBar(false);
+            setIsClosing(false);
+          }, 300); // Match animation duration
         }
       }
     };
@@ -96,14 +110,16 @@ const Index = ({ isNarrow, onClose }) => {
   }, []);
 
   // If clicked to expand from narrow mode
-  if (isNarrow && isClicksideBar) {
+  if (isNarrow && (isClicksideBar || isClosing)) {
     return ( 
       <div
         ref={sidebarRef}
         onClick={(e) => e.stopPropagation()} // Prevent click from closing sidebar
-        className="w-[200px] max-w-md rounded-xl overflow-hidden fixed z-10 bg-white shadow-lg animate-slide-in"
+        className="w-[200px] max-w-md rounded-xl overflow-hidden fixed z-10 bg-white shadow-lg"
         style={{
-          animation: 'slideIn 0.3s ease-out forwards'
+          animation: isClosing 
+            ? 'slideOut 0.3s ease-in forwards' 
+            : 'slideIn 0.3s ease-out forwards'
         }}
       >
         <div className="relative">
