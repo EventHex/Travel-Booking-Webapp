@@ -14,12 +14,12 @@ import {
   SearchGray,
 } from "../../assets";
 
-const Index = () => {
+const Index = ({ isNarrow }) => {
+  const [isClicksideBar, setClicksideBar] = useState(false);
   const [selectedOption, setSelectedOption] = useState("departure");
 
   const filterOptions = [
     { id: "visas", label: "Visas Only", icon: Visa },
-
     { id: "created", label: "Date Created On", icon: Date },
     { id: "departure", label: "Departure Date", icon: Location },
     {
@@ -28,20 +28,192 @@ const Index = () => {
       icon: Destination,
     },
   ];
+  
   const filterOption = [
     { id: "Activities", label: "Activities", icon: Acitivty },
     { id: "Insurance", label: "Insurance", icon: Inurance },
     { id: "flight", label: "flight", icon: Flight },
   ];
 
+  const sidebarOpen = () => {
+    if (isNarrow) {
+      // Only toggle if in narrow mode
+      setTimeout(() => {
+        setClicksideBar(!isClicksideBar);
+      }, 300); // Reduced timeout for better responsiveness
+    }
+  };
+
+  // If clicked to expand from narrow mode
+  if (isNarrow && isClicksideBar) {
+    return ( 
+      <div
+        onClick={sidebarOpen}
+        className="w-[200px] max-w-md rounded-xl overflow-hidden fixed z-10 bg-white shadow-lg"
+      >
+        <div className="relative">
+          <input
+            className="rounded-[14px] border border-[#E2E4E9] py-3 pl-16 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
+            type="text"
+            placeholder="Search..."
+          />
+          <div className="absolute left-8 top-1/2 transform -translate-y-1/2">
+            <img src={SearchGray} alt="Search" />
+          </div>
+        </div>
+
+        <div className="rounded-xl bg-gradient-to-b">
+          <div className="space-y-1">
+            <div className="p-3 flex gap-3 text-gray-500">
+              <img src={Filter} alt="" /> <span>Popular filters</span>
+            </div>
+          </div>
+          {filterOptions.map((option) => (
+            <div
+              key={option.id}
+              onClick={() => setSelectedOption(option.id)}
+              className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
+                selectedOption === option.id
+                  ? "bg-white shadow-sm"
+                  : "hover:bg-white/50"
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <div className="text-gray-500">
+                  <img src={option.icon} alt="" />
+                </div>
+                <span className="text-gray-600 font-medium text-sm">
+                  {option.label}
+                </span>
+              </div>
+
+              <div
+                className={`flex h-5 w-5 items-center justify-center rounded-full border ${
+                  selectedOption === option.id
+                    ? "border-blue-500 bg-blue-500"
+                    : "border-gray-300"
+                }`}
+              >
+                {selectedOption === option.id && (
+                  <div className="h-2 w-2 rounded-full bg-white"></div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="rounded-xl bg-gradient-to-b">
+          <div className="space-y-1">
+            <div className="p-3 flex gap-3 text-gray-500">
+              <img src={Filter} alt="" /> <span>Booking</span>
+            </div>
+          </div>
+          {filterOption.map((option) => (
+            <div
+              key={option.id}
+              onClick={() => setSelectedOption(option.id)}
+              className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
+                selectedOption === option.id
+                  ? "bg-white shadow-sm"
+                  : "hover:bg-white/50"
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <div className="text-gray-500">
+                  <img src={option.icon} alt="" />
+                </div>
+                <span className="text-gray-600 font-medium text-sm">
+                  {option.label}
+                </span>
+              </div>
+
+              <div
+                className={`flex h-5 w-5 items-center justify-center rounded-full border ${
+                  selectedOption === option.id
+                    ? "border-blue-500 bg-blue-500"
+                    : "border-gray-300"
+                }`}
+              >
+                {selectedOption === option.id && (
+                  <div className="h-2 w-2 rounded-full bg-white"></div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Narrow sidebar with only icons
+  if (isNarrow) {
+    return (
+      <div 
+        onClick={sidebarOpen}
+        className="w-full rounded-xl overflow-hidden"
+      >
+        <div className="rounded-xl bg-gradient-to-b">
+          <div className="space-y-1">
+            <div className="p-3 flex justify-center text-gray-500">
+              <img src={Search} alt="" className="mx-auto" /> 
+            </div>
+          </div>
+          <div className="space-y-1">
+            <div className="p-3 flex justify-center text-gray-500">
+              <img src={Filter} alt="" className="mx-auto" /> 
+            </div>
+          </div>
+          {filterOptions.map((option) => (
+            <div
+              key={option.id}
+              onClick={() => setSelectedOption(option.id)}
+              className={`flex cursor-pointer items-center justify-center rounded-lg p-3 transition-colors ${
+                selectedOption === option.id
+                  ? "bg-white shadow-sm"
+                  : "hover:bg-white/50"
+              }`}
+            >
+              <div className="flex items-center">
+                <div className="text-gray-500">
+                  <img src={option.icon} alt={option.label} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="rounded-xl bg-gradient-to-b">
+          <div className="space-y-1">
+            <div className="p-3 flex justify-center text-gray-500">
+              <img src={Filter} alt="" className="mx-auto" /> 
+            </div>
+          </div>
+          {filterOption.map((option) => (
+            <div
+              key={option.id}
+              onClick={() => setSelectedOption(option.id)}
+              className={`flex cursor-pointer items-center justify-center rounded-lg p-3 transition-colors ${
+                selectedOption === option.id
+                  ? "bg-white shadow-sm"
+                  : "hover:bg-white/50"
+              }`}
+            >
+              <div className="flex items-center">
+                <div className="text-gray-500">
+                  <img src={option.icon} alt={option.label} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Normal/expanded sidebar with text and icons
   return (
-    <div
-    
-      className="w-full  rounded-xl overflow-hidden"
-    >
-      <div className="relative p-4">
+    <div className="w-full rounded-xl overflow-hidden">
+      <div className="relative">
         <input
-          className="rounded-[14px] border border-[#E2E4E9] py-3 pl-12 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
+          className="rounded-[14px] border border-[#E2E4E9] py-3 pl-16 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
           type="text"
           placeholder="Search..."
         />
@@ -50,9 +222,9 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="w-64 rounded-xl bg-gradient-to-b  p-3">
+      <div className="rounded-xl bg-gradient-to-b">
         <div className="space-y-1">
-          <div className=" p-3 flex gap-3 text-gray-500">
+          <div className="p-3 flex gap-3 text-gray-500">
             <img src={Filter} alt="" /> <span>Popular filters</span>
           </div>
         </div>
@@ -68,7 +240,6 @@ const Index = () => {
           >
             <div className="flex items-center space-x-3">
               <div className="text-gray-500">
-                {" "}
                 <img src={option.icon} alt="" />
               </div>
               <span className="text-gray-600 font-medium text-sm">
@@ -90,9 +261,9 @@ const Index = () => {
           </div>
         ))}
       </div>
-      <div className="w-64 rounded-xl bg-gradient-to-b  p-3">
+      <div className="rounded-xl bg-gradient-to-b">
         <div className="space-y-1">
-          <div className=" p-3 flex gap-3 text-gray-500">
+          <div className="p-3 flex gap-3 text-gray-500">
             <img src={Filter} alt="" /> <span>Booking</span>
           </div>
         </div>
@@ -108,8 +279,7 @@ const Index = () => {
           >
             <div className="flex items-center space-x-3">
               <div className="text-gray-500">
-                {" "}
-                <img src={option.icon} alt="" />{" "}
+                <img src={option.icon} alt="" />
               </div>
               <span className="text-gray-600 font-medium text-sm">
                 {option.label}
