@@ -77,7 +77,9 @@ const Index = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "all":
-        return <>{/* <Ticket/> */}</>;
+        return <>
+        <Ticket/>
+        </>;
       case "approved":
         return (
           <div className=" bg-green-50 rounded-md">

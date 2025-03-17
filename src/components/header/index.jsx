@@ -18,7 +18,9 @@ const index = () => {
                  </div>
                  <div className="w-[70%] flex">
                    <ul className="flex items-center gap-4 justify-center">
+                    <Link to='/apply'>
                      <li className="hover:text-[#375DFB]">Apply</li>
+                     </Link>
                      <Link to='/dashboard'>
                      <li className="hover:text-[#375DFB]">Dash Board</li>
                      </Link>
