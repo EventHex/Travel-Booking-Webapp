@@ -40,7 +40,7 @@ const Index = ({ isNarrow }) => {
       // Only toggle if in narrow mode
       setTimeout(() => {
         setClicksideBar(!isClicksideBar);
-      }, 300); // Reduced timeout for better responsiveness
+      }, 200); // Reduced timeout for better responsiveness
     }
   };
 

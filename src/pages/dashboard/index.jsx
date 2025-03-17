@@ -80,28 +80,28 @@ const Index = () => {
         return <>{/* <Ticket/> */}</>;
       case "approved":
         return (
-          <div className="p-4 bg-green-50 rounded-md">
+          <div className=" bg-green-50 rounded-md">
             <h3 className="font-medium text-green-800 mb-2">Approved Items</h3>
             <p className="text-green-700">Displaying 20 approved items</p>
           </div>
         );
       case "rejected":
         return (
-          <div className="p-4 bg-red-50 rounded-md">
+          <div className=" bg-red-50 rounded-md">
             <h3 className="font-medium text-red-800 mb-2">Rejected Items</h3>
             <p className="text-red-700">Displaying 20 rejected items</p>
           </div>
         );
       case "submitted":
         return (
-          <div className="p-4 bg-blue-50 rounded-md">
+          <div className=" bg-blue-50 rounded-md">
             <h3 className="font-medium text-blue-800 mb-2">Submitted Items</h3>
             <p className="text-blue-700">Items awaiting review</p>
           </div>
         );
       case "pending":
         return (
-          <div className="p-4 bg-yellow-50 rounded-md">
+          <div className=" bg-yellow-50 rounded-md">
             <h3 className="font-medium text-yellow-800 mb-2">
               Pending Payment
             </h3>
@@ -110,7 +110,7 @@ const Index = () => {
         );
       case "refunded":
         return (
-          <div className="p-4 bg-purple-50 rounded-md">
+          <div className=" bg-purple-50 rounded-md">
             <h3 className="font-medium text-purple-800 mb-2">Refunded Items</h3>
             <p className="text-purple-700">Completed refunds</p>
           </div>
@@ -132,7 +132,7 @@ const Index = () => {
       >
         <Header />
         <div className="w-full">
-          <div className="w-full max-w-[1300px] mx-auto px-4 sm:px-5">
+          <div className="w-full max-w-[1300px] mx-auto px-2 sm:px-5">
             <div className="w-full mt-10 flex gap-1 md:gap-4">
               {/* Sidebar container - fixed 20% width on larger screens */}
               <div
