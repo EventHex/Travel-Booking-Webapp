@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Ticket, Calendar, MapPin, Flag } from "lucide-react";
 import {
   Filter,
@@ -14,9 +14,10 @@ import {
   SearchGray,
 } from "../../assets";
 
-const Index = ({ isNarrow }) => {
+const Index = ({ isNarrow, onClose }) => {
   const [isClicksideBar, setClicksideBar] = useState(false);
   const [selectedOption, setSelectedOption] = useState("departure");
+  const sidebarRef = useRef(null);
 
   const filterOptions = [
     { id: "visas", label: "Visas Only", icon: Visa },
@@ -35,7 +36,10 @@ const Index = ({ isNarrow }) => {
     { id: "flight", label: "flight", icon: Flight },
   ];
 
-  const sidebarOpen = () => {
+  const sidebarOpen = (e) => {
+    // Stop propagation to prevent immediate closing
+    e.stopPropagation();
+    
     if (isNarrow) {
       // Only toggle if in narrow mode
       setTimeout(() => {
@@ -43,21 +47,76 @@ const Index = ({ isNarrow }) => {
       }, 200); // Reduced timeout for better responsiveness
     }
   };
+  
+  // Add event listeners to detect clicks outside the sidebar
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Only run if sidebar is expanded in narrow mode
+      if (isNarrow && isClicksideBar && sidebarRef.current) {
+        if (!sidebarRef.current.contains(event.target)) {
+          setClicksideBar(false);
+        }
+      }
+    };
+
+    // Add event listener
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    
+    // Clean up
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isNarrow, isClicksideBar]);
+  
+  // Add CSS animation for the sliding effect
+  React.useEffect(() => {
+    // Create a style element
+    const styleEl = document.createElement('style');
+    // Define the keyframes animation
+    const animationCSS = `
+      @keyframes slideIn {
+        0% { transform: translateX(-100%); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOut {
+        0% { transform: translateX(0); opacity: 1; }
+        100% { transform: translateX(-100%); opacity: 0; }
+      }
+    `;
+    
+    styleEl.innerHTML = animationCSS;
+    document.head.appendChild(styleEl);
+    
+    // Clean up
+    return () => {
+      document.head.removeChild(styleEl);
+    };
+  }, []);
 
   // If clicked to expand from narrow mode
   if (isNarrow && isClicksideBar) {
     return ( 
       <div
-        onClick={sidebarOpen}
-        className="w-[200px] max-w-md rounded-xl overflow-hidden fixed z-10 bg-white shadow-lg"
+        ref={sidebarRef}
+        onClick={(e) => e.stopPropagation()} // Prevent click from closing sidebar
+        className="w-[200px] max-w-md rounded-xl overflow-hidden fixed z-10 bg-white shadow-lg animate-slide-in"
+        style={{
+          animation: 'slideIn 0.3s ease-out forwards'
+        }}
       >
         <div className="relative">
           <input
             className="rounded-[14px] border border-[#E2E4E9] py-3 pl-16 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
             type="text"
             placeholder="Search..."
+            onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing
           />
-          <div className="absolute left-8 top-1/2 transform -translate-y-1/2">
+          <div 
+            className="absolute left-8 top-1/2 transform -translate-y-1/2"
+            onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing
+          >
             <img src={SearchGray} alt="Search" />
           </div>
         </div>
@@ -148,8 +207,8 @@ const Index = ({ isNarrow }) => {
   if (isNarrow) {
     return (
       <div 
-        onClick={sidebarOpen}
-        className="w-full rounded-xl overflow-hidden"
+        onClick={(e) => sidebarOpen(e)}
+        className="w-full rounded-xl overflow-hidden cursor-pointer"
       >
         <div className="rounded-xl bg-gradient-to-b">
           <div className="space-y-1">
@@ -216,8 +275,12 @@ const Index = ({ isNarrow }) => {
           className="rounded-[14px] border border-[#E2E4E9] py-3 pl-16 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
           type="text"
           placeholder="Search..."
+          onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing when clicking the search input
         />
-        <div className="absolute left-8 top-1/2 transform -translate-y-1/2">
+        <div 
+          className="absolute left-8 top-1/2 transform -translate-y-1/2"
+          onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing when clicking the search icon
+        >
           <img src={SearchGray} alt="Search" />
         </div>
       </div>
