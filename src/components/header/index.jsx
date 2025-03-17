@@ -14,7 +14,9 @@ const index = () => {
                {/* First child div - takes full width on mobile, 50% on md and above */}
                <div className="w-full md:w-[50%]  flex gap-5">
                  <div className="w-[30%] px-2">
+                <Link to='/'>
                    <img src={LogoBlue} alt="" />
+                 </Link>
                  </div>
                  <div className="w-[70%] flex">
                    <ul className="flex items-center gap-4 justify-center">
