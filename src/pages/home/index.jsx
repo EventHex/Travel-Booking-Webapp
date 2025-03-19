@@ -155,7 +155,7 @@ const HeroSection = () => {
         );
       case "Activities":
         return (
-          <div className="relative mb-34 w-full">
+          <div className="relative mb-24 w-full">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
               <img src={Search} alt="" />
             </div>
@@ -168,7 +168,7 @@ const HeroSection = () => {
         );
       case "Insurance":
         return (
-          <div className="relative w-full">
+          <div className="relative mb-24 w-full">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
               <img src={Search} alt="" />
             </div>
@@ -182,7 +182,7 @@ const HeroSection = () => {
       case "Flights":
         return (
           <>
-            <div className="relative w-full">
+            <div className="relative mb-24 w-full">
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                 <img src={Search} alt="" />
               </div>
