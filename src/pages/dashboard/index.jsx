@@ -174,10 +174,10 @@ const Index = () => {
 />         );
       case "rejected":
         return (
-          <div className=" bg-red-50 rounded-md">
-            <h3 className="font-medium text-red-800 mb-2">Rejected Items</h3>
-            <p className="text-red-700">Displaying 20 rejected items</p>
-          </div>
+          <Ticket 
+          rejectedApplication={rejectedApplication}
+        
+        /> 
         );
       case "submitted":
         return (
