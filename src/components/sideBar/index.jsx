@@ -115,7 +115,7 @@ const Index = ({ isNarrow, onClose }) => {
       <div
         ref={sidebarRef}
         onClick={(e) => e.stopPropagation()} // Prevent click from closing sidebar
-        className="w-[200px] max-w-md rounded-xl overflow-hidden fixed z-10 bg-white shadow-lg"
+        className="w-[200px]    max-w-md rounded-xl overflow-hidden fixed z-10 bg-white shadow-lg"
         style={{
           animation: isClosing 
             ? 'slideOut 0.3s ease-in forwards' 
@@ -285,8 +285,8 @@ const Index = ({ isNarrow, onClose }) => {
 
   // Normal/expanded sidebar with text and icons
   return (
-    <div className="w-full rounded-xl overflow-hidden">
-      <div className="relative">
+    <div className="w-full  flex flex-col gap-10  rounded-xl overflow-hidden">
+      <div className=" relative">
         <input
           className="rounded-[14px] border border-[#E2E4E9] py-3 pl-16 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
           type="text"
@@ -340,7 +340,7 @@ const Index = ({ isNarrow, onClose }) => {
           </div>
         ))}
       </div>
-      <div className="rounded-xl bg-gradient-to-b">
+      <div className="rounded-xl mb-10 bg-gradient-to-b">
         <div className="space-y-1">
           <div className="p-3 flex gap-3 text-gray-500">
             <img src={Filter} alt="" /> <span>Booking</span>

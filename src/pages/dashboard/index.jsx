@@ -11,6 +11,7 @@ import {
   Submit,
 } from "../../assets";
 import Ticket from "../../components/ticket";
+import {SuccessIcon,PendingIcon,RejectIcon} from '../../assets'
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -73,20 +74,104 @@ const Index = () => {
     { id: "pending", label: "Pending Payment", icon: Pending, count: null },
     { id: "refunded", label: "Refunded", icon: Refuse, count: null },
   ];
+  // ***************************tickets******************************
+  const approvedApplication = {
+      name: "SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL",
+      icon:SuccessIcon,
+      submittedOn: "Feb 19, 2025",
+      submittedAt: "11:14 AM",
+      passportNumber: "V7672497",
+      country: "United Arab Emirates",
+      visa: "UAE 30 Days Covid Insurance",
+      travelDates: "Mar 4, 2025 — Mar 20, 2025",
+      status: "approved",
+      details: {
+        errorFixed: true,
+        applicationComplete: true,
+        applicationPaid: true,
+        submittedToSpencer: true,
+        visaApproved: true,
+      },
+      statusMessage: {
+        title: "Visa Approved",
+        icon: SuccessIcon,
+        iconBg: "bg-blue-50",
+        iconColor: "text-blue-500",
+        cardBg: "bg-gradient-to-br from-blue-50/80 to-blue-50/40",
+        borderColor: "border-blue-100",
+      },
+    };
+  
+    const rejectedApplication = {
+      name: 'SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL',
+      submittedOn: 'Feb 19, 2025',
+      submittedAt: '11:14 AM',
+      passportNumber: 'V7672497',
+      country: 'United Arab Emirates',
+      visa: 'UAE 30 Days Covid Insurance',
+      travelDates: 'Mar 4, 2025 — Mar 20, 2025',
+      status: 'rejected',
+      details: {
+        errorFixed: true,
+        applicationComplete: true,
+        applicationPaid: true,
+        submittedToSpencer: true,
+        visaApproved: false,
+      },
+      statusMessage: {
+        title: 'Visa Rejected',
+        icon: RejectIcon,
+        iconBg: 'bg-red-100',
+        iconColor: 'text-red-500',
+        cardBg: 'bg-red-50',
+        borderColor: 'border-red-100',
+      }
+    };
+  
+    const refuntApplication = {
+      name: 'SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL',
+      icon:'',
+      submittedOn: 'Feb 19, 2025',
+      submittedAt: '11:14 AM',
+      passportNumber: 'V7672497',
+      country: 'United Arab Emirates',
+      visa: 'UAE 30 Days Covid Insurance',
+      travelDates: 'Mar 4, 2025 — Mar 20, 2025',
+      status: 'refunded',
+      details: {
+        errorFixed: true,
+        applicationComplete: true,
+        applicationPaid: true,
+        submittedToSpencer: true,
+        visaApproved: false,
+      },
+      statusMessage: {
+        title: 'Application Refunded',
+        description: 'Since your visa was not delivered within the promised time frame, Atlys has issued you with a full refund for this application. 7530 INR will be credited to your wallet.',
+        reason: 'Unable to process',
+        icon: '',
+        iconBg: 'bg-orange-100',
+        iconColor: 'text-orange-500',
+        cardBg: 'bg-orange-50',
+        borderColor: 'border-orange-100',
+      }
+    };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "all":
         return <>
-        <Ticket/>
-        </>;
+<Ticket 
+  approvedApplication={approvedApplication} 
+  refuntApplication={refuntApplication} 
+  rejectedApplication={rejectedApplication}
+/>        </>;
       case "approved":
         return (
-          <div className=" bg-green-50 rounded-md">
-            <h3 className="font-medium text-green-800 mb-2">Approved Items</h3>
-            <p className="text-green-700">Displaying 20 approved items</p>
-          </div>
-        );
+<Ticket 
+  approvedApplication={approvedApplication} 
+
+/>         );
       case "rejected":
         return (
           <div className=" bg-red-50 rounded-md">
@@ -126,7 +211,7 @@ const Index = () => {
     <>
       <div
         style={{
-          height: "100vh",
+          
           backgroundImage: `url(${MainBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -134,13 +219,13 @@ const Index = () => {
       >
         <Header />
         <div className="w-full">
-          <div className="w-full max-w-[1300px] mx-auto px-2 sm:px-5">
+          <div className="w-full max-w-[1300px] mx-auto  sm:px-5">
             <div className="w-full mt-10 flex gap-1 md:gap-4">
               {/* Sidebar container - fixed 20% width on larger screens */}
               <div
                 className={`${
                   isNarrowScreen ? "w-[50px]" : "w-[20%]"
-                } min-w-[50px] mb-6 md:mb-0 transition-all duration-300`}
+                } min-w-[50px]   mb-6 md:mb-0 transition-all duration-300`}
               >
                 <SideBar isNarrow={isNarrowScreen} />
               </div>
@@ -188,7 +273,7 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="rounded-lg shadow p-2 sm:p-4 mt-2">
+                  <div className="rounded-lg p-2 sm:p-4 mt-2">
                     {renderTabContent()}
                   </div>
                 </div>

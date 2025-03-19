@@ -27,6 +27,10 @@ import Rejection from "./icons/menu/reject.svg";
 import Submit from "./icons/menu/submitted.svg";
 import Pending from "./icons/menu/pending.svg";
 import Refuse from "./icons/menu/refunsed.svg";
+import SuccessIcon from "./icons/ticket/Security.svg";
+import RejectIcon from "./icons/ticket/reject.svg";
+import PendingIcon from "./icons/ticket/pending.svg";
+
 export {
   Logo,
   Men,
@@ -57,4 +61,7 @@ export {
   Rejection,
   Aproved,
   Allicon,
+  SuccessIcon,
+  RejectIcon,
+  PendingIcon,
 };
