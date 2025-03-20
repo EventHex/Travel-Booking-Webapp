@@ -187,7 +187,9 @@ const Ticket = ({
                           className={`${
                             application.status === "pending" 
                               ? "bg-blue-50 border-blue-100" 
-                              : application.statusMessage.cardBg + " " + application.statusMessage.borderColor + " border"
+                              : application.status === "approved"
+                                ? "bg-blue-50 border-blue-100 border"
+                                : application.statusMessage.cardBg + " " + application.statusMessage.borderColor + " border"
                           } rounded-xl sm:rounded-2xl sm:p-2`}
                         >
                           <div className="flex w-full space-x-3 sm:space-x-4">
@@ -239,7 +241,16 @@ const Ticket = ({
                                   ? "Your application is being processed"
                                   : application.statusMessage.title}
                               </h4>
-                              {/* Removed "Before Time" button */}
+                              {application.status === "approved" && (
+                                <div>
+                                  <button className="text-[12px] text-white px-1 gap-1 flex justify-center bg-green-500 rounded-full">
+                                    <span className="flex justify-center">
+                                      <img src={True} alt="" />
+                                    </span>
+                                    Before Time
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                           
@@ -252,21 +263,18 @@ const Ticket = ({
                             </p>
                           )}
                           
-                          {/* Reason for refund */}
-                          {application.statusMessage.reason && (
+                          {/* Delivery status */}
+                          {application.status === "pending" && (
                             <div className="mt-2">
-                              <span className="text-xs sm:text-sm font-medium text-gray-700">
-                                Reason for refund:{" "}
-                              </span>
                               <span className="text-xs sm:text-sm text-gray-600">
-                                {application.statusMessage.reason}
+                                Yet to be delivered
                               </span>
                             </div>
                           )}
                           
                           {/* Dates for rejected */}
                           {application.status === "rejected" && (
-                            <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
+                            <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-700">
                               <p className="flex justify-between">
                                 <span className="text-[14px] font-[400]">Estimated on:</span>
                                 <span className="text-[14px] font-[400]">Mar 4, 2025</span>
@@ -282,15 +290,15 @@ const Ticket = ({
                           {(application.status === "approved" || application.status === "pending") && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm">
                               <p className="flex justify-between">
-                                <span className="text-gray-500 text-[14px] font-[400] font-500">
+                                <span className="text-gray-700 text-[14px] font-[400]">
                                   Estimated on:
                                 </span>
-                                <span className="text-gray-500 text-[14px] font-[400]">
+                                <span className="text-gray-700 text-[14px] font-[400]">
                                   Mar 4, 2025
                                 </span>
                               </p>
                               <p className="flex justify-between">
-                                <span className="text-black font-500 text-[14px] font-[400]">
+                                <span className="text-gray-700 text-[14px] font-[400]">
                                   Delivery on:
                                 </span>
                                 <span className="text-[14px] font-[400]">
@@ -427,7 +435,9 @@ const Ticket = ({
                           className={`${
                             application.status === "pending" 
                               ? "bg-blue-50 border-blue-100 border" 
-                              : application.statusMessage.cardBg + " " + application.statusMessage.borderColor + " border"
+                              : application.status === "approved"
+                                ? "bg-blue-50 border-blue-100 border"
+                                : application.statusMessage.cardBg + " " + application.statusMessage.borderColor + " border"
                           } rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6`}
                         >
                           <div className="flex items-center space-x-3 sm:space-x-4">
@@ -479,7 +489,12 @@ const Ticket = ({
                                   ? "Your application is being processed"
                                   : application.statusMessage.title}
                               </h4>
-                              {/* Removed "Before Time" button */}
+                              {application.status === "approved" && (
+                                <div className="text-xs bg-green-500 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full mt-1 inline-flex items-center gap-1">
+                                  <img src={True} alt="" className="h-3 w-3" />
+                                  Before Time
+                                </div>
+                              )}
                             </div>
                           </div>
                           
@@ -492,14 +507,11 @@ const Ticket = ({
                             </p>
                           )}
                           
-                          {/* Reason for refund */}
-                          {application.statusMessage.reason && (
+                          {/* Delivery status */}
+                          {application.status === "pending" && (
                             <div className="mt-2">
-                              <span className="text-xs sm:text-sm font-medium text-gray-700">
-                                Reason for refund:{" "}
-                              </span>
                               <span className="text-xs sm:text-sm text-gray-600">
-                                {application.statusMessage.reason}
+                                Yet to be delivered
                               </span>
                             </div>
                           )}
@@ -518,19 +530,7 @@ const Ticket = ({
                             </div>
                           )}
                           
-                          {/* Dates for approved or pending */}
-                          {(application.status === "approved" || application.status === "pending") && (
-                            <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
-                              <p className="flex justify-between">
-                                <span className="">Estimated on:</span>
-                                <span>Mar 4, 2025</span>
-                              </p>
-                              <p className="flex justify-between">
-                                <span>Delivery on:</span>
-                                <span>Mar 4, 2025</span>
-                              </p>
-                            </div>
-                          )}
+                          {/* No dates shown for refunded applications */}
                         </div>
                         
                         {/* Buttons */}
