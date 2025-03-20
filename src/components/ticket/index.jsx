@@ -11,23 +11,26 @@ import {
   Shield,
   X,
 } from "lucide-react";
-import {True} from '../../assets'
+import { True, TrueVertical} from "../../assets";
+
 const Ticket = ({
   approvedApplication,
   refuntApplication,
   rejectedApplication,
+  pendingApplication,
 }) => {
   // Create an array of applications, filtering out undefined ones
   const applicationData = [
     approvedApplication,
     refuntApplication,
     rejectedApplication,
+    pendingApplication
   ].filter((app) => app !== undefined);
 
   const getStatusBarColor = (status) => {
     switch (status) {
       case "approved":
-        return "bg-blue-500";
+        return "bg-blue-500 ";
       case "rejected":
         return "bg-red-500";
       case "refunded":
@@ -52,7 +55,7 @@ const Ticket = ({
 
   return (
     <div className="w-full">
-      <main className="w-full px-4 sm:px-6 py-2">
+      <main className="w-full  ">
         <div className="flex flex-col gap-3">
           <div className="flex-1">
             {applicationData.map((application, index) => (
@@ -66,8 +69,8 @@ const Ticket = ({
                       application.status
                     )} flex-shrink-0`}
                   >
-                    <div className="absolute flex gap-2 origin-center -rotate-90 whitespace-nowrap text-white text-[12px]">
-                      <span>visa </span>
+                    <div className="absolute flex gap-5   origin-center -rotate-90 whitespace-nowrap text-white text-[12px]">
+                       <p className="flex  gap-1"> <img src={True} alt="" /><span className="flex">visa</span></p> 
                       {getStatusText(application.status)}
                     </div>
                   </div>
@@ -179,22 +182,25 @@ const Ticket = ({
                       </div>
 
                       {/* Status Card Section */}
-                      <div className="flex-shrink-0   w-72">
+                      <div className="flex-shrink-0 w-72">
                         <div
-                          className={`${application.statusMessage.cardBg} rounded-xl sm:rounded-2xl  sm:p-2  ${application.statusMessage.borderColor} border`}
+                          className={`${
+                            application.status === "pending" 
+                              ? "bg-blue-50 border-blue-100" 
+                              : application.statusMessage.cardBg + " " + application.statusMessage.borderColor + " border"
+                          } rounded-xl sm:rounded-2xl sm:p-2`}
                         >
-                          <div className="flex w-full bg-red-300 space-x-3 sm:space-x-4">
-                            {/* Only render icon container for approved or rejected statuses, or if there's an explicit icon */}
-                            {(application.status === "approved" ||
-                              application.status === "rejected" ||
-                              (typeof application.statusMessage.icon ===
-                                "string" &&
-                                application.statusMessage.icon)) && (
+                          <div className="flex w-full space-x-3 sm:space-x-4">
+                            {/* Icon container for all statuses */}
+                            {application.status !== "refunded" && (
                               <div
-                                className={`h-10 w-10   sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
+                                className={`h-10 w-10 sm:h-12 sm:w-12 ${
+                                  application.status === "pending"
+                                    ? "bg-blue-100"
+                                    : application.statusMessage.iconBg
+                                } rounded-lg sm:rounded-xl flex items-center justify-center`}
                               >
-                                {typeof application.statusMessage.icon ===
-                                "string" ? (
+                                {typeof application.statusMessage.icon === "string" ? (
                                   <img
                                     src={application.statusMessage.icon}
                                     alt=""
@@ -202,7 +208,11 @@ const Ticket = ({
                                   />
                                 ) : (
                                   <div
-                                    className={`${application.statusMessage.iconColor}`}
+                                    className={`${
+                                      application.status === "pending"
+                                        ? "text-blue-500"
+                                        : application.statusMessage.iconColor
+                                    }`}
                                   >
                                     {application.status === "approved" && (
                                       <Shield className="h-6 w-6" />
@@ -210,38 +220,39 @@ const Ticket = ({
                                     {application.status === "rejected" && (
                                       <X className="h-6 w-6" />
                                     )}
+                                    {application.status === "pending" && (
+                                      <Shield className="h-6 w-6" />
+                                    )}
                                   </div>
                                 )}
                               </div>
                             )}
-                            <div className="w-[80%]   justify-between flex">
+                            <div className="w-[80%] justify-between flex">
                               <h4
-                                className={`font-medium ${application.statusMessage.iconColor} sm:text-[16px]`}
+                                className={`font-medium ${
+                                  application.status === "pending"
+                                    ? "text-blue-500"
+                                    : application.statusMessage.iconColor
+                                } sm:text-[16px]`}
                               >
-                                {application.statusMessage.title}
+                                {application.status === "pending"
+                                  ? "Your application is being processed"
+                                  : application.statusMessage.title}
                               </h4>
-                              {application.status === "approved" && (
-                                <div>
-                                  <button className="text-[12px] text-white  px-1 gap-1  flex justify-center bg-green-500 rounded-full">
-                                    {" "}
-                                    <span className=" flex justify-center">
-                                      {" "}
-                                      <img src={True} alt="" />
-                                    </span>
-                                    Before Time
-                                  </button>
-                                </div>
-                              )}
+                              {/* Removed "Before Time" button */}
                             </div>
-                            {/* <div>
-                              <button className="border">sadsa</button><button  className="border">zv</button>
-                            </div> */}
                           </div>
-                          {application.statusMessage.description && (
+                          
+                          {/* Description */}
+                          {(application.statusMessage.description || application.status === "pending") && (
                             <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
-                              {application.statusMessage.description}
+                              {application.status === "pending"
+                                ? "We are reviewing your application. This usually takes 2-3 business days."
+                                : application.statusMessage.description}
                             </p>
                           )}
+                          
+                          {/* Reason for refund */}
                           {application.statusMessage.reason && (
                             <div className="mt-2">
                               <span className="text-xs sm:text-sm font-medium text-gray-700">
@@ -252,19 +263,45 @@ const Ticket = ({
                               </span>
                             </div>
                           )}
+                          
+                          {/* Dates for rejected */}
                           {application.status === "rejected" && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
                               <p className="flex justify-between">
-                                <span>Estimated on:</span>
-                                <span>Mar 4, 2025</span>
+                                <span className="text-[14px] font-[400]">Estimated on:</span>
+                                <span className="text-[14px] font-[400]">Mar 4, 2025</span>
                               </p>
                               <p className="flex justify-between">
-                                <span>Delivery on:</span>
-                                <span>Mar 4, 2025</span>
+                                <span className="text-[14px] font-[400]">Delivery on:</span>
+                                <span className="text-[14px] font-[400]">Mar 4, 2025</span>
+                              </p>
+                            </div>
+                          )}
+                          
+                          {/* Dates for approved or pending */}
+                          {(application.status === "approved" || application.status === "pending") && (
+                            <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm">
+                              <p className="flex justify-between">
+                                <span className="text-gray-500 text-[14px] font-[400] font-500">
+                                  Estimated on:
+                                </span>
+                                <span className="text-gray-500 text-[14px] font-[400]">
+                                  Mar 4, 2025
+                                </span>
+                              </p>
+                              <p className="flex justify-between">
+                                <span className="text-black font-500 text-[14px] font-[400]">
+                                  Delivery on:
+                                </span>
+                                <span className="text-[14px] font-[400]">
+                                  Mar 4, 2025
+                                </span>
                               </p>
                             </div>
                           )}
                         </div>
+                        
+                        {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
                           <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
                             View Application
@@ -385,22 +422,25 @@ const Ticket = ({
                         </div>
                       </div>
 
-                      {/* Status Card Section */}
-                      <div className="mt-6">
+                      <div className="mt-6 ">
                         <div
-                          className={`${application.statusMessage.cardBg} rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 ${application.statusMessage.borderColor} border`}
+                          className={`${
+                            application.status === "pending" 
+                              ? "bg-blue-50 border-blue-100 border" 
+                              : application.statusMessage.cardBg + " " + application.statusMessage.borderColor + " border"
+                          } rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6`}
                         >
                           <div className="flex items-center space-x-3 sm:space-x-4">
-                            {/* Only render icon container if there should be an icon */}
-                            {(typeof application.statusMessage.icon ===
-                              "string" ||
-                              application.status === "approved" ||
-                              application.status === "rejected") && (
+                            {/* Icon container for all statuses */}
+                            {application.status !== "refunded" && (
                               <div
-                                className={`h-10 w-10 sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
+                                className={`h-10 w-10 sm:h-12 sm:w-12 ${
+                                  application.status === "pending"
+                                    ? "bg-blue-100"
+                                    : application.statusMessage.iconBg
+                                } rounded-lg sm:rounded-xl flex items-center justify-center`}
                               >
-                                {typeof application.statusMessage.icon ===
-                                "string" ? (
+                                {typeof application.statusMessage.icon === "string" ? (
                                   <img
                                     src={application.statusMessage.icon}
                                     alt=""
@@ -408,7 +448,11 @@ const Ticket = ({
                                   />
                                 ) : (
                                   <div
-                                    className={`${application.statusMessage.iconColor}`}
+                                    className={`${
+                                      application.status === "pending"
+                                        ? "text-blue-500"
+                                        : application.statusMessage.iconColor
+                                    }`}
                                   >
                                     {application.status === "approved" && (
                                       <Shield className="h-6 w-6" />
@@ -416,29 +460,39 @@ const Ticket = ({
                                     {application.status === "rejected" && (
                                       <X className="h-6 w-6" />
                                     )}
+                                    {application.status === "pending" && (
+                                      <Shield className="h-6 w-6" />
+                                    )}
                                   </div>
                                 )}
                               </div>
                             )}
                             <div>
                               <h4
-                                className={`font-medium ${application.statusMessage.iconColor} text-base sm:text-lg`}
+                                className={`font-medium ${
+                                  application.status === "pending"
+                                    ? "text-blue-500"
+                                    : application.statusMessage.iconColor
+                                } text-base sm:text-lg`}
                               >
-                                {application.statusMessage.title}
+                                {application.status === "pending"
+                                  ? "Your application is being processed"
+                                  : application.statusMessage.title}
                               </h4>
-                              {application.status === "approved" && (
-                                <div className="text-xs bg-green-500 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full mt-1 inline-flex items-center gap-1">
-                                  <img src={True} alt="" className="h-3 w-3" />
-                                  Before Time
-                                </div>
-                              )}
+                              {/* Removed "Before Time" button */}
                             </div>
                           </div>
-                          {application.statusMessage.description && (
+                          
+                          {/* Description */}
+                          {(application.statusMessage.description || application.status === "pending") && (
                             <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
-                              {application.statusMessage.description}
+                              {application.status === "pending"
+                                ? "We are reviewing your application. This usually takes 2-3 business days."
+                                : application.statusMessage.description}
                             </p>
                           )}
+                          
+                          {/* Reason for refund */}
                           {application.statusMessage.reason && (
                             <div className="mt-2">
                               <span className="text-xs sm:text-sm font-medium text-gray-700">
@@ -449,6 +503,8 @@ const Ticket = ({
                               </span>
                             </div>
                           )}
+                          
+                          {/* Dates for rejected */}
                           {application.status === "rejected" && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
                               <p className="flex justify-between">
@@ -461,7 +517,23 @@ const Ticket = ({
                               </p>
                             </div>
                           )}
+                          
+                          {/* Dates for approved or pending */}
+                          {(application.status === "approved" || application.status === "pending") && (
+                            <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
+                              <p className="flex justify-between">
+                                <span className="">Estimated on:</span>
+                                <span>Mar 4, 2025</span>
+                              </p>
+                              <p className="flex justify-between">
+                                <span>Delivery on:</span>
+                                <span>Mar 4, 2025</span>
+                              </p>
+                            </div>
+                          )}
                         </div>
+                        
+                        {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
                           <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
                             View Application

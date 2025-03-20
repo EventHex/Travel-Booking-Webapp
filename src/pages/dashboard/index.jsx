@@ -157,6 +157,34 @@ const Index = () => {
       }
     };
 
+    const pendingApplication = {
+      name: 'SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL',
+      icon:'',
+      submittedOn: 'Feb 19, 2025',
+      submittedAt: '11:14 AM',
+      passportNumber: 'V7672497',
+      country: 'United Arab Emirates',
+      visa: 'UAE 30 Days Covid Insurance',
+      travelDates: 'Mar 4, 2025 — Mar 20, 2025',
+      status: 'pending',
+      details: {
+        errorFixed: true,
+        applicationComplete: true,
+        applicationPaid: true,
+        submittedToSpencer: true,
+        visaApproved: false,
+      },
+      statusMessage: {
+        title: 'Application pending',
+        description: '',
+        reason: 'Unable to process',
+        icon: PendingIcon,
+        iconBg: 'bg-orange-100',
+        iconColor: 'text-orange-500',
+        cardBg: 'bg-orange-50',
+        borderColor: 'border-orange-100',
+      }
+    };
   const renderTabContent = () => {
     switch (activeTab) {
       case "all":
@@ -166,6 +194,8 @@ const Index = () => {
   approvedApplication={approvedApplication} 
   refuntApplication={refuntApplication} 
   rejectedApplication={rejectedApplication}
+  pendingApplication = {pendingApplication}
+
 />    
     </>
 ;
