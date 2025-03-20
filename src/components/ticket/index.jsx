@@ -9,16 +9,20 @@ import {
   Plane,
   ArrowRight,
   Shield,
-  X
+  X,
 } from "lucide-react";
 
-const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication }) => {
+const Ticket = ({
+  approvedApplication,
+  refuntApplication,
+  rejectedApplication,
+}) => {
   // Create an array of applications, filtering out undefined ones
   const applicationData = [
-    approvedApplication, 
-    refuntApplication, 
-    rejectedApplication
-  ].filter(app => app !== undefined);
+    approvedApplication,
+    refuntApplication,
+    rejectedApplication,
+  ].filter((app) => app !== undefined);
 
   const getStatusBarColor = (status) => {
     switch (status) {
@@ -33,6 +37,18 @@ const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication })
     }
   };
 
+  const getStatusText = (status) => {
+    switch (status) {
+      case "approved":
+        return "Approved";
+      case "rejected":
+        return "Rejected";
+      case "refunded":
+        return "Refunded";
+      default:
+        return "Processing";
+    }
+  };
   return (
     <div className="w-full">
       <main className="w-full px-4 sm:px-6 py-2">
@@ -44,12 +60,16 @@ const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication })
                 className="bg-white rounded-[20px] mb-6 overflow-hidden shadow-sm"
               >
                 <div className="flex w-full">
-                <div className={`relative w-[8px] sm:w-[12px] flex justify-center items-center md:w-[20px] ${getStatusBarColor(application.status)} flex-shrink-0`}>
-  <div className="absolute flex gap-2 origin-center -rotate-90 whitespace-nowrap text-white text-xs">
- <span>sdsf</span>
-    Status Text
-  </div>
-</div>
+                  <div
+                    className={`relative w-[8px] sm:w-[12px] flex justify-center items-center md:w-[20px] ${getStatusBarColor(
+                      application.status
+                    )} flex-shrink-0`}
+                  >
+                    <div className="absolute flex gap-2 origin-center -rotate-90 whitespace-nowrap text-white text-[12px]">
+                      <span>visa </span>
+                      {getStatusText(application.status)}
+                    </div>
+                  </div>
                   <div className="flex flex-col w-full p-3 sm:p-5">
                     {/* Desktop layout (lg and above) */}
                     <div className="hidden lg:flex lg:flex-row lg:justify-between lg:gap-4 lg:w-full">
@@ -166,12 +186,24 @@ const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication })
                             <div
                               className={`h-10 w-10 sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
                             >
-                              {typeof application.statusMessage.icon === 'string' ? (
-                                <img src={application.statusMessage.icon} alt="" className="h-6 w-6" />
+                              {typeof application.statusMessage.icon ===
+                              "string" ? (
+                                <img
+                                  src={application.statusMessage.icon}
+                                  alt=""
+                                  className="h-6 w-6"
+                                />
                               ) : (
-                                <div className={`${application.statusMessage.iconColor}`}>
-                                  {application.status === "approved" && <Shield className="h-6 w-6" />}
-                                  {(application.status === "rejected" || application.status === "refunded") && <X className="h-6 w-6" />}
+                                <div
+                                  className={`${application.statusMessage.iconColor}`}
+                                >
+                                  {application.status === "approved" && (
+                                    <Shield className="h-6 w-6" />
+                                  )}
+                                  {(application.status === "rejected" ||
+                                    application.status === "refunded") && (
+                                    <X className="h-6 w-6" />
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -345,12 +377,24 @@ const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication })
                             <div
                               className={`h-10 w-10 sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
                             >
-                              {typeof application.statusMessage.icon === 'string' ? (
-                                <img src={application.statusMessage.icon} alt="" className="h-6 w-6" />
+                              {typeof application.statusMessage.icon ===
+                              "string" ? (
+                                <img
+                                  src={application.statusMessage.icon}
+                                  alt=""
+                                  className="h-6 w-6"
+                                />
                               ) : (
-                                <div className={`${application.statusMessage.iconColor}`}>
-                                  {application.status === "approved" && <Shield className="h-6 w-6" />}
-                                  {(application.status === "rejected" || application.status === "refunded") && <X className="h-6 w-6" />}
+                                <div
+                                  className={`${application.statusMessage.iconColor}`}
+                                >
+                                  {application.status === "approved" && (
+                                    <Shield className="h-6 w-6" />
+                                  )}
+                                  {(application.status === "rejected" ||
+                                    application.status === "refunded") && (
+                                    <X className="h-6 w-6" />
+                                  )}
                                 </div>
                               )}
                             </div>
