@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Search, AlertTriangle, Shield } from "lucide-react";
 import Header from "../../components/header";
-import { Flight, Home,CalenderUp,CalenderDown } from "../../assets";
+import { Flight, Home,CalenderUp,CalenderDown, MainBackground } from "../../assets";
 const TravelVisaBooking = () => {
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
@@ -24,10 +24,21 @@ const TravelVisaBooking = () => {
 
   return (
     <>
+    <div  
+      style={{
+          
+        backgroundImage: `url(${MainBackground})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+ >
+
+   
       <Header />
-      <div className="max-w-[1300px] w-full mx-auto p-4 bg-gray-50 rounded-lg">
+
+      <div className="max-w-[1300px] w-full mx-auto p-4 rounded-lg">
         {/* Search Form */}
-        <>
+     
           <div className=" flex gap-5  w-full">
             <div className="flex gap-3  justify-center    w-[50%]  flex-col ">
               <div className="flex   bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
@@ -128,7 +139,10 @@ const TravelVisaBooking = () => {
             </div>
 
           </div>
-        </>
+
+          
+   <h1>sdfsd</h1>
+      </div>
       </div>
     </>
   );
