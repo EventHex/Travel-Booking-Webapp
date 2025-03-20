@@ -161,11 +161,14 @@ const Index = () => {
     switch (activeTab) {
       case "all":
         return <>
+
 <Ticket 
   approvedApplication={approvedApplication} 
   refuntApplication={refuntApplication} 
   rejectedApplication={rejectedApplication}
-/>        </>;
+/>    
+    </>
+;
       case "approved":
         return (
 <Ticket 

@@ -11,7 +11,7 @@ import {
   Shield,
   X,
 } from "lucide-react";
-
+import {True} from '../../assets'
 const Ticket = ({
   approvedApplication,
   refuntApplication,
@@ -181,9 +181,9 @@ const Ticket = ({
                       {/* Status Card Section */}
                       <div className="flex-shrink-0   w-72">
                         <div
-                          className={`${application.statusMessage.cardBg} rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 ${application.statusMessage.borderColor} border`}
+                          className={`${application.statusMessage.cardBg} rounded-xl sm:rounded-2xl  sm:p-2  ${application.statusMessage.borderColor} border`}
                         >
-                          <div className="flex w-full space-x-3 sm:space-x-4">
+                          <div className="flex w-full bg-red-300 space-x-3 sm:space-x-4">
                             {/* Only render icon container for approved or rejected statuses, or if there's an explicit icon */}
                             {(application.status === "approved" ||
                               application.status === "rejected" ||
@@ -191,7 +191,7 @@ const Ticket = ({
                                 "string" &&
                                 application.statusMessage.icon)) && (
                               <div
-                                className={`h-10 w-10 sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
+                                className={`h-10 w-10   sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
                               >
                                 {typeof application.statusMessage.icon ===
                                 "string" ? (
@@ -204,7 +204,7 @@ const Ticket = ({
                                   <div
                                     className={`${application.statusMessage.iconColor}`}
                                   >
-                                    {application.status === "approved" && ( 
+                                    {application.status === "approved" && (
                                       <Shield className="h-6 w-6" />
                                     )}
                                     {application.status === "rejected" && (
@@ -214,14 +214,28 @@ const Ticket = ({
                                 )}
                               </div>
                             )}
-                            <div className="w-[80%] flex">
+                            <div className="w-[80%]   justify-between flex">
                               <h4
                                 className={`font-medium ${application.statusMessage.iconColor} sm:text-[16px]`}
                               >
                                 {application.statusMessage.title}
                               </h4>
-                              {/* Removed the checkmark and "Before" text */}
+                              {application.status === "approved" && (
+                                <div>
+                                  <button className="text-[12px] text-white  px-1 gap-1  flex justify-center bg-green-500 rounded-full">
+                                    {" "}
+                                    <span className=" flex justify-center">
+                                      {" "}
+                                      <img src={True} alt="" />
+                                    </span>
+                                    Before Time
+                                  </button>
+                                </div>
+                              )}
                             </div>
+                            {/* <div>
+                              <button className="border">sadsa</button><button  className="border">zv</button>
+                            </div> */}
                           </div>
                           {application.statusMessage.description && (
                             <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
@@ -412,8 +426,9 @@ const Ticket = ({
                               >
                                 {application.statusMessage.title}
                               </h4>
-                              {application.status === "rejected" && (
-                                <div className="text-xs bg-red-100 text-red-600 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full mt-1 inline-block">
+                              {application.status === "approved" && (
+                                <div className="text-xs bg-green-500 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full mt-1 inline-flex items-center gap-1">
+                                  <img src={True} alt="" className="h-3 w-3" />
                                   Before Time
                                 </div>
                               )}
