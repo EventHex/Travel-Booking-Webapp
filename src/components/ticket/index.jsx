@@ -49,6 +49,7 @@ const Ticket = ({
         return "Processing";
     }
   };
+
   return (
     <div className="w-full">
       <main className="w-full px-4 sm:px-6 py-2">
@@ -115,7 +116,7 @@ const Ticket = ({
                       </div>
 
                       {/* Application Details Section */}
-                      <div className="flex-shrink-0   w-64 relative">
+                      <div className="flex-shrink-0 w-64 relative">
                         <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4 sm:mb-6">
                           Application Details
                         </h4>
@@ -182,42 +183,44 @@ const Ticket = ({
                         <div
                           className={`${application.statusMessage.cardBg} rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 ${application.statusMessage.borderColor} border`}
                         >
-                          <div className="flex items-center space-x-3 sm:space-x-4">
-                            <div
-                              className={`h-10 w-10 sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
-                            >
-                              {typeof application.statusMessage.icon ===
-                              "string" ? (
-                                <img
-                                  src={application.statusMessage.icon}
-                                  alt=""
-                                  className="h-6 w-6"
-                                />
-                              ) : (
-                                <div
-                                  className={`${application.statusMessage.iconColor}`}
-                                >
-                                  {application.status === "approved" && (
-                                    <Shield className="h-6 w-6" />
-                                  )}
-                                  {(application.status === "rejected" ||
-                                    application.status === "refunded") && (
-                                    <X className="h-6 w-6" />
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                            <div>
+                          <div className="flex w-full space-x-3 sm:space-x-4">
+                            {/* Only render icon container for approved or rejected statuses, or if there's an explicit icon */}
+                            {(application.status === "approved" ||
+                              application.status === "rejected" ||
+                              (typeof application.statusMessage.icon ===
+                                "string" &&
+                                application.statusMessage.icon)) && (
+                              <div
+                                className={`h-10 w-10 sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
+                              >
+                                {typeof application.statusMessage.icon ===
+                                "string" ? (
+                                  <img
+                                    src={application.statusMessage.icon}
+                                    alt=""
+                                    className="h-6 w-6"
+                                  />
+                                ) : (
+                                  <div
+                                    className={`${application.statusMessage.iconColor}`}
+                                  >
+                                    {application.status === "approved" && ( 
+                                      <Shield className="h-6 w-6" />
+                                    )}
+                                    {application.status === "rejected" && (
+                                      <X className="h-6 w-6" />
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            <div className="w-[80%] flex">
                               <h4
-                                className={`font-medium ${application.statusMessage.iconColor} text-base sm:text-lg`}
+                                className={`font-medium ${application.statusMessage.iconColor} sm:text-[16px]`}
                               >
                                 {application.statusMessage.title}
                               </h4>
-                              {application.status === "rejected" && (
-                                <div className="text-xs bg-red-100 text-red-600 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full mt-1 inline-block">
-                                  Before Time
-                                </div>
-                              )}
+                              {/* Removed the checkmark and "Before" text */}
                             </div>
                           </div>
                           {application.statusMessage.description && (
@@ -263,7 +266,7 @@ const Ticket = ({
                     </div>
 
                     {/* Mobile layout (below lg) */}
-                    <div className="flex flex-col lg:hidden   gap-4 w-full">
+                    <div className="flex flex-col lg:hidden gap-4 w-full">
                       {/* Personal Information Section */}
                       <div className="flex flex-col p-2">
                         <div>
@@ -369,35 +372,40 @@ const Ticket = ({
                       </div>
 
                       {/* Status Card Section */}
-                      <div className="mt-6  ">
+                      <div className="mt-6">
                         <div
                           className={`${application.statusMessage.cardBg} rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 ${application.statusMessage.borderColor} border`}
                         >
                           <div className="flex items-center space-x-3 sm:space-x-4">
-                            <div
-                              className={`h-10 w-10 sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
-                            >
-                              {typeof application.statusMessage.icon ===
-                              "string" ? (
-                                <img
-                                  src={application.statusMessage.icon}
-                                  alt=""
-                                  className="h-6 w-6"
-                                />
-                              ) : (
-                                <div
-                                  className={`${application.statusMessage.iconColor}`}
-                                >
-                                  {application.status === "approved" && (
-                                    <Shield className="h-6 w-6" />
-                                  )}
-                                  {(application.status === "rejected" ||
-                                    application.status === "refunded") && (
-                                    <X className="h-6 w-6" />
-                                  )}
-                                </div>
-                              )}
-                            </div>
+                            {/* Only render icon container if there should be an icon */}
+                            {(typeof application.statusMessage.icon ===
+                              "string" ||
+                              application.status === "approved" ||
+                              application.status === "rejected") && (
+                              <div
+                                className={`h-10 w-10 sm:h-12 sm:w-12 ${application.statusMessage.iconBg} rounded-lg sm:rounded-xl flex items-center justify-center`}
+                              >
+                                {typeof application.statusMessage.icon ===
+                                "string" ? (
+                                  <img
+                                    src={application.statusMessage.icon}
+                                    alt=""
+                                    className="h-6 w-6"
+                                  />
+                                ) : (
+                                  <div
+                                    className={`${application.statusMessage.iconColor}`}
+                                  >
+                                    {application.status === "approved" && (
+                                      <Shield className="h-6 w-6" />
+                                    )}
+                                    {application.status === "rejected" && (
+                                      <X className="h-6 w-6" />
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            )}
                             <div>
                               <h4
                                 className={`font-medium ${application.statusMessage.iconColor} text-base sm:text-lg`}
