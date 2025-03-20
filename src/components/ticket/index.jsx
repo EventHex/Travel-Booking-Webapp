@@ -44,20 +44,24 @@ const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication })
                 className="bg-white rounded-[20px] mb-6 overflow-hidden shadow-sm"
               >
                 <div className="flex w-full">
-                  <div className={`relative w-[8px] sm:w-[12px] md:w-[20px] ${getStatusBarColor(application.status)} flex-shrink-0`}></div>
-
+                <div className={`relative w-[8px] sm:w-[12px] flex justify-center items-center md:w-[20px] ${getStatusBarColor(application.status)} flex-shrink-0`}>
+  <div className="absolute flex gap-2 origin-center -rotate-90 whitespace-nowrap text-white text-xs">
+ <span>sdsf</span>
+    Status Text
+  </div>
+</div>
                   <div className="flex flex-col w-full p-3 sm:p-5">
                     {/* Desktop layout (lg and above) */}
                     <div className="hidden lg:flex lg:flex-row lg:justify-between lg:gap-4 lg:w-full">
                       {/* Personal Information Section */}
-                      <div className="flex flex-col p-2 flex-grow">
+                      <div className="flex flex-col border-r border-dashed border-black p-2 flex-grow">
                         <div>
                           <h3 className="text-[16px] sm:text-[18px] md:text-[20px] font-semibold text-gray-900 break-words">
                             {application.name}
                           </h3>
                         </div>
 
-                        <div className="mt-4 text-[12px] sm:text-[13px] md:text-[14px] flex flex-col w-full text-gray-500">
+                        <div className="mt-4 text-[12px] sm:text-[13px] md:text-[14px] flex flex-col w-[80%] text-gray-500">
                           <div className="flex w-full">
                             <p className="flex w-full justify-between">
                               <span className="mr-2">Submitted on:</span>
@@ -91,7 +95,7 @@ const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication })
                       </div>
 
                       {/* Application Details Section */}
-                      <div className="flex-shrink-0 w-64 relative">
+                      <div className="flex-shrink-0   w-64 relative">
                         <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-4 sm:mb-6">
                           Application Details
                         </h4>
@@ -154,7 +158,7 @@ const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication })
                       </div>
 
                       {/* Status Card Section */}
-                      <div className="flex-shrink-0 w-72">
+                      <div className="flex-shrink-0   w-72">
                         <div
                           className={`${application.statusMessage.cardBg} rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 ${application.statusMessage.borderColor} border`}
                         >
@@ -227,7 +231,7 @@ const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication })
                     </div>
 
                     {/* Mobile layout (below lg) */}
-                    <div className="flex flex-col lg:hidden gap-4 w-full">
+                    <div className="flex flex-col lg:hidden   gap-4 w-full">
                       {/* Personal Information Section */}
                       <div className="flex flex-col p-2">
                         <div>
@@ -333,7 +337,7 @@ const Ticket = ({ approvedApplication, refuntApplication, rejectedApplication })
                       </div>
 
                       {/* Status Card Section */}
-                      <div className="mt-6">
+                      <div className="mt-6  ">
                         <div
                           className={`${application.statusMessage.cardBg} rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 ${application.statusMessage.borderColor} border`}
                         >
