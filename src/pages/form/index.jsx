@@ -94,7 +94,6 @@ const TravelVisaBooking = () => {
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Handle file upload logic here
       console.log('File selected:', file.name);
     }
   };
@@ -103,8 +102,26 @@ const TravelVisaBooking = () => {
     e.preventDefault();
     console.log('Form submitted:', formData);
   };
+// ***************passport photo*****************
+const [occupation, setOccupation] = useState('');
+const [file, setFile] = useState(null);
 
-  // Application type form component
+const occupations = [
+  'Select Occupation',
+  'Service',
+  'Business Owner',
+  'Employee',
+  'Student',
+  'Retired',
+  'Other'
+];
+
+const handleFileChange = (e) => {
+  if (e.target.files && e.target.files[0]) {
+    setFile(e.target.files[0]);
+  }
+};
+
   const UploadForm = () => {
     return (
       <>
@@ -238,7 +255,7 @@ const TravelVisaBooking = () => {
   // Front passport page component
   const FrontPassportForm = () => {
     return (
-      <div className="w-full mx-auto py-8 px-8">
+      <div className="w-full  mx-auto py-8 px-8">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-blue-600 mb-2">Traveler 1</h1>
           <h2 className="text-xl font-medium text-gray-900 mb-4">Upload Traveler's Front Passport Page</h2>
@@ -247,9 +264,10 @@ const TravelVisaBooking = () => {
             automatically. All fields with (*) are mandatory. Please review the information before submitting to ensure there are no mistakes.
           </p>
         </div>
-
+ <div>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+          <div className="flex w-full flex-red-300  gap-x-8 gap-y-6">
+  <div className="w-[50%] ">
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Passport Front Page Image<span className="text-red-500">*</span>
@@ -277,7 +295,10 @@ const TravelVisaBooking = () => {
                 </label>
               </div>
             </div>
+            </div>
 
+
+            <div className="w-[50%] ">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Passport Number<span className="text-red-500">*</span>
@@ -290,7 +311,6 @@ const TravelVisaBooking = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
-
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -317,7 +337,6 @@ const TravelVisaBooking = () => {
                 />
               </div>
             </div>
-
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -360,7 +379,6 @@ const TravelVisaBooking = () => {
                 />
               </div>
             </div>
-
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Place of Birth<span className="text-red-500">*</span>
@@ -373,7 +391,6 @@ const TravelVisaBooking = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
-
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Place of Issue<span className="text-red-500">*</span>
@@ -386,7 +403,6 @@ const TravelVisaBooking = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>
-
             <div className="grid grid-cols-3 gap-4 col-span-2">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -405,6 +421,7 @@ const TravelVisaBooking = () => {
                   <option value="widowed">Widowed</option>
                 </select>
               </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Date of Issue<span className="text-red-500">*</span>
@@ -429,9 +446,11 @@ const TravelVisaBooking = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
+              </div>
             </div>
           </div>
         </form>
+      </div>
       </div>
     );
   };
@@ -526,6 +545,81 @@ const TravelVisaBooking = () => {
       </div>
     );
   };
+
+  const UploadTravelerPhoto =() => {
+return(
+  <div className="min-h-screen bg-white p-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <h1 className="text-xl font-medium mb-6">Upload Traveler Photo</h1>
+        
+        {/* Main upload section */}
+        <div className="border border-gray-300 rounded-lg p-6 mb-8">
+          <div className="flex gap-6">
+            {/* Left side - Text content */}
+            <div className="flex-1">
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Vietnam requires a scan of the traveler's passport. Upload a 
+                clear passport image and your details will be filled 
+                automatically. AI has built-in OCR which is 99.9% 
+                accurate. However, it is mandatory to review the information 
+                before submitting to ensure there are no mistakes. See detailed 
+                guidelines for the perfect passport here. Your visa can 
+                get rejected if these guidelines are not followed.
+              </p>
+            </div>
+
+            {/* Right side - Upload box */}
+            <div className="flex-1">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
+                <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
+                <p className="text-sm text-gray-600 mb-2">Choose a file or drag & drop it here.</p>
+                <p className="text-xs text-gray-500 mb-4">JPG, PNG, and MIME formats, up to 10 MB</p>
+                
+                <label className="inline-block">
+                  <span className="px-4 py-2 rounded bg-blue-500 text-white text-sm cursor-pointer hover:bg-blue-600 transition-colors">
+                    Browse File
+                  </span>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/jpeg,image/png"
+                    onChange={handleFileChange}
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Additional Questions Section */}
+        <div>
+          <h2 className="text-xl text-blue-600 mb-6">Answer Additional Required Questions</h2>
+          
+          <div className="space-y-4">
+            <h3 className="text-base font-medium">What is the traveler's occupation (optional)?</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              This is an optional occupation field. Most people use the default - Service. Occupation does not influence the decision of the visa.
+            </p>
+            <select
+              value={occupation}
+              onChange={(e) => setOccupation(e.target.value)}
+              className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="">Select Occupation</option>
+              <option value="service">Service</option>
+              <option value="business">Business Owner</option>
+              <option value="employee">Employee</option>
+              <option value="student">Student</option>
+              <option value="retired">Retired</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+)
+  }
 
   // Sidebar component
   function Sidebar() {
@@ -689,6 +783,7 @@ const TravelVisaBooking = () => {
             <div className="w-[70%]">
               <FrontPassportForm />
               <BackPassportForm />
+              <UploadTravelerPhoto/>
             </div>
           </div>
         </div>
