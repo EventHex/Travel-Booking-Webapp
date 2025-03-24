@@ -13,6 +13,7 @@ import {
   Pending,
   Submit,
 } from "../../assets";
+import { Upload, Calendar, Info } from 'lucide-react';
 import FormSideBar from "../form/formSidebar";
 const TravelVisaBooking = () => {
   const citizenInputRef = useRef(null);
@@ -22,7 +23,8 @@ const TravelVisaBooking = () => {
   // Track focus state for all four inputs
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [goingToIsFocused, setGoingToIsFocused] = useState(false);
-// const [TrvellingDateFo]
+const [TravellingDateFocuesd,setTravellingDateFocuesd] = useState(false)
+const [TravellingDateEndFocuesd,setTravellingDateEndFocuesd] = useState(false) 
   // Track which input is focused
 
   const handleCitizenIconClick = () => {
@@ -65,6 +67,69 @@ const TravelVisaBooking = () => {
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(prev => ({ ...prev, [name]: value }));
+    };
+  
+    const [formData, setFormData] = useState({
+      passportNumber: '',
+      firstName: '',
+      lastName: '',
+      nationality: '',
+      sex: '',
+      dateOfBirth: '',
+      placeOfBirth: '',
+      placeOfIssue: '',
+      maritalStatus: '',
+      dateOfIssue: '',
+      dateOfExpiry: '',
+    });
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      console.log('Form submitted:', formData);
+    };
+
+function Sidebar() {
+  return (
+    <div className="w-full ">
+      <div className="p-4 space-y-4">
+        <div className="space-y-1">
+          <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+            <span>Internal ID</span>
+            <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+          </button>
+          <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+            <span>Group Name</span>
+            <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+          </button>
+          <button className="w-full text-left px-4 py-2.5 text-blue-600 bg-white/80 rounded-lg flex items-center">
+            <span>Traveller 1</span>
+            <div className="ml-auto w-2 h-2 rounded-full bg-blue-600"></div>
+          </button>
+          <button className="w-full text-left px-4 py-2.5 text-blue-600 hover:bg-white/50 rounded-lg">
+            Passport
+          </button>
+          <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+            <span>Traveller Photo</span>
+            <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+          </button>
+          <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+            <span>Review</span>
+            <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+          </button>
+          <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+            <span>Submit</span>
+            <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
   return (
     <>
       <div
@@ -303,26 +368,211 @@ const TravelVisaBooking = () => {
             </div>
           </div>
           {/* ****************************** */}
-          <div className="w-full mt-10 flex gap-1 md:gap-4">
-              {/* Sidebar container - fixed 20% width on larger screens */}
-              <div
-                className={`${
-                  isNarrowScreen ? "w-[50px]" : "w-[20%]"
-                } min-w-[50px]   mb-6 md:mb-0 transition-all duration-300`}
-              >
-                <FormSideBar isNarrow={isNarrowScreen} />
+   
+         <div className="flex bg-gradient-to-br ">
+   <div className="w-[30%]">
+
+      <Sidebar />
+   </div>
+    
+      <div className="w-[70%] ">
+        <div className="max-w-4xl mx-auto py-8 px-8">
+          <div className="mb-6">
+            <h1 className="text-2xl font-semibold text-blue-600 mb-2">Traveler 1</h1>
+            <h2 className="text-xl font-medium text-gray-900 mb-4">Upload Traveler's Front Passport Page</h2>
+            <p className="text-sm text-gray-600">
+              Vietnam requires a scan of the traveler's passport. Upload a clear passport image and your details will be filled
+              automatically. All fields with (*) are mandatory. Please review the information before submitting to ensure there are no mistakes.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Passport Front Page Image<span className="text-red-500">*</span>
+                </label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="passport-upload"
+                    accept="image/*"
+                  />
+                  <label
+                    htmlFor="passport-upload"
+                    className="cursor-pointer flex flex-col items-center"
+                  >
+                    <Calendar className="h-8 w-8 text-gray-400 mb-2" />
+                    <span className="text-sm text-gray-600">Choose a file or drag & drop it here</span>
+                    <span className="text-xs text-gray-400 mt-1">JPEG, PNG, PDF and NPF formats, up to 50 MB</span>
+                    <button
+                      type="button"
+                      className="mt-3 px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                      Browse File
+                    </button>
+                  </label>
+                </div>
               </div>
-              
-              <div 
-                className={`${
-                  isNarrowScreen ? "w-[calc(100%-60px)]" : "w-[80%]"
-                } px-2 transition-all duration-300`}
-              >
-                <div className="w-full">
-                
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Passport Number<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="passportNumber"
+                  value={formData.passportNumber}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    First Name<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nationality<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="nationality"
+                    value={formData.nationality}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Sex<span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="sex"
+                    value={formData.sex}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  >
+                    <option value="">Select</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                    <option value="O">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date of Birth<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="dateOfBirth"
+                    value={formData.dateOfBirth}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Place of Birth<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="placeOfBirth"
+                  value={formData.placeOfBirth}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Place of Issue<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="placeOfIssue"
+                  value={formData.placeOfIssue}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-4 col-span-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Marital Status<span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="maritalStatus"
+                    value={formData.maritalStatus}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  >
+                    <option value="">Select</option>
+                    <option value="single">Single</option>
+                    <option value="married">Married</option>
+                    <option value="divorced">Divorced</option>
+                    <option value="widowed">Widowed</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date of Issue<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="dateOfIssue"
+                    value={formData.dateOfIssue}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date of Expiry<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="dateOfExpiry"
+                    value={formData.dateOfExpiry}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
                 </div>
               </div>
             </div>
+          </form>
+        </div>
+      </div>
+    </div>
         </div>
       </div>
     </>

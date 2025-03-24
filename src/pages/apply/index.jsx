@@ -297,8 +297,8 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
                   </div>
                   <span className="text-xs text-gray-400">(Includes Discounted Visa & Insurance)</span>
                 </div>
-                <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                  Select
+                <button className="px-6 py-2 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-700 hover:text-white transition-colors">
+                Select
                 </button>
               </div>
             </div>
