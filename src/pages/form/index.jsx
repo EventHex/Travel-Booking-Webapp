@@ -121,7 +121,23 @@ const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   }
 };
+// *********************ticketBooking******************************
+const [documents, setDocuments] = useState({
+  flightTicket: null,
+  hotelBooking: null,
+});
 
+const handleFileChangeTicketBooking = (type, file) => {
+  setDocuments(prev => ({
+    ...prev,
+    [type]: file
+  }));
+};
+
+const handleSubmitTicketBooking = (e) => {
+  e.preventDefault();
+  console.log('Submitted documents:', documents);
+};
   const UploadForm = () => {
     return (
       <>
@@ -458,7 +474,7 @@ const handleFileChange = (e) => {
   // Back passport page component
   const BackPassportForm = () => {
     return (
-      <div className="bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-gray-900">Upload Traveler's Back Passport Page</h1>
@@ -469,7 +485,7 @@ const handleFileChange = (e) => {
             </p>
           </div>
 
-          <div className="bg-white shadow rounded-lg">
+          <div className=" shadow rounded-lg">
             <div className="grid md:grid-cols-2 gap-6">
               {/* File Upload Column */}
               <div className="p-6 border-b md:border-b-0 md:border-r border-gray-200">
@@ -548,7 +564,7 @@ const handleFileChange = (e) => {
 
   const UploadTravelerPhoto =() => {
 return(
-  <div className="min-h-screen bg-white p-6">
+  <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <h1 className="text-xl font-medium mb-6">Upload Traveler Photo</h1>
@@ -621,6 +637,105 @@ return(
 )
   }
 
+  const TicketBooking =()=> {
+    return(
+      <div className="min-h-screen p-8">
+      <div className="max-w-6xl mx-auto  overflow-hidden">
+        <form onSubmit={handleSubmitTicketBooking} className="">
+      <div className="w-full ">
+          <div className="w-full  flex gap-5  p-8 border-b md:border-b-0 md:border-r border-gray-200">
+            <div className="w-[50%]">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Round Trip Flight Ticket</h2>
+            <p className="text-sm text-gray-600 mb-8">
+              Ensure all round trip tickets (both onward and return). Highlight the passenger's name clearly.
+            </p>
+            </div>
+            <div className="relative w-[50%]">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-500 transition-colors">
+                <input
+                  type="file"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onChange={(e) => handleFileChangeTicketBooking('flightTicket', e.target.files?.[0] || null)}
+                  accept=".jpg,.jpeg,.png,.pdf"
+                />
+                <div className="text-center">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <p className="mt-4 text-sm text-gray-600">
+                    {documents.flightTicket
+                      ? documents.flightTicket.name
+                      : 'Choose a file or drag & drop it here.'}
+                  </p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    JPEG, PNG, PDF, and MP4 formats, up to 50 MB
+                  </p>
+                  {!documents.flightTicket && (
+                    <button
+                      type="button"
+                      className="mt-4 px-4 py-2 text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
+                    >
+                      Browse File
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Section */}
+          <div className="w-full flex  gap-5 p-8">
+            <div className="w-[50%]">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Hotel Booking</h2>
+            <p className="text-sm text-gray-600 mb-8">
+              Hotel booking should be for the same day as the passenger's arrival in Dubai. Highlight the passenger's name clearly.
+            </p>
+            </div>
+            <div className= " w-[50%] relative">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-500 transition-colors">
+                <input
+                  type="file"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onChange={(e) => handleFileChangeTicketBooking('hotelBooking', e.target.files?.[0] || null)}
+                  accept=".jpg,.jpeg,.png,.pdf"
+                />
+                <div className="text-center">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <p className="mt-4 text-sm text-gray-600">
+                    {documents.hotelBooking
+                      ? documents.hotelBooking.name
+                      : 'Choose a file or drag & drop it here.'}
+                  </p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    JPEG, PNG, PDF, and MP4 formats, up to 50 MB
+                  </p>
+                  {!documents.hotelBooking && (
+                    <button
+                      type="button"
+                      className="mt-4 px-4 py-2 text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
+                    >
+                      Browse File
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="w-full">
+            <div className="w-[70%]">
+              <div className="flex py-5 border-t-1 border-[#868C98] gap-5">
+              <button className="bg-blue-600  w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-2">
+                Add Another Traveller</button>
+                <button className="bg-blue-600   w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-2">
+                Review & Save</button>
+                </div>
+            </div>
+          </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+    )
+  }
   // Sidebar component
   function Sidebar() {
     return (
@@ -784,6 +899,7 @@ return(
               <FrontPassportForm />
               <BackPassportForm />
               <UploadTravelerPhoto/>
+              <TicketBooking/>
             </div>
           </div>
         </div>
