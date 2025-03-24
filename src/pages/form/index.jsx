@@ -680,7 +680,6 @@ return(
               </div>
             </div>
           </div>
-
           {/* Right Section */}
           <div className="w-full flex  gap-5 p-8">
             <div className="w-[50%]">
