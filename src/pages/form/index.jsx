@@ -13,8 +13,10 @@ import {
   Pending,
   Submit,
 } from "../../assets";
-import { Upload, Calendar, Info } from 'lucide-react';
-// import FormSideBar from "../form/formSidebar";
+import { Upload, Calendar, Info } from "lucide-react";
+import Input from "../../components/input";
+import CustomSelect from "../../components/dropdown";
+import { CustomDatePicker, FullCalendar } from "../../components/calender";
 
 const TravelVisaBooking = () => {
   const citizenInputRef = useRef(null);
@@ -25,23 +27,24 @@ const TravelVisaBooking = () => {
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [goingToIsFocused, setGoingToIsFocused] = useState(false);
   const [TravellingDateFocused, setTravellingDateFocused] = useState(false);
-  const [TravellingDateEndFocused, setTravellingDateEndFocused] = useState(false);
+  const [TravellingDateEndFocused, setTravellingDateEndFocused] =
+    useState(false);
 
   // Form data state
   const [formData, setFormData] = useState({
-    passportNumber: '',
-    firstName: '',
-    lastName: '',
-    nationality: '',
-    sex: '',
-    dateOfBirth: '',
-    placeOfBirth: '',
-    placeOfIssue: '',
-    maritalStatus: '',
-    dateOfIssue: '',
-    dateOfExpiry: '',
-    fathersName: '',
-    mothersName: '',
+    passportNumber: "",
+    firstName: "",
+    lastName: "",
+    nationality: "",
+    sex: "",
+    dateOfBirth: "",
+    placeOfBirth: "",
+    placeOfIssue: "",
+    maritalStatus: "",
+    dateOfIssue: "",
+    dateOfExpiry: "",
+    fathersName: "",
+    mothersName: "",
   });
 
   const handleCitizenIconClick = () => {
@@ -85,59 +88,59 @@ const TravelVisaBooking = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      console.log('File selected:', file.name);
+      console.log("File selected:", file.name);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
   };
-// ***************passport photo*****************
-const [occupation, setOccupation] = useState('');
-const [file, setFile] = useState(null);
+  // ***************passport photo*****************
+  const [occupation, setOccupation] = useState("");
+  const [file, setFile] = useState(null);
 
-const occupations = [
-  'Select Occupation',
-  'Service',
-  'Business Owner',
-  'Employee',
-  'Student',
-  'Retired',
-  'Other'
-];
+  const occupations = [
+    "Select Occupation",
+    "Service",
+    "Business Owner",
+    "Employee",
+    "Student",
+    "Retired",
+    "Other",
+  ];
 
-const handleFileChange = (e) => {
-  if (e.target.files && e.target.files[0]) {
-    setFile(e.target.files[0]);
-  }
-};
-// *********************ticketBooking******************************
-const [documents, setDocuments] = useState({
-  flightTicket: null,
-  hotelBooking: null,
-});
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
+  // *********************ticketBooking******************************
+  const [documents, setDocuments] = useState({
+    flightTicket: null,
+    hotelBooking: null,
+  });
 
-const handleFileChangeTicketBooking = (type, file) => {
-  setDocuments(prev => ({
-    ...prev,
-    [type]: file
-  }));
-};
+  const handleFileChangeTicketBooking = (type, file) => {
+    setDocuments((prev) => ({
+      ...prev,
+      [type]: file,
+    }));
+  };
 
-const handleSubmitTicketBooking = (e) => {
-  e.preventDefault();
-  console.log('Submitted documents:', documents);
-};
+  const handleSubmitTicketBooking = (e) => {
+    e.preventDefault();
+    console.log("Submitted documents:", documents);
+  };
   const UploadForm = () => {
     return (
       <>
@@ -230,36 +233,26 @@ const handleSubmitTicketBooking = (e) => {
             </div>
 
             <div>
-              <label
-                htmlFor="internal-id"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Internal Id
-              </label>
-              <input
-                type="text"
-                id="internal-id"
-                className="shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
-                placeholder="Internal Id"
-                value={internalId}
-                onChange={(e) => setInternalId(e.target.value)}
+              <Input
+                labal={" Internal Id"}
+                onChange={""}
+                placeholder={"Internal Id"}
+                labalClassName={"block text-sm font-medium text-gray-700 mb-1"}
+                InputClassName={
+                  "shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
+                }
               />
             </div>
 
             <div>
-              <label
-                htmlFor="group-name"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Group Name
-              </label>
-              <input
-                type="text"
-                id="group-name"
-                className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md py-5 px-3 text-gray-500 bg-white transition duration-200 ease-in-out hover:border-blue-300"
-                placeholder="Group Name"
-                value={groupName}
-                onChange={(e) => setGroupName(e.target.value)}
+              <Input
+                labal={"Group Name"}
+                onChange={""}
+                placeholder={"Group Name"}
+                labalClassName={"block text-sm font-medium text-gray-700 mb-1"}
+                InputClassName={
+                  "shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
+                }
               />
             </div>
           </div>
@@ -267,221 +260,231 @@ const handleSubmitTicketBooking = (e) => {
       </>
     );
   };
-  
+
   // Front passport page component
+
+  const sexOptions = [
+    { value: "M", label: "Male" },
+    { value: "F", label: "Female" },
+    { value: "O", label: "Other" },
+  ];
+  const Metiral =[
+    {value:'s',label:"single"},
+    {value:'m',label:"married"},
+
+  ]
   const FrontPassportForm = () => {
+    const [selectedOption, setSelectedOption] = useState("");
+    const [dob, setDob] = useState("");
+   
+
     return (
       <div className="w-full  mx-auto py-8 px-8">
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-blue-600 mb-2">Traveler 1</h1>
-          <h2 className="text-xl font-medium text-gray-900 mb-4">Upload Traveler's Front Passport Page</h2>
+          <h1 className="text-2xl font-semibold text-blue-600 mb-2">
+            Traveler 1
+          </h1>
+          <h2 className="text-xl font-medium text-gray-900 mb-4">
+            Upload Traveler's Front Passport Page
+          </h2>
           <p className="text-sm text-gray-600">
-            Vietnam requires a scan of the traveler's passport. Upload a clear passport image and your details will be filled
-            automatically. All fields with (*) are mandatory. Please review the information before submitting to ensure there are no mistakes.
+            Vietnam requires a scan of the traveler's passport. Upload a clear
+            passport image and your details will be filled automatically. All
+            fields with (*) are mandatory. Please review the information before
+            submitting to ensure there are no mistakes.
           </p>
         </div>
- <div>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex w-full flex-red-300  gap-x-8 gap-y-6">
-  <div className="w-[50%] ">
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Passport Front Page Image<span className="text-red-500">*</span>
-              </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                <input
-                  type="file"
-                  className="hidden"
-                  id="passport-upload"
-                  accept="image/*"
-                />
-                <label
-                  htmlFor="passport-upload"
-                  className="cursor-pointer flex flex-col items-center"
-                >
-                  <Calendar className="h-8 w-8 text-gray-400 mb-2" />
-                  <span className="text-sm text-gray-600">Choose a file or drag & drop it here</span>
-                  <span className="text-xs text-gray-400 mt-1">JPEG, PNG, PDF and NPF formats, up to 50 MB</span>
-                  <button
-                    type="button"
-                    className="mt-3 px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  >
-                    Browse File
-                  </button>
-                </label>
-              </div>
-            </div>
-            </div>
-
-
-            <div className="w-[50%] ">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Passport Number<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="passportNumber"
-                value={formData.passportNumber}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  First Name<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nationality<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="nationality"
-                  value={formData.nationality}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Sex<span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="sex"
-                  value={formData.sex}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                >
-                  <option value="">Select</option>
-                  <option value="M">Male</option>
-                  <option value="F">Female</option>
-                  <option value="O">Other</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Date of Birth<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  name="dateOfBirth"
-                  value={formData.dateOfBirth}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Place of Birth<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="placeOfBirth"
-                value={formData.placeOfBirth}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Place of Issue<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="placeOfIssue"
-                value={formData.placeOfIssue}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4 col-span-2">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Marital Status<span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="maritalStatus"
-                  value={formData.maritalStatus}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                >
-                  <option value="">Select</option>
-                  <option value="single">Single</option>
-                  <option value="married">Married</option>
-                  <option value="divorced">Divorced</option>
-                  <option value="widowed">Widowed</option>
-                </select>
+        <div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="flex w-full flex-red-300  gap-x-8 gap-y-6">
+              <div className="w-[50%] ">
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Passport Front Page Image
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <input
+                      type="file"
+                      className="hidden"
+                      id="passport-upload"
+                      accept="image/*"
+                    />
+                    <label
+                      htmlFor="passport-upload"
+                      className="cursor-pointer flex flex-col items-center"
+                    >
+                      <img className={"mb-5"} src={CalenderUp} alt="" />
+                      <span className="text-sm text-gray-600">
+                        Choose a file or drag & drop it here
+                      </span>
+                      <span className="text-xs text-gray-400 mt-1">
+                        JPEG, PNG, PDF and NPF formats, up to 50 MB
+                      </span>
+                      <button
+                        type="button"
+                        className="mt-3 px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                      >
+                        Browse File
+                      </button>
+                    </label>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Date of Issue<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  name="dateOfIssue"
-                  value={formData.dateOfIssue}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Date of Expiry<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  name="dateOfExpiry"
-                  value={formData.dateOfExpiry}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
+              <div className="w-[50%] ">
+                <div>
+                  <Input
+                    labal={"Passport Number *"}
+                    onChange={""}
+                    placeholder={"Passport Number"}
+                    InputClassName={
+                      " mb-1 focus:ring-blue-500 focus:border-blue-500 block w-full "
+                    }
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Input
+                      label={"First Name *"}
+                      onChange={""}
+                      placeholder={"First Name"}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      label={" Last Name *"}
+                      onChange={""}
+                      placeholder={"Last Name"}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Input
+                      label={" Nationality* *"}
+                      onChange={""}
+                      placeholder={"Nationality*"}
+                    />
+                  </div>
+                  <div>
+                    <CustomSelect
+                      name="sex"
+                      value={formData.sex}
+                      onChange={handleInputChange}
+                      options={sexOptions}
+                      label="Sex"
+                      placeholder="Select"
+                      required={true}
+                    />
+                  </div>
+                  <div>
+                    <CustomDatePicker
+                      name="dob"
+                      label=" Date of Birth"
+                      value={dob}
+                      onChange={(e) => setDob(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Place of Birth<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="placeOfBirth"
+                    value={formData.placeOfBirth}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Place of Issue<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="placeOfIssue"
+                    value={formData.placeOfIssue}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="grid grid-cols-3 gap-4 col-span-2">
+                  <div>
+                    <CustomSelect
+                      name="Maritalstatus"
+                      label="Marital Status"
+                      value={selectedOption}
+                      onChange={(e) => setSelectedOption(e.target.value)}
+                      options={Metiral}
+                    />
+                    {/* <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Marital Status<span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="maritalStatus"
+                      value={formData.maritalStatus}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value="">Select</option>
+                      <option value="single">Single</option>
+                      <option value="married">Married</option>
+                      <option value="divorced">Divorced</option>
+                      <option value="widowed">Widowed</option>
+                    </select> */}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date of Issue<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      name="dateOfIssue"
+                      value={formData.dateOfIssue}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date of Expiry<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      name="dateOfExpiry"
+                      value={formData.dateOfExpiry}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
       </div>
     );
   };
-  
+
   // Back passport page component
   const BackPassportForm = () => {
     return (
       <div className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Upload Traveler's Back Passport Page</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Upload Traveler's Back Passport Page
+            </h1>
             <p className="mt-2 text-sm text-gray-600">
-              Vietnam requires a scan of the traveler's passport. Upload a clear passport image and your details will be filled
-              automatically. AI has built its own OCR which is 99.9% accurate. However, it is mandatory to review the information
-              before submitting to ensure there are no mistakes.
+              Vietnam requires a scan of the traveler's passport. Upload a clear
+              passport image and your details will be filled automatically. AI
+              has built its own OCR which is 99.9% accurate. However, it is
+              mandatory to review the information before submitting to ensure
+              there are no mistakes.
             </p>
           </div>
 
@@ -497,7 +500,10 @@ const handleSubmitTicketBooking = (e) => {
                     <div className="space-y-2 text-center">
                       <Upload className="mx-auto h-12 w-12 text-gray-400" />
                       <div className="flex text-sm text-gray-600">
-                        <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500">
+                        <label
+                          htmlFor="file-upload"
+                          className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500"
+                        >
                           <span>Choose a file</span>
                           <input
                             id="file-upload"
@@ -510,7 +516,9 @@ const handleSubmitTicketBooking = (e) => {
                         </label>
                         <p className="pl-1">or drag & drop it here.</p>
                       </div>
-                      <p className="text-xs text-gray-500">JPEG, PNG, GIF up to 5MB</p>
+                      <p className="text-xs text-gray-500">
+                        JPEG, PNG, GIF up to 5MB
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -520,7 +528,10 @@ const handleSubmitTicketBooking = (e) => {
               <div className="p-6">
                 <div className="space-y-6">
                   <div>
-                    <label htmlFor="fathersName" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="fathersName"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Father's Name
                     </label>
                     <input
@@ -534,7 +545,10 @@ const handleSubmitTicketBooking = (e) => {
                   </div>
 
                   <div>
-                    <label htmlFor="mothersName" className="block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="mothersName"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Mother's Name
                     </label>
                     <input
@@ -562,179 +576,206 @@ const handleSubmitTicketBooking = (e) => {
     );
   };
 
-  const UploadTravelerPhoto =() => {
-return(
-  <div className="min-h-screen p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <h1 className="text-xl font-medium mb-6">Upload Traveler Photo</h1>
-        
-        {/* Main upload section */}
-        <div className="border border-gray-300 rounded-lg p-6 mb-8">
-          <div className="flex gap-6">
-            {/* Left side - Text content */}
-            <div className="flex-1">
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Vietnam requires a scan of the traveler's passport. Upload a 
-                clear passport image and your details will be filled 
-                automatically. AI has built-in OCR which is 99.9% 
-                accurate. However, it is mandatory to review the information 
-                before submitting to ensure there are no mistakes. See detailed 
-                guidelines for the perfect passport here. Your visa can 
-                get rejected if these guidelines are not followed.
+  const UploadTravelerPhoto = () => {
+    return (
+      <div className="min-h-screen p-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <h1 className="text-xl font-medium mb-6">Upload Traveler Photo</h1>
+
+          {/* Main upload section */}
+          <div className="border border-gray-300 rounded-lg p-6 mb-8">
+            <div className="flex gap-6">
+              {/* Left side - Text content */}
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Vietnam requires a scan of the traveler's passport. Upload a
+                  clear passport image and your details will be filled
+                  automatically. AI has built-in OCR which is 99.9% accurate.
+                  However, it is mandatory to review the information before
+                  submitting to ensure there are no mistakes. See detailed
+                  guidelines for the perfect passport here. Your visa can get
+                  rejected if these guidelines are not followed.
+                </p>
+              </div>
+
+              {/* Right side - Upload box */}
+              <div className="flex-1">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
+                  <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
+                  <p className="text-sm text-gray-600 mb-2">
+                    Choose a file or drag & drop it here.
+                  </p>
+                  <p className="text-xs text-gray-500 mb-4">
+                    JPG, PNG, and MIME formats, up to 10 MB
+                  </p>
+
+                  <label className="inline-block">
+                    <span className="px-4 py-2 rounded bg-blue-500 text-white text-sm cursor-pointer hover:bg-blue-600 transition-colors">
+                      Browse File
+                    </span>
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="image/jpeg,image/png"
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Questions Section */}
+          <div>
+            <h2 className="text-xl text-blue-600 mb-6">
+              Answer Additional Required Questions
+            </h2>
+
+            <div className="space-y-4">
+              <h3 className="text-base font-medium">
+                What is the traveler's occupation (optional)?
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                This is an optional occupation field. Most people use the
+                default - Service. Occupation does not influence the decision of
+                the visa.
               </p>
+              <select
+                value={occupation}
+                onChange={(e) => setOccupation(e.target.value)}
+                className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="">Select Occupation</option>
+                <option value="service">Service</option>
+                <option value="business">Business Owner</option>
+                <option value="employee">Employee</option>
+                <option value="student">Student</option>
+                <option value="retired">Retired</option>
+                <option value="other">Other</option>
+              </select>
             </div>
-
-            {/* Right side - Upload box */}
-            <div className="flex-1">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
-                <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
-                <p className="text-sm text-gray-600 mb-2">Choose a file or drag & drop it here.</p>
-                <p className="text-xs text-gray-500 mb-4">JPG, PNG, and MIME formats, up to 10 MB</p>
-                
-                <label className="inline-block">
-                  <span className="px-4 py-2 rounded bg-blue-500 text-white text-sm cursor-pointer hover:bg-blue-600 transition-colors">
-                    Browse File
-                  </span>
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/jpeg,image/png"
-                    onChange={handleFileChange}
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Questions Section */}
-        <div>
-          <h2 className="text-xl text-blue-600 mb-6">Answer Additional Required Questions</h2>
-          
-          <div className="space-y-4">
-            <h3 className="text-base font-medium">What is the traveler's occupation (optional)?</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              This is an optional occupation field. Most people use the default - Service. Occupation does not influence the decision of the visa.
-            </p>
-            <select
-              value={occupation}
-              onChange={(e) => setOccupation(e.target.value)}
-              className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            >
-              <option value="">Select Occupation</option>
-              <option value="service">Service</option>
-              <option value="business">Business Owner</option>
-              <option value="employee">Employee</option>
-              <option value="student">Student</option>
-              <option value="retired">Retired</option>
-              <option value="other">Other</option>
-            </select>
           </div>
         </div>
       </div>
-    </div>
-)
-  }
+    );
+  };
 
-  const TicketBooking =()=> {
-    return(
+  const TicketBooking = () => {
+    return (
       <div className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto  overflow-hidden">
-        <form onSubmit={handleSubmitTicketBooking} className="">
-      <div className="w-full ">
-          <div className="w-full  flex gap-5  p-8 border-b md:border-b-0 md:border-r border-gray-200">
-            <div className="w-[50%]">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Round Trip Flight Ticket</h2>
-            <p className="text-sm text-gray-600 mb-8">
-              Ensure all round trip tickets (both onward and return). Highlight the passenger's name clearly.
-            </p>
-            </div>
-            <div className="relative w-[50%]">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-500 transition-colors">
-                <input
-                  type="file"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={(e) => handleFileChangeTicketBooking('flightTicket', e.target.files?.[0] || null)}
-                  accept=".jpg,.jpeg,.png,.pdf"
-                />
-                <div className="text-center">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <p className="mt-4 text-sm text-gray-600">
-                    {documents.flightTicket
-                      ? documents.flightTicket.name
-                      : 'Choose a file or drag & drop it here.'}
+        <div className="max-w-6xl mx-auto  overflow-hidden">
+          <form onSubmit={handleSubmitTicketBooking} className="">
+            <div className="w-full ">
+              <div className="w-full  flex gap-5  p-8 border-b md:border-b-0 md:border-r border-gray-200">
+                <div className="w-[50%]">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                    Round Trip Flight Ticket
+                  </h2>
+                  <p className="text-sm text-gray-600 mb-8">
+                    Ensure all round trip tickets (both onward and return).
+                    Highlight the passenger's name clearly.
                   </p>
-                  <p className="mt-2 text-xs text-gray-500">
-                    JPEG, PNG, PDF, and MP4 formats, up to 50 MB
+                </div>
+                <div className="relative w-[50%]">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-500 transition-colors">
+                    <input
+                      type="file"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={(e) =>
+                        handleFileChangeTicketBooking(
+                          "flightTicket",
+                          e.target.files?.[0] || null
+                        )
+                      }
+                      accept=".jpg,.jpeg,.png,.pdf"
+                    />
+                    <div className="text-center">
+                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                      <p className="mt-4 text-sm text-gray-600">
+                        {documents.flightTicket
+                          ? documents.flightTicket.name
+                          : "Choose a file or drag & drop it here."}
+                      </p>
+                      <p className="mt-2 text-xs text-gray-500">
+                        JPEG, PNG, PDF, and MP4 formats, up to 50 MB
+                      </p>
+                      {!documents.flightTicket && (
+                        <button
+                          type="button"
+                          className="mt-4 px-4 py-2 text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
+                        >
+                          Browse File
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Right Section */}
+              <div className="w-full flex  gap-5 p-8">
+                <div className="w-[50%]">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                    Hotel Booking
+                  </h2>
+                  <p className="text-sm text-gray-600 mb-8">
+                    Hotel booking should be for the same day as the passenger's
+                    arrival in Dubai. Highlight the passenger's name clearly.
                   </p>
-                  {!documents.flightTicket && (
-                    <button
-                      type="button"
-                      className="mt-4 px-4 py-2 text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
-                    >
-                      Browse File
+                </div>
+                <div className=" w-[50%] relative">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-500 transition-colors">
+                    <input
+                      type="file"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={(e) =>
+                        handleFileChangeTicketBooking(
+                          "hotelBooking",
+                          e.target.files?.[0] || null
+                        )
+                      }
+                      accept=".jpg,.jpeg,.png,.pdf"
+                    />
+                    <div className="text-center">
+                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                      <p className="mt-4 text-sm text-gray-600">
+                        {documents.hotelBooking
+                          ? documents.hotelBooking.name
+                          : "Choose a file or drag & drop it here."}
+                      </p>
+                      <p className="mt-2 text-xs text-gray-500">
+                        JPEG, PNG, PDF, and MP4 formats, up to 50 MB
+                      </p>
+                      {!documents.hotelBooking && (
+                        <button
+                          type="button"
+                          className="mt-4 px-4 py-2 text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
+                        >
+                          Browse File
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full">
+                <div className="w-[70%]">
+                  <div className="flex py-5 border-t-1 border-[#868C98] gap-5">
+                    <button className="bg-blue-600  w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-2">
+                      Add Another Traveller
                     </button>
-                  )}
+                    <button className="bg-blue-600   w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-2">
+                      Review & Save
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          {/* Right Section */}
-          <div className="w-full flex  gap-5 p-8">
-            <div className="w-[50%]">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Hotel Booking</h2>
-            <p className="text-sm text-gray-600 mb-8">
-              Hotel booking should be for the same day as the passenger's arrival in Dubai. Highlight the passenger's name clearly.
-            </p>
-            </div>
-            <div className= " w-[50%] relative">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-500 transition-colors">
-                <input
-                  type="file"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={(e) => handleFileChangeTicketBooking('hotelBooking', e.target.files?.[0] || null)}
-                  accept=".jpg,.jpeg,.png,.pdf"
-                />
-                <div className="text-center">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <p className="mt-4 text-sm text-gray-600">
-                    {documents.hotelBooking
-                      ? documents.hotelBooking.name
-                      : 'Choose a file or drag & drop it here.'}
-                  </p>
-                  <p className="mt-2 text-xs text-gray-500">
-                    JPEG, PNG, PDF, and MP4 formats, up to 50 MB
-                  </p>
-                  {!documents.hotelBooking && (
-                    <button
-                      type="button"
-                      className="mt-4 px-4 py-2 text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
-                    >
-                      Browse File
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="w-full">
-            <div className="w-[70%]">
-              <div className="flex py-5 border-t-1 border-[#868C98] gap-5">
-              <button className="bg-blue-600  w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-2">
-                Add Another Traveller</button>
-                <button className="bg-blue-600   w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-2">
-                Review & Save</button>
-                </div>
-            </div>
-          </div>
-          </div>
-        </form>
-
+          </form>
+        </div>
       </div>
-    </div>
-    )
-  }
+    );
+  };
   // Sidebar component
   function Sidebar() {
     return (
@@ -883,22 +924,22 @@ return(
               </button>
             </div>
           </div>
-          
+
           {/* Form section */}
           <UploadForm />
-          
+
           {/* Main content with sidebar */}
           <div className="flex bg-gradient-to-br">
             <div className="w-[30%]">
               <Sidebar />
             </div>
-            
+
             {/* Passport upload section */}
             <div className="w-[70%]">
               <FrontPassportForm />
               <BackPassportForm />
-              <UploadTravelerPhoto/>
-              <TicketBooking/>
+              <UploadTravelerPhoto />
+              <TicketBooking />
             </div>
           </div>
         </div>
