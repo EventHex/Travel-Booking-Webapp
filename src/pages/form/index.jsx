@@ -380,21 +380,6 @@ const TravelVisaBooking = () => {
                       onChange={(e) => setSelectedOption(e.target.value)}
                       options={Metiral}
                     />
-                    {/* <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Marital Status<span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      name="maritalStatus"
-                      value={formData.maritalStatus}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    >
-                      <option value="">Select</option>
-                      <option value="single">Single</option>
-                      <option value="married">Married</option>
-                      <option value="divorced">Divorced</option>
-                      <option value="widowed">Widowed</option>
-                    </select> */}
                   </div>
 
                   <div>
@@ -487,37 +472,13 @@ const TravelVisaBooking = () => {
               <div className="p-6">
                 <div className="space-y-6">
                   <div>
-                    <label
-                      htmlFor="fathersName"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Father's Name
-                    </label>
-                    <input
-                      type="text"
-                      name="fathersName"
-                      id="fathersName"
-                      value={formData.fathersName}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                    />
+
+                    <Input label={`Father's Name` }/>
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="mothersName"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Mother's Name
-                    </label>
-                    <input
-                      type="text"
-                      name="mothersName"
-                      id="mothersName"
-                      value={formData.mothersName}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                    />
+                  <Input label={`Mother's Name` }/>
+
                   </div>
 
                   <button
@@ -537,7 +498,7 @@ const TravelVisaBooking = () => {
 
   const UploadTravelerPhoto = () => {
     return (
-      <div className="min-h-screen p-6">
+      <div className="min-h-screen ">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <h1 className="text-xl font-medium mb-6">Upload Traveler Photo</h1>
@@ -622,11 +583,11 @@ const TravelVisaBooking = () => {
 
   const TicketBooking = () => {
     return (
-      <div className="min-h-screen p-8">
-        <div className="max-w-6xl mx-auto  overflow-hidden">
+      <div className=" ">
+        <div className="max-w-6xl   overflow-hidden">
           <form onSubmit={handleSubmitTicketBooking} className="">
             <div className="w-full ">
-              <div className="w-full  flex gap-5  p-8 border-b md:border-b-0 md:border-r border-gray-200">
+              <div className="w-full  flex gap-5 border-b md:border-b-0 md:border-r border-gray-200">
                 <div className="w-[50%]">
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">
                     Round Trip Flight Ticket
