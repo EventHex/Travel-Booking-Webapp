@@ -539,86 +539,86 @@ const TravelVisaBooking = () => {
 
   const UploadTravelerPhoto = () => {
     return (
-      <div className="min-h-screen ">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <h1 className="text-xl font-medium mb-6">Upload Traveler Photo</h1>
+      <div className="mb-10 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <h1 className="text-lg sm:text-xl font-medium mb-4 sm:mb-6">Upload Traveler Photo</h1>
 
-          {/* Main upload section */}
-          <div className="border border-gray-300 rounded-lg p-6 mb-8">
-            <div className="flex gap-6">
-              {/* Left side - Text content */}
-              <div className="flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Vietnam requires a scan of the traveler's passport. Upload a
-                  clear passport image and your details will be filled
-                  automatically. AI has built-in OCR which is 99.9% accurate.
-                  However, it is mandatory to review the information before
-                  submitting to ensure there are no mistakes. See detailed
-                  guidelines for the perfect passport here. Your visa can get
-                  rejected if these guidelines are not followed.
-                </p>
-              </div>
-
-              {/* Right side - Upload box */}
-              <div className="flex-1">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
-                  <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-600 mb-2">
-                    Choose a file or drag & drop it here.
-                  </p>
-                  <p className="text-xs text-gray-500 mb-4">
-                    JPG, PNG, and MIME formats, up to 10 MB
-                  </p>
-
-                  <label className="inline-block">
-                    <span className="px-4 py-2 rounded bg-blue-500 text-white text-sm cursor-pointer hover:bg-blue-600 transition-colors">
-                      Browse File
-                    </span>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="image/jpeg,image/png"
-                      onChange={handleFileChange}
-                    />
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Questions Section */}
-          <div>
-            <h2 className="text-xl text-blue-600 mb-6">
-              Answer Additional Required Questions
-            </h2>
-
-            <div className="space-y-4">
-              <h3 className="text-base font-medium">
-                What is the traveler's occupation (optional)?
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                This is an optional occupation field. Most people use the
-                default - Service. Occupation does not influence the decision of
-                the visa.
+        {/* Main upload section */}
+        <div className="border border-gray-300 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Left side - Text content */}
+            <div className="w-full md:flex-1">
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-4 md:mb-0">
+                Vietnam requires a scan of the traveler's passport. Upload a
+                clear passport image and your details will be filled
+                automatically. AI has built-in OCR which is 99.9% accurate.
+                However, it is mandatory to review the information before
+                submitting to ensure there are no mistakes. See detailed
+                guidelines for the perfect passport here. Your visa can get
+                rejected if these guidelines are not followed.
               </p>
-              <select
-                value={occupation}
-                onChange={(e) => setOccupation(e.target.value)}
-                className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              >
-                <option value="">Select Occupation</option>
-                <option value="service">Service</option>
-                <option value="business">Business Owner</option>
-                <option value="employee">Employee</option>
-                <option value="student">Student</option>
-                <option value="retired">Retired</option>
-                <option value="other">Other</option>
-              </select>
+            </div>
+
+            {/* Right side - Upload box */}
+            <div className="w-full md:flex-1">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 md:p-8 text-center bg-gray-50">
+                <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
+                <p className="text-xs sm:text-sm text-gray-600 mb-2">
+                  Choose a file or drag & drop it here.
+                </p>
+                <p className="text-xs text-gray-500 mb-4">
+                  JPG, PNG, and MIME formats, up to 10 MB
+                </p>
+
+                <label className="inline-block">
+                  <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded bg-blue-500 text-white text-xs sm:text-sm cursor-pointer hover:bg-blue-600 transition-colors">
+                    Browse File
+                  </span>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/jpeg,image/png"
+                    onChange={handleFileChange}
+                  />
+                </label>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Additional Questions Section */}
+        <div>
+          <h2 className="text-lg sm:text-xl text-blue-600 mb-4 sm:mb-6">
+            Answer Additional Required Questions
+          </h2>
+
+          <div className="space-y-3 sm:space-y-4">
+            <h3 className="text-sm sm:text-base font-medium">
+              What is the traveler's occupation (optional)?
+            </h3>
+            <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-4">
+              This is an optional occupation field. Most people use the
+              default - Service. Occupation does not influence the decision of
+              the visa.
+            </p>
+            <select
+              value={occupation}
+              onChange={(e) => setOccupation(e.target.value)}
+              className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="">Select Occupation</option>
+              <option value="service">Service</option>
+              <option value="business">Business Owner</option>
+              <option value="employee">Employee</option>
+              <option value="student">Student</option>
+              <option value="retired">Retired</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
       </div>
+    </div>
     );
   };
 
