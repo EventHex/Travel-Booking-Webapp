@@ -57,10 +57,7 @@ const TravelVisaBooking = () => {
 
   const [applicationType, setApplicationType] = useState("individual");
   const [visaType, setVisaType] = useState("Tourist Visa");
-  const [internalId, setInternalId] = useState("");
-  const [groupName, setGroupName] = useState("Tourist Visa");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("all");
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -106,7 +103,6 @@ const TravelVisaBooking = () => {
     console.log("Form submitted:", formData);
   };
   // ***************passport photo*****************
-  const [occupation, setOccupation] = useState("");
   const [file, setFile] = useState(null);
 
   const handleFileChange = (e) => {
@@ -224,16 +220,17 @@ const TravelVisaBooking = () => {
 
   // Front passport page component
 
-  const sexOptions = [
-    { value: "M", label: "Male" },
-    { value: "F", label: "Female" },
-    { value: "O", label: "Other" },
-  ];
-  const Metiral = [
-    { value: "s", label: "single" },
-    { value: "m", label: "married" },
-  ];
+
   const FrontPassportForm = () => {
+    const sexOptions = [
+      { value: "M", label: "Male" },
+      { value: "F", label: "Female" },
+      { value: "O", label: "Other" },
+    ];
+    const Metiral = [
+      { value: "s", label: "single" },
+      { value: "m", label: "married" },
+    ];
     const [selectedOption, setSelectedOption] = useState("");
     const [dob, setDob] = useState("");
 
@@ -293,49 +290,40 @@ const TravelVisaBooking = () => {
 
             <div className="w-full lg:w-[50%]">
               <div className="mb-4 md:mb-5">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Passport Number<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Passport Number"
-                  className="mb-1 focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1"
+                <Input
+                placeholder={'Passport Number'}
+                label={'Passport Number'}
                 />
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="mb-4 md:mb-5">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    First Name<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
+                <Input
+                placeholder={'First Name'}
+                label={'First Name'}
+                />  
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Last Name<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
+
+                <Input
+                placeholder={' Last Name'}
+                label={' Last Name'}
+                />
                 </div>
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="mb-4 md:mb-5">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <Input label={' Nationality'} placeholder={' Nationality'}/>
+
+                  {/* <label className="block text-sm font-medium text-gray-700 mb-1">
                     Nationality<span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     placeholder="Nationality"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
+                  /> */}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
