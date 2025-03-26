@@ -109,16 +109,6 @@ const TravelVisaBooking = () => {
   const [occupation, setOccupation] = useState("");
   const [file, setFile] = useState(null);
 
-  const occupations = [
-    "Select Occupation",
-    "Service",
-    "Business Owner",
-    "Employee",
-    "Student",
-    "Retired",
-    "Other",
-  ];
-
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
@@ -142,6 +132,11 @@ const TravelVisaBooking = () => {
     console.log("Submitted documents:", documents);
   };
   const UploadForm = () => {
+    const Visa = [
+      { value: 1, label: "goldern visa" },
+      { value: 2, label: "job visa" },
+      { value: 3, label: "visiting visa" },
+    ];
     return (
       <>
         <div className="w-full p-6 rounded-3xl shadow-sm">
@@ -178,38 +173,8 @@ const TravelVisaBooking = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
-              <label
-                htmlFor="visa-type"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Visa Type
-              </label>
               <div className="relative">
-                <button
-                  type="button"
-                  id="visa-type"
-                  className="relative w-full bg-white border py-5 border-gray-300 rounded-md pl-3 pr-10 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                >
-                  <span className="block truncate text-gray-500">
-                    {visaType}
-                  </span>
-                  <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </button>
+                <CustomSelect className={'py-4'} label={"Visa Type"} options={Visa} />
 
                 {isDropdownOpen && (
                   <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
@@ -234,25 +199,21 @@ const TravelVisaBooking = () => {
 
             <div>
               <Input
-                labal={" Internal Id"}
-                onChange={""}
-                placeholder={"Internal Id"}
-                labalClassName={"block text-sm font-medium text-gray-700 mb-1"}
-                InputClassName={
-                  "shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
-                }
+                label="Internal Id"
+                onChange={() => {}}
+                placeholder="Internal Id"
+                labelClassName="block text-sm font-medium text-gray-700 mb-1"
+                InputClassName="shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
               />
             </div>
 
             <div>
               <Input
-                labal={"Group Name"}
-                onChange={""}
-                placeholder={"Group Name"}
-                labalClassName={"block text-sm font-medium text-gray-700 mb-1"}
-                InputClassName={
-                  "shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
-                }
+                label="Group Name"
+                onChange={() => {}}
+                placeholder="Internal Id"
+                labelClassName="block text-sm font-medium text-gray-700 mb-1"
+                InputClassName="shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
               />
             </div>
           </div>
@@ -268,15 +229,13 @@ const TravelVisaBooking = () => {
     { value: "F", label: "Female" },
     { value: "O", label: "Other" },
   ];
-  const Metiral =[
-    {value:'s',label:"single"},
-    {value:'m',label:"married"},
-
-  ]
+  const Metiral = [
+    { value: "s", label: "single" },
+    { value: "m", label: "married" },
+  ];
   const FrontPassportForm = () => {
     const [selectedOption, setSelectedOption] = useState("");
     const [dob, setDob] = useState("");
-   
 
     return (
       <div className="w-full  mx-auto py-8 px-8">
@@ -314,7 +273,8 @@ const TravelVisaBooking = () => {
                       htmlFor="passport-upload"
                       className="cursor-pointer flex flex-col items-center"
                     >
-                      <img className={"mb-5"} src={CalenderUp} alt="" />
+                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                      {/* <img className={"mb-5"} src={Calendar} alt="" /> */}
                       <span className="text-sm text-gray-600">
                         Choose a file or drag & drop it here
                       </span>
@@ -333,7 +293,7 @@ const TravelVisaBooking = () => {
               </div>
 
               <div className="w-[50%] ">
-                <div>
+                <div className="mb-5">
                   <Input
                     labal={"Passport Number *"}
                     onChange={""}
@@ -344,7 +304,7 @@ const TravelVisaBooking = () => {
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
+                  <div className="mb-5">
                     <Input
                       label={"First Name *"}
                       onChange={""}
@@ -360,7 +320,7 @@ const TravelVisaBooking = () => {
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
-                  <div>
+                  <div className="mb-5">
                     <Input
                       label={" Nationality* *"}
                       onChange={""}
@@ -387,7 +347,7 @@ const TravelVisaBooking = () => {
                     />
                   </div>
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-2 mb-5">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Place of Birth<span className="text-red-500">*</span>
                   </label>
@@ -399,7 +359,7 @@ const TravelVisaBooking = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-2 mb-5">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Place of Issue<span className="text-red-500">*</span>
                   </label>
@@ -470,7 +430,6 @@ const TravelVisaBooking = () => {
     );
   };
 
-  // Back passport page component
   const BackPassportForm = () => {
     return (
       <div className="py-12 px-4 sm:px-6 lg:px-8">
