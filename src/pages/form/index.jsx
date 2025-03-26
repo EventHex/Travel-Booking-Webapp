@@ -238,180 +238,223 @@ const TravelVisaBooking = () => {
     const [dob, setDob] = useState("");
 
     return (
-      <div className="w-full  mx-auto py-8 px-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold text-blue-600 mb-2">
-            Traveler 1
-          </h1>
-          <h2 className="text-xl font-medium text-gray-900 mb-4">
-            Upload Traveler's Front Passport Page
-          </h2>
-          <p className="text-sm text-gray-600">
-            Vietnam requires a scan of the traveler's passport. Upload a clear
-            passport image and your details will be filled automatically. All
-            fields with (*) are mandatory. Please review the information before
-            submitting to ensure there are no mistakes.
-          </p>
-        </div>
-        <div>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="flex w-full flex-red-300  gap-x-8 gap-y-6">
-              <div className="w-[50%] ">
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Passport Front Page Image
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                    <input
-                      type="file"
-                      className="hidden"
-                      id="passport-upload"
-                      accept="image/*"
-                    />
-                    <label
-                      htmlFor="passport-upload"
-                      className="cursor-pointer flex flex-col items-center"
+      <div className="w-full mx-auto py-4 px-4 md:py-8 md:px-8">
+      <div className="mb-6">
+        <h1 className="text-xl md:text-2xl font-semibold text-blue-600 mb-2">
+          Traveler 1
+        </h1>
+        <h2 className="text-lg md:text-xl font-medium text-gray-900 mb-4">
+          Upload Traveler's Front Passport Page
+        </h2>
+        <p className="text-xs md:text-sm text-gray-600">
+          Vietnam requires a scan of the traveler's passport. Upload a clear
+          passport image and your details will be filled automatically. All
+          fields with (*) are mandatory. Please review the information before
+          submitting to ensure there are no mistakes.
+        </p>
+      </div>
+      <div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex flex-col lg:flex-row w-full gap-x-4 lg:gap-x-8 gap-y-6">
+            <div className="w-full lg:w-[50%]">
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Passport Front Page Image
+                  <span className="text-red-500">*</span>
+                </label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-6 text-center">
+                  <input
+                    type="file"
+                    className="hidden"
+                    id="passport-upload"
+                    accept="image/*"
+                  />
+                  <label
+                    htmlFor="passport-upload"
+                    className="cursor-pointer flex flex-col items-center"
+                  >
+                    <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
+                    <span className="text-xs md:text-sm text-gray-600">
+                      Choose a file or drag & drop it here
+                    </span>
+                    <span className="text-xs text-gray-400 mt-1">
+                      JPEG, PNG, PDF and NPF formats, up to 50 MB
+                    </span>
+                    <button
+                      type="button"
+                      className="mt-3 px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-md text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
                     >
-                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                      {/* <img className={"mb-5"} src={Calendar} alt="" /> */}
-                      <span className="text-sm text-gray-600">
-                        Choose a file or drag & drop it here
-                      </span>
-                      <span className="text-xs text-gray-400 mt-1">
-                        JPEG, PNG, PDF and NPF formats, up to 50 MB
-                      </span>
-                      <button
-                        type="button"
-                        className="mt-3 px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                      >
-                        Browse File
-                      </button>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-[50%] ">
-                <div className="mb-5">
-                  <Input
-                    labal={"Passport Number *"}
-                    onChange={""}
-                    placeholder={"Passport Number"}
-                    InputClassName={
-                      " mb-1 focus:ring-blue-500 focus:border-blue-500 block w-full "
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="mb-5">
-                    <Input
-                      label={"First Name *"}
-                      onChange={""}
-                      placeholder={"First Name"}
-                    />
-                  </div>
-                  <div>
-                    <Input
-                      label={" Last Name *"}
-                      onChange={""}
-                      placeholder={"Last Name"}
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="mb-5">
-                    <Input
-                      label={" Nationality* *"}
-                      onChange={""}
-                      placeholder={"Nationality*"}
-                    />
-                  </div>
-                  <div>
-                    <CustomSelect
-                      name="sex"
-                      value={formData.sex}
-                      onChange={handleInputChange}
-                      options={sexOptions}
-                      label="Sex"
-                      placeholder="Select"
-                      required={true}
-                    />
-                  </div>
-                  <div>
-                    <CustomDatePicker
-                      name="dob"
-                      label=" Date of Birth"
-                      value={dob}
-                      onChange={(e) => setDob(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="col-span-2 mb-5">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Place of Birth<span className="text-red-500">*</span>
+                      Browse File
+                    </button>
                   </label>
-                  <input
-                    type="text"
-                    name="placeOfBirth"
-                    value={formData.placeOfBirth}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="col-span-2 mb-5">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Place of Issue<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="placeOfIssue"
-                    value={formData.placeOfIssue}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="grid grid-cols-3 gap-4 col-span-2">
-                  <div>
-                    <CustomSelect
-                      name="Maritalstatus"
-                      label="Marital Status"
-                      value={selectedOption}
-                      onChange={(e) => setSelectedOption(e.target.value)}
-                      options={Metiral}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Date of Issue<span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      name="dateOfIssue"
-                      value={formData.dateOfIssue}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Date of Expiry<span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      name="dateOfExpiry"
-                      value={formData.dateOfExpiry}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
-          </form>
-        </div>
+
+            <div className="w-full lg:w-[50%]">
+              <div className="mb-4 md:mb-5">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Passport Number<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Passport Number"
+                  className="mb-1 focus:ring-blue-500 focus:border-blue-500 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1"
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="mb-4 md:mb-5">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    First Name<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="First Name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Last Name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="mb-4 md:mb-5">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nationality<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Nationality"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Sex<span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="sex"
+                    value={formData.sex}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  >
+                    <option value="" disabled>Select</option>
+                    {sexOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date of Birth<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="dob"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              
+              <div className="mb-4 md:mb-5">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Place of Birth<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="placeOfBirth"
+                  value={formData.placeOfBirth}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+              
+              <div className="mb-4 md:mb-5">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Place of Issue<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="placeOfIssue"
+                  value={formData.placeOfIssue}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Marital Status
+                  </label>
+                  <select
+                    name="Maritalstatus"
+                    value={selectedOption}
+                    onChange={(e) => setSelectedOption(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  >
+                    <option value="" disabled>Select</option>
+                    {Metiral.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date of Issue<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="dateOfIssue"
+                    value={formData.dateOfIssue}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date of Expiry<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="dateOfExpiry"
+                    value={formData.dateOfExpiry}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex justify-end mt-6">
+            <button
+              type="submit"
+              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
       </div>
+    </div>
     );
   };
 
