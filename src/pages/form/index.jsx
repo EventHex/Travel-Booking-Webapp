@@ -538,6 +538,14 @@ const TravelVisaBooking = () => {
   };
 
   const UploadTravelerPhoto = () => {
+    const Occupations= [
+      {value:1,label:'developer'},
+      {value:2,label:'enginear'},
+      {value:3,label:'docter'}
+
+
+
+    ]
     return (
       <div className="mb-10 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
@@ -593,7 +601,7 @@ const TravelVisaBooking = () => {
             Answer Additional Required Questions
           </h2>
 
-          <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-3 w-full  md:w-[60%] sm:space-y-4">
             <h3 className="text-sm sm:text-base font-medium">
               What is the traveler's occupation (optional)?
             </h3>
@@ -602,19 +610,7 @@ const TravelVisaBooking = () => {
               default - Service. Occupation does not influence the decision of
               the visa.
             </p>
-            <select
-              value={occupation}
-              onChange={(e) => setOccupation(e.target.value)}
-              className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            >
-              <option value="">Select Occupation</option>
-              <option value="service">Service</option>
-              <option value="business">Business Owner</option>
-              <option value="employee">Employee</option>
-              <option value="student">Student</option>
-              <option value="retired">Retired</option>
-              <option value="other">Other</option>
-            </select>
+            <CustomSelect options={Occupations} label="" />
           </div>
         </div>
       </div>
