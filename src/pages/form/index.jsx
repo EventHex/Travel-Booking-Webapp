@@ -222,7 +222,7 @@ const TravelVisaBooking = () => {
 
 
   const FrontPassportForm = () => {
-    const sexOptions = [
+    const Options = [
       { value: "M", label: "Male" },
       { value: "F", label: "Female" },
       { value: "O", label: "Other" },
@@ -231,7 +231,6 @@ const TravelVisaBooking = () => {
       { value: "s", label: "single" },
       { value: "m", label: "married" },
     ];
-    const [selectedOption, setSelectedOption] = useState("");
     const [dob, setDob] = useState("");
 
     return (
@@ -316,32 +315,9 @@ const TravelVisaBooking = () => {
                 <div className="mb-4 md:mb-5">
                   <Input label={' Nationality'} placeholder={' Nationality'}/>
 
-                  {/* <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Nationality<span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Nationality"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  /> */}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Sex<span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    name="sex"
-                    value={formData.sex}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  >
-                    <option value="" disabled>Select</option>
-                    {sexOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  <CustomSelect label={"Sex"} options={Options}/>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -358,49 +334,24 @@ const TravelVisaBooking = () => {
               </div>
               
               <div className="mb-4 md:mb-5">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Place of Birth<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="placeOfBirth"
-                  value={formData.placeOfBirth}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
+                <Input
+                 placeholder={' Place of Birth'}
+                 label={' Place of Birth'}
+                 />
+      
               </div>
               
               <div className="mb-4 md:mb-5">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Place of Issue<span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="placeOfIssue"
-                  value={formData.placeOfIssue}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                />
+                <Input 
+                placeholder={' Place of Issue'}
+                label={' Place of Issue'}/>
+    
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Marital Status
-                  </label>
-                  <select
-                    name="Maritalstatus"
-                    value={selectedOption}
-                    onChange={(e) => setSelectedOption(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  >
-                    <option value="" disabled>Select</option>
-                    {Metiral.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  <CustomSelect  options={Metiral} label="Marital Status"/>
+                 
                 </div>
 
                 <div>
@@ -503,11 +454,11 @@ const TravelVisaBooking = () => {
             <div className="p-4 sm:p-6">
               <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <Input label="Father's Name" required={true} />
+                  <Input  placeholder={`Father's Name`} label="Father's Name" required={true} />
                 </div>
 
                 <div>
-                  <Input label="Mother's Name" required={true} />
+                  <Input placeholder={`Mother's Name`} label="Mother's Name" required={true} />
                 </div>
 
                 <button
