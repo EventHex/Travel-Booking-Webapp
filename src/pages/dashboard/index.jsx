@@ -226,10 +226,9 @@ const Index = () => {
         );
       case "refunded":
         return (
-          <div className=" bg-purple-50 rounded-md">
-            <h3 className="font-medium text-purple-800 mb-2">Refunded Items</h3>
-            <p className="text-purple-700">Completed refunds</p>
-          </div>
+          <Ticket 
+          refuntApplication={refuntApplication}  
+        /> 
         );
       default:
         return <></>;
