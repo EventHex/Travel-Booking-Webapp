@@ -32,6 +32,8 @@ import RejectIcon from "./icons/ticket/reject.svg";
 import PendingIcon from "./icons/ticket/pending.svg";
 import TrueVertical from "./icons/ticket/TrueVertical.svg";
 import True from "./icons/ticket/True.svg";
+import UserAdd from "./icons/menu/useraddline.svg"
+import Saveline from "./icons/menu/saveline.svg"
 export {
   Logo,
   Men,
@@ -67,4 +69,6 @@ export {
   PendingIcon,
   TrueVertical,
   True,
+  UserAdd,
+  Saveline
 };

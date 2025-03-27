@@ -6,20 +6,14 @@ import {
   CalenderUp,
   CalenderDown,
   MainBackground,
-  Allicon,
-  Aproved,
-  Rejection,
-  Refuse,
-  Pending,
-  Submit,
+ UserAdd,
+ Saveline
 } from "../../assets";
 import {
   Upload,
-  Calendar,
   Info,
   Clock,
-  CheckCircle2,
-  XCircle,
+ 
 } from "lucide-react";
 import Input from "../../components/input";
 import CustomSelect from "../../components/dropdown";
@@ -577,7 +571,7 @@ const TravelVisaBooking = () => {
           <form onSubmit={handleSubmitTicketBooking} className="">
             <div className="w-full">
               {/* Flight Ticket Section */}
-              <div className="w-full flex flex-col md:flex-row gap-4 md:gap-5 border-b pb-6 md:pb-8 md:border-b-0 md:border-r border-gray-200">
+              <div className="w-full flex flex-col md:flex-row gap-4 md:gap-5 border-b pb-6 md:pb-8 md:border-b-0  border-gray-200">
                 <div className="w-full md:w-[50%]">
                   <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
                     Round Trip Flight Ticket
@@ -671,14 +665,14 @@ const TravelVisaBooking = () => {
               </div>
 
               {/* Buttons Section */}
-              <div className="w-full px-4 md:px-0">
+              <div className="w-full mt-10 px-4 md:px-0">
                 <div className="w-full md:w-[70%]">
                   <div className="flex flex-col sm:flex-row py-4 md:py-5 border-t border-[#868C98] gap-3 sm:gap-5">
-                    <button className="bg-blue-600 w-full sm:w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-2">
-                      Add Another Traveller
+                    <button className=" gap-2 bg-blue-600 w-full  flex sm:w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-4">
+                      <img src={UserAdd} alt="" /> Add Another Traveller
                     </button>
-                    <button className="bg-blue-600 w-full sm:w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-2">
-                      Review & Save
+                    <button className=" gap-2 bg-blue-600 flex w-full sm:w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-4">
+                     <img src={Saveline} alt="" />  Review & Save
                     </button>
                   </div>
                 </div>
@@ -812,44 +806,7 @@ const TravelVisaBooking = () => {
       </div>
     );
   };
-  // Sidebar component
-  // function Sidebar() {
-  //   return (
-  //     <div className="w-full">
-  //       <div className="p-4 space-y-4">
-  //         <div className="space-y-1">
-  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-  //             <span>Internal ID</span>
-  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-  //           </button>
-  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-  //             <span>Group Name</span>
-  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-  //           </button>
-  //           <button className="w-full text-left px-4 py-2.5 text-blue-600 bg-white/80 rounded-lg flex items-center">
-  //             <span>Traveller 1</span>
-  //             <div className="ml-auto w-2 h-2 rounded-full bg-blue-600"></div>
-  //           </button>
-  //           <button className="w-full text-left px-4 py-2.5 text-blue-600 hover:bg-white/50 rounded-lg">
-  //             Passport
-  //           </button>
-  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-  //             <span>Traveller Photo</span>
-  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-  //           </button>
-  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-  //             <span>Review</span>
-  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-  //           </button>
-  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-  //             <span>Submit</span>
-  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+
 
   return (
     <>
