@@ -214,10 +214,10 @@ const Index = () => {
         );
       case "submitted":
         return (
-          <div className=" bg-blue-50 rounded-md">
-            <h3 className="font-medium text-blue-800 mb-2">Submitted Items</h3>
-            <p className="text-blue-700">Items awaiting review</p>
-          </div>
+          <Ticket 
+          approvedApplication={approvedApplication} 
+        
+        /> 
         );
       case "pending":
         return (

@@ -35,6 +35,8 @@ const Ticket = ({
         return "bg-red-500";
       case "refunded":
         return "bg-orange-500";
+        case "pending":
+          return "bg-green-500"
       default:
         return "bg-blue-500";
     }
@@ -65,12 +67,12 @@ const Ticket = ({
               >
                 <div className="flex w-full">
                   <div
-                    className={`relative w-[8px] sm:w-[12px] flex justify-center items-center md:w-[20px] ${getStatusBarColor(
+                    className={`relative w-[8px] p-2 sm:w-[12px] flex justify-center items-center md:w-[20px] ${getStatusBarColor(
                       application.status
                     )} flex-shrink-0`}
                   >
-                    <div className="absolute flex gap-5   origin-center -rotate-90 whitespace-nowrap text-white text-[12px]">
-                       <p className="flex  gap-1"> <img src={True} alt="" /><span className="flex">visa</span></p> 
+                    <div className="  flex gap-5   origin-center -rotate-90 whitespace-nowrap text-white text-[12px]">
+                       <p className="flex   gap-1"> <img src={True} alt="" /><span className="flex">visa</span></p> 
                       {getStatusText(application.status)}
                     </div>
                   </div>
