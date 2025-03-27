@@ -17,7 +17,7 @@ import {
 const Index = ({ isNarrow, onClose }) => {
   const [isClicksideBar, setClicksideBar] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("departure");
+  const [selectedOption, setSelectedOption] = useState("Review"); // Default selected option changed to "Review"
   const sidebarRef = useRef(null);
 
   const filterOptions = [
@@ -103,13 +103,35 @@ const Index = ({ isNarrow, onClose }) => {
     };
   }, []);
 
+  // Custom radio button renderer for the options
+  const renderRadioButton = (optionId) => (
+    <div
+      className={`flex h-5 w-5 items-center justify-center rounded-full border ${
+        selectedOption === optionId
+          ? "border-blue-500 bg-blue-500"
+          : "border-gray-300"
+      }`}
+    >
+      {selectedOption === optionId && (
+        <div className="h-2 w-2 rounded-full bg-white"></div>
+      )}
+    </div>
+  );
+
+  // Custom blue link renderer
+  const renderBlueLink = (text) => (
+    <div className="p-3 flex">
+      <span className="text-blue-500 font-[400] cursor-pointer">{text}</span>
+    </div>
+  );
+
   // If clicked to expand from narrow mode
   if (isNarrow && (isClicksideBar || isClosing)) {
     return ( 
       <div
         ref={sidebarRef}
         onClick={(e) => e.stopPropagation()} // Prevent click from closing sidebar
-        className="w-[200px]  max-w-md rounded-xl overflow-hidden  z-10 bg-white shadow-lg"
+        className="w-[200px] max-w-md rounded-xl overflow-hidden z-10 bg-white shadow-lg"
         style={{
           animation: isClosing 
             ? 'slideOut 0.3s ease-in forwards' 
@@ -117,6 +139,7 @@ const Index = ({ isNarrow, onClose }) => {
         }}
       >
         <div className="rounded-xl bg-gradient-to-b">
+          {/* Filter options - Internal ID, Group Name, Traveller 1 */}
           {filterOptions.map((option) => (
             <div
               key={option.id}
@@ -128,37 +151,21 @@ const Index = ({ isNarrow, onClose }) => {
               }`}
             >
               <div className="flex items-center space-x-3">
-                <div className="text-gray-500">
-                  {/* <img src={option.icon} alt="" /> */}
-                </div>
                 <span className="text-gray-600 font-medium text-sm">
                   {option.label}
                 </span>
               </div>
-
-              <div
-                className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                  selectedOption === option.id
-                    ? "border-blue-500 bg-blue-500"
-                    : "border-gray-300"
-                }`}
-              >
-                {selectedOption === option.id && (
-                  <div className="h-2 w-2 rounded-full bg-white"></div>
-                )}
-              </div>
+              {renderRadioButton(option.id)}
             </div>
           ))}
         </div>
+        
         <div className="rounded-xl bg-gradient-to-b">
-          <div className="">
-            <div className="p-3  justify-evenly flex gap-3 text-gray-500">
-             <span  className="text-blue-500 font-[400]">passport</span>
-            </div>
-            <div className="p-3  justify-evenly flex gap-3 text-gray-500">
-             <span  className="text-blue-500 font-[400]">Traveller Photo</span>
-            </div>
-          </div>
+          {/* Blue links section */}
+          {renderBlueLink("passport")}
+          {renderBlueLink("Traveller Photo")}
+          
+          {/* Review and Submit options */}
           {filterOption.map((option) => (
             <div
               key={option.id}
@@ -170,25 +177,11 @@ const Index = ({ isNarrow, onClose }) => {
               }`}
             >
               <div className="flex items-center space-x-3">
-                <div className="text-gray-500">
-                  {/* <img src={option.icon} alt="" /> */}
-                </div>
                 <span className="text-gray-600 font-medium text-sm">
                   {option.label}
                 </span>
               </div>
-
-              <div
-                className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                  selectedOption === option.id
-                    ? "border-blue-500 bg-blue-500"
-                    : "border-gray-300"
-                }`}
-              >
-                {selectedOption === option.id && (
-                  <div className="h-2 w-2 rounded-full bg-white"></div>
-                )}
-              </div>
+              {renderRadioButton(option.id)}
             </div>
           ))}
         </div>
@@ -203,7 +196,6 @@ const Index = ({ isNarrow, onClose }) => {
         onClick={(e) => sidebarOpen(e)}
         className="w-full rounded-xl overflow-hidden cursor-pointer"
       >
-
         <div className="rounded-xl bg-gradient-to-b">
           <div className="space-y-1">
            
@@ -232,11 +224,9 @@ const Index = ({ isNarrow, onClose }) => {
 
   // Normal/expanded sidebar with text and icons
   return (
-    <div className="w-full  flex flex-col gap-10  rounded-xl overflow-hidden">
-     
-
+    <div className="w-full flex flex-col gap-4 rounded-xl overflow-hidden">
       <div className="rounded-xl bg-gradient-to-b">
-       
+        {/* Filter options - Internal ID, Group Name, Traveller 1 */}
         {filterOptions.map((option) => (
           <div
             key={option.id}
@@ -248,30 +238,21 @@ const Index = ({ isNarrow, onClose }) => {
             }`}
           >
             <div className="flex items-center space-x-3">
-              <div className="text-gray-500">
-                {/* <img src={option.icon} alt="" /> */}
-              </div>
               <span className="text-gray-600 font-medium text-sm">
                 {option.label}
               </span>
             </div>
-
-            <div
-              className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                selectedOption === option.id
-                  ? "border-blue-500 bg-blue-500"
-                  : "border-gray-300"
-              }`}
-            >
-              {selectedOption === option.id && (
-                <div className="h-2 w-2 rounded-full bg-white"></div>
-              )}
-            </div>
+            {renderRadioButton(option.id)}
           </div>
         ))}
       </div>
-      <div className="rounded-xl mb-10 bg-gradient-to-b">
       
+      <div className="rounded-xl bg-gradient-to-b">
+        {/* Blue links section */}
+        {renderBlueLink("passport")}
+        {renderBlueLink("Traveller Photo")}
+        
+        {/* Review and Submit options */}
         {filterOption.map((option) => (
           <div
             key={option.id}
@@ -283,25 +264,11 @@ const Index = ({ isNarrow, onClose }) => {
             }`}
           >
             <div className="flex items-center space-x-3">
-              <div className="text-gray-500">
-                {/* <img src={option.icon} alt="" /> */}
-              </div>
               <span className="text-gray-600 font-medium text-sm">
                 {option.label}
               </span>
             </div>
-
-            <div
-              className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                selectedOption === option.id
-                  ? "border-blue-500 bg-blue-500"
-                  : "border-gray-300"
-              }`}
-            >
-              {selectedOption === option.id && (
-                <div className="h-2 w-2 rounded-full bg-white"></div>
-              )}
-            </div>
+            {renderRadioButton(option.id)}
           </div>
         ))}
       </div>
