@@ -231,7 +231,11 @@ const Index = () => {
         /> 
         );
       default:
-        return <></>;
+        return <>
+        <p className=" text-center">
+          no Visa
+        </p>
+        </>;
     }
   };
 
@@ -239,8 +243,7 @@ const Index = () => {
     <>
       <div
         style={{
-          
-          backgroundImage: `url(${MainBackground})`,
+           backgroundImage: `url(${MainBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -288,7 +291,6 @@ const Index = () => {
                               className="w-4 h-4 sm:w-5 sm:h-5"
                             />
                           </span>
-                          {/* Hide tab text on very small screens */}
                           <span className={isSmallScreen ? "hidden sm:inline" : ""}>
                             {tab.label}
                           </span>

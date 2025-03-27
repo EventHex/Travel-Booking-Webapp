@@ -17,7 +17,7 @@ import { Upload, Calendar, Info,Clock, CheckCircle2, XCircle  } from "lucide-rea
 import Input from "../../components/input";
 import CustomSelect from "../../components/dropdown";
 import { CustomDatePicker, FullCalendar } from "../../components/calender";
-
+import SideBar from './sideBar'
 const TravelVisaBooking = () => {
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
@@ -775,43 +775,43 @@ const TravelVisaBooking = () => {
     )
   }
   // Sidebar component
-  function Sidebar() {
-    return (
-      <div className="w-full">
-        <div className="p-4 space-y-4">
-          <div className="space-y-1">
-            <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-              <span>Internal ID</span>
-              <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-            </button>
-            <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-              <span>Group Name</span>
-              <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-            </button>
-            <button className="w-full text-left px-4 py-2.5 text-blue-600 bg-white/80 rounded-lg flex items-center">
-              <span>Traveller 1</span>
-              <div className="ml-auto w-2 h-2 rounded-full bg-blue-600"></div>
-            </button>
-            <button className="w-full text-left px-4 py-2.5 text-blue-600 hover:bg-white/50 rounded-lg">
-              Passport
-            </button>
-            <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-              <span>Traveller Photo</span>
-              <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-            </button>
-            <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-              <span>Review</span>
-              <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-            </button>
-            <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
-              <span>Submit</span>
-              <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // function Sidebar() {
+  //   return (
+  //     <div className="w-full">
+  //       <div className="p-4 space-y-4">
+  //         <div className="space-y-1">
+  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+  //             <span>Internal ID</span>
+  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+  //           </button>
+  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+  //             <span>Group Name</span>
+  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+  //           </button>
+  //           <button className="w-full text-left px-4 py-2.5 text-blue-600 bg-white/80 rounded-lg flex items-center">
+  //             <span>Traveller 1</span>
+  //             <div className="ml-auto w-2 h-2 rounded-full bg-blue-600"></div>
+  //           </button>
+  //           <button className="w-full text-left px-4 py-2.5 text-blue-600 hover:bg-white/50 rounded-lg">
+  //             Passport
+  //           </button>
+  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+  //             <span>Traveller Photo</span>
+  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+  //           </button>
+  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+  //             <span>Review</span>
+  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+  //           </button>
+  //           <button className="w-full text-left px-4 py-2.5 text-gray-500 hover:bg-white/50 rounded-lg flex items-center">
+  //             <span>Submit</span>
+  //             <div className="ml-auto w-2 h-2 rounded-full border border-gray-300"></div>
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -825,7 +825,6 @@ const TravelVisaBooking = () => {
         <Header />
 
         <div className="max-w-[1300px] w-full mx-auto p-4 rounded-lg">
-          {/* Search Form */}
           <div className="flex gap-5 w-full">
             <div className="flex gap-3 justify-center w-[50%] flex-col">
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
@@ -922,17 +921,21 @@ const TravelVisaBooking = () => {
               </button>
             </div>
           </div>
-
-          {/* Form section */}
           <UploadForm />
+          <div className="flex justify-around">
+            <div className="  w-[10%] mt-3 md:w-[20%]">
 
-          {/* Main content with sidebar */}
-          <div className="flex bg-gradient-to-br">
-            <div className="w-[30%]">
-              <Sidebar />
+
+            <div
+                className={`${
+                  isNarrowScreen ? "w-[50px]" : "w-full"
+                } min-w-[50px]   mb-6 md:mb-0 transition-all duration-300`}
+              >
+                <SideBar isNarrow={isNarrowScreen} />
+              </div>
+
+              {/* <Sidebar /> */}
             </div>
-
-            {/* Passport upload section */}
             <div className="w-[70%]">
               <FrontPassportForm />
               <BackPassportForm />
