@@ -679,7 +679,7 @@ const TravelVisaBooking = () => {
 
   const VisaInformation = () =>{
     return(
-      <div className=" flex items-center justify-center p-4">
+      <div className=" flex items-center  justify-center p-4">
       <div className="w-full  rounded-2xl  overflow-hidden">
         {/* Visa Information Section */}
         <div className="p-6 space-y-6">
@@ -747,7 +747,7 @@ const TravelVisaBooking = () => {
           </div>
 
           {/* Price Details Section */}
-          <div className="mt-8 border-t pt-6">
+          <div className="mt-8 border-[#CDD0D5] border  rounded-[21px]  p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Price Details</h2>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
@@ -763,11 +763,13 @@ const TravelVisaBooking = () => {
                 <span className="text-gray-800">₹13,519</span>
               </div>
             </div>
-
-            <button className="mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center">
+<div className="">
+            <button className="mt-6  bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center">
               <Info className="w-4 h-4 mr-2" />
               Select Insurance date
             </button>
+</div>
+  
           </div>
         </div>
       </div>
