@@ -917,8 +917,8 @@ const TravelVisaBooking = () => {
             </div>
           </div>
           <UploadForm />
-          <div className="flex  ">
-            <div className="  w-auto  mt-3 md:w-[20%]">
+          <div className="flex  mt-10 ">
+            <div className="  w-auto  pr-3 mt-3 md:w-[20%]">
               <div
                 className={`${
                   isNarrowScreen ? "w-[50px]" : "w-full"
@@ -929,7 +929,7 @@ const TravelVisaBooking = () => {
 
               {/* <Sidebar /> */}
             </div>
-            <div className=" w-full md:w-[70%]  flex flex-col justify-center">
+            <div className=" w-full md:w-[70%] border-l  pl-5 border-[#868C98]   flex flex-col justify-center">
               <FrontPassportForm />
               <BackPassportForm />
               <UploadTravelerPhoto />
