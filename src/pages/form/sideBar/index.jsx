@@ -21,20 +21,14 @@ const Index = ({ isNarrow, onClose }) => {
   const sidebarRef = useRef(null);
 
   const filterOptions = [
-    { id: "visas", label: "Visas Only", icon: Visa },
-    { id: "created", label: "Date Created On", icon: Date },
-    { id: "departure", label: "Departure Date", icon: Location },
-    {
-      id: "destination",
-      label: "Destination Country",
-      icon: Destination,
-    },
+    { id: "InternalID", label: "Internal ID", icon: Visa },
+    { id: "GroupName", label: "Group Name", icon: Date },
+    { id: "Traveller1", label: "Traveller 1", icon: Location },
   ];
   
   const filterOption = [
-    { id: "Activities", label: "Activities", icon: Acitivty },
-    { id: "Insurance", label: "Insurance", icon: Inurance },
-    { id: "flight", label: "flight", icon: Flight },
+    { id: "Review", label: "Review", icon: Acitivty },
+    { id: "Submit", label: "Submit", icon: Inurance },
   ];
 
   const sidebarOpen = (e) => {
@@ -122,27 +116,7 @@ const Index = ({ isNarrow, onClose }) => {
             : 'slideIn 0.3s ease-out forwards'
         }}
       >
-        <div className="relative">
-          <input
-            className="rounded-[14px] border border-[#E2E4E9] py-3 pl-16 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
-            type="text"
-            placeholder="Search..."
-            onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing
-          />
-          <div 
-            className="absolute left-8 top-1/2 transform -translate-y-1/2"
-            onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing
-          >
-            <img src={SearchGray} alt="Search" />
-          </div>
-        </div>
-
         <div className="rounded-xl bg-gradient-to-b">
-          <div className="space-y-1">
-            <div className="p-3 flex gap-3 text-gray-500">
-              <img src={Filter} alt="" /> <span>Popular filters</span>
-            </div>
-          </div>
           {filterOptions.map((option) => (
             <div
               key={option.id}
@@ -155,7 +129,7 @@ const Index = ({ isNarrow, onClose }) => {
             >
               <div className="flex items-center space-x-3">
                 <div className="text-gray-500">
-                  <img src={option.icon} alt="" />
+                  {/* <img src={option.icon} alt="" /> */}
                 </div>
                 <span className="text-gray-600 font-medium text-sm">
                   {option.label}
@@ -177,9 +151,12 @@ const Index = ({ isNarrow, onClose }) => {
           ))}
         </div>
         <div className="rounded-xl bg-gradient-to-b">
-          <div className="space-y-1">
-            <div className="p-3 flex gap-3 text-gray-500">
-              <img src={Filter} alt="" /> <span>Booking</span>
+          <div className="">
+            <div className="p-3  justify-evenly flex gap-3 text-gray-500">
+             <span  className="text-blue-500 font-[400]">passport</span>
+            </div>
+            <div className="p-3  justify-evenly flex gap-3 text-gray-500">
+             <span  className="text-blue-500 font-[400]">Traveller Photo</span>
             </div>
           </div>
           {filterOption.map((option) => (
@@ -194,7 +171,7 @@ const Index = ({ isNarrow, onClose }) => {
             >
               <div className="flex items-center space-x-3">
                 <div className="text-gray-500">
-                  <img src={option.icon} alt="" />
+                  {/* <img src={option.icon} alt="" /> */}
                 </div>
                 <span className="text-gray-600 font-medium text-sm">
                   {option.label}
@@ -226,40 +203,10 @@ const Index = ({ isNarrow, onClose }) => {
         onClick={(e) => sidebarOpen(e)}
         className="w-full rounded-xl overflow-hidden cursor-pointer"
       >
+
         <div className="rounded-xl bg-gradient-to-b">
           <div className="space-y-1">
-            <div className="p-3 flex justify-center text-gray-500">
-              <img src={Search} alt="" className="mx-auto" /> 
-            </div>
-          </div>
-          <div className="space-y-1">
-            <div className="p-3 flex justify-center text-gray-500">
-              <img src={Filter} alt="" className="mx-auto" /> 
-            </div>
-          </div>
-          {filterOptions.map((option) => (
-            <div
-              key={option.id}
-              onClick={() => setSelectedOption(option.id)}
-              className={`flex cursor-pointer items-center justify-center rounded-lg p-3 transition-colors ${
-                selectedOption === option.id
-                  ? "bg-white shadow-sm"
-                  : "hover:bg-white/50"
-              }`}
-            >
-              <div className="flex items-center">
-                <div className="text-gray-500">
-                  <img src={option.icon} alt={option.label} />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="rounded-xl bg-gradient-to-b">
-          <div className="space-y-1">
-            <div className="p-3 flex justify-center text-gray-500">
-              <img src={Filter} alt="" className="mx-auto" /> 
-            </div>
+           
           </div>
           {filterOption.map((option) => (
             <div
@@ -286,27 +233,10 @@ const Index = ({ isNarrow, onClose }) => {
   // Normal/expanded sidebar with text and icons
   return (
     <div className="w-full  flex flex-col gap-10  rounded-xl overflow-hidden">
-      <div className=" relative">
-        <input
-          className="rounded-[14px] border border-[#E2E4E9] py-3 pl-16 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
-          type="text"
-          placeholder="Search..."
-          onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing when clicking the search input
-        />
-        <div 
-          className="absolute left-8 top-1/2 transform -translate-y-1/2"
-          onClick={(e) => e.stopPropagation()} // Prevent sidebar from closing when clicking the search icon
-        >
-          <img src={SearchGray} alt="Search" />
-        </div>
-      </div>
+     
 
       <div className="rounded-xl bg-gradient-to-b">
-        <div className="space-y-1">
-          <div className="p-3 flex gap-3 text-gray-500">
-            <img src={Filter} alt="" /> <span>Popular filters</span>
-          </div>
-        </div>
+       
         {filterOptions.map((option) => (
           <div
             key={option.id}
@@ -319,7 +249,7 @@ const Index = ({ isNarrow, onClose }) => {
           >
             <div className="flex items-center space-x-3">
               <div className="text-gray-500">
-                <img src={option.icon} alt="" />
+                {/* <img src={option.icon} alt="" /> */}
               </div>
               <span className="text-gray-600 font-medium text-sm">
                 {option.label}
@@ -341,11 +271,7 @@ const Index = ({ isNarrow, onClose }) => {
         ))}
       </div>
       <div className="rounded-xl mb-10 bg-gradient-to-b">
-        <div className="space-y-1">
-          <div className="p-3 flex gap-3 text-gray-500">
-            <img src={Filter} alt="" /> <span>Booking</span>
-          </div>
-        </div>
+      
         {filterOption.map((option) => (
           <div
             key={option.id}
@@ -358,7 +284,7 @@ const Index = ({ isNarrow, onClose }) => {
           >
             <div className="flex items-center space-x-3">
               <div className="text-gray-500">
-                <img src={option.icon} alt="" />
+                {/* <img src={option.icon} alt="" /> */}
               </div>
               <span className="text-gray-600 font-medium text-sm">
                 {option.label}

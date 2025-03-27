@@ -923,7 +923,7 @@ const TravelVisaBooking = () => {
           </div>
           <UploadForm />
           <div className="flex  ">
-            <div className="  w-auto bg-red-400 mt-3 md:w-[20%]">
+            <div className="  w-auto  mt-3 md:w-[20%]">
 
 
             <div
@@ -936,7 +936,7 @@ const TravelVisaBooking = () => {
 
               {/* <Sidebar /> */}
             </div>
-            <div className=" w-full md:w-[70%] bg-amber-200 flex flex-col justify-center">
+            <div className=" w-full md:w-[70%]  flex flex-col justify-center">
             
               <FrontPassportForm />
               <BackPassportForm />
