@@ -13,7 +13,7 @@ import {
   Pending,
   Submit,
 } from "../../assets";
-import { Upload, Calendar, Info } from "lucide-react";
+import { Upload, Calendar, Info,Clock, CheckCircle2, XCircle  } from "lucide-react";
 import Input from "../../components/input";
 import CustomSelect from "../../components/dropdown";
 import { CustomDatePicker, FullCalendar } from "../../components/calender";
@@ -676,6 +676,104 @@ const TravelVisaBooking = () => {
     </div>
     );
   };
+
+  const VisaInformation = () =>{
+    return(
+      <div className=" flex items-center justify-center p-4">
+      <div className="w-full  rounded-2xl  overflow-hidden">
+        {/* Visa Information Section */}
+        <div className="p-6 space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Visa Information</h2>
+              <div className="space-y-2">
+                <p className="text-gray-600">Vietnam - Vietnam E-Visa</p>
+                <p className="text-gray-600">Vietnam - Vietnam E-Visa</p>
+                <div className="mt-4">
+                  <p className="text-gray-600">Travelers: 2</p>
+                  <p className="text-gray-600">Travel Dates: Feb 27, 2025 - Feb 27, 2025</p>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="text-lg font-medium text-gray-800 mb-2">Expected Visa Approval</h3>
+                <div className="flex items-center text-blue-600">
+                  <Clock className="w-4 h-4 mr-2" />
+                  <span>3/7/25, if submitted now!</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-8">Know Before You Pay</h2>
+              <div className="relative pl-8 space-y-12">
+                {/* Timeline line */}
+                <div className="absolute left-[9px] top-2 bottom-2 w-0.5 bg-gray-200"></div>
+
+                {/* Auto-validation item */}
+                <div className="relative">
+                  <div className="absolute -left-8 mt-1.5">
+                    <div className="w-4 h-4 rounded-full bg-green-500"></div>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900">Auto-validation upon submission</h4>
+                    <p className="mt-1 text-gray-600">Atlys performs automated validation after submission. We will let you know if there are any problems with the application.</p>
+                  </div>
+                </div>
+
+                {/* Visa processed item */}
+                <div className="relative">
+                  <div className="absolute -left-8 mt-1.5">
+                    <div className="w-4 h-4 rounded-full bg-green-500"></div>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900">Visa processed within 30 seconds</h4>
+                    <p className="mt-1 text-gray-600">Atlys automatically processes your visa.</p>
+                  </div>
+                </div>
+
+                {/* Non-refundable item */}
+                <div className="relative">
+                  <div className="absolute -left-8 mt-1.5">
+                    <div className="w-4 h-4 rounded-full bg-red-500"></div>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900">Non-refundable after you pay</h4>
+                    <p className="mt-1 text-gray-600">If canceled after payment, you will not be refunded.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Price Details Section */}
+          <div className="mt-8 border-t pt-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Price Details</h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Traveller 1</span>
+                <span className="text-gray-800">₹13,519</span>
+              </div>
+              <div className="flex justify-between items-center font-medium">
+                <span className="text-gray-800">Total</span>
+                <span className="text-gray-800">₹13,519</span>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-600">Current Wallet Balance</span>
+                <span className="text-gray-800">₹13,519</span>
+              </div>
+            </div>
+
+            <button className="mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center">
+              <Info className="w-4 h-4 mr-2" />
+              Select Insurance date
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    )
+  }
   // Sidebar component
   function Sidebar() {
     return (
@@ -840,6 +938,7 @@ const TravelVisaBooking = () => {
               <BackPassportForm />
               <UploadTravelerPhoto />
               <TicketBooking />
+              <VisaInformation/>
             </div>
           </div>
         </div>
