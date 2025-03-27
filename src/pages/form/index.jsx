@@ -929,12 +929,14 @@ const TravelVisaBooking = () => {
 
               {/* <Sidebar /> */}
             </div>
-            <div className=" w-full md:w-[70%] border-l  pl-5 border-[#868C98]   flex flex-col justify-center">
+            <div className=" w-full md:w-[70%] border-l   border-[#868C98]   flex flex-col justify-center">
+              <div className="p-2 md:p-5">
               <FrontPassportForm />
               <BackPassportForm />
               <UploadTravelerPhoto />
               <TicketBooking />
               <VisaInformation />
+              </div>
             </div>
           </div>
         </div>
