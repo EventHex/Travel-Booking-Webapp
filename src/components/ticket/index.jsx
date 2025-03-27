@@ -144,7 +144,7 @@ const Ticket = ({
                                 <div
                                   className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
                                     value ? "bg-blue-50" : "bg-red-50"
-                                  } flex items-center justify-center  border ${
+                                  } flex items-center justify-center z-10 border ${
                                     value ? "border-blue-100" : "border-red-100"
                                   }`}
                                 >
