@@ -192,9 +192,9 @@ const Index = () => {
 
 <Ticket 
   approvedApplication={approvedApplication} 
-  refuntApplication={refuntApplication} 
   rejectedApplication={rejectedApplication}
   pendingApplication = {pendingApplication}
+  refuntApplication={refuntApplication} 
 
 />    
     </>
@@ -216,17 +216,13 @@ const Index = () => {
         return (
           <Ticket 
           approvedApplication={approvedApplication} 
-        
         /> 
         );
       case "pending":
         return (
-          <div className=" bg-yellow-50 rounded-md">
-            <h3 className="font-medium text-yellow-800 mb-2">
-              Pending Payment
-            </h3>
-            <p className="text-yellow-700">Items awaiting payment</p>
-          </div>
+          <Ticket 
+          pendingApplication={pendingApplication}  
+        /> 
         );
       case "refunded":
         return (
