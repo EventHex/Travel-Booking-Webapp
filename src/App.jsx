@@ -5,6 +5,7 @@ import DashboardPage from './pages/dashboard'
 import ApplyPage from './pages/apply'
 import FormPage from './pages/form'
 import Productpge from './pages/products'
+import DetailsPage from './pages/details'
 // import NotFound from "./pages/NotFound";
 import "./App.css";
 
@@ -18,7 +19,8 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/apply" element={<ApplyPage />} />
           <Route path="/form" element={<FormPage />} />
-        <Route path="/products" element={<Productpge />} />   
+        <Route path="/products" element={<Productpge />} /> 
+        <Route path="/details" element={<DetailsPage />} />
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </Router>

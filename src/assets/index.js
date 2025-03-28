@@ -44,7 +44,10 @@ import FlightIcon from "./icons/menu/flight-takeoff-fill.svg";
 import Ship from "./icons/menu/ship-2-line.svg";
 import Placeholder from "./image/photo-placeholder-icon-17.jpg"
 import Star from "./icons/card/star-line.svg"
-
+import Alerm from "./icons/card/alarm-line.svg"
+import Tic from "./icons/card/select-box-circle-line (1).svg"
+import Ticketed from "./icons/card/ticket-2-line.svg"
+import Map from "./icons/card/map-pin-2-line.svg"
 export {
   Logo,
   Men,
@@ -91,5 +94,9 @@ export {
   Billi,
   Luggage,
   Placeholder,
-  Star
+  Star,
+  Alerm,
+  Tic,
+  Ticketed,
+  Map
 };
