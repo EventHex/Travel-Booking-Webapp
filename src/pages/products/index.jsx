@@ -18,6 +18,7 @@ import {
   Landscape,
   FlightIcon,
   Ship,
+  Placeholder,
 
 } from "../../assets";
 const index = () => {
@@ -58,6 +59,63 @@ const index = () => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+  const cardData = [
+    {
+      id: 1,
+      image: Placeholder,
+      title: "Burj Khalifa At the Top Tickets: Level 124 & 125",
+      location: "Dubai",
+      rating: 4.5,
+      reviews: 34916,
+      originalPrice: "₹8864",
+      discountedPrice: "₹5317",
+      discount: "39%"
+    },
+    {
+      id: 2,
+      image: Placeholder,
+      title: "Dubai Aquarium & Underwater Zoo Tickets",
+      location: "Dubai",
+      rating: 4.7,
+      reviews: 28745,
+      originalPrice: "₹7500",
+      discountedPrice: "₹4875",
+      discount: "35%"
+    },
+    {
+      id: 3,
+      image: Placeholder,
+      title: "Dubai Frame Entry Tickets",
+      location: "Dubai",
+      rating: 4.3,
+      reviews: 19872,
+      originalPrice: "₹5999",
+      discountedPrice: "₹3899",
+      discount: "35%"
+    },
+    {
+      id: 4,
+      image: Placeholder,
+      title: "Museum of the Future Tickets",
+      location: "Dubai",
+      rating: 4.8,
+      reviews: 15623,
+      originalPrice: "₹9500",
+      discountedPrice: "₹6175",
+      discount: "35%"
+    },
+    {
+      id: 5,
+      image: Placeholder,
+      title: "Dubai Desert Safari with BBQ Dinner",
+      location: "Dubai",
+      rating: 4.6,
+      reviews: 42315,
+      originalPrice: "₹12000",
+      discountedPrice: "₹7200",
+      discount: "40%"
+    }
+  ];
   return (
     <div
       style={{
@@ -159,9 +217,21 @@ const index = () => {
                 </div>{" "}
               </div>
             </div>
-            <div className="w-full flex flex-wrap gap-4">
-              <Card />
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+      {cardData.map((card) => (
+        <Card 
+          key={card.id}
+          image={card.image}
+          title={card.title}
+          location={card.location}
+          rating={card.rating}
+          reviews={card.reviews}
+          originalPrice={card.originalPrice}
+          discountedPrice={card.discountedPrice}
+          discount={card.discount}
+        />
+      ))}
+    </div>
           </div>
         </div>
       </div>
