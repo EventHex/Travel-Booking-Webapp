@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
-
+import Card from "../../components/card";
 import Header from "../../components/header";
 import {
   Flight,
@@ -18,6 +18,7 @@ import {
   Landscape,
   FlightIcon,
   Ship,
+
 } from "../../assets";
 const index = () => {
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
@@ -157,6 +158,9 @@ const index = () => {
                   )}
                 </div>{" "}
               </div>
+            </div>
+            <div className="w-full flex flex-wrap gap-4">
+              <Card />
             </div>
           </div>
         </div>

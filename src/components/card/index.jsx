@@ -1,14 +1,13 @@
 import React from 'react'
-import { Star } from 'lucide-react';
-
+import { Placeholder,Star } from '../../assets'
 const index = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-    <div className="bg-white rounded-3xl shadow-lg overflow-hidden max-w-[300px]">
+    <div className="  flex items-center justify-center p-4">
+    <div className="bg-white rounded-3xl hover:shadow-lg duration-300   overflow-hidden max-w-[300px]">
       {/* Image Section */}
-      <div className="relative">
+      <div className="  relative">
         <img 
-          src="https://images.unsplash.com/photo-1582672752793-08460883bb17?auto=format&fit=crop&q=80"
+          src={Placeholder}
           alt="Burj Khalifa Experience" 
           className="w-full h-48 object-cover"
         />
@@ -16,7 +15,7 @@ const index = () => {
       
       {/* Content Section */}
       <div className="p-4">
-        <h2 className="text-lg font-bold mb-1">
+        <h2 className="text-[20px] font-[600] mb-1">
           Burj Khalifa At the Top Tickets: Level 124 & 125
         </h2>
         
@@ -24,20 +23,23 @@ const index = () => {
         
         {/* Rating Section */}
         <div className="flex items-center gap-1 mb-3">
-          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <img src={Star} alt="" />
           <span className="font-semibold">4.5</span>
           <span className="text-gray-500 text-sm">(34916 reviews)</span>
         </div>
         
         {/* Price Section */}
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-gray-500 line-through text-sm">₹8864</div>
-            <div className="text-xl font-bold">₹5317</div>
+        <div className="flex  justify-between">
+          <div className='w-[50%]'>
+            <div className="text-gray-500 line-through text-[14px]">₹8864</div>
+            <div className="text-[20px] font-bold">₹5317</div>
           </div>
-          <span className="text-green-600 text-sm bg-green-50 px-2 py-1 rounded-full">
+          <div className='flex w-[50%]  justify-end items-end '>
+
+          <span className="border-[#00963C] text-[#00963C] border text-[14px]  px-2 py-1 rounded-md">
             Save up to 39%
           </span>
+          </div>
         </div>
       </div>
     </div>
