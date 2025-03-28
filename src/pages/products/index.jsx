@@ -295,29 +295,7 @@ const index = () => {
         <div className="max-w-[1300px] w-full flex-col   flex justify-center">
           <div className="w-full flex items-center   justify-center">
             <div className="flex gap-3   w-[80%] mt-15 mb-15 flex-col ">
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        citizenIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleCitizenIconClick}
-                    >
-                      <img src={Search} alt="Home icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={citizenInputRef}
-                      type="text"
-                      placeholder="Search for Activities ( eg. Burje Khalifa, Universal Studio)"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setCitizenIsFocused(true)}
-                      onBlur={() => setCitizenIsFocused(false)}
-                    />
-                  </div>
-                </div>
-              </div>
+              <SearchInput /> 
             </div>
           </div>
           {/* *************tabs***************** */}
