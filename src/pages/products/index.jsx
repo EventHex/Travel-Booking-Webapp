@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { ChevronDown, Check } from 'lucide-react';
+
 import Header from "../../components/header";
 import {
   Flight,
@@ -36,6 +38,20 @@ const index = () => {
     { icon:FlightIcon, text: 'Aerial Sightseeing' },
     { icon: Ship, text: 'Cruises' }
   ];
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('Popularity');
+  
+  const options = ['Popularity', 'Newest', 'Price: Low to High', 'Price: High to Low', 'Rating'];
+  
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  
+  const selectOption = (option) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
   return (
     <div
       style={{
@@ -91,6 +107,41 @@ const index = () => {
         </nav>
       </div>
     </div>
+          </div>
+          {/* *********************cards****************** */}
+          <div className="w-full ">
+            <div>
+              <div> <h1>Select Your Experiences</h1></div>
+              <div>   <div className="relative w-56">
+      <div className="text-xs text-gray-500 mb-1">Sort Activities by</div>
+      <button
+        onClick={toggleDropdown}
+        className="flex items-center justify-between w-full px-3 py-2 text-sm text-gray-900 bg-white border border-gray-200 rounded-md shadow-sm focus:outline-none"
+      >
+        <span>{selectedOption}</span>
+        <ChevronDown className="w-4 h-4 text-gray-500" />
+      </button>
+      
+      {isOpen && (
+        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+          <ul className="py-1">
+            {options.map((option) => (
+              <li 
+                key={option} 
+                onClick={() => selectOption(option)}
+                className="flex items-center px-3 py-2 text-sm cursor-pointer hover:bg-gray-100"
+              >
+                <span className="flex-grow">{option}</span>
+                {selectedOption === option && (
+                  <Check className="w-4 h-4 text-blue-600" />
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div> </div>
+            </div>
           </div>
         </div>
       </div>
