@@ -30,6 +30,8 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
   });
 
   const [activeTab, setActiveTab] = useState("front");
+  const [mounted, setMounted] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     if (passportData) {
@@ -66,14 +68,47 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
     }
   }, [passportData]);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true);
+      // Small delay to ensure mounting is complete before animation
+      requestAnimationFrame(() => {
+        setIsAnimating(true);
+      });
+    } else {
+      setIsAnimating(false);
+      // Wait for animation to complete before unmounting
+      const timer = setTimeout(() => {
+        setMounted(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  if (!mounted) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-      <div className="fixed inset-0 bg-black/50" onClick={onClose}></div>
-      <div className="bg-white rounded-lg w-[60%] max-w-md relative max-h-[90vh] flex flex-col">
+    <div 
+      className={`fixed inset-0 flex items-center justify-center z-50 p-4 transition-all duration-300 ease-in-out ${
+        isAnimating ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
+      <div 
+        className={`fixed inset-0 bg-black/50 transition-opacity duration-300 ease-in-out ${
+          isAnimating ? 'opacity-100' : 'opacity-0'
+        }`} 
+        onClick={onClose}
+      ></div>
+      <div 
+        className={`bg-white p-4 rounded-[26px] w-[60%] max-w-md relative max-h-[90vh] 
+          flex flex-col transform transition-all duration-300 ease-in-out ${
+          isAnimating 
+            ? 'translate-y-0 opacity-100 scale-100' 
+            : 'translate-y-8 opacity-0 scale-95'
+        }`}
+      >
         {/* Tabs */}
-        <div className="flex  bg-[#F6F8FA] px-2 py-2 shrink-0">
+        <div className="flex  rounded-lg bg-[#F6F8FA] px-2 py-2 shrink-0">
           <button
             onClick={() => setActiveTab("front")}
             className={`flex-1 py-2 text-sm font-medium relative ${
