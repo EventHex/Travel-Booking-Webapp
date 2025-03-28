@@ -42,6 +42,8 @@ import Billi from "./icons/menu/bilibili-fill.svg";
 import Landscape from "./icons/menu/landscape-line.svg";
 import FlightIcon from "./icons/menu/flight-takeoff-fill.svg";
 import Ship from "./icons/menu/ship-2-line.svg";
+import Placeholder from "./image/photo-placeholder-icon-17.jpg"
+
 export {
   Logo,
   Men,
@@ -86,5 +88,6 @@ export {
   Ship,
   Restaurant,
   Billi,
-  Luggage
+  Luggage,
+  Placeholder
 };
