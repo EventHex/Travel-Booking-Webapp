@@ -334,7 +334,7 @@ const HeroSection = () => {
                       <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center mb-[1px]  sm: sm:px-4 py-2 whitespace-nowrap text-[14px] sm:text-[16px] md:text-[18px] font-[500] transition-colors
+                        className={`flex items-center  sm: sm:px-4 py-2 whitespace-nowrap text-[14px] sm:text-[16px] md:text-[18px] font-[500] transition-colors
                       ${
                         activeTab === tab.id
                           ? "text-blue-600 border-b-2 "
