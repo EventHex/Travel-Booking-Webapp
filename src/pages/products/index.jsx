@@ -21,6 +21,7 @@ import {
   Placeholder,
 
 } from "../../assets";
+import SearchInput from "../../components/searchInput";
 const index = () => {
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [citizenInputRef, setCitizenInputRef] = useState(null);
@@ -114,6 +115,171 @@ const index = () => {
       originalPrice: "₹12000",
       discountedPrice: "₹7200",
       discount: "40%"
+    },
+    {
+      id: 6,
+      image: Placeholder,
+      title: "Dubai Miracle Garden Entrance Tickets",
+      location: "Dubai",
+      rating: 4.4,
+      reviews: 18452,
+      originalPrice: "₹4500",
+      discountedPrice: "₹2925",
+      discount: "35%"
+    },
+    {
+      id: 7,
+      image: Placeholder,
+      title: "Palm Jumeirah Boat Tour",
+      location: "Dubai",
+      rating: 4.7,
+      reviews: 12863,
+      originalPrice: "₹15000",
+      discountedPrice: "₹9750",
+      discount: "35%"
+    },
+    {
+      id: 8,
+      image: Placeholder,
+      title: "IMG Worlds of Adventure Tickets",
+      location: "Dubai",
+      rating: 4.5,
+      reviews: 21489,
+      originalPrice: "₹11200",
+      discountedPrice: "₹6720",
+      discount: "40%"
+    },
+    {
+      id: 9,
+      image: Placeholder,
+      title: "Atlantis Aquaventure Waterpark Tickets",
+      location: "Dubai",
+      rating: 4.8,
+      reviews: 37285,
+      originalPrice: "₹14500",
+      discountedPrice: "₹8700",
+      discount: "40%"
+    },
+    {
+      id: 10,
+      image: Placeholder,
+      title: "Dubai Mall VR Park Entry",
+      location: "Dubai",
+      rating: 4.3,
+      reviews: 9876,
+      originalPrice: "₹6000",
+      discountedPrice: "₹3600",
+      discount: "40%"
+    },
+    {
+      id: 11,
+      image: Placeholder,
+      title: "Dubai Global Village Tickets",
+      location: "Dubai",
+      rating: 4.5,
+      reviews: 25431,
+      originalPrice: "₹3500",
+      discountedPrice: "₹2275",
+      discount: "35%"
+    },
+    {
+      id: 12,
+      image: Placeholder,
+      title: "Ski Dubai Snow Park Entry",
+      location: "Dubai",
+      rating: 4.6,
+      reviews: 18327,
+      originalPrice: "₹10000",
+      discountedPrice: "₹6500",
+      discount: "35%"
+    },
+    {
+      id: 13,
+      image: Placeholder,
+      title: "Dubai Helicopter Tour",
+      location: "Dubai",
+      rating: 4.9,
+      reviews: 8241,
+      originalPrice: "₹48000",
+      discountedPrice: "₹38400",
+      discount: "20%"
+    },
+    {
+      id: 14,
+      image: Placeholder,
+      title: "Abu Dhabi Grand Mosque Day Tour",
+      location: "Abu Dhabi",
+      rating: 4.8,
+      reviews: 27632,
+      originalPrice: "₹9800",
+      discountedPrice: "₹6370",
+      discount: "35%"
+    },
+    {
+      id: 15,
+      image: Placeholder,
+      title: "La Perle by Dragone Show Tickets",
+      location: "Dubai",
+      rating: 4.7,
+      reviews: 16427,
+      originalPrice: "₹12500",
+      discountedPrice: "₹8125",
+      discount: "35%"
+    },
+    {
+      id: 16,
+      image: Placeholder,
+      title: "Ferrari World Abu Dhabi Tickets",
+      location: "Abu Dhabi",
+      rating: 4.6,
+      reviews: 29184,
+      originalPrice: "₹17500",
+      discountedPrice: "₹11375",
+      discount: "35%"
+    },
+    {
+      id: 17,
+      image: Placeholder,
+      title: "Yas Waterworld Abu Dhabi Tickets",
+      location: "Abu Dhabi",
+      rating: 4.7,
+      reviews: 23156,
+      originalPrice: "₹13500",
+      discountedPrice: "₹8775",
+      discount: "35%"
+    },
+    {
+      id: 18,
+      image: Placeholder,
+      title: "Dubai Creek Dhow Dinner Cruise",
+      location: "Dubai",
+      rating: 4.4,
+      reviews: 17689,
+      originalPrice: "₹8000",
+      discountedPrice: "₹5200",
+      discount: "35%"
+    },
+    {
+      id: 19,
+      image: Placeholder,
+      title: "Louvre Abu Dhabi Tickets",
+      location: "Abu Dhabi",
+      rating: 4.8,
+      reviews: 19254,
+      originalPrice: "₹6500",
+      discountedPrice: "₹4225",
+      discount: "35%"
+    },
+    {
+      id: 20,
+      image: Placeholder,
+      title: "Dubai Hot Air Balloon Experience",
+      location: "Dubai",
+      rating: 4.9,
+      reviews: 12376,
+      originalPrice: "₹32000",
+      discountedPrice: "₹25600",
+      discount: "20%"
     }
   ];
   return (

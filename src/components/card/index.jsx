@@ -24,7 +24,7 @@ const index = ({
         
         {/* Content Section */}
         <div className="p-4">
-          <h2 className="text-[20px] font-[600] mb-1">
+          <h2 className="text-[20px] leading-[101%] font-[600] mb-1">
             {title}
           </h2>
           
