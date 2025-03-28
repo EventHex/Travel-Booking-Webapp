@@ -4,6 +4,7 @@ import { Calendar, Info, MapPin, Plane, ArrowRight } from 'lucide-react';
 
 import Header from "../../components/header";
 import { Flight, Home,CalenderUp,CalenderDown, MainBackground } from "../../assets";
+import { Link } from "react-router-dom";
 const TravelVisaBooking = () => {
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
@@ -297,9 +298,11 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
                   </div>
                   <span className="text-xs text-gray-400">(Includes Discounted Visa & Insurance)</span>
                 </div>
+                <Link to='/form'>
                 <button className="px-6 py-2 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-700 hover:text-white transition-colors">
                 Select
                 </button>
+                </Link>
               </div>
             </div>
           </div>
