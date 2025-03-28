@@ -594,7 +594,7 @@ const Ticket = ({
       <PassportPopup 
         isOpen={isPopupOpen} 
         onClose={() => setIsPopupOpen(false)}
-        passportData={selectedPassport}
+        passportData={passportData}
       />
     </div>
   );
