@@ -1,17 +1,7 @@
-import React from "react";
-import {
-  Search,
-  Filter,
-  Calendar,
-  MapPin,
-  Briefcase,
-  Heart,
-  Plane,
-  ArrowRight,
-  Shield,
-  X,
-} from "lucide-react";
-import { True, TrueVertical} from "../../assets";
+import React, { useState } from "react";
+import { Shield, X } from "lucide-react";
+import { True } from "../../assets";
+import PassportPopup  from "./popup";
 
 const Ticket = ({
   approvedApplication,
@@ -24,7 +14,7 @@ const Ticket = ({
     approvedApplication,
     refuntApplication,
     rejectedApplication,
-    pendingApplication
+    pendingApplication,
   ].filter((app) => app !== undefined);
 
   const getStatusBarColor = (status) => {
@@ -35,8 +25,8 @@ const Ticket = ({
         return "bg-red-500";
       case "refunded":
         return "bg-orange-500";
-        case "pending":
-          return "bg-green-500"
+      case "pending":
+        return "bg-green-500";
       default:
         return "bg-blue-500";
     }
@@ -53,6 +43,26 @@ const Ticket = ({
       default:
         return "Processing";
     }
+  };
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedPassport, setSelectedPassport] = useState(null);
+
+  const passportData = {
+    name: "James Cameroon",
+    passportNumber: "M903152415y5u6",
+    gender: "Male",
+    dateOfBirth: "29-10-2022",
+    placeOfBirth: "singapur Jattan, Punchab",
+    maritalStatus: "Single",
+    dateOfIssue: "29-10-2022",
+    dateOfExpiry: "29-10-2022",
+    nationality: "Indian"
+  };
+
+  const openPassportPopup = () => {
+    setSelectedPassport(passportData);
+    setIsPopupOpen(true);
   };
 
   return (
@@ -72,7 +82,11 @@ const Ticket = ({
                     )} flex-shrink-0`}
                   >
                     <div className="  flex gap-5   origin-center -rotate-90 whitespace-nowrap text-white text-[12px]">
-                       <p className="flex   gap-1"> <img src={True} alt="" /><span className="flex">visa</span></p> 
+                      <p className="flex   gap-1">
+                        {" "}
+                        <img src={True} alt="" />
+                        <span className="flex">visa</span>
+                      </p>
                       {getStatusText(application.status)}
                     </div>
                   </div>
@@ -135,51 +149,49 @@ const Ticket = ({
                             }}
                           ></div>
 
-                          {Object.entries(application.details).map(
-                            ([key, value], idx) => (
+                          {Object.entries(application.details).map(([key, value]) => (
+                            <div
+                              key={key}
+                              className="flex items-center space-x-3 relative"
+                            >
                               <div
-                                key={key}
-                                className="flex items-center space-x-3 relative"
+                                className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
+                                  value ? "bg-blue-50" : "bg-red-50"
+                                } flex items-center justify-center z-10 border ${
+                                  value ? "border-blue-100" : "border-red-100"
+                                }`}
                               >
-                                <div
-                                  className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
-                                    value ? "bg-blue-50" : "bg-red-50"
-                                  } flex items-center justify-center z-10 border ${
-                                    value ? "border-blue-100" : "border-red-100"
-                                  }`}
-                                >
-                                  {value ? (
-                                    <svg
-                                      className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                        value ? "text-blue-500" : "text-red-500"
-                                      }`}
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M5 13l4 4L19 7"
-                                      />
-                                    </svg>
-                                  ) : (
-                                    <X
-                                      className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                        value ? "text-blue-500" : "text-red-500"
-                                      }`}
+                                {value ? (
+                                  <svg
+                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
+                                      value ? "text-blue-500" : "text-red-500"
+                                    }`}
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M5 13l4 4L19 7"
                                     />
-                                  )}
-                                </div>
-                                <span className="text-xs sm:text-sm text-gray-600">
-                                  {key
-                                    .replace(/([A-Z])/g, " $1")
-                                    .replace(/^./, (str) => str.toUpperCase())}
-                                </span>
+                                  </svg>
+                                ) : (
+                                  <X
+                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
+                                      value ? "text-blue-500" : "text-red-500"
+                                    }`}
+                                  />
+                                )}
                               </div>
-                            )
-                          )}
+                              <span className="text-xs sm:text-sm text-gray-600">
+                                {key
+                                  .replace(/([A-Z])/g, " $1")
+                                  .replace(/^./, (str) => str.toUpperCase())}
+                              </span>
+                            </div>
+                          ))}
                         </div>
                       </div>
 
@@ -187,11 +199,14 @@ const Ticket = ({
                       <div className="flex-shrink-0 w-72">
                         <div
                           className={`${
-                            application.status === "pending" 
-                              ? "bg-blue-50 border-blue-100" 
+                            application.status === "pending"
+                              ? "bg-blue-50 border-blue-100"
                               : application.status === "approved"
-                                ? "bg-blue-50 border-blue-100 border"
-                                : application.statusMessage.cardBg + " " + application.statusMessage.borderColor + " border"
+                              ? "bg-blue-50 border-blue-100 border"
+                              : application.statusMessage.cardBg +
+                                " " +
+                                application.statusMessage.borderColor +
+                                " border"
                           } rounded-xl sm:rounded-2xl sm:p-2`}
                         >
                           <div className="flex w-full space-x-3 sm:space-x-4">
@@ -204,7 +219,8 @@ const Ticket = ({
                                     : application.statusMessage.iconBg
                                 } rounded-lg sm:rounded-xl flex items-center justify-center`}
                               >
-                                {typeof application.statusMessage.icon === "string" ? (
+                                {typeof application.statusMessage.icon ===
+                                "string" ? (
                                   <img
                                     src={application.statusMessage.icon}
                                     alt=""
@@ -255,16 +271,17 @@ const Ticket = ({
                               )}
                             </div>
                           </div>
-                          
+
                           {/* Description */}
-                          {(application.statusMessage.description || application.status === "pending") && (
+                          {(application.statusMessage.description ||
+                            application.status === "pending") && (
                             <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
                               {application.status === "pending"
                                 ? "We are reviewing your application. This usually takes 2-3 business days."
                                 : application.statusMessage.description}
                             </p>
                           )}
-                          
+
                           {/* Delivery status */}
                           {application.status === "pending" && (
                             <div className="mt-2">
@@ -273,23 +290,32 @@ const Ticket = ({
                               </span>
                             </div>
                           )}
-                          
+
                           {/* Dates for rejected */}
                           {application.status === "rejected" && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-700">
                               <p className="flex justify-between">
-                                <span className="text-[14px] font-[400]">Estimated on:</span>
-                                <span className="text-[14px] font-[400]">Mar 4, 2025</span>
+                                <span className="text-[14px] font-[400]">
+                                  Estimated on:
+                                </span>
+                                <span className="text-[14px] font-[400]">
+                                  Mar 4, 2025
+                                </span>
                               </p>
                               <p className="flex justify-between">
-                                <span className="text-[14px] font-[400]">Delivery on:</span>
-                                <span className="text-[14px] font-[400]">Mar 4, 2025</span>
+                                <span className="text-[14px] font-[400]">
+                                  Delivery on:
+                                </span>
+                                <span className="text-[14px] font-[400]">
+                                  Mar 4, 2025
+                                </span>
                               </p>
                             </div>
                           )}
-                          
+
                           {/* Dates for approved or pending */}
-                          {(application.status === "approved" || application.status === "pending") && (
+                          {(application.status === "approved" ||
+                            application.status === "pending") && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm">
                               <p className="flex justify-between">
                                 <span className="text-gray-700 text-[14px] font-[400]">
@@ -310,10 +336,14 @@ const Ticket = ({
                             </div>
                           )}
                         </div>
-                        
+
                         {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          <button
+                          onClick={() => openPassportPopup()}
+                            className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+                         
+                          >
                             View Application
                           </button>
                           <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
@@ -384,62 +414,63 @@ const Ticket = ({
                             }}
                           ></div>
 
-                          {Object.entries(application.details).map(
-                            ([key, value], idx) => (
+                          {Object.entries(application.details).map(([key, value]) => (
+                            <div
+                              key={key}
+                              className="flex items-center space-x-3 relative"
+                            >
                               <div
-                                key={key}
-                                className="flex items-center space-x-3 relative"
+                                className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
+                                  value ? "bg-blue-50" : "bg-red-50"
+                                } flex items-center justify-center border ${
+                                  value ? "border-blue-100" : "border-red-100"
+                                }`}
                               >
-                                <div
-                                  className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
-                                    value ? "bg-blue-50" : "bg-red-50"
-                                  } flex items-center justify-center border ${
-                                    value ? "border-blue-100" : "border-red-100"
-                                  }`}
-                                >
-                                  {value ? (
-                                    <svg
-                                      className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                        value ? "text-blue-500" : "text-red-500"
-                                      }`}
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M5 13l4 4L19 7"
-                                      />
-                                    </svg>
-                                  ) : (
-                                    <X
-                                      className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                        value ? "text-blue-500" : "text-red-500"
-                                      }`}
+                                {value ? (
+                                  <svg
+                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
+                                      value ? "text-blue-500" : "text-red-500"
+                                    }`}
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M5 13l4 4L19 7"
                                     />
-                                  )}
-                                </div>
-                                <span className="text-xs sm:text-sm text-gray-600">
-                                  {key
-                                    .replace(/([A-Z])/g, " $1")
-                                    .replace(/^./, (str) => str.toUpperCase())}
-                                </span>
+                                  </svg>
+                                ) : (
+                                  <X
+                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
+                                      value ? "text-blue-500" : "text-red-500"
+                                    }`}
+                                  />
+                                )}
                               </div>
-                            )
-                          )}
+                              <span className="text-xs sm:text-sm text-gray-600">
+                                {key
+                                  .replace(/([A-Z])/g, " $1")
+                                  .replace(/^./, (str) => str.toUpperCase())}
+                              </span>
+                            </div>
+                          ))}
                         </div>
                       </div>
 
                       <div className="mt-6 ">
                         <div
                           className={`${
-                            application.status === "pending" 
-                              ? "bg-blue-50 border-blue-100 border" 
+                            application.status === "pending"
+                              ? "bg-blue-50 border-blue-100 border"
                               : application.status === "approved"
-                                ? "bg-blue-50 border-blue-100 border"
-                                : application.statusMessage.cardBg + " " + application.statusMessage.borderColor + " border"
+                              ? "bg-blue-50 border-blue-100 border"
+                              : application.statusMessage.cardBg +
+                                " " +
+                                application.statusMessage.borderColor +
+                                " border"
                           } rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6`}
                         >
                           <div className="flex items-center space-x-3 sm:space-x-4">
@@ -452,7 +483,8 @@ const Ticket = ({
                                     : application.statusMessage.iconBg
                                 } rounded-lg sm:rounded-xl flex items-center justify-center`}
                               >
-                                {typeof application.statusMessage.icon === "string" ? (
+                                {typeof application.statusMessage.icon ===
+                                "string" ? (
                                   <img
                                     src={application.statusMessage.icon}
                                     alt=""
@@ -499,16 +531,17 @@ const Ticket = ({
                               )}
                             </div>
                           </div>
-                          
+
                           {/* Description */}
-                          {(application.statusMessage.description || application.status === "pending") && (
+                          {(application.statusMessage.description ||
+                            application.status === "pending") && (
                             <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
                               {application.status === "pending"
                                 ? "We are reviewing your application. This usually takes 2-3 business days."
                                 : application.statusMessage.description}
                             </p>
                           )}
-                          
+
                           {/* Delivery status */}
                           {application.status === "pending" && (
                             <div className="mt-2">
@@ -517,7 +550,7 @@ const Ticket = ({
                               </span>
                             </div>
                           )}
-                          
+
                           {/* Dates for rejected */}
                           {application.status === "rejected" && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
@@ -531,10 +564,10 @@ const Ticket = ({
                               </p>
                             </div>
                           )}
-                          
+
                           {/* No dates shown for refunded applications */}
                         </div>
-                        
+
                         {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
                           <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
@@ -556,6 +589,13 @@ const Ticket = ({
           </div>
         </div>
       </main>
+      
+      {/* Add the PassportPopup component at the root level */}
+      <PassportPopup 
+        isOpen={isPopupOpen} 
+        onClose={() => setIsPopupOpen(false)}
+        passportData={selectedPassport}
+      />
     </div>
   );
 };
