@@ -214,18 +214,28 @@ const index = () => {
                 </p>
               </div>
               <div className="flex flex-col gap-[10px]">
-                <h5 className="text-[16px] font-[500]">
-                Lost Valley
-                </h5>
+                <h5 className="text-[16px] font-[500]">Lost Valley</h5>
                 <p className="text-[14px] text-[#525866] font-[400]">
-                  Explore Marvel zone, designed to let you have a closer look
-                  into the Marvel Universe through several rides and
-                  attractions. Meet your favourite Marvel avengers in person
-                  here in the meet and greets taking place throughout the day.
+                  This zone is rife with dinosaur-themed fun. Everything here
+                  brings the lost world of dinosaurs back to life, from the
+                  rides to the restaurants and all the activities.
                 </p>
                 <p className="text-[14px] text-[#525866] font-[400]">
-                  Must-Try Rides: Avengers Battle of Ultron, Hulk Epsilon Base
-                  3D, Spider-Man Dock Ock's Revenge & Thor Thunder Spin.
+                  Must-Try Rides: The Velociraptor, Forbidden Territory,
+                  Predator & Dino Carousel
+                </p>
+              </div>
+              <div className="flex flex-col gap-[10px]">
+                <h5 className="text-[16px] font-[500]">Cartoon Network</h5>
+                <p className="text-[14px] text-[#525866] font-[400]">
+                  Who doesn't miss the old Cartoon Network? This zone is heaven
+                  to all the 90s kids. The Cartoon Network zone brings to life
+                  The Amazing World of Gumball, Adventure Time, The Powerpuff
+                  Girls, Ben 10 & LazyTown in all its glory.
+                </p>
+                <p className="text-[14px] text-[#525866] font-[400]">
+                  Must-Try Rides: Ben 10 5D Hero Time, Mojo Jojo's Robot
+                  Rampage: The Powerpuff Girls, The Amazing Ride of Gumball
                 </p>
               </div>
             </div>
