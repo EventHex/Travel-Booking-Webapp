@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../components/header";
 import {
   Alerm,
@@ -8,8 +8,10 @@ import {
   Star,
   Tic,
 } from "../../assets";
+import { Calendar } from "lucide-react";
 import SearchInput from "../../components/searchInput";
 const index = () => {
+  const [date, setDate] = useState('');
   return (
     <div
       style={{
@@ -117,9 +119,9 @@ const index = () => {
           </div>
 
           {/* *************details ******************** */}
-          <div className="w-full flex gap-3 bg-red-400">
-            <div className="w-[70%]">
-              <div className="p-3 pb-10 border-b">
+          <div className="w-full flex md:flex-row flex-col   mt-5 md:mt-15 gap-3 ">
+            <div className=" md:w-[70%] w-full">
+              <div className="p-3 pb-10 border-[#CDD0D5] border-b">
                 <h1 className="text-[32px] font-[600]">Highlights</h1>
                 <ul className="list-disc pl-5">
                   <li className="text-[14px] font-[400]">
@@ -127,14 +129,60 @@ const index = () => {
                     feet of a playground at IMG World of Adventure, Dubai's
                     largest indoor theme and amusement park.
                   </li>
-                  <li className="text-[14px] font-[400]">Feel the rush of childhood nostalgia and excitement with epic zones such as Marvel and Cartoo Network.</li>
-                  <li className="text-[14px] font-[400]">Swing through the city with Spider Man, come face-to-face with life-sized dinosaurs,or join the Powerpuff Girls in fighting their nemesis, Mojo Jojo.</li>
-                  <li className="text-[14px] font-[400]">Upgrade your ticket to get fast-track entry to any rides or attractions at IMG or get skip-the-line entry at Dubai Miracle Garden.</li>
-                  <li className="text-[14px] font-[400]">Fun fact: The Velociraptor rollercoaster propels visitors to an exhilarating 100 km/h in 2.5 seconds.</li>
+                  <li className="text-[14px] font-[400]">
+                    Feel the rush of childhood nostalgia and excitement with
+                    epic zones such as Marvel and Cartoo Network.
+                  </li>
+                  <li className="text-[14px] font-[400]">
+                    Swing through the city with Spider Man, come face-to-face
+                    with life-sized dinosaurs,or join the Powerpuff Girls in
+                    fighting their nemesis, Mojo Jojo.
+                  </li>
+                  <li className="text-[14px] font-[400]">
+                    Upgrade your ticket to get fast-track entry to any rides or
+                    attractions at IMG or get skip-the-line entry at Dubai
+                    Miracle Garden.
+                  </li>
+                  <li className="text-[14px] font-[400]">
+                    Fun fact: The Velociraptor rollercoaster propels visitors to
+                    an exhilarating 100 km/h in 2.5 seconds.
+                  </li>
                 </ul>
               </div>
             </div>
-            <div className="w-[30%]"></div>
+            <div className=" md:w-[30%]  p-3 w-full ">
+              <div className="max-w-xs w-full mx-auto border-[#CDD0D5] border rounded-xl  p-6">
+                <div className="mb-4">
+                  <div className="text-sm text-gray-500">from</div>
+                  <div className="flex items-baseline">
+                    <span className="text-xl font-semibold">₹5,335</span>
+                  </div>
+                  <div className="text-sm text-emerald-400">₹534 cashback</div>
+                </div>
+
+                <div className="mb-4">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Select a Date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      readOnly
+                    />
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400">
+                      <Calendar size={20} />
+                      {/* <img src={CalenderUp} alt="" /> */}
+
+                    </div>
+                  </div>
+                </div>
+
+                <button className="w-full bg-blue-600 text-white py-3 text-[16px] font-[400] rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                  Check Availability
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
