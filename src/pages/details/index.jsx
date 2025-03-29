@@ -121,7 +121,7 @@ const index = () => {
 
           {/* *************details ******************** */}
           <div className="w-full flex md:flex-row flex-col   mt-5 md:mt-15 gap-3 ">
-            <div className=" md:w-[70%] flex flex-col gap-[60px] w-full">
+            <div className=" md:w-[70%] flex flex-col gap-[20px] w-full">
               <div className="p-3 pb-10 flex flex-col gap-[25px] border-[#CDD0D5] border-b">
                 <h1 className="text-[32px] font-[600]">Highlights</h1>
                 <ul className="list-disc flex flex-col gap-[25px] pl-5">
@@ -249,7 +249,7 @@ const index = () => {
               </div>
               <div className="flex flex-col gap-[10px]">
                 <h1>Dining areas:</h1>
-                <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                <ul className="list-disc flex flex-col gap-[15px] pl-5">
                   <li className="text-[14px] text-[#525866] font-[400]">
                     Popcorn Factory
                   </li>
@@ -273,7 +273,7 @@ const index = () => {
               </div>
               <div className="flex flex-col  border-[#CDD0D5] pb-10 border-b gap-[10px]">
                 <h1>Shopping areas:</h1>
-                <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                <ul className="list-disc flex flex-col gap-[15px] pl-5">
                   <li className="text-[14px] text-[#525866] font-[400]">
                     World of Candy
                   </li>
@@ -293,7 +293,7 @@ const index = () => {
                 <h5>What makes IMG Worlds of Adventure so special</h5>
                 <div className="flex flex-col gap-[10px]">
                   <h5 className="text-[16px] font-[500]">What's not allowed</h5>
-                  <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                  <ul className="list-disc flex flex-col gap-[1px] pl-5">
                     <li className="text-[14px] text-[#525866] font-[400]">
                       Keep in mind outside food, smoking, drones, helium
                       balloons, illegal substances, hard sided containers and
@@ -307,7 +307,7 @@ const index = () => {
 
                 <div className="flex flex-col gap-[10px]">
                   <h5 className="text-[16px] font-[500]">Accessibility</h5>
-                  <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                  <ul className="list-disc flex flex-col gap-[10px] pl-5">
                     <li className="text-[14px] text-[#525866] font-[400]">
                       This experience is wheelchair and pram/stroller
                       accessible.
@@ -333,7 +333,7 @@ const index = () => {
                   <h5 className="text-[16px] font-[500]">
                     Additional information
                   </h5>
-                  <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                  <ul className="list-disc flex flex-col gap-[10px] pl-5">
                     <li className="text-[14px] text-[#525866] font-[400]">
                       Facilities: Lockers
                     </li>
@@ -349,6 +349,52 @@ const index = () => {
                     <li className="text-[14px] text-[#525866] font-[400]">The opening hours are subject to change.</li>
                   </ul>
                 </div>
+                <div className="flex flex-col border-[#CDD0D5] border-b pb-10 gap-[10px]">
+                  <h1 className="text-[32px] font-[600]">
+                  My tickets
+                  </h1>
+                  <ul className="list-disc flex flex-col gap-[20px] pl-5">
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                    Your voucher will be emailed to you instantly.
+                                        </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                    Please display this voucher on your mobile phone with a valid photo ID at the entrance of the attraction.
+                    </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                    If you have purchased reduced price tickets, please carry your valid photo ID proof for verification. Students must show their valid Student IDs.                    </li>
+                  </ul>
+                </div>
+                <div className="flex flex-col border-[#CDD0D5] border-b pb-10 gap-[10px]">
+                  <h1 className="text-[16px] font-[500]">
+                  Ticket Redemption Point
+                                    </h1>
+                  <ul className="list-disc flex flex-col gap-[10px] pl-5">
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                    Redeem your tickets at the entrance of IMG Worlds of Adventure (E311 - Sheikh Mohammed Bin Zayed Rd - Dubai - United Arab Emirates).                                        </li>
+                   
+                     </ul>
+                     <p className="text-[14px] text-[#525866] font-[400]">Get Directions to the Meeting Point</p>
+                </div>
+                <div className="flex flex-col border-[#CDD0D5] border-b pb-10 gap-[10px]">
+                  <h1 className="text-[16px] font-[500]">
+                  Getting There                  </h1>
+                  <ul className="list-disc flex flex-col gap-[10px] pl-5">
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                    The theme park is located on E311 (Sheikh Mohammed Bin Zayed Road), next to Global Village.                                        </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                    The venue is not connected directly via Metro.                    </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                    Take a taxi from either the Dubai Mall Metro or the Mall of Emirates Metro.
+                    </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                    The venue is not connected directly via Metro.                    </li>
+                                      </ul>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-[10px]">
+                <h1 className="text-[32px] font-[600]">Where</h1>
+                
               </div>
             </div>
             <div className=" md:w-[30%]  p-3 w-full ">
