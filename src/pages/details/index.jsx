@@ -125,26 +125,26 @@ const index = () => {
               <div className="p-3 pb-10 flex flex-col gap-[25px] border-[#CDD0D5] border-b">
                 <h1 className="text-[32px] font-[600]">Highlights</h1>
                 <ul className="list-disc flex flex-col gap-[25px] pl-5">
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Enjoy 22 adrenaline-fueled rides across 1.5 million square
                     feet of a playground at IMG World of Adventure, Dubai's
                     largest indoor theme and amusement park.
                   </li>
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Feel the rush of childhood nostalgia and excitement with
                     epic zones such as Marvel and Cartoo Network.
                   </li>
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Swing through the city with Spider Man, come face-to-face
                     with life-sized dinosaurs,or join the Powerpuff Girls in
                     fighting their nemesis, Mojo Jojo.
                   </li>
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Upgrade your ticket to get fast-track entry to any rides or
                     attractions at IMG or get skip-the-line entry at Dubai
                     Miracle Garden.
                   </li>
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Fun fact: The Velociraptor rollercoaster propels visitors to
                     an exhilarating 100 km/h in 2.5 seconds.
                   </li>
@@ -153,23 +153,23 @@ const index = () => {
               <div className="p-3  pb-5 md:pb-10 flex flex-col gap-[25px] border-[#CDD0D5] border-b">
                 <h1 className="text-[32px] font-[600]">Inclusions</h1>
                 <ul className="list-disc flex flex-col gap-[25px] pl-5">
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Entry to IMG Worlds of Adventure
                   </li>
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Access to all rides and attractions
                   </li>
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Fast-track access to all rides or attractions (as per option
                     selected)
                   </li>
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Entry to Global Village Dubai (as per option selected)
                   </li>
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Entry into IMG Worlds of Adventure (as per option selected)
                   </li>
-                  <li className="text-[14px] font-[400]">
+                  <li className="text-[14px] text-[#525866] font-[400]">
                     Skip-the-line entry to Dubai Miracle Garden (as per optio
                     selected)
                   </li>
@@ -178,7 +178,7 @@ const index = () => {
               <div className="flex flex-col gap-[10px]">
                 <h1 className="text-[32px] font-[600]">Your experience</h1>
                 <h5>What makes IMG Worlds of Adventure so special</h5>
-                <p className="text-[14px] font-[400]">
+                <p className="text-[14px] text-[#525866] font-[400]">
                   Live the epic adventure at IMG Worlds of Adventure, the
                   world’s largest indoor theme park spread over a massive 1.5
                   million square feet. IMG Worlds of Adventure is divided into 4
@@ -186,7 +186,7 @@ const index = () => {
                   and Marvel, while the other two are in-house brands, IMG
                   Boulevard and Lost Valley: Dinosaur Adventure
                 </p>
-                <p className="text-[14px] font-[400]">
+                <p className="text-[14px] text-[#525866] font-[400]">
                   The park has 22 exciting rides and attractions, 17 of which
                   are theme rides, each aiming to provide you with a dose of
                   adrenaline or leave you in a state of wonder. The Cartoon
@@ -199,25 +199,33 @@ const index = () => {
                 </p>
               </div>
               <div className="flex flex-col gap-[10px]">
-                <h5 className="text-[16px] font-[500]">The 4 adventure zones at IMG Worlds of Adventure</h5>
-                <p className="text-[14px] font-[400]">
-                  Live the epic adventure at IMG Worlds of Adventure, the
-                  world’s largest indoor theme park spread over a massive 1.5
-                  million square feet. IMG Worlds of Adventure is divided into 4
-                  zones, two of which represent global brands, Cartoon Network
-                  and Marvel, while the other two are in-house brands, IMG
-                  Boulevard and Lost Valley: Dinosaur Adventure
+                <h5 className="text-[16px] font-[500]">
+                  The 4 adventure zones at IMG Worlds of Adventure <br /> Marvel
+                </h5>
+                <p className="text-[14px] text-[#525866] font-[400]">
+                  Explore Marvel zone, designed to let you have a closer look
+                  into the Marvel Universe through several rides and
+                  attractions. Meet your favourite Marvel avengers in person
+                  here in the meet and greets taking place throughout the day.
                 </p>
-                <p className="text-[14px] font-[400]">
-                  The park has 22 exciting rides and attractions, 17 of which
-                  are theme rides, each aiming to provide you with a dose of
-                  adrenaline or leave you in a state of wonder. The Cartoon
-                  Network Zone hosts Live Shows whereas the Marvel Zone has the
-                  epic 3D attraction - “Avengers: Battle of Ultron”. In the Lost
-                  Valley, you’re destined to see animatronic dinosaurs and ride
-                  rollercoasters. The IMG Boulevard is the busiest, be sure to
-                  check this out before you leave. Enjoy round-trip hotel
-                  transfers from hotels in Central Dubai with your ticket.
+                <p className="text-[14px] text-[#525866] font-[400]">
+                  Must-Try Rides: Avengers Battle of Ultron, Hulk Epsilon Base
+                  3D, Spider-Man Dock Ock's Revenge & Thor Thunder Spin.
+                </p>
+              </div>
+              <div className="flex flex-col gap-[10px]">
+                <h5 className="text-[16px] font-[500]">
+                Lost Valley
+                </h5>
+                <p className="text-[14px] text-[#525866] font-[400]">
+                  Explore Marvel zone, designed to let you have a closer look
+                  into the Marvel Universe through several rides and
+                  attractions. Meet your favourite Marvel avengers in person
+                  here in the meet and greets taking place throughout the day.
+                </p>
+                <p className="text-[14px] text-[#525866] font-[400]">
+                  Must-Try Rides: Avengers Battle of Ultron, Hulk Epsilon Base
+                  3D, Spider-Man Dock Ock's Revenge & Thor Thunder Spin.
                 </p>
               </div>
             </div>
