@@ -15,6 +15,7 @@ import {
   CalenderUp,
 } from "../../assets";
 import Header from "../../components/header";
+import SearchInput from "../../components/searchInput";
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("Visas");
   const tabs = [
@@ -168,15 +169,105 @@ const HeroSection = () => {
         );
       case "Insurance":
         return (
-          <div className="relative mb-24 w-full">
-            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-              <img src={Search} alt="" />
+          <div className="flex gap-3  flex-col ">
+          <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
+            <div className="w-full">
+              <div className="flex items-center p-3">
+                <span
+                  className={`mr-2 cursor-pointer ${
+                    citizenIsFocused ? "opacity-100" : "opacity-20"
+                  }`}
+                  onClick={handleCitizenIconClick}
+                >
+                  <img src={Home} alt="Home icon" />
+                </span>
+                <input
+                  style={{ border: "none" }}
+                  ref={citizenInputRef}
+                  type="text"
+                  placeholder="Citizen Of"
+                  className="w-full bg-transparent outline-none"
+                  onFocus={() => setCitizenIsFocused(true)}
+                  onBlur={() => setCitizenIsFocused(false)}
+                />
+              </div>
             </div>
-            <input
-              type="text"
-              placeholder={`Search for ${activeTab} (e.g. Burj Khalifa, Universal Studio)`}
-              className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white border border-[#A6BFFF82] border-solid rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm sm:text-base text-gray-600 placeholder-gray-400 transition-all duration-300 delay-150 hover:border-blue-500"
-            />
+            <div className="w-full">
+              <div className="flex items-center p-3">
+                <span
+                  className={`mr-2 cursor-pointer ${
+                    goingToIsFocused ? "opacity-100" : "opacity-20"
+                  }`}
+                  onClick={handleGoingToIconClick}
+                >
+                  <img src={Flight} alt="Flight icon" />
+                </span>
+                <input
+                  style={{ border: "none" }}
+                  ref={goingToInputRef}
+                  type="text"
+                  placeholder="Going to"
+                  className="w-full bg-transparent outline-none"
+                  onFocus={() => setGoingToIsFocused(true)}
+                  onBlur={() => setGoingToIsFocused(false)}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
+            <div className="w-full">
+              <div className="flex items-center p-3">
+                <span
+                  className={`mr-2 cursor-pointer ${
+                    travelDateIsFocused ? "opacity-100" : "opacity-20"
+                  }`}
+                  onClick={handleTravelDateIconClick}
+                >
+                  <img src={CalenderUp} alt="Calendar icon" />
+                </span>
+                <input
+                  style={{ border: "none" }}
+                  ref={travelDateInputRef}
+                  type="text"
+                  placeholder="Travel Date"
+                  className="w-full bg-transparent outline-none"
+                  onFocus={() => setTravelDateIsFocused(true)}
+                  onBlur={() => setTravelDateIsFocused(false)}
+                />
+              </div>
+            </div>
+            <div className="w-full">
+              <div className="flex items-center p-3">
+                <span
+                  className={`mr-2 cursor-pointer ${
+                    returnDateIsFocused ? "opacity-100" : "opacity-20"
+                  }`}
+                  onClick={handleReturnDateIconClick}
+                >
+                  <img src={CalenderDown} alt="Calendar icon" />
+                </span>
+                <input
+                  style={{ border: "none" }}
+                  ref={returnDateInputRef}
+                  type="text"
+                  placeholder="Return Date"
+                  className="w-full bg-transparent outline-none"
+                  onFocus={() => setReturnDateIsFocused(true)}
+                  onBlur={() => setReturnDateIsFocused(false)}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex  justify-between">
+            <div className="w-[80%]">
+
+<SearchInput/>
+            </div>
+            <div className="w-[20%] justify-end   flex">
+
+          <button className=" text-white  px-10 rounded-xl bg-[#000099] border text-[16px]">Search</button>
+            </div>
+          </div>
           </div>
         );
       case "Flights":
@@ -243,7 +334,7 @@ const HeroSection = () => {
                       <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center mb-[1px]  sm: sm:px-4 py-2 whitespace-nowrap text-[14px] sm:text-[16px] md:text-[18px] font-[500] transition-colors
+                        className={`flex items-center  sm: sm:px-4 py-2 whitespace-nowrap text-[14px] sm:text-[16px] md:text-[18px] font-[500] transition-colors
                       ${
                         activeTab === tab.id
                           ? "text-blue-600 border-b-2 "

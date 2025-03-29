@@ -32,8 +32,22 @@ import RejectIcon from "./icons/ticket/reject.svg";
 import PendingIcon from "./icons/ticket/pending.svg";
 import TrueVertical from "./icons/ticket/TrueVertical.svg";
 import True from "./icons/ticket/True.svg";
-import UserAdd from "./icons/menu/useraddline.svg"
-import Saveline from "./icons/menu/saveline.svg"
+import UserAdd from "./icons/menu/useraddline.svg";
+import Saveline from "./icons/menu/saveline.svg";
+import Tour from "./icons/menu/suitcase-2-line.svg";
+import Transport from "./icons/menu/bus-fill.svg";
+import Luggage from "./icons/menu/luggage-cart-line.svg";
+import Restaurant from "./icons/menu/restaurant-2-fill.svg";
+import Billi from "./icons/menu/bilibili-fill.svg";
+import Landscape from "./icons/menu/landscape-line.svg";
+import FlightIcon from "./icons/menu/flight-takeoff-fill.svg";
+import Ship from "./icons/menu/ship-2-line.svg";
+import Placeholder from "./image/photo-placeholder-icon-17.jpg"
+import Star from "./icons/card/star-line.svg"
+import Alerm from "./icons/card/alarm-line.svg"
+import Tic from "./icons/card/select-box-circle-line (1).svg"
+import Ticketed from "./icons/card/ticket-2-line.svg"
+import Map from "./icons/card/map-pin-2-line.svg"
 export {
   Logo,
   Men,
@@ -70,5 +84,19 @@ export {
   TrueVertical,
   True,
   UserAdd,
-  Saveline
+  Saveline,
+  Tour,
+  Transport,
+  Landscape,
+  FlightIcon,
+  Ship,
+  Restaurant,
+  Billi,
+  Luggage,
+  Placeholder,
+  Star,
+  Alerm,
+  Tic,
+  Ticketed,
+  Map
 };

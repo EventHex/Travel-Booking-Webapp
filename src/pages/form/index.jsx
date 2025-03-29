@@ -666,12 +666,12 @@ const TravelVisaBooking = () => {
 
               {/* Buttons Section */}
               <div className="w-full mt-10 px-4 md:px-0">
-                <div className="w-full md:w-[70%]">
-                  <div className="flex flex-col sm:flex-row py-4 md:py-5 border-t border-[#868C98] gap-3 sm:gap-5">
-                    <button className=" gap-2 bg-blue-600 w-full  flex sm:w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-4">
+                <div className="w-full md:w-[50%]">
+                  <div className="flex flex-col sm:flex-row py-4 md:py-5 border-t border-[#CDD0D5] gap-3 sm:gap-5">
+                    <button className=" gap-2 bg-blue-600 hover:bg-blue-700  w-full justify-center py-2  flex text-[14px] font-[400] text-white rounded-md ">
                       <img src={UserAdd} alt="" /> Add Another Traveller
                     </button>
-                    <button className=" gap-2 bg-blue-600 flex w-full sm:w-[220px] text-[14px] font-[400] text-white rounded-md px-4 py-4">
+                    <button className=" gap-2 bg-blue-600 hover:bg-blue-700 flex w-full justify-center py-2 text-[14px] font-[400] text-white rounded-md ">
                      <img src={Saveline} alt="" />  Review & Save
                     </button>
                   </div>
@@ -795,7 +795,7 @@ const TravelVisaBooking = () => {
                 </div>
               </div>
               <div className="  flex justify-end">
-                <button className="mt-6  w-full  md:w-auto bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center">
+                <button className="mt-6  w-full  md:w-auto bg-blue-600 text-white py-2 px-4 rounded-lg font-[400] text-[14px] hover:bg-blue-700 transition-colors flex items-center justify-center">
                   <Info className="w-4 h-4 mr-2" />
                   Select Insurance date
                 </button>

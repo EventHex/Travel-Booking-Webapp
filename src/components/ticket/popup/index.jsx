@@ -71,13 +71,11 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
   useEffect(() => {
     if (isOpen) {
       setMounted(true);
-      // Small delay to ensure mounting is complete before animation
       requestAnimationFrame(() => {
         setIsAnimating(true);
       });
     } else {
       setIsAnimating(false);
-      // Wait for animation to complete before unmounting
       const timer = setTimeout(() => {
         setMounted(false);
       }, 300);
@@ -100,26 +98,23 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
         onClick={onClose}
       ></div>
       <div 
-        className={`bg-white p-4 rounded-[26px] w-[60%] max-w-md relative max-h-[90vh] 
-          flex flex-col transform transition-all duration-300 ease-in-out ${
+        className={`bg-white p-4 rounded-[26px] w-[95%] sm:w-[80%] md:w-[70%] lg:w-[60%] 
+          max-w-[800px] relative max-h-[90vh] flex flex-col transform transition-all 
+          duration-300 ease-in-out ${
           isAnimating 
             ? 'translate-y-0 opacity-100 scale-100' 
             : 'translate-y-8 opacity-0 scale-95'
         }`}
       >
         {/* Tabs */}
-        <div className="flex  rounded-lg bg-[#F6F8FA] px-2 py-2 shrink-0">
+        <div className="flex rounded-lg bg-[#F6F8FA] px-2 py-2 shrink-0">
           <button
             onClick={() => setActiveTab("front")}
-            className={`flex-1 py-2 text-sm font-medium relative ${
+            className={`flex-1 py-2 text-[12px] sm:text-sm font-medium relative ${
               activeTab === "front" ? "text-blue-600 bg-white rounded-lg" : "text-gray-500"
             }`}
           >
             Front Passport
-            {activeTab === "front" && (
-              ''
-              // <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></div>
-            )}
           </button>
           <button
             onClick={() => setActiveTab("back")}
@@ -128,10 +123,6 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
             }`}
           >
             Back Passport
-            {activeTab === "back" && (
-              ''
-              // <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></div>
-            )}
           </button>
           <button
             onClick={() => setActiveTab("pan")}
@@ -140,46 +131,45 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
             }`}
           >
             Pan Card
-            {activeTab === "pan" && (
-              ''
-              // <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></div>
-            )}
           </button>
         </div>
 
         {/* Tab Content */}
         <div className="p-2 overflow-y-auto">
-          {/* Front Passport Content */}
           {activeTab === "front" && (
             <div className="space-y-2">
-              <div className="bg-gray-100 p-4 rounded-lg">
+              <div className="bg-gray-100 p-2 sm:p-4 rounded-lg">
                 <img
                   src="/path/to/passport/image"
                   alt="Front Passport"
-                  className="w-full h-38 object-contain"
+                  className="w-full h-32 sm:h-38 md:h-48 object-contain"
                 />
               </div>
-              <div className="flex flex-col">
-                <div className="justify-between flex ">
-                  <Input
-                  labalClassName='text-[12px] text-gray-500'
-                    name="name"
-                    label="Name"
-                    value={formData.front.name}
-                    disabled
-                    placeholder="Name"
-                  />
-
-                  <Input
-                    name="passportNumber"
-                    label="Passport Number"
-                    value={formData.front.passportNumber}
-                    disabled
-                    placeholder="Passport Number"
-                  />
+              <div className="flex flex-col gap-2 sm:gap-4">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                  <div className="w-full sm:w-1/2">
+                    <Input
+                      labalClassName='text-[12px] text-gray-500'
+                      name="name"
+                      label="Name"
+                      value={formData.front.name}
+                      disabled
+                      placeholder="Name"
+                    />
+                  </div>
+                  <div className="w-full sm:w-1/2">
+                    <Input
+                      labalClassName='text-[12px] text-gray-500'
+                      name="passportNumber"
+                      label="Passport Number"
+                      value={formData.front.passportNumber}
+                      disabled
+                      placeholder="Passport Number"
+                    />
+                  </div>
                 </div>
 
-                <div className=" gap-1 flex">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                   <Input
                     name="gender"
                     label="Sex"
@@ -203,7 +193,7 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
                     placeholder="Place of Birth"
                   />
                 </div>
-                <div className="flex gap-1 justify-between">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                   <Input
                     name="maritalStatus"
                     label="Marital Status"
@@ -220,7 +210,7 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
                     placeholder="Date of Issue"
                   />
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                   <Input
                     name="dateOfExpiry"
                     label="Date of Expiry"
@@ -241,7 +231,6 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
             </div>
           )}
 
-          {/* Back Passport Content */}
           {activeTab === "back" && (
             <div className="space-y-6">
               <div className="bg-gray-100 p-4 rounded-lg">
@@ -297,7 +286,6 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
             </div>
           )}
 
-          {/* Pan Card Content */}
           {activeTab === "pan" && (
             <div className="space-y-6">
               <div className="bg-gray-100 p-4 rounded-lg">
@@ -344,16 +332,6 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
             </div>
           )}
         </div>
-
-        {/* Close button section commented out as in original design */}
-        {/* <div className="border-t p-4 flex justify-end shrink-0">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
-          >
-            Close
-          </button>
-        </div> */}
       </div>
     </div>
   );
