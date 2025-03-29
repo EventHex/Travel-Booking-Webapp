@@ -7,6 +7,7 @@ import {
   Placeholder,
   Star,
   Tic,
+  Ticketed
 } from "../../assets";
 import { Calendar } from "lucide-react";
 import SearchInput from "../../components/searchInput";
@@ -100,7 +101,7 @@ const index = () => {
             </div>
 
             {/* Feature Icons */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2 bg-gray-50 rounded-lg space-y-2 sm:space-y-0">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-2  border-[#CDD0D5] border rounded-lg space-y-2 sm:space-y-0">
               <div className="flex items-center text-gray-600 text-sm">
                 <img src={Alerm} alt="" />
                 <span>Opening hours vary</span>
@@ -112,7 +113,7 @@ const index = () => {
               </div>
 
               <div className="flex gap-2 items-center text-gray-600 text-sm">
-                <img src={Allicon} alt="" />
+                <img src={Ticketed} alt="" />
                 <span>Mobile ticket</span>
               </div>
             </div>
@@ -148,6 +149,22 @@ const index = () => {
                     an exhilarating 100 km/h in 2.5 seconds.
                   </li>
                 </ul>
+              </div>
+              <div className="p-3  pb-5 md:pb-10 border-[#CDD0D5] border-b">
+                <h1 className="text-[32px] font-[600]">Inclusions</h1>
+                <ul className="list-disc pl-5">
+                  <li className="text-[14px] font-[400]">Entry to IMG Worlds of Adventure</li>
+                  <li className="text-[14px] font-[400]">Access to all rides and attractions</li>
+                  <li className="text-[14px] font-[400]">Fast-track access to all rides or attractions (as per option selected)</li>
+                  <li className="text-[14px] font-[400]">Entry to Global Village Dubai (as per option selected)</li>
+                  <li className="text-[14px] font-[400]">Entry into IMG Worlds of Adventure (as per option selected)</li>
+                  <li className="text-[14px] font-[400]">Skip-the-line entry to Dubai Miracle Garden (as per optio selected)</li>
+                </ul>
+              </div>
+              <div>
+                <h1></h1>
+                <h5></h5>
+                <p></p>
               </div>
             </div>
             <div className=" md:w-[30%]  p-3 w-full ">
