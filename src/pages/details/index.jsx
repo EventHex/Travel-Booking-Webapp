@@ -329,28 +329,24 @@ const index = () => {
                     </li>
                   </ul>
                 </div>
-                <div className="flex flex-col gap-[10px]">
-                  <h5 className="text-[16px] font-[500]">Accessibility</h5>
+                <div className="flex flex-col border-[#CDD0D5] border-b pb-10 gap-[10px]">
+                  <h5 className="text-[16px] font-[500]">
+                    Additional information
+                  </h5>
                   <ul className="list-disc flex flex-col gap-[25px] pl-5">
                     <li className="text-[14px] text-[#525866] font-[400]">
-                      This experience is wheelchair and pram/stroller
-                      accessible.
+                      Facilities: Lockers
                     </li>
                     <li className="text-[14px] text-[#525866] font-[400]">
-                      Your safety comes first. So, pregnant women, guests with
-                      back issues, neck issues, high blood pressure, cardiac
-                      issues, children unable to sit upright and walk, and
-                      guests who have undergone surgery or were recently unwell
-                      are restricted from participating in this experience.
+                      IMG Worlds of Adventures has launched a new exciting
+                      Weekend Offer valid every Thursday to Saturday from 12pm
+                      to 10pm with additional fun-filled live performances,
+                      parades, and dances.
                     </li>
                     <li className="text-[14px] text-[#525866] font-[400]">
-                      Guests with disabilities need to show a Person of
-                      Disability ID card at the Guest Relations counter to
-                      receive a POD wristband (a blue bracelet that grants VIP
-                      fast-track access to all rides and attractions). In cases
-                      of visible disability and no POD ID card, guests can show
-                      a normal ID requesting a POD bracelet.
+                    Children aged 12 and below must be accompanied by an adult of 16 years.
                     </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">The opening hours are subject to change.</li>
                   </ul>
                 </div>
               </div>
