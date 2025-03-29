@@ -22,6 +22,7 @@ import {
 
 } from "../../assets";
 import SearchInput from "../../components/searchInput";
+import { Link} from "react-router-dom";
 const index = () => {
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [citizenInputRef, setCitizenInputRef] = useState(null);
@@ -363,6 +364,7 @@ const index = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
       {cardData.map((card) => (
+        <Link to="/details">
         <Card 
           key={card.id}
           image={card.image}
@@ -374,6 +376,7 @@ const index = () => {
           discountedPrice={card.discountedPrice}
           discount={card.discount}
         />
+        </Link>
       ))}
     </div>
           </div>

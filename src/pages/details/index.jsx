@@ -238,6 +238,33 @@ const index = () => {
                   Rampage: The Powerpuff Girls, The Amazing Ride of Gumball
                 </p>
               </div>
+              <div className="flex flex-col gap-[10px]">
+                <h5 className="text-[16px] font-[500]">IMG Boulevard</h5>
+                <p className="text-[14px] text-[#525866] font-[400]">
+                  Experience live shows, meet-n-greets, and more; indulge in
+                  food, shopping, photography and more. IMG Worlds of Adventure
+                  is the place to visit in Dubai if you’re looking to have a
+                  jolly good time with your family, and friends.
+                </p>
+              </div>
+              <div className="flex flex-col gap-[10px]">
+                <h1>Dining areas:</h1>
+                <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                    Popcorn Factory
+                  </li>
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                  Boulevard Gourmet                                 </li>
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                  Samosa House                  </li>
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                  Fast-track access to all rides or attractions (as per option selected)               </li>
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                  Flavors of Arabia                  </li>
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                  The Coffeehouse                  </li>
+                </ul>
+              </div>
             </div>
             <div className=" md:w-[30%]  p-3 w-full ">
               <div className="max-w-xs w-full mx-auto border-[#CDD0D5] border rounded-xl  p-6">
