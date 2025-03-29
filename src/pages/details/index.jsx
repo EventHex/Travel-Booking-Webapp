@@ -119,12 +119,22 @@ const index = () => {
           {/* *************details ******************** */}
           <div className="w-full flex gap-3 bg-red-400">
             <div className="w-[70%]">
-              <div>
+              <div className="p-3 pb-10 border-b">
                 <h1 className="text-[32px] font-[600]">Highlights</h1>
+                <ul className="list-disc pl-5">
+                  <li className="text-[14px] font-[400]">
+                    Enjoy 22 adrenaline-fueled rides across 1.5 million square
+                    feet of a playground at IMG World of Adventure, Dubai's
+                    largest indoor theme and amusement park.
+                  </li>
+                  <li className="text-[14px] font-[400]">Feel the rush of childhood nostalgia and excitement with epic zones such as Marvel and Cartoo Network.</li>
+                  <li className="text-[14px] font-[400]">Swing through the city with Spider Man, come face-to-face with life-sized dinosaurs,or join the Powerpuff Girls in fighting their nemesis, Mojo Jojo.</li>
+                  <li className="text-[14px] font-[400]">Upgrade your ticket to get fast-track entry to any rides or attractions at IMG or get skip-the-line entry at Dubai Miracle Garden.</li>
+                  <li className="text-[14px] font-[400]">Fun fact: The Velociraptor rollercoaster propels visitors to an exhilarating 100 km/h in 2.5 seconds.</li>
+                </ul>
               </div>
             </div>
             <div className="w-[30%]"></div>
-
           </div>
         </div>
       </div>
