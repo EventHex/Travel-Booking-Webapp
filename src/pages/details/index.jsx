@@ -254,16 +254,105 @@ const index = () => {
                     Popcorn Factory
                   </li>
                   <li className="text-[14px] text-[#525866] font-[400]">
-                  Boulevard Gourmet                                 </li>
+                    Boulevard Gourmet{" "}
+                  </li>
                   <li className="text-[14px] text-[#525866] font-[400]">
-                  Samosa House                  </li>
+                    Samosa House{" "}
+                  </li>
                   <li className="text-[14px] text-[#525866] font-[400]">
-                  Fast-track access to all rides or attractions (as per option selected)               </li>
+                    Fast-track access to all rides or attractions (as per option
+                    selected){" "}
+                  </li>
                   <li className="text-[14px] text-[#525866] font-[400]">
-                  Flavors of Arabia                  </li>
+                    Flavors of Arabia{" "}
+                  </li>
                   <li className="text-[14px] text-[#525866] font-[400]">
-                  The Coffeehouse                  </li>
+                    The Coffeehouse{" "}
+                  </li>
                 </ul>
+              </div>
+              <div className="flex flex-col  border-[#CDD0D5] pb-10 border-b gap-[10px]">
+                <h1>Shopping areas:</h1>
+                <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                    World of Candy
+                  </li>
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                    IMG Emporium{" "}
+                  </li>
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                    Courage & Kind{" "}
+                  </li>
+                  <li className="text-[14px] text-[#525866] font-[400]">
+                    Adventure Photography{" "}
+                  </li>
+                </ul>
+              </div>
+              <div className="flex flex-col gap-[10px]">
+                <h1 className="text-[32px] font-[600]">Know before you go</h1>
+                <h5>What makes IMG Worlds of Adventure so special</h5>
+                <div className="flex flex-col gap-[10px]">
+                  <h5 className="text-[16px] font-[500]">What's not allowed</h5>
+                  <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                      Keep in mind outside food, smoking, drones, helium
+                      balloons, illegal substances, hard sided containers and
+                      bags, large flags, knives, sharp objects, flares, tents,
+                      camping chairs, selfie sticks, lenses over 70mm, glass
+                      items, scooter, shoes with wheels, political slogans, and
+                      drinking are not allowed inside the park.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="flex flex-col gap-[10px]">
+                  <h5 className="text-[16px] font-[500]">Accessibility</h5>
+                  <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                      This experience is wheelchair and pram/stroller
+                      accessible.
+                    </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                      Your safety comes first. So, pregnant women, guests with
+                      back issues, neck issues, high blood pressure, cardiac
+                      issues, children unable to sit upright and walk, and
+                      guests who have undergone surgery or were recently unwell
+                      are restricted from participating in this experience.
+                    </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                      Guests with disabilities need to show a Person of
+                      Disability ID card at the Guest Relations counter to
+                      receive a POD wristband (a blue bracelet that grants VIP
+                      fast-track access to all rides and attractions). In cases
+                      of visible disability and no POD ID card, guests can show
+                      a normal ID requesting a POD bracelet.
+                    </li>
+                  </ul>
+                </div>
+                <div className="flex flex-col gap-[10px]">
+                  <h5 className="text-[16px] font-[500]">Accessibility</h5>
+                  <ul className="list-disc flex flex-col gap-[25px] pl-5">
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                      This experience is wheelchair and pram/stroller
+                      accessible.
+                    </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                      Your safety comes first. So, pregnant women, guests with
+                      back issues, neck issues, high blood pressure, cardiac
+                      issues, children unable to sit upright and walk, and
+                      guests who have undergone surgery or were recently unwell
+                      are restricted from participating in this experience.
+                    </li>
+                    <li className="text-[14px] text-[#525866] font-[400]">
+                      Guests with disabilities need to show a Person of
+                      Disability ID card at the Guest Relations counter to
+                      receive a POD wristband (a blue bracelet that grants VIP
+                      fast-track access to all rides and attractions). In cases
+                      of visible disability and no POD ID card, guests can show
+                      a normal ID requesting a POD bracelet.
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
             <div className=" md:w-[30%]  p-3 w-full ">
