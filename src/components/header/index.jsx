@@ -51,9 +51,11 @@ const index = () => {
                      <div className="border border-[#E2E4E9] w-10 h-10 flex items-center justify-center rounded-full">
                        <img src={QuestionMark} alt="" />
                      </div>
-                     <div className="border border-[#E2E4E9] w-10 h-10 flex items-center justify-center rounded-full">
+                     <Link to='/profle'>                     <div className="border border-[#E2E4E9] w-10 h-10 flex items-center justify-center rounded-full">
                        <img src={User} alt="" />
                      </div>
+                     </Link>
+
                    </div>
                  </div>
                </div>

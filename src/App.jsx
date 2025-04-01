@@ -6,6 +6,7 @@ import ApplyPage from './pages/apply'
 import FormPage from './pages/form'
 import Productpge from './pages/products'
 import DetailsPage from './pages/details'
+import ProflePage from "./pages/profile"
 // import NotFound from "./pages/NotFound";
 import "./App.css";
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/form" element={<FormPage />} />
         <Route path="/products" element={<Productpge />} /> 
         <Route path="/details" element={<DetailsPage />} />
+        <Route path="/profle" element={<ProflePage />} />
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </Router>
