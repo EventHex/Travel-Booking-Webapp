@@ -9,6 +9,8 @@ import {
   Refuse,
   Pending,
   Submit,
+  SeccessTrue,
+  CloseIcon,
 } from "../../assets";
 import Ticket from "../../components/ticket";
 import {SuccessIcon,PendingIcon,RejectIcon} from '../../assets'
@@ -85,6 +87,7 @@ const Index = () => {
       visa: "UAE 30 Days Covid Insurance",
       travelDates: "Mar 4, 2025 — Mar 20, 2025",
       status: "approved",
+      image:SeccessTrue,
       details: {
         errorFixed: true,
         applicationComplete: true,
@@ -111,6 +114,7 @@ const Index = () => {
       visa: 'UAE 30 Days Covid Insurance',
       travelDates: 'Mar 4, 2025 — Mar 20, 2025',
       status: 'rejected',
+      image:CloseIcon,
       details: {
         errorFixed: true,
         applicationComplete: true,
@@ -138,6 +142,7 @@ const Index = () => {
       visa: 'UAE 30 Days Covid Insurance',
       travelDates: 'Mar 4, 2025 — Mar 20, 2025',
       status: 'refunded',
+      image:CloseIcon,
       details: {
         errorFixed: true,
         applicationComplete: true,
@@ -167,6 +172,8 @@ const Index = () => {
       visa: 'UAE 30 Days Covid Insurance',
       travelDates: 'Mar 4, 2025 — Mar 20, 2025',
       status: 'pending',
+      image:CloseIcon,
+
       details: {
         errorFixed: true,
         applicationComplete: true,
