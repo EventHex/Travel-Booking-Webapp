@@ -252,7 +252,7 @@ const Index = () => {
       case "submitted":
         return (
           <Ticket 
-          approvedApplication={approvedApplication} 
+         submittedApplication={submittedApplication}
         /> 
         );
       case "pending":
