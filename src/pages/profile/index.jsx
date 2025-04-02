@@ -3,6 +3,8 @@ import Header from "../../components/header";
 import Sidebar from "./sideBar";
 import Transaction from "./transaction";
 import Overstay from "./Overstay";
+import Training from "./Training";
+import Password from "./password";
 import { PhoneCall, AlertTriangle,Upload,Save } from 'lucide-react';
 
 const Index = () => {
@@ -430,9 +432,9 @@ const Index = () => {
       case "Overstay":
         return <Overstay/>
       case "Training":
-        return <div><h2 className="text-xl font-bold mb-4">Training</h2><p>Access training materials</p></div>;
+        return <Training/>
       case "changepassword":
-        return <div><h2 className="text-xl font-bold mb-4">Change Password</h2><p>Update your account password</p></div>;
+        return <Password/>
       case "passport":
         return <div><h2 className="text-xl font-bold mb-4">Passport Details</h2><p>View and update passport information</p></div>;
       case "traveller-photo":
