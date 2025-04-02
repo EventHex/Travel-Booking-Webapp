@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Shield, X } from "lucide-react";
-import { True } from "../../assets";
+import { True, TicIcon, CloseIconTicket } from "../../assets";
 import PassportPopup  from "./popup";
 
 const Ticket = ({
@@ -155,34 +155,16 @@ const Ticket = ({
                               className="flex items-center space-x-3 relative"
                             >
                               <div
-                                className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
-                                  value ? "bg-blue-50" : "bg-red-50"
-                                } flex items-center justify-center z-10 border ${
-                                  value ? "border-blue-100" : "border-red-100"
+                                className={` sm:w-6 rounded-full ${
+                                  value ? "" : ""
+                                } flex items-center justify-center  ${
+                                  value ? "" : ""
                                 }`}
                               >
                                 {value ? (
-                                  <svg
-                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                      value ? "text-blue-500" : "text-red-500"
-                                    }`}
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 13l4 4L19 7"
-                                    />
-                                  </svg>
+                                  <img src={TicIcon} alt="tic" />                          
                                 ) : (
-                                  <X
-                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                      value ? "text-blue-500" : "text-red-500"
-                                    }`}
-                                  />
+                              <img src={CloseIconTicket} alt="close" />
                                 )}
                               </div>
                               <span className="text-xs sm:text-sm text-gray-600">
