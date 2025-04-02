@@ -132,6 +132,35 @@ const Index = () => {
       }
     };
   
+
+    const submittedApplication = {
+      name: "SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL",
+      icon:SuccessIcon,
+      submittedOn: "Feb 19, 2025",
+      submittedAt: "11:14 AM",
+      passportNumber: "V7672497",
+      country: "United Arab Emirates",
+      visa: "UAE 30 Days Covid Insurance",
+      travelDates: "Mar 4, 2025 — Mar 20, 2025",
+      status: "submitted",
+      image:SeccessTrue,
+      details: {
+        errorFixed: true,
+        applicationComplete: true,
+        applicationPaid: true,
+        submittedToSpencer: true,
+        visaApproved: true,
+      },
+      statusMessage: {
+        title: "Visa submitted",
+        icon: SuccessIcon,
+        iconBg: "bg-blue-200",
+        iconColor: "text-blue-500",
+        cardBg: "bg-gradient-to-br from-blue-50/80 to-blue-50/40",
+        borderColor: "border-blue-100",
+      },
+    }
+
     const refuntApplication = {
       name: 'SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL',
       icon:'',
@@ -200,6 +229,7 @@ const Index = () => {
 <Ticket 
   approvedApplication={approvedApplication} 
   rejectedApplication={rejectedApplication}
+  submittedApplication={submittedApplication}
   pendingApplication = {pendingApplication}
   refuntApplication={refuntApplication} 
 

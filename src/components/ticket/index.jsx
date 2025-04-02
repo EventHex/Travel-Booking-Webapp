@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Shield, X } from "lucide-react";
-import { True } from "../../assets";
-import PassportPopup  from "./popup";
+import { True, TicIcon, CloseIconTicket } from "../../assets";
+import PassportPopup from "./popup";
 
 const Ticket = ({
   approvedApplication,
-  refuntApplication,
   rejectedApplication,
+  submittedApplication,
+  refuntApplication,
   pendingApplication,
 }) => {
   // Create an array of applications, filtering out undefined ones
@@ -15,6 +16,7 @@ const Ticket = ({
     refuntApplication,
     rejectedApplication,
     pendingApplication,
+    submittedApplication,
   ].filter((app) => app !== undefined);
 
   const getStatusBarColor = (status) => {
@@ -25,6 +27,8 @@ const Ticket = ({
         return "bg-red-500";
       case "refunded":
         return "bg-orange-500";
+      case "submitted":
+        return "bg-blue-800";
       case "pending":
         return "bg-green-500";
       default:
@@ -38,6 +42,8 @@ const Ticket = ({
         return "Approved";
       case "rejected":
         return "Rejected";
+      case "submitted":
+        return "Submitted";
       case "refunded":
         return "Refunded";
       default:
@@ -57,7 +63,7 @@ const Ticket = ({
     maritalStatus: "Single",
     dateOfIssue: "29-10-2022",
     dateOfExpiry: "29-10-2022",
-    nationality: "Indian"
+    nationality: "Indian",
   };
 
   const openPassportPopup = () => {
@@ -149,68 +155,58 @@ const Ticket = ({
                             }}
                           ></div>
 
-                          {Object.entries(application.details).map(([key, value]) => (
-                            <div
-                              key={key}
-                              className="flex items-center space-x-3 relative"
-                            >
+                          {Object.entries(application.details).map(
+                            ([key, value]) => (
                               <div
-                                className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
-                                  value ? "bg-blue-50" : "bg-red-50"
-                                } flex items-center justify-center z-10 border ${
-                                  value ? "border-blue-100" : "border-red-100"
-                                }`}
+                                key={key}
+                                className="flex items-center space-x-3 relative"
                               >
-                                {value ? (
-                                  <svg
-                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                      value ? "text-blue-500" : "text-red-500"
-                                    }`}
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 13l4 4L19 7"
-                                    />
-                                  </svg>
-                                ) : (
-                                  <X
-                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                      value ? "text-blue-500" : "text-red-500"
-                                    }`}
-                                  />
-                                )}
+                                <div
+                                  className={` sm:w-6 rounded-full ${
+                                    value ? "" : ""
+                                  } flex items-center justify-center  ${
+                                    value ? "" : ""
+                                  }`}
+                                >
+                                  {value ? (
+                                    <img src={TicIcon} alt="tic" />
+                                  ) : (
+                                    <img src={CloseIconTicket} alt="close" />
+                                  )}
+                                </div>
+                                <span className="text-xs sm:text-sm text-gray-600">
+                                  {key
+                                    .replace(/([A-Z])/g, " $1")
+                                    .replace(/^./, (str) => str.toUpperCase())}
+                                </span>
                               </div>
-                              <span className="text-xs sm:text-sm text-gray-600">
-                                {key
-                                  .replace(/([A-Z])/g, " $1")
-                                  .replace(/^./, (str) => str.toUpperCase())}
-                              </span>
-                            </div>
-                          ))}
+                            )
+                          )}
                         </div>
                       </div>
 
                       {/* Status Card Section */}
                       <div className="flex-shrink-0 w-72">
-                        <h2 
-                        className="w-full rounded-lg text-gray-500 underline text-sm   font-semibold mb-3 py-1"
-                        onClick={()=> openPassportPopup()}
-                        >9/9 Parameters checked</h2>
+                        <h2
+                          className="w-full rounded-lg text-gray-500 underline text-sm   font-semibold mb-3 py-1"
+                          onClick={() => openPassportPopup()}
+                        >
+                          {
+                            Object.values(application.details).filter(Boolean)
+                              .length
+                          }
+                          /{Object.keys(application.details).length} Parameters
+                          checked
+                        </h2>
                         <div
                           className={`${
-                            application.status === "pending"
-                              ? "bg-blue-50 border-blue-100"
-                              : application.status === "approved"
-                              ? "bg-blue-50 border-blue-100 border"
-                              : application.statusMessage.cardBg +
-                                " " +
-                                application.statusMessage.borderColor +
-                                " border"
+                            application.status === "approved"
+                              ? "bg-blue-100"
+                              : application.status === "pending"
+                              ? "bg-green-100"
+                              : application.status === "submitted"
+                              ? "bg-blue-200"
+                              : application.statusMessage.cardBg
                           } rounded-xl sm:rounded-2xl sm:p-2`}
                         >
                           <div className="flex w-full space-x-3 sm:space-x-4">
@@ -219,7 +215,11 @@ const Ticket = ({
                               <div
                                 className={`h-10 w-10 sm:h-12 sm:w-12 ${
                                   application.status === "pending"
+                                    ? "bg-green-200"
+                                    : application.status === "submitted" || application.status === "submitting"
                                     ? "bg-blue-100"
+                                    : application.status === "approved"
+                                    ? "bg-blue-200"
                                     : application.statusMessage.iconBg
                                 } rounded-lg sm:rounded-xl flex items-center justify-center`}
                               >
@@ -234,7 +234,11 @@ const Ticket = ({
                                   <div
                                     className={`${
                                       application.status === "pending"
-                                        ? "text-blue-500"
+                                        ? "text-green-500"
+                                        : application.status === "submitted" || application.status === "submitting"
+                                        ? "text-orange-500"
+                                        : application.status === "approved"
+                                        ? "text-yellow-500"
                                         : application.statusMessage.iconColor
                                     }`}
                                   >
@@ -247,6 +251,9 @@ const Ticket = ({
                                     {application.status === "pending" && (
                                       <Shield className="h-6 w-6" />
                                     )}
+                                    {(application.status === "submitted" || application.status === "submitting") && (
+                                      <span className="text-lg font-bold">!</span>
+                                    )}
                                   </div>
                                 )}
                               </div>
@@ -255,7 +262,7 @@ const Ticket = ({
                               <h4
                                 className={`font-medium ${
                                   application.status === "pending"
-                                    ? "text-blue-500"
+                                    ? "text-green-500  "
                                     : application.statusMessage.iconColor
                                 } sm:text-[16px]`}
                               >
@@ -319,7 +326,8 @@ const Ticket = ({
 
                           {/* Dates for approved or pending */}
                           {(application.status === "approved" ||
-                            application.status === "pending") && (
+                            application.status === "pending" ||
+                            application.status === "submitted") && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm">
                               <p className="flex justify-between">
                                 <span className="text-gray-700 text-[14px] font-[400]">
@@ -344,9 +352,8 @@ const Ticket = ({
                         {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
                           <button
-                          // onClick={() => openPassportPopup()}
+                            // onClick={() => openPassportPopup()}
                             className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
-                         
                           >
                             View Application
                           </button>
@@ -418,49 +425,51 @@ const Ticket = ({
                             }}
                           ></div>
 
-                          {Object.entries(application.details).map(([key, value]) => (
-                            <div
-                              key={key}
-                              className="flex items-center space-x-3 relative"
-                            >
+                          {Object.entries(application.details).map(
+                            ([key, value]) => (
                               <div
-                                className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
-                                  value ? "bg-blue-50" : "bg-red-50"
-                                } flex items-center justify-center border ${
-                                  value ? "border-blue-100" : "border-red-100"
-                                }`}
+                                key={key}
+                                className="flex items-center space-x-3 relative"
                               >
-                                {value ? (
-                                  <svg
-                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                      value ? "text-blue-500" : "text-red-500"
-                                    }`}
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 13l4 4L19 7"
+                                <div
+                                  className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
+                                    value ? "bg-blue-500" : "bg-red-500"
+                                  } flex items-center justify-center border ${
+                                    value ? "border-blue-100" : "border-red-100"
+                                  }`}
+                                >
+                                  {value ? (
+                                    <svg
+                                      className={`h-3 w-3 sm:h-4 sm:w-4 ${
+                                        value ? "text-blue-500" : "text-red-500"
+                                      }`}
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 13l4 4L19 7"
+                                      />
+                                    </svg>
+                                  ) : (
+                                    <X
+                                      className={`h-3 w-3 sm:h-4 sm:w-4 ${
+                                        value ? "text-blue-500" : "text-red-500"
+                                      }`}
                                     />
-                                  </svg>
-                                ) : (
-                                  <X
-                                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                      value ? "text-blue-500" : "text-red-500"
-                                    }`}
-                                  />
-                                )}
+                                  )}
+                                </div>
+                                <span className="text-xs sm:text-sm text-gray-600">
+                                  {key
+                                    .replace(/([A-Z])/g, " $1")
+                                    .replace(/^./, (str) => str.toUpperCase())}
+                                </span>
                               </div>
-                              <span className="text-xs sm:text-sm text-gray-600">
-                                {key
-                                  .replace(/([A-Z])/g, " $1")
-                                  .replace(/^./, (str) => str.toUpperCase())}
-                              </span>
-                            </div>
-                          ))}
+                            )
+                          )}
                         </div>
                       </div>
 
@@ -483,7 +492,11 @@ const Ticket = ({
                               <div
                                 className={`h-10 w-10 sm:h-12 sm:w-12 ${
                                   application.status === "pending"
-                                    ? "bg-blue-100"
+                                    ? "bg-green-200"
+                                    : application.status === "submitted" || application.status === "submitting"
+                                    ? "bg-orange-100"
+                                    : application.status === "approved"
+                                    ? "bg-yellow-100"
                                     : application.statusMessage.iconBg
                                 } rounded-lg sm:rounded-xl flex items-center justify-center`}
                               >
@@ -498,7 +511,11 @@ const Ticket = ({
                                   <div
                                     className={`${
                                       application.status === "pending"
-                                        ? "text-blue-500"
+                                        ? "text-green-500"
+                                        : application.status === "submitted" || application.status === "submitting"
+                                        ? "text-orange-500"
+                                        : application.status === "approved"
+                                        ? "text-yellow-500"
                                         : application.statusMessage.iconColor
                                     }`}
                                   >
@@ -510,6 +527,9 @@ const Ticket = ({
                                     )}
                                     {application.status === "pending" && (
                                       <Shield className="h-6 w-6" />
+                                    )}
+                                    {(application.status === "submitted" || application.status === "submitting") && (
+                                      <span className="text-lg font-bold">!</span>
                                     )}
                                   </div>
                                 )}
@@ -568,6 +588,19 @@ const Ticket = ({
                               </p>
                             </div>
                           )}
+                          {application.status === "submitted" && (
+                            <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
+                              <p className="flex justify-between">
+                                <span>Estixgcmated on:</span>
+                                <span>Mar 4, 2025</span>
+                              </p>
+                              <p className="flex justify-between">
+                                <span>Delivery on:</span>
+                                <span>Mar 4, 2025</span>
+                              </p>
+                            </div>
+                          )}
+
 
                           {/* No dates shown for refunded applications */}
                         </div>
@@ -593,10 +626,10 @@ const Ticket = ({
           </div>
         </div>
       </main>
-      
+
       {/* Add the PassportPopup component at the root level */}
-      <PassportPopup 
-        isOpen={isPopupOpen} 
+      <PassportPopup
+        isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}
         passportData={passportData}
       />

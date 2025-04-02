@@ -50,6 +50,8 @@ import Ticketed from "./icons/card/ticket-2-line.svg"
 import Map from "./icons/card/map-pin-2-line.svg"
 import CloseIcon from "./icons/ticket/close-circle-fill.svg"
 import SeccessTrue from "./icons/ticket/select-box-circle-fill (4).svg"
+import TicIcon from "./icons/ticket/Vector (45).svg"
+import CloseIconTicket from "./icons/ticket/Vector (46).svg"
 export {
   Logo,
   Men,
@@ -102,5 +104,7 @@ export {
   Ticketed,
   Map,
   CloseIcon,
-  SeccessTrue
+  SeccessTrue,
+  TicIcon,
+  CloseIconTicket
 };
