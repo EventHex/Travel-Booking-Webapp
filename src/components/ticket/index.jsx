@@ -198,7 +198,7 @@ const Ticket = ({
                       {/* Status Card Section */}
                       <div className="flex-shrink-0 w-72">
                         <h2 
-                        className="w-full bg-green-100 rounded-lg text-gray-500 underline text-md font-semibold mb-3 py-1"
+                        className="w-full rounded-lg text-gray-500 underline text-sm   font-semibold mb-3 py-1"
                         onClick={()=> openPassportPopup()}
                         >9/9 Parameters checked</h2>
                         <div
@@ -344,7 +344,7 @@ const Ticket = ({
                         {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
                           <button
-                          onClick={() => openPassportPopup()}
+                          // onClick={() => openPassportPopup()}
                             className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
                          
                           >
