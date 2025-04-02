@@ -67,7 +67,7 @@ const Ticket = ({
 
   return (
     <div className="w-full">
-      <main className="w-full  ">
+      <main className="w-full">
         <div className="flex flex-col gap-3">
           <div className="flex-1">
             {applicationData.map((application, index) => (
@@ -197,6 +197,10 @@ const Ticket = ({
 
                       {/* Status Card Section */}
                       <div className="flex-shrink-0 w-72">
+                        <h2 
+                        className="w-full bg-green-100 rounded-lg text-gray-500 underline text-md font-semibold mb-3 py-1"
+                        onClick={()=> openPassportPopup()}
+                        >9/9 Parameters checked</h2>
                         <div
                           className={`${
                             application.status === "pending"

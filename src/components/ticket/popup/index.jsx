@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Input from "../../input";
 
 const PassportPopup = ({ isOpen, onClose, passportData }) => {
   const [formData, setFormData] = useState({
@@ -85,6 +84,15 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
 
   if (!mounted) return null;
 
+  // Field item component
+  const FieldItem = ({ label, value }) => (
+    <div className="flex items-center bg-green-50 hover:bg-green-100 rounded-md p-2 mb-2">
+      <span className="text-green-500 mr-2">✓</span>
+      <span className="text-gray-600 font-medium mr-2">{label}:</span>
+      <span className="text-green-600 font-medium">{value}</span>
+    </div>
+  );
+
   return (
     <div 
       className={`fixed inset-0 flex items-center justify-center z-50 p-4 transition-all duration-300 ease-in-out ${
@@ -99,7 +107,7 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
       ></div>
       <div 
         className={`bg-white p-4 rounded-[26px] w-[95%] sm:w-[80%] md:w-[70%] lg:w-[60%] 
-          max-w-[800px] relative max-h-[90vh] flex flex-col transform transition-all 
+          max-w-[700px] relative max-h-[90vh] flex flex-col transform transition-all 
           duration-300 ease-in-out ${
           isAnimating 
             ? 'translate-y-0 opacity-100 scale-100' 
@@ -137,7 +145,7 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
         {/* Tab Content */}
         <div className="p-2 overflow-y-auto">
           {activeTab === "front" && (
-            <div className="space-y-2">
+            <div className="space-y-4">
               <div className="bg-gray-100 p-2 sm:p-4 rounded-lg">
                 <img
                   src="/path/to/passport/image"
@@ -145,94 +153,22 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
                   className="w-full h-32 sm:h-38 md:h-48 object-contain"
                 />
               </div>
-              <div className="flex flex-col gap-2 sm:gap-4">
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                  <div className="w-full sm:w-1/2">
-                    <Input
-                      labalClassName='text-[12px] text-gray-500'
-                      name="name"
-                      label="Name"
-                      value={formData.front.name}
-                      disabled
-                      placeholder="Name"
-                    />
-                  </div>
-                  <div className="w-full sm:w-1/2">
-                    <Input
-                      labalClassName='text-[12px] text-gray-500'
-                      name="passportNumber"
-                      label="Passport Number"
-                      value={formData.front.passportNumber}
-                      disabled
-                      placeholder="Passport Number"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                  <Input
-                    name="gender"
-                    label="Sex"
-                    value={formData.front.gender}
-                    disabled
-                    placeholder="Sex"
-                  />
-
-                  <Input
-                    name="dateOfBirth"
-                    label="Date of Birth"
-                    value={formData.front.dateOfBirth}
-                    disabled
-                    placeholder="Date of Birth"
-                  />
-                  <Input
-                    name="placeOfBirth"
-                    label="Place of Birth"
-                    value={formData.front.placeOfBirth}
-                    disabled
-                    placeholder="Place of Birth"
-                  />
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                  <Input
-                    name="maritalStatus"
-                    label="Marital Status"
-                    value={formData.front.maritalStatus}
-                    disabled
-                    placeholder="Marital Status"
-                  />
-
-                  <Input
-                    name="dateOfIssue"
-                    label="Date of Issue"
-                    value={formData.front.dateOfIssue}
-                    disabled
-                    placeholder="Date of Issue"
-                  />
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                  <Input
-                    name="dateOfExpiry"
-                    label="Date of Expiry"
-                    value={formData.front.dateOfExpiry}
-                    disabled
-                    placeholder="Date of Expiry"
-                  />
-
-                  <Input
-                    name="nationality"
-                    label="Nationality"
-                    value={formData.front.nationality}
-                    disabled
-                    placeholder="Nationality"
-                  />
-                </div>
+                <FieldItem label="Name" value={formData.front.name}  />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FieldItem label="Passport" value={formData.front.passportNumber} />
+                <FieldItem label="Sex" value={formData.front.gender} />
+                <FieldItem label="DOB" value={formData.front.dateOfBirth} />
+                <FieldItem label="POB" value={formData.front.placeOfBirth} />
+                <FieldItem label="Marital Status" value={formData.front.maritalStatus} />
+                <FieldItem label="Date of Issue" value={formData.front.dateOfIssue} />
+                <FieldItem label="Date of Expiry" value={formData.front.dateOfExpiry} />
+                <FieldItem label="Nationality" value={formData.front.nationality} />
               </div>
             </div>
           )}
 
           {activeTab === "back" && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="bg-gray-100 p-4 rounded-lg">
                 <img
                   src="/path/to/passport/back/image"
@@ -240,54 +176,18 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
                   className="w-full h-38 object-contain"
                 />
               </div>
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between">
-                  <Input
-                    name="address"
-                    label="Address"
-                    value={formData.back.address}
-                    disabled
-                    placeholder="Address"
-                  />
-                  <Input
-                    name="fatherName"
-                    label="Father's Name"
-                    value={formData.back.fatherName}
-                    disabled
-                    placeholder="Father's Name"
-                  />
-                </div>
-                <div className="flex justify-between">
-                  <Input
-                    name="motherName"
-                    label="Mother's Name"
-                    value={formData.back.motherName}
-                    disabled
-                    placeholder="Mother's Name"
-                  />
-                  <Input
-                    name="emergencyContact"
-                    label="Emergency Contact"
-                    value={formData.back.emergencyContact}
-                    disabled
-                    placeholder="Emergency Contact"
-                  />
-                </div>
-                <div className="flex">
-                  <Input
-                    name="bloodGroup"
-                    label="Blood Group"
-                    value={formData.back.bloodGroup}
-                    disabled
-                    placeholder="Blood Group"
-                  />
-                </div>
-              </div>
+              {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FieldItem label="Address" value={formData.back.address} />
+                <FieldItem label="Father's Name" value={formData.back.fatherName} />
+                <FieldItem label="Mother's Name" value={formData.back.motherName} />
+                <FieldItem label="Emergency Contact" value={formData.back.emergencyContact} />
+                <FieldItem label="Blood Group" value={formData.back.bloodGroup} />
+              </div> */}
             </div>
           )}
 
           {activeTab === "pan" && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="bg-gray-100 p-4 rounded-lg">
                 <img
                   src="/path/to/pan/image"
@@ -295,39 +195,11 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
                   className="w-full h-38 object-contain"
                 />
               </div>
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between">
-                  <Input
-                    name="panNumber"
-                    label="PAN Number"
-                    value={formData.pan.panNumber}
-                    disabled
-                    placeholder="PAN Number"
-                  />
-                  <Input
-                    name="nameOnCard"
-                    label="Name on Card"
-                    value={formData.pan.nameOnCard}
-                    disabled
-                    placeholder="Name on Card"
-                  />
-                </div>
-                <div className="flex justify-between">
-                  <Input
-                    name="fatherName"
-                    label="Father's Name"
-                    value={formData.pan.fatherName}
-                    disabled
-                    placeholder="Father's Name"
-                  />
-                  <Input
-                    name="dateOfBirth"
-                    label="Date of Birth"
-                    value={formData.pan.dateOfBirth}
-                    disabled
-                    placeholder="Date of Birth"
-                  />
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FieldItem label="PAN Number" value={formData.pan.panNumber} />
+                {/* <FieldItem label="Name on Card" value={formData.pan.nameOnCard} />
+                <FieldItem label="Father's Name" value={formData.pan.fatherName} />
+                <FieldItem label="Date of Birth" value={formData.pan.dateOfBirth} /> */}
               </div>
             </div>
           )}
