@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import Header from "../../components/header";
 import Sidebar from "./sideBar";
 import Transaction from "./transaction";
+import Overstay from "./Overstay";
+import Training from "./Training";
+import Password from "./password";
+import Loadwallet from "./LaodWallet";
 import { PhoneCall, AlertTriangle,Upload,Save } from 'lucide-react';
+import { MainBackground } from "../../assets";
 
 const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -425,13 +430,13 @@ const Index = () => {
       case "Transactions":
         return <Transaction/>
       case "LoadWallet":
-        return <div><h2 className="text-xl font-bold mb-4">Load Wallet</h2><p>Add funds to your wallet</p></div>;
+        return <Loadwallet/>
       case "Overstay":
-        return <div><h2 className="text-xl font-bold mb-4">Overstay Management</h2><p>Manage overstay information</p></div>;
+        return <Overstay/>
       case "Training":
-        return <div><h2 className="text-xl font-bold mb-4">Training</h2><p>Access training materials</p></div>;
+        return <Training/>
       case "changepassword":
-        return <div><h2 className="text-xl font-bold mb-4">Change Password</h2><p>Update your account password</p></div>;
+        return <Password/>
       case "passport":
         return <div><h2 className="text-xl font-bold mb-4">Passport Details</h2><p>View and update passport information</p></div>;
       case "traveller-photo":
@@ -445,12 +450,19 @@ const Index = () => {
   };
 
   return (
-    <div>
+    <div
+    style={{
+          
+      backgroundImage: `url(${MainBackground})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+    >
       <Header />
       
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
-          <div className="w-full bg-gray-100 p-4 flex-col flex">
+          <div className="w-full  p-4 flex-col flex">
             <div className="flex items-center space-x-4">
               {/* Avatar/Logo Circle */}
               <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
@@ -471,17 +483,17 @@ const Index = () => {
             </div>
             
             <div className="flex mt-10">
-              <div className="w-auto pr-3 mt-3 md:w-[20%]">
+              <div className="w-auto pr-3 mt-3 mb-10 md:w-[20%]">
                 <div
                   className={`${
-                    isNarrowScreen ? "sticky top-5 w-[50px]" : "sticky top-5 w-full"
+                    isNarrowScreen ? "sticky  top-5 w-[50px]" : "sticky top-5 w-full"
                   } min-w-[50px] mb-6 md:mb-0 transition-all duration-300`}
                 >
                   {/* Pass the callback function to Sidebar */}
                   <Sidebar isNarrow={isNarrowScreen} onOptionSelect={handleOptionSelect} />
                 </div>
               </div>
-              <div className="w-full md:w-[80%]  flex flex-col ">
+              <div className="w-full md:w-[80%]   flex flex-col ">
                 <div className="p-2 md:p-5">
                   {/* Render content based on selected option */}
                   {renderContent()}

@@ -68,49 +68,58 @@ const AtlysWallet = () => {
         </div>
       </div>
       
-      {/* Transaction Table */}
-      <div className="w-full overflow-x-auto">
-        <div className="relative">
-          {/* Fixed Header */}
-          <div className="sticky top-0 bg-indigo-800 text-white">
-            <div className="grid grid-cols-6 font-medium">
-              <div className="p-4">DATE/TIME</div>
-              <div className="p-4">DESCRIPTION</div>
-              <div className="p-4">APPLICATION</div>
-              <div className="p-4">TYPE</div>
-              <div className="p-4 text-right">AMOUNT</div>
-              <div className="p-4 text-right">BALANCE</div>
-            </div>
+      {/* Transaction Table - Fixed Width Container with Horizontal Scroll */}
+      <div className="w-full overflow-hidden">
+        <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <div className="inline-block min-w-full">
+            <table className="min-w-full table-fixed" style={{ width: '800px' }}>
+              {/* Fixed Header */}
+              <thead className="sticky top-0 bg-indigo-800 text-white">
+                <tr>
+                  <th className="p-4 text-left font-medium w-1/6">DATE/TIME</th>
+                  <th className="p-4 text-left font-medium w-1/6">DESCRIPTION</th>
+                  <th className="p-4 text-left font-medium w-1/6">APPLICATION</th>
+                  <th className="p-4 text-left font-medium w-1/6">TYPE</th>
+                  <th className="p-4 text-right font-medium w-1/6">AMOUNT</th>
+                  <th className="p-4 text-right font-medium w-1/6">BALANCE</th>
+                </tr>
+              </thead>
+              
+              {/* Transaction Rows */}
+              <tbody className="bg-white divide-y divide-gray-200">
+                {transactions.map((transaction, index) => (
+                  <tr 
+                    key={transaction.id}
+                    className={index % 2 === 1 ? 'bg-gray-50' : 'bg-white'}
+                  >
+                    <td className="p-4">
+                      <div className="text-[12px]">{transaction.date}</div>
+                      <div className="text-gray-500 text-[12px]">{transaction.time}</div>
+                    </td>
+                    <td className="p-4 text-[12px]">{transaction.description}</td>
+                    <td className="p-4">
+                      {transaction.application && (
+                        <div className="flex items-center bg-gray-200 px-3 py-1 rounded-full w-fit">
+                          <span className="text-[12px]">{transaction.application}</span>
+                          <ChevronDown size={16} className="ml-1" />
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-4 text-[12px]">{transaction.type}</td>
+                    <td className={`p-4 text-right text-[12px] ${transaction.type === 'Credit' ? 'text-green-600' : 'text-red-600'}`}>
+                      {transaction.type === 'Credit' ? '₹' : '-₹'}{Math.abs(transaction.amount).toFixed(2)}
+                    </td>
+                    <td className="p-4 text-right text-[12px]">₹{transaction.balance.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          
-          {/* Transaction Rows */}
-          <div className="max-h-[400px] overflow-y-auto">
-            {transactions.map((transaction, index) => (
-              <div 
-                key={transaction.id}
-                className={`grid grid-cols-6 border-b ${index % 2 === 1 ? 'bg-gray-50' : 'bg-white'}`}
-              >
-                <div className="p-4">
-                  <div  className='text-[12px]'>{transaction.date}</div>
-                  <div className="text-gray-500 text-[12px]">{transaction.time}</div>
-                </div>
-                <div className="p-4 flex text-[12px] items-center">{transaction.description}</div>
-                <div className="p-4">
-                  {transaction.application && (
-                    <div className="flex items-center bg-gray-200 px-3 py-1 rounded-full w-fit">
-                      <span className='text-[12px]'>{transaction.application}</span>
-                      <ChevronDown size={16} className="ml-1" />
-                    </div>
-                  )}
-                </div>
-                <div className="p-4 text-[12px]">{transaction.type}</div>
-                <div className={`p-4 text-right text-[12px] ${transaction.type === 'Credit' ? 'text-green-600' : 'text-red-600'}`}>
-                  {transaction.type === 'Credit' ? '₹' : '-₹'}{Math.abs(transaction.amount).toFixed(2)}
-                </div>
-                <div className="p-4 text-right  text-[12px]">₹{transaction.balance.toFixed(2)}</div>
-              </div>
-            ))}
-          </div>
+        </div>
+        
+        {/* Scroll indicator for small screens */}
+        <div className="block sm:hidden text-center text-gray-500 text-xs py-2 bg-gray-50 border-t">
+          Swipe left/right to view all transaction details
         </div>
       </div>
     </div>
