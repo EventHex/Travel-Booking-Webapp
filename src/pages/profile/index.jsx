@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../../components/header";
 import Sidebar from "./sideBar";
 import Transaction from "./transaction";
-import Loadwallet from "./Loadwallet";
+import Overstay from "./Overstay";
 import { PhoneCall, AlertTriangle,Upload,Save } from 'lucide-react';
 
 const Index = () => {
@@ -426,9 +426,9 @@ const Index = () => {
       case "Transactions":
         return <Transaction/>
       case "LoadWallet":
-        return <Loadwallet/>
+        return ''
       case "Overstay":
-        return <div><h2 className="text-xl font-bold mb-4">Overstay Management</h2><p>Manage overstay information</p></div>;
+        return <Overstay/>
       case "Training":
         return <div><h2 className="text-xl font-bold mb-4">Training</h2><p>Access training materials</p></div>;
       case "changepassword":
