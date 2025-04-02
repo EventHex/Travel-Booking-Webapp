@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const Index = () => {
+const Header = ({ onMenuClick }) => {
   const [showHelp, setShowHelp] = useState(false);
   const [showModal, setShowModal] = useState(false);
   
@@ -75,17 +75,18 @@ const Index = () => {
   };
 
   return (
-    <div 
-      className="w-full shadow-sm py-4 bg-white justify-center flex"
-      onClick={() => {
-        setShowHelp(false);
-        setShowModal(false);
-      }}
-    >
-      <div 
-        className="max-w-[1300px] w-full flex flex-col md:flex-row items-center"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="w-full shadow-sm py-4 bg-white justify-center flex">
+      <div className="max-w-[1300px] w-full flex flex-col md:flex-row items-center">
+        {/* Add menu button for mobile */}
+        <button 
+          className="lg:hidden p-2 mr-4"
+          onClick={onMenuClick}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        
         {/* First child div - takes full width on mobile, 50% on md and above */}
         <div className="w-full md:w-[50%] flex gap-5">
           <div className="w-[30%] px-2">
@@ -346,4 +347,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Header;
