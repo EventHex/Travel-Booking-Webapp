@@ -5,7 +5,9 @@ import Transaction from "./transaction";
 import Overstay from "./Overstay";
 import Training from "./Training";
 import Password from "./password";
+import Loadwallet from "./LaodWallet";
 import { PhoneCall, AlertTriangle,Upload,Save } from 'lucide-react';
+import { MainBackground } from "../../assets";
 
 const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -428,7 +430,7 @@ const Index = () => {
       case "Transactions":
         return <Transaction/>
       case "LoadWallet":
-        return ''
+        return <Loadwallet/>
       case "Overstay":
         return <Overstay/>
       case "Training":
@@ -448,12 +450,19 @@ const Index = () => {
   };
 
   return (
-    <div>
+    <div
+    style={{
+          
+      backgroundImage: `url(${MainBackground})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+    >
       <Header />
       
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
-          <div className="w-full bg-gray-100 p-4 flex-col flex">
+          <div className="w-full  p-4 flex-col flex">
             <div className="flex items-center space-x-4">
               {/* Avatar/Logo Circle */}
               <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Eye, EyeOff } from 'lucide-react';
 
 // Parent component to demonstrate modal functionality
-const App = () => {
+const passowrd = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   
   const openModal = () => setIsModalOpen(true);
@@ -142,4 +142,4 @@ const PasswordChangeDialog = ({ onClose }) => {
   );
 };
 
-export default App;
+export default passowrd;
