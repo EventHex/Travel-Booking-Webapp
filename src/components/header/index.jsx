@@ -10,7 +10,7 @@ import {
   import {Link} from 'react-router-dom'
 const index = () => {
   const [showHelp, setShowHelp] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(true);
 
 
   return (
@@ -88,7 +88,7 @@ const index = () => {
 
 
            {showModal &&  (
-            <div className="absolute z-10 right-4 p-6 bg-white rounded-lg shadow-md max-w-lg">
+            <div className="absolute top-22 z-20 right-4 p-6 bg-white rounded-lg shadow-md max-w-lg">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-xl font-bold">Help</h1>
               <button className="text-gray-400" onClick={()=> setShowModal(false)}>
