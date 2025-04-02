@@ -88,7 +88,7 @@ const index = () => {
 
 
            {showModal &&  (
-            <div className="absolute right-4 p-6 bg-white rounded-lg shadow-md max-w-lg">
+            <div className="absolute top-22 z-20 right-4 p-6 bg-white rounded-lg shadow-md max-w-lg">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-xl font-bold">Help</h1>
               <button className="text-gray-400" onClick={()=> setShowModal(false)}>

@@ -143,7 +143,7 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
         </div>
 
         {/* Tab Content */}
-        <div className="p-2 overflow-y-auto">
+        <div className="px-2 overflow-y-auto">
           {activeTab === "front" && (
             <div className="space-y-4">
               <div className="bg-gray-100 p-2 sm:p-4 rounded-lg">
@@ -153,8 +153,10 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
                   className="w-full h-32 sm:h-38 md:h-48 object-contain"
                 />
               </div>
+              <div className="text-sm">
                 <FieldItem label="Name" value={formData.front.name}  />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <FieldItem label="Passport" value={formData.front.passportNumber} />
                 <FieldItem label="Sex" value={formData.front.gender} />
                 <FieldItem label="DOB" value={formData.front.dateOfBirth} />
