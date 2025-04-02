@@ -14,22 +14,34 @@ import {
   SearchGray,
 } from "../../../assets";
 
-const Index = ({ isNarrow, onClose }) => {
+const Index = ({ isNarrow, onOptionSelect }) => {
   const [isClicksideBar, setClicksideBar] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Review"); // Default selected option changed to "Review"
+  const [selectedOption, setSelectedOption] = useState("Review"); // Default selected option
   const sidebarRef = useRef(null);
 
   const filterOptions = [
-    { id: "InternalID", label: "Internal ID", icon: Visa },
-    { id: "GroupName", label: "Group Name", icon: Date },
-    { id: "Traveller1", label: "Traveller 1", icon: Location },
+    { id: "profile", label: "profile", icon: Visa },
+    { id: "Transactions", label: "Transactions", icon: Date },
+    { id: "LoadWallet", label: "Load Wallet", icon: Location },
   ];
   
   const filterOption = [
-    { id: "Review", label: "Review", icon: Acitivty },
-    { id: "Submit", label: "Submit", icon: Inurance },
+    { id: "Overstay", label: "Overstay", icon: Acitivty },
+    { id: "Training", label: "Training", icon: Inurance },
+    { id: "changepassword", label: "change password", icon: Inurance },
+    { id: "Signout", label: "Sign Out", icon: Inurance },
   ];
+
+  // Handle option selection and pass the ID to parent component
+  const handleOptionSelect = (optionId) => {
+    setSelectedOption(optionId);
+    
+    // Pass the selected option ID to the parent component
+    if (onOptionSelect) {
+      onOptionSelect(optionId);
+    }
+  };
 
   const sidebarOpen = (e) => {
     // Stop propagation to prevent immediate closing
@@ -118,9 +130,9 @@ const Index = ({ isNarrow, onClose }) => {
     </div>
   );
 
-  // Custom blue link renderer
-  const renderBlueLink = (text) => (
-    <div className="p-3 flex">
+  // Custom blue link renderer with ID passing capability
+  const renderBlueLink = (text, id) => (
+    <div className="p-3 flex" onClick={() => handleOptionSelect(id)}>
       <span className="text-blue-500 font-[400] cursor-pointer">{text}</span>
     </div>
   );
@@ -143,7 +155,7 @@ const Index = ({ isNarrow, onClose }) => {
           {filterOptions.map((option) => (
             <div
               key={option.id}
-              onClick={() => setSelectedOption(option.id)}
+              onClick={() => handleOptionSelect(option.id)}
               className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
                 selectedOption === option.id
                   ? "bg-white shadow-sm"
@@ -162,14 +174,14 @@ const Index = ({ isNarrow, onClose }) => {
         
         <div className="rounded-xl bg-gradient-to-b">
           {/* Blue links section */}
-          {renderBlueLink("passport")}
-          {renderBlueLink("Traveller Photo")}
+          {renderBlueLink("passport", "passport")}
+          {renderBlueLink("Traveller Photo", "traveller-photo")}
           
           {/* Review and Submit options */}
           {filterOption.map((option) => (
             <div
               key={option.id}
-              onClick={() => setSelectedOption(option.id)}
+              onClick={() => handleOptionSelect(option.id)}
               className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
                 selectedOption === option.id
                   ? "bg-white shadow-sm"
@@ -203,7 +215,7 @@ const Index = ({ isNarrow, onClose }) => {
           {filterOption.map((option) => (
             <div
               key={option.id}
-              onClick={() => setSelectedOption(option.id)}
+              onClick={() => handleOptionSelect(option.id)}
               className={`flex cursor-pointer items-center justify-center rounded-lg p-3 transition-colors ${
                 selectedOption === option.id
                   ? "bg-white shadow-sm"
@@ -230,7 +242,7 @@ const Index = ({ isNarrow, onClose }) => {
         {filterOptions.map((option) => (
           <div
             key={option.id}
-            onClick={() => setSelectedOption(option.id)}
+            onClick={() => handleOptionSelect(option.id)}
             className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
               selectedOption === option.id
                 ? "bg-white shadow-sm"
@@ -249,14 +261,14 @@ const Index = ({ isNarrow, onClose }) => {
       
       <div className="rounded-xl bg-gradient-to-b">
         {/* Blue links section */}
-        {renderBlueLink("passport")}
-        {renderBlueLink("Traveller Photo")}
+        {renderBlueLink("passport", "passport")}
+        {renderBlueLink("Traveller Photo", "traveller-photo")}
         
         {/* Review and Submit options */}
         {filterOption.map((option) => (
           <div
             key={option.id}
-            onClick={() => setSelectedOption(option.id)}
+            onClick={() => handleOptionSelect(option.id)}
             className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
               selectedOption === option.id
                 ? "bg-white shadow-sm"
