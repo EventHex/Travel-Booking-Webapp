@@ -473,14 +473,14 @@ const Index = () => {
               <div className="w-auto pr-3 mt-3 md:w-[20%]">
                 <div
                   className={`${
-                    isNarrowScreen ? "w-[50px]" : "w-full"
+                    isNarrowScreen ? "sticky top-5 w-[50px]" : "sticky top-5 w-full"
                   } min-w-[50px] mb-6 md:mb-0 transition-all duration-300`}
                 >
                   {/* Pass the callback function to Sidebar */}
                   <Sidebar isNarrow={isNarrowScreen} onOptionSelect={handleOptionSelect} />
                 </div>
               </div>
-              <div className="w-full md:w-[80%] border-l border-[#868C98]   flex flex-col ">
+              <div className="w-full md:w-[80%]  flex flex-col ">
                 <div className="p-2 md:p-5">
                   {/* Render content based on selected option */}
                   {renderContent()}
