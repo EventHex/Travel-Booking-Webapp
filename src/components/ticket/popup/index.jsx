@@ -154,7 +154,11 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
                 />
               </div>
               <div className="text-sm">
-                <FieldItem label="Name" value={formData.front.name}  />
+                <div className="w-full flex justify-center items-center">
+
+                <p className="text-[18px] font-medium"> {formData.front.name}</p>
+                </div>
+                {/* <FieldItem    label="Name" value={formData.front.name}  /> */}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <FieldItem label="Passport" value={formData.front.passportNumber} />
@@ -178,13 +182,6 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
                   className="w-full h-38 object-contain"
                 />
               </div>
-              {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <FieldItem label="Address" value={formData.back.address} />
-                <FieldItem label="Father's Name" value={formData.back.fatherName} />
-                <FieldItem label="Mother's Name" value={formData.back.motherName} />
-                <FieldItem label="Emergency Contact" value={formData.back.emergencyContact} />
-                <FieldItem label="Blood Group" value={formData.back.bloodGroup} />
-              </div> */}
             </div>
           )}
 
