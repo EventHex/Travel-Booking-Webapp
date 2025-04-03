@@ -142,7 +142,7 @@ const Index = () => {
       {showHelp && (
         <div 
           ref={helpRef}
-          className="absolute right-4 md:right-58 top-24 bg-white p-4 md:p-6 rounded-lg shadow-lg w-[90%] md:w-80 mx-4 md:mx-0 z-50"
+          className="absolute md:top-20 md:right-58 top-34 bg-white p-4 md:p-6 rounded-lg shadow-lg w-[90%] md:w-80 mx-4 md:mx-0 z-50"
           onClick={handleModalContentClick}
         >
           <div className="flex justify-between items-center mb-4">
