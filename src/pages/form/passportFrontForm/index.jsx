@@ -10,6 +10,8 @@ import {
   import Input from "../../../components/input";
   import CustomSelect from "../../../components/dropdown";
 
+  // const [frontPage, setFrontPage] = useState(null);
+
 
    export const FrontPassportForm = () => {
     const Options = [
@@ -21,6 +23,7 @@ import {
       { value: "s", label: "single" },
       { value: "m", label: "married" },
     ];
+  const [frontImage,setFrontImage] = useState(null)
  const [formData, setFormData] = useState({
     passportNumber: "",
     firstName: "",
@@ -36,7 +39,20 @@ import {
     fathersName: "",
     mothersName: "",
   });
-    
+  
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        frontImage: file,
+      }));
+      
+      const imageURL = URL.createObjectURL(file);
+      setFrontImage(imageURL);
+    }
+  };
+  
     const [dob, setDob] = useState("");
  const handleSubmit = (e) => {
     e.preventDefault();
@@ -50,7 +66,10 @@ import {
       ...prev,
       [name]: value,
     }));
-  };
+  };  
+
+
+
     return (
       <div className="w-full mx-auto py-4 px-4 md:py-8 md:px-8">
         <div className="mb-6">
@@ -87,7 +106,8 @@ import {
                       htmlFor="passport-upload"
                       className="cursor-pointer flex flex-col items-center"
                     >
-                      <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
+                      <input type="file" accept="image/*" className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" onChange={handleFileChange}  />
+                      {frontImage && <img src={frontImage} alt="image"  width="500" />}
                       <span className="text-xs md:text-sm text-gray-600">
                         Choose a file or drag & drop it here
                       </span>

@@ -90,7 +90,7 @@ const Ticket = ({
                     <div className="  flex gap-5   origin-center -rotate-90 whitespace-nowrap text-white text-[12px]">
                       <p className="flex   gap-1">
                         {" "}
-                        <img src={application.image} alt="" />
+                        <img className="rotate-90" src={application.image} alt="" />
                         <span className="flex">visa</span>
                       </p>
                       {getStatusText(application.status)}
