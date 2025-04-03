@@ -18,6 +18,7 @@ import {
   User,
   Placeholder,
 } from "../../assets";
+import { Link } from "react-router-dom"; 
 import { ChevronRight } from "lucide-react";
 
 import Header from "../../components/header";
@@ -892,11 +893,9 @@ const HeroSection = () => {
   <div className="max-w-[1300px] flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
     <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">
       {/* Responsive logo size */}
-      <img 
-        src={Logo} 
-        alt="Logo" 
-        className="w-[100px] md:w-[150px]" 
-      />
+     <Link to="/">
+              <img   className="w-[100px]" src={Logo} alt="" />
+            </Link>
     </div>
     <div className="w-full md:w-[50%] flex flex-col md:flex-row md:justify-end items-center md:items-end space-y-2 md:space-y-0 md:space-x-4">
       <div className="text-center md:text-right">

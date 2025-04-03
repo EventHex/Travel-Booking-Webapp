@@ -360,11 +360,11 @@ export const FrontPassportForm = () => {
     };
   };
 
-  // Magnifier effect function
+  // Improved Magnifier effect function
   const addMagnifierEffect = (imageElement) => {
     if (!imageElement) return;
     
-    const magnifierSize = 120; // Size of magnifier lens in pixels
+    const magnifierSize = 180; // Size of magnifier lens in pixels
     const zoomLevel = 2.5; // Magnification level
     
     // Create and append magnifier element
@@ -376,7 +376,7 @@ export const FrontPassportForm = () => {
       // Create new magnifier
       const magnifier = document.createElement('div');
       magnifier.id = 'image-magnifier';
-      magnifier.style.position = 'absolute';
+      magnifier.style.position = 'fixed'; // Changed from 'absolute' to 'fixed'
       magnifier.style.width = `${magnifierSize}px`;
       magnifier.style.height = `${magnifierSize}px`;
       magnifier.style.borderRadius = '50%';
@@ -398,20 +398,51 @@ export const FrontPassportForm = () => {
     imageElement.addEventListener('mousemove', (e) => {
       // Get image and cursor positions
       const imageRect = imageElement.getBoundingClientRect();
-      const x = (e.clientX - imageRect.left) / imageRect.width;
-      const y = (e.clientY - imageRect.top) / imageRect.height;
       
-      // Position magnifier near cursor
-      magnifier.style.left = `${e.clientX}px`;
-      magnifier.style.top = `${e.clientY}px`;
-      magnifier.style.transform = 'translate(-50%, -50%)';
-      magnifier.style.backgroundImage = `url(${imageElement.src})`;
-      magnifier.style.backgroundPosition = `${x * 100}% ${y * 100}%`;
-      magnifier.style.backgroundSize = `${imageRect.width * zoomLevel}px ${imageRect.height * zoomLevel}px`;
-      magnifier.style.display = 'block';
+      // Check if cursor is within the image boundaries
+      if (
+        e.clientX >= imageRect.left &&
+        e.clientX <= imageRect.right &&
+        e.clientY >= imageRect.top &&
+        e.clientY <= imageRect.bottom
+      ) {
+        // Calculate position relative to the image (0 to 1)
+        const x = (e.clientX - imageRect.left) / imageRect.width;
+        const y = (e.clientY - imageRect.top) / imageRect.height;
+        
+        // Position magnifier near cursor with an offset to prevent it from covering what you're looking at
+        // Position it 50px up and to the right of the cursor
+        magnifier.style.left = `${e.clientX + 50}px`;  
+        magnifier.style.top = `${e.clientY - 50}px`;
+        
+        // If magnifier would go off-screen to the right, position it to the left of cursor instead
+        if (e.clientX + 50 + magnifierSize/2 > window.innerWidth) {
+          magnifier.style.left = `${e.clientX - 100 - magnifierSize/2}px`;
+        }
+        
+        // If magnifier would go off-screen to the top, position it below cursor instead
+        if (e.clientY - 50 - magnifierSize/2 < 0) {
+          magnifier.style.top = `${e.clientY + 100}px`;
+        }
+        
+        // Set the background image and position
+        magnifier.style.backgroundImage = `url(${imageElement.src})`;
+        magnifier.style.backgroundPosition = `${x * 100}% ${y * 100}%`;
+        magnifier.style.backgroundSize = `${imageRect.width * zoomLevel}px ${imageRect.height * zoomLevel}px`;
+        magnifier.style.display = 'block';
+      } else {
+        // Hide magnifier if cursor is outside the image
+        magnifier.style.display = 'none';
+      }
     });
     
+    // Hide magnifier when mouse leaves the image
     imageElement.addEventListener('mouseleave', () => {
+      magnifier.style.display = 'none';
+    });
+    
+    // Hide magnifier when page is scrolled (prevents it from getting stuck in position)
+    window.addEventListener('scroll', () => {
       magnifier.style.display = 'none';
     });
   };
@@ -613,9 +644,8 @@ export const FrontPassportForm = () => {
         {/* Image Edit Modal */}
         {showEditModal && (
           <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50">
-            <div className=" bg-white rounded-lg p-3 w-full max-w-lg">
-              <div className="flex justify-end  items-center mb-4">
-                {/* <h3 className="text-lg font-medium">Edit Image</h3> */}
+            <div className="bg-white rounded-lg p-3 w-full max-w-lg">
+              <div className="flex justify-end items-center mb-4">
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
@@ -680,7 +710,7 @@ export const FrontPassportForm = () => {
                   
                   {/* Preview panel - shows the result of the crop in real-time */}
                   {imageTransform.crop && cropSelection.startX !== cropSelection.endX && cropSelection.startY !== cropSelection.endY && (
-                    <div className="w-full md:w-64 border   border-gray-300 rounded-md p-3">
+                    <div className="w-full md:w-64 border border-gray-300 rounded-md p-3">
                       <div className="text-sm text-center mb-2 font-medium">Crop Preview</div>
                       <div className="flex justify-center bg-gray-50 p-2 rounded">
                         <img 
@@ -697,11 +727,11 @@ export const FrontPassportForm = () => {
                 </div>
               </div>
               
-              <div className="grid gap-2   grid-cols-3 ">
+              <div className="grid gap-2 grid-cols-3">
                 <button
                   type="button"
                   onClick={handleCropImage}
-                  className={`flex flex-col items-center justify-center border ${imageTransform.crop ? ' border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
+                  className={`flex flex-col items-center justify-center border ${imageTransform.crop ? 'border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50 p-2`}
                 >
                   <Crop size={16} className="text-blue-600" />
                   <span className="text-[12px]">Crop</span>
@@ -710,27 +740,27 @@ export const FrontPassportForm = () => {
                 <button
                   type="button"
                   onClick={handleFlipImage}
-                  className={`flex flex-col items-center p-1 justify-center border ${imageTransform.flipX ? ' border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
+                  className={`flex flex-col items-center p-2 justify-center border ${imageTransform.flipX ? 'border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
                 >
-                  <FlipHorizontal size={16} className="text-blue-600 " />
+                  <FlipHorizontal size={16} className="text-blue-600" />
                   <span className="text-[12px]">Flip</span>
                 </button>
                 
                 <button
                   type="button"
                   onClick={handleRotateImage}
-                  className="flex flex-col items-center justify-center  border border-gray-200 rounded-lg hover:bg-gray-50"
+                  className="flex flex-col items-center justify-center p-2 border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
-                  <RotateCw size={16} className="text-blue-600 " />
+                  <RotateCw size={16} className="text-blue-600" />
                   <span className="text-[12px]">Rotate {imageTransform.rotate}°</span>
                 </button>
               </div>
               
-              <div className="flex justify-end mt-2 gap-2">
+              <div className="flex justify-end mt-4 gap-2">
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-3 py-1 border border-gray-300  text-[12px] text-gray-700 rounded-md hover:bg-gray-50"
+                  className="px-3 py-1 border border-gray-300 text-[12px] text-gray-700 rounded-md hover:bg-gray-50"
                 >
                   Cancel
                 </button>
