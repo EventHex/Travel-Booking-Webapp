@@ -99,7 +99,7 @@ const Index = () => {
                 <li className="hover:text-[#375DFB]">Apply</li>
               </Link>
               <Link to="/dashboard">
-                <li className="hover:text-[#375DFB]">Dash Board</li>
+                <li className="hover:text-[#375DFB]">Dashboard</li>
               </Link>
             </ul>
           </div>

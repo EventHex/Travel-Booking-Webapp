@@ -25,6 +25,47 @@ const HeroSection = () => {
     { id: "Flights", icon: Flight },
   ];
 
+
+  const searchResults = [
+    {
+      type: 'location',
+      title: 'Dubai',
+      subtitle: 'United Arab Emirates',
+      id: 1
+    },
+    {
+      type: 'location',
+      title: 'Singapore',
+      subtitle: 'Singapore',
+      id: 2
+    },
+    {
+      type: 'attraction',
+      title: 'Combo: Burj Khalifa At The Top SKY (Level 148) + Sky Views Observatory Entry Tickets',
+      subtitle: 'Dubai, United Arab Emirates',
+      id: 3
+    },
+    {
+      type: 'attraction',
+      title: 'Andamanda Phuket Water Park Ticket With Transfers',
+      subtitle: 'Phuket, Thailand',
+      id: 4
+    },
+    {
+      type: 'attraction',
+      title: 'Dubai Frame Tickets',
+      subtitle: 'Dubai, United Arab Emirates',
+      id: 5
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    }
+  ];
+
+
   // Function to render different content based on active tab
   const renderTabContent = () => {
     const citizenInputRef = useRef(null);
@@ -59,6 +100,9 @@ const HeroSection = () => {
       case "Visas":
         return (
           <>
+
+
+
           <div className="flex gap-3  flex-col ">
             <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
               <div className="w-full">
