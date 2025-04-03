@@ -433,27 +433,13 @@ const Ticket = ({
                               >
                                 <div
                                   className={`h-5 w-5 sm:h-6 sm:w-6 rounded-full ${
-                                    value ? "bg-blue-500" : "bg-red-500"
-                                  } flex items-center justify-center border ${
+                                    value ? "" : ""
+                                  } flex items-center justify-center  ${
                                     value ? "border-blue-100" : "border-red-100"
                                   }`}
                                 >
                                   {value ? (
-                                    <svg
-                                      className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                                        value ? "text-blue-500" : "text-red-500"
-                                      }`}
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M5 13l4 4L19 7"
-                                      />
-                                    </svg>
+                               <img src={TicIcon} alt="" />
                                   ) : (
                                     <X
                                       className={`h-3 w-3 sm:h-4 sm:w-4 ${
@@ -477,7 +463,7 @@ const Ticket = ({
                         <div
                           className={`${
                             application.status === "pending"
-                              ? "bg-blue-50 border-blue-100 border"
+                              ? "bg-green-100 border-blue-100 border"
                               : application.status === "approved"
                               ? "bg-blue-50 border-blue-100 border"
                               : application.statusMessage.cardBg +
@@ -494,9 +480,9 @@ const Ticket = ({
                                   application.status === "pending"
                                     ? "bg-green-200"
                                     : application.status === "submitted" || application.status === "submitting"
-                                    ? "bg-orange-100"
+                                    ? "bg-blue-100"
                                     : application.status === "approved"
-                                    ? "bg-yellow-100"
+                                    ? "bg-blue-100"
                                     : application.statusMessage.iconBg
                                 } rounded-lg sm:rounded-xl flex items-center justify-center`}
                               >
