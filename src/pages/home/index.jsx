@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState,useEffect, useRef } from "react";
 import { TabMenu } from "../../components/tabs";
 import {
   Men,
@@ -13,6 +13,7 @@ import {
   Home,
   CalenderDown,
   CalenderUp,
+  Placeholder,
 } from "../../assets";
 import Header from "../../components/header";
 import SearchInput from "../../components/searchInput";
@@ -25,6 +26,9 @@ const HeroSection = () => {
     { id: "Flights", icon: Flight },
   ];
 
+  const [showResults, setShowResults] = useState(false);
+  const inputRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const searchResults = [
     {
@@ -62,8 +66,152 @@ const HeroSection = () => {
       title: 'Marina Bay Sands Skypark Observation Deck Tickets',
       subtitle: 'Singapore, Singapore',
       id: 6
-    }
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },
+    {
+      type: 'attraction',
+      title: 'Marina Bay Sands Skypark Observation Deck Tickets',
+      subtitle: 'Singapore, Singapore',
+      id: 6
+    },   
   ];
+
+
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        inputRef.current !== event.target
+      ) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  const LocationIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  );
 
 
   // Function to render different content based on active tab
@@ -101,9 +249,66 @@ const HeroSection = () => {
         return (
           <>
 
+{/* <div className="w-full max-w-3xl mx-auto p-4 bg-white rounded-lg shadow-md">
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Start typing to search"
+          className="w-full p-3 border border-gray-200 rounded-lg text-gray-500 text-sm focus:outline-none"
+        />
+      </div>
+      
+      <div className="mt-2 bg-white rounded-lg overflow-hidden">
+        {searchResults.map((item, index) => (
+          <div 
+            key={item.id} 
+            className={`flex items-center p-3 hover:bg-gray-50 cursor-pointer ${
+              index < searchResults.length - 1 ? 'border-b border-gray-100' : ''
+            }`}
+          >
+            <div className="flex justify-center items-center w-12 h-12 bg-gray-100 rounded-lg mr-4 overflow-hidden">
+              {item.type === 'location' ? (
+                <LocationIcon />
+              ) : (
+                <img src={Placeholder} alt={item.title} className="w-full h-full object-cover" />
+              )}
+            </div>
+            <div>
+              <div className="font-semibold text-gray-800">{item.title}</div>
+              <div className="text-sm text-gray-400">{item.subtitle}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div> */}
 
+          <div className="flex gap-3  flex-col">
+          {showResults && (
+              <div ref={dropdownRef} className="w-full max-h-[400px] overflow-x-hidden overflow-scroll border rounded-lg border-white shadow-2xl">
+                  {searchResults.map((item, index) => (
+          <div 
+            key={item.id} 
+            className={`flex items-center p-3 hover:bg-gray-50 cursor-pointer ${
+              index < searchResults.length - 1 ? 'border-b border-gray-100' : ''
+            }`}
+          >
+            <div className="flex justify-center items-center w-12 h-12 bg-gray-100 rounded-lg mr-4 overflow-hidden">
+              {item.type === 'location' ? (
+                <LocationIcon />
+              ) : (
+                <img src={Placeholder} alt={item.title} className="w-full h-full object-cover" />
+              )}
+            </div>
+            <div>
+              <div className="font-semibold text-gray-800">{item.title}</div>
+              <div className="text-sm text-gray-400">{item.subtitle}</div>
+            </div>
+          </div>
+        ))}
+              </div>
+              )}
+            </div>
 
-          <div className="flex gap-3  flex-col ">
             <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
               <div className="w-full">
                 <div className="flex items-center p-3">
@@ -117,14 +322,17 @@ const HeroSection = () => {
                   </span>
                   <input
                     style={{ border: "none" }}
-                    ref={citizenInputRef}
+                    // ref={citizenInputRef}
+                    ref={inputRef}
                     type="text"
                     placeholder="Citizen Of"
                     className="w-full bg-transparent outline-none"
                     onFocus={() => setCitizenIsFocused(true)}
                     onBlur={() => setCitizenIsFocused(false)}
+                    onClick={() => setShowResults(true)}
                   />
                 </div>
+               
               </div>
               <div className="w-full">
                 <div className="flex items-center p-3">
@@ -194,7 +402,6 @@ const HeroSection = () => {
             </div>
             <div className="flex justify-end">
             <button className=" text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">Search</button>
-            </div>
             </div>
           </>
         );
