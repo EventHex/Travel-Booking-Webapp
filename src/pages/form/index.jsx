@@ -13,7 +13,7 @@ import {
   Upload,
   Info,
   Clock,
- 
+  X
 } from "lucide-react";
 import Input from "../../components/input";
 import CustomSelect from "../../components/dropdown";
@@ -930,7 +930,7 @@ const TravelVisaBooking = () => {
               {/* <Sidebar /> */}
             </div>
             <div className=" w-full md:w-[70%] border-l   border-[#868C98]   flex flex-col justify-center">
-              <div className="p-2 md:p-5">
+              <div className=" md:p-5">
               <FrontPassportForm />
               <BackPassportForm />
               <UploadTravelerPhoto />
