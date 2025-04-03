@@ -176,7 +176,7 @@ const Index = () => {
       {showModal && (
         <div 
           ref={modalRef}
-          className="absolute top-24 z-20 md:right-44 right-24 p-6 bg-white rounded-lg shadow-md max-w-lg"
+          className="absolute   top-34 md:top-20 z-20 right-0 p-6 bg-white rounded-lg shadow-md max-w-lg"
           onClick={handleModalContentClick}
         >
           <div className="flex justify-between items-center mb-6">
