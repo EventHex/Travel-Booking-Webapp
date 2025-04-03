@@ -93,7 +93,7 @@ const Index = () => {
               <img src={LogoBlue} alt="" />
             </Link>
           </div>
-          <div className="w-[70%] flex">
+          <div className="w-[70%]  justify-end p-2 md:justify-start flex">
             <ul className="flex items-center gap-4 justify-center">
               <Link to="/apply">
                 <li className="hover:text-[#375DFB]">Apply</li>
