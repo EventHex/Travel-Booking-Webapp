@@ -129,8 +129,8 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
       <div className="max-w-[1300px] w-full mx-auto p-4 rounded-lg">
         {/* Search Form */}
      
-        <div className="flex gap-5 w-full">
-      <div className="flex gap-3 justify-center w-[50%] flex-col">
+        <div className="flex gap-5 flex-col md:flex-row justify-center items-center w-full">
+      <div className="flex gap-3 justify-center   w-full md:w-[50%] flex-col">
         <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
           <div className="w-full">
             <div className="flex items-center p-3">
@@ -176,7 +176,7 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
           </div>
         </div>
       </div>
-      <div className="flex gap-3 w-[50%] flex-col">
+      <div className="flex gap-3 w-full md:w-[50%] flex-col">
         <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
           <div className="w-full">
             <div className="flex items-center p-3">
@@ -227,7 +227,7 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
       </div>
     </div>
     {/* *************  ticket section ***************** */}
-    <main className="max-w-7xl mx-auto py-4 sm:py-6 md:py-8 px-4 sm:px-6 lg:px-8">
+    <main className="max-w-7xl mx-auto py-4 sm:py-6   sm:px-6 lg:px-8">
       <div className="space-y-4 md:space-y-6">
         {visaOption.map((option, index) => (
           <div 
