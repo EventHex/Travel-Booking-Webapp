@@ -888,31 +888,36 @@ const HeroSection = () => {
           </div>
         </div>
         {/* *****************footer***************************** */}
-        <div className="w-full flex justify-center rounded-t-[30px] py-10 items-center bg-gradient-to-r from-[#1C1C82] to-[#24186C]">
-          <div className="max-w-[1300px] md:pb-32 flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
-            <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">
-              <img src={Logo} alt="Logo" className="max-w-full h-auto" />
-            </div>
-            <div className="w-full md:w-[50%] flex flex-col md:flex-row md:justify-end items-center md:items-end space-y-2 md:space-y-0 md:space-x-4">
-              <div className="text-center md:text-right">
-                <p className="text-[#B3B3B3] text-[14px] font-[400]">
-                  CNN Holidays, ZAIKAS EF COMPLEX,{" "}
-                </p>
-                <p className="text-[#B3B3B3] text-[14px] font-[400]">
-                  Fort Road, Cannanore, Kannur - 670001
-                </p>
-              </div>
-              <div className="text-center md:text-right">
-                <p className="text-[#B3B3B3] text-[14px] font-[400]">
-                  CNN Holidays, ZAIKAS EF COMPLEX,{" "}
-                </p>
-                <p className="text-[#B3B3B3] text-[14px] font-[400]">
-                  Fort Road, Cannanore, Kannur - 670001
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div className="w-full flex justify-center rounded-t-[30px] py-6 sm:py-8 md:py-10 items-center bg-gradient-to-r from-[#1C1C82] to-[#24186C]">
+  <div className="max-w-[1300px] flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
+    <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">
+      {/* Responsive logo size */}
+      <img 
+        src={Logo} 
+        alt="Logo" 
+        className="w-[100px] md:w-[150px]" 
+      />
+    </div>
+    <div className="w-full md:w-[50%] flex flex-col md:flex-row md:justify-end items-center md:items-end space-y-2 md:space-y-0 md:space-x-4">
+      <div className="text-center md:text-right">
+        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+          CNN Holidays, ZAIKAS EF COMPLEX,{" "}
+        </p>
+        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+          Fort Road, Cannanore, Kannur - 670001
+        </p>
+      </div>
+      <div className="text-center md:text-right">
+        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+          CNN Holidays, ZAIKAS EF COMPLEX,{" "}
+        </p>
+        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+          Fort Road, Cannanore, Kannur - 670001
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
     </div>
   );
