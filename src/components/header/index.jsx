@@ -88,9 +88,9 @@ const Index = () => {
       >
         {/* First child div - takes full width on mobile, 50% on md and above */}
         <div className="w-full md:w-[50%] flex gap-5">
-          <div className="w-[30%] px-2">
+          <div className="w-[30%] flex justify-center items-center px-2">
             <Link to="/">
-              <img src={LogoBlue} alt="" />
+              <img   className="w-[100px]" src={LogoBlue} alt="" />
             </Link>
           </div>
           <div className="w-[70%]  justify-end p-2 md:justify-start flex">
@@ -99,7 +99,7 @@ const Index = () => {
                 <li className="hover:text-[#375DFB]">Apply</li>
               </Link>
               <Link to="/dashboard">
-                <li className="hover:text-[#375DFB]">Dash Board</li>
+                <li className="hover:text-[#375DFB]">Dashboard</li>
               </Link>
             </ul>
           </div>
@@ -142,7 +142,7 @@ const Index = () => {
       {showHelp && (
         <div 
           ref={helpRef}
-          className="absolute right-4 md:right-58 top-24 bg-white p-4 md:p-6 rounded-lg shadow-lg w-[90%] md:w-80 mx-4 md:mx-0 z-50"
+          className="absolute md:top-20 md:right-58 top-34 bg-white p-4 md:p-6 rounded-lg shadow-lg w-[90%] md:w-80 mx-4 md:mx-0 z-50"
           onClick={handleModalContentClick}
         >
           <div className="flex justify-between items-center mb-4">
@@ -176,7 +176,7 @@ const Index = () => {
       {showModal && (
         <div 
           ref={modalRef}
-          className="absolute top-24 z-20 md:right-44 right-24 p-6 bg-white rounded-lg shadow-md max-w-lg"
+          className="absolute   top-34 md:top-20 z-20 right-0 p-6 bg-white rounded-lg shadow-md max-w-lg"
           onClick={handleModalContentClick}
         >
           <div className="flex justify-between items-center mb-6">
