@@ -1,5 +1,7 @@
-import React, { useState, useRef } from "react";
-import { TabMenu } from "../../components/tabs";
+import React, { useState,useEffect, useRef } from "react";
+import Calander from "../../ui/calander";
+import { ChevronDown } from "lucide-react";
+
 import {
   Men,
   MainBackground,
@@ -13,7 +15,10 @@ import {
   Home,
   CalenderDown,
   CalenderUp,
+  User,
 } from "../../assets";
+import { ChevronRight } from "lucide-react";
+
 import Header from "../../components/header";
 import SearchInput from "../../components/searchInput";
 const HeroSection = () => {
@@ -31,126 +36,229 @@ const HeroSection = () => {
     const goingToInputRef = useRef(null);
     const travelDateInputRef = useRef(null);
     const returnDateInputRef = useRef(null);
-
+  
     // Track focus state for all four inputs
     const [citizenIsFocused, setCitizenIsFocused] = useState(false);
     const [goingToIsFocused, setGoingToIsFocused] = useState(false);
     const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
     const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
-
-    // Track which input is focused
-
+    
+    // Initialize citizenOptions with country list
+    // const [citizenOptions] = useState([
+    //   'United States', 'United Kingdom', 'Canada', 'Australia', 
+    //   'India', 'Germany', 'France', 'Japan', 'China', 'Brazil',
+    //   'Mexico', 'Italy', 'Spain', 'South Korea', 'Russia',
+    //   'Netherlands', 'Singapore', 'Switzerland', 'Sweden', 'Norway'
+    // ]);
+    const citizenOptions = [
+      {
+        type: 'location',
+        title: 'Dubai',
+        subtitle: 'United Arab Emirates',
+        id: 1
+      },
+      {
+        type: 'location',
+        title: 'Singapore',
+        subtitle: 'Singapore',
+        id: 2
+      },
+      {
+        type: 'attraction',
+        title: 'Combo: Burj Khalifa At The Top SKY (Level 148) + Sky Views Observatory Entry Tickets',
+        subtitle: 'Dubai, United Arab Emirates',
+        id: 3
+      },
+      {
+        type: 'attraction',
+        title: 'Andamanda Phuket Water Park Ticket With Transfers',
+        subtitle: 'Phuket, Thailand',
+        id: 4
+      },
+      {
+        type: 'attraction',
+        title: 'Dubai Frame Tickets',
+        subtitle: 'Dubai, United Arab Emirates',
+        id: 5
+      },
+    ]  
+  
     const handleCitizenIconClick = () => {
       citizenInputRef.current.focus();
     };
-
+  
     const handleGoingToIconClick = () => {
       goingToInputRef.current.focus();
     };
-
+  
     const handleTravelDateIconClick = () => {
       travelDateInputRef.current.focus();
     };
-
+  
     const handleReturnDateIconClick = () => {
       returnDateInputRef.current.focus();
     };
+    
+    const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef(null);
+    
+    const handleInputFocus = () => {
+      setCitizenIsFocused(true);
+      setShowDropdown(true);
+    };
+    
+    const handleInputBlur = () => {
+      setCitizenIsFocused(false);
+      // Don't immediately hide dropdown to allow for clicks on dropdown items
+      // setTimeout(() => setShowDropdown(false), 100);
+    };
+    
+    const handleOptionSelect = (option) => {
+      if (citizenInputRef.current) {
+        citizenInputRef.current.value = option;
+      }
+      setShowDropdown(false);
+    };
+  
+    const [tripType, setTripType] = useState("oneWay");
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [cabinClass, setCabinClass] = useState("Economy");
+    
+    const cabinOptions = [
+      "Economy",
+      "Premium Economy",
+      "Business",
+      "First Class",
+    ];
+  
+    const handleTripTypeChange = (type) => {
+      setTripType(type);
+    };
+  
+    const toggleDropdown = () => {
+      setIsDropdownOpen(!isDropdownOpen);
+    };
+  
+    const selectCabinClass = (option) => {
+      setCabinClass(option);
+      setIsDropdownOpen(false);
+    };
+  
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (
+          dropdownRef.current && 
+          !dropdownRef.current.contains(event.target) && 
+          citizenInputRef.current && 
+          !citizenInputRef.current.contains(event.target)
+        ) {
+          setShowDropdown(false);
+        }
+      };
+      
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, []);
     switch (activeTab) {
       case "Visas":
         return (
           <>
-          <div className="flex gap-3  flex-col ">
-            <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-              <div className="w-full">
-                <div className="flex items-center p-3">
-                  <span
-                    className={`mr-2 cursor-pointer ${
-                      citizenIsFocused ? "opacity-100" : "opacity-20"
-                    }`}
-                    onClick={handleCitizenIconClick}
-                  >
-                    <img src={Home} alt="Home icon" />
-                  </span>
-                  <input
-                    style={{ border: "none" }}
-                    ref={citizenInputRef}
-                    type="text"
-                    placeholder="Citizen Of"
-                    className="w-full bg-transparent outline-none"
-                    onFocus={() => setCitizenIsFocused(true)}
-                    onBlur={() => setCitizenIsFocused(false)}
-                  />
+            <div className="flex gap-3  flex-col ">
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        citizenIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleCitizenIconClick}
+                    >
+                      <img src={Home} alt="Home icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={citizenInputRef}
+                      type="text"
+                      placeholder="Citizen Of"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setCitizenIsFocused(true)}
+                      onBlur={() => setCitizenIsFocused(false)}
+                    />
+                  </div>
+                </div>
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        goingToIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleGoingToIconClick}
+                    >
+                      <img src={Flight} alt="Flight icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={goingToInputRef}
+                      type="text"
+                      placeholder="Going to"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setGoingToIsFocused(true)}
+                      onBlur={() => setGoingToIsFocused(false)}
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="w-full">
-                <div className="flex items-center p-3">
-                  <span
-                    className={`mr-2 cursor-pointer ${
-                      goingToIsFocused ? "opacity-100" : "opacity-20"
-                    }`}
-                    onClick={handleGoingToIconClick}
-                  >
-                    <img src={Flight} alt="Flight icon" />
-                  </span>
-                  <input
-                    style={{ border: "none" }}
-                    ref={goingToInputRef}
-                    type="text"
-                    placeholder="Going to"
-                    className="w-full bg-transparent outline-none"
-                    onFocus={() => setGoingToIsFocused(true)}
-                    onBlur={() => setGoingToIsFocused(false)}
-                  />
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        travelDateIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleTravelDateIconClick}
+                    >
+                      <img src={CalenderUp} alt="Calendar icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={travelDateInputRef}
+                      type="date"
+                      placeholder="Travel Date"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setTravelDateIsFocused(true)}
+                      onBlur={() => setTravelDateIsFocused(false)}
+                    />
+                  </div>
+                </div>
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        returnDateIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleReturnDateIconClick}
+                    >
+                      <img src={CalenderDown} alt="Calendar icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={returnDateInputRef}
+                      type="date"
+                      placeholder="Return Date"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setReturnDateIsFocused(true)}
+                      onBlur={() => setReturnDateIsFocused(false)}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-              <div className="w-full">
-                <div className="flex items-center p-3">
-                  <span
-                    className={`mr-2 cursor-pointer ${
-                      travelDateIsFocused ? "opacity-100" : "opacity-20"
-                    }`}
-                    onClick={handleTravelDateIconClick}
-                  >
-                    <img src={CalenderUp} alt="Calendar icon" />
-                  </span>
-                  <input
-                    style={{ border: "none" }}
-                    ref={travelDateInputRef}
-                    type="text"
-                    placeholder="Travel Date"
-                    className="w-full bg-transparent outline-none"
-                    onFocus={() => setTravelDateIsFocused(true)}
-                    onBlur={() => setTravelDateIsFocused(false)}
-                  />
-                </div>
+              <div className="flex justify-end">
+                <button className=" text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">
+                  Search
+                </button>
               </div>
-              <div className="w-full">
-                <div className="flex items-center p-3">
-                  <span
-                    className={`mr-2 cursor-pointer ${
-                      returnDateIsFocused ? "opacity-100" : "opacity-20"
-                    }`}
-                    onClick={handleReturnDateIconClick}
-                  >
-                    <img src={CalenderDown} alt="Calendar icon" />
-                  </span>
-                  <input
-                    style={{ border: "none" }}
-                    ref={returnDateInputRef}
-                    type="text"
-                    placeholder="Return Date"
-                    className="w-full bg-transparent outline-none"
-                    onFocus={() => setReturnDateIsFocused(true)}
-                    onBlur={() => setReturnDateIsFocused(false)}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-end">
-            <button className=" text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">Search</button>
-            </div>
             </div>
           </>
         );
@@ -169,121 +277,293 @@ const HeroSection = () => {
         );
       case "Insurance":
         return (
-          <div className="flex gap-3  flex-col ">
-          <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-            <div className="w-full">
-              <div className="flex items-center p-3">
-                <span
-                  className={`mr-2 cursor-pointer ${
-                    citizenIsFocused ? "opacity-100" : "opacity-20"
-                  }`}
-                  onClick={handleCitizenIconClick}
-                >
-                  <img src={Home} alt="Home icon" />
-                </span>
-                <input
-                  style={{ border: "none" }}
-                  ref={citizenInputRef}
-                  type="text"
-                  placeholder="Citizen Of"
-                  className="w-full bg-transparent outline-none"
-                  onFocus={() => setCitizenIsFocused(true)}
-                  onBlur={() => setCitizenIsFocused(false)}
-                />
+          <>
+            <div className="flex gap-3  flex-col ">
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        goingToIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleGoingToIconClick}
+                    >
+                      <img src={Flight} alt="Flight icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={goingToInputRef}
+                      type="text"
+                      placeholder="Going to"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setGoingToIsFocused(true)}
+                      onBlur={() => setGoingToIsFocused(false)}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        travelDateIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleTravelDateIconClick}
+                    >
+                      <img src={CalenderUp} alt="Calendar icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={travelDateInputRef}
+                      type="text"
+                      placeholder="Travel Date"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setTravelDateIsFocused(true)}
+                      onBlur={() => setTravelDateIsFocused(false)}
+                    />
+                  </div>
+                </div>
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        returnDateIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleReturnDateIconClick}
+                    >
+                      <img src={CalenderDown} alt="Calendar icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={returnDateInputRef}
+                      type="text"
+                      placeholder="Return Date"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setReturnDateIsFocused(true)}
+                      onBlur={() => setReturnDateIsFocused(false)}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="">
+                <div className=" w-[80%]">
+                  <button className="flex py-3  rounded-2xl gap-5 text-[14px] bg-white/40 px-5 shadow-lg">
+                    <img src={User} alt="" /> <span> 1 Traveler</span>{" "}
+                    <span>
+                      {" "}
+                      <ChevronRight className="text-[#7a7a7f]" />
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="w-full">
-              <div className="flex items-center p-3">
-                <span
-                  className={`mr-2 cursor-pointer ${
-                    goingToIsFocused ? "opacity-100" : "opacity-20"
-                  }`}
-                  onClick={handleGoingToIconClick}
-                >
-                  <img src={Flight} alt="Flight icon" />
-                </span>
-                <input
-                  style={{ border: "none" }}
-                  ref={goingToInputRef}
-                  type="text"
-                  placeholder="Going to"
-                  className="w-full bg-transparent outline-none"
-                  onFocus={() => setGoingToIsFocused(true)}
-                  onBlur={() => setGoingToIsFocused(false)}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-            <div className="w-full">
-              <div className="flex items-center p-3">
-                <span
-                  className={`mr-2 cursor-pointer ${
-                    travelDateIsFocused ? "opacity-100" : "opacity-20"
-                  }`}
-                  onClick={handleTravelDateIconClick}
-                >
-                  <img src={CalenderUp} alt="Calendar icon" />
-                </span>
-                <input
-                  style={{ border: "none" }}
-                  ref={travelDateInputRef}
-                  type="text"
-                  placeholder="Travel Date"
-                  className="w-full bg-transparent outline-none"
-                  onFocus={() => setTravelDateIsFocused(true)}
-                  onBlur={() => setTravelDateIsFocused(false)}
-                />
-              </div>
-            </div>
-            <div className="w-full">
-              <div className="flex items-center p-3">
-                <span
-                  className={`mr-2 cursor-pointer ${
-                    returnDateIsFocused ? "opacity-100" : "opacity-20"
-                  }`}
-                  onClick={handleReturnDateIconClick}
-                >
-                  <img src={CalenderDown} alt="Calendar icon" />
-                </span>
-                <input
-                  style={{ border: "none" }}
-                  ref={returnDateInputRef}
-                  type="text"
-                  placeholder="Return Date"
-                  className="w-full bg-transparent outline-none"
-                  onFocus={() => setReturnDateIsFocused(true)}
-                  onBlur={() => setReturnDateIsFocused(false)}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex  justify-between">
-            <div className="w-[80%]">
-
-<SearchInput/>
-            </div>
-            <div className="w-[20%] justify-end   flex">
-
-          <button className=" text-white  px-10 rounded-xl bg-[#000099] border text-[16px]">Search</button>
-            </div>
-          </div>
-          </div>
+          </>
         );
       case "Flights":
         return (
           <>
-            <div className="relative mb-24 w-full">
-              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                <img src={Search} alt="" />
+            <div className="flex gap-3 flex-col ">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-2  ">
+                {/* Trip Type Toggle */}
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center cursor-pointer">
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                        tripType === "oneWay"
+                          ? "border-blue-600"
+                          : "border-gray-300"
+                      }`}
+                    >
+                      {tripType === "oneWay" && (
+                        <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
+                      )}
+                    </div>
+                    <input
+                      type="radio"
+                      className="hidden"
+                      checked={tripType === "oneWay"}
+                      onChange={() => handleTripTypeChange("oneWay")}
+                    />
+                    <span className="ml-2 text-sm font-medium text-gray-700">
+                      One Way
+                    </span>
+                  </label>
+
+                  <label className="flex items-center cursor-pointer">
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                        tripType === "roundTrip"
+                          ? "border-blue-600"
+                          : "border-gray-300"
+                      }`}
+                    >
+                      {tripType === "roundTrip" && (
+                        <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
+                      )}
+                    </div>
+                    <input
+                      type="radio"
+                      className="hidden"
+                      checked={tripType === "roundTrip"}
+                      onChange={() => handleTripTypeChange("roundTrip")}
+                    />
+                    <span className="ml-2 text-sm font-medium text-gray-700">
+                      Round Trip
+                    </span>
+                  </label>
+                </div>
+
+                {/* Cabin Class Dropdown */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    className="flex items-center justify-between w-48 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none"
+                    onClick={toggleDropdown}
+                  >
+                    <span>{cabinClass}</span>
+                    <ChevronDown size={16} />
+                  </button>
+
+                  {isDropdownOpen && (
+                    <div className="absolute z-10 w-48 mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+                      {cabinOptions.map((option) => (
+                        <div
+                          key={option}
+                          className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => selectCabinClass(option)}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <input
-                type="text"
-                placeholder={`Search for ${activeTab} (e.g. Burj Khalifa, Universal Studio)`}
-                className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white border border-[#A6BFFF82] border-solid rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm sm:text-base text-gray-600 placeholder-gray-400 transition-all duration-300 delay-150 hover:border-blue-500"
-              />
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
+             <div className="w-full relative">
+      <div className="flex items-center p-3">
+        <span
+          className={`mr-2 cursor-pointer ${
+            citizenIsFocused ? "opacity-100" : "opacity-20"
+          }`}
+          onClick={handleCitizenIconClick}
+        >
+          <img src={Home} alt="Home icon" />
+        </span>
+        <input
+          style={{ border: "none" }}
+          ref={citizenInputRef}
+          type="text"
+          placeholder="Search destinations, attractions..."
+          className="w-full bg-transparent outline-none"
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+        />
+      </div>
+      
+      {showDropdown && (
+        <div 
+          ref={dropdownRef}
+          className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+        >
+          {citizenOptions.map((option) => (
+            <div
+              key={option.id}
+              className="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+              onClick={() => handleOptionSelect(option)}
+            >
+              <div className="font-medium text-gray-800">{option.title}</div>
+              <div className="text-xs text-gray-500 mt-1">{option.subtitle}</div>
+              <div className="text-xs text-blue-500 mt-1 capitalize">{option.type}</div>
             </div>
-           
+          ))}
+        </div>
+      )}
+    </div>
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        goingToIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleGoingToIconClick}
+                    >
+                      <img src={Flight} alt="Flight icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={goingToInputRef}
+                      type="text"
+                      placeholder="Going to"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setGoingToIsFocused(true)}
+                      onBlur={() => setGoingToIsFocused(false)}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        travelDateIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleTravelDateIconClick}
+                    >
+                      <img src={CalenderUp} alt="Calendar icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={travelDateInputRef}
+                      type="date"
+                      placeholder="Travel Date"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setTravelDateIsFocused(true)}
+                      onBlur={() => setTravelDateIsFocused(false)}
+                    />
+                  </div>
+                </div>
+                <div className="w-full">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        returnDateIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleReturnDateIconClick}
+                    >
+                      <img src={CalenderDown} alt="Calendar icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={returnDateInputRef}
+                      type="date"
+                      placeholder="Return Date"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={() => setReturnDateIsFocused(true)}
+                      onBlur={() => setReturnDateIsFocused(false)}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-between">
+                <div className=" w-[30%] ">
+                  <div className="bg-white/40 px-5  rounded-2xl shadow-lg flex justify-center items-center">
+                    <button className="flex py-3 w-full   text-[14px] ">
+                      <img src={User} alt="" /> <span> 1 Traveler</span>{" "}
+                    </button>
+                    <p>
+                      {" "}
+                      <ChevronRight className="text-[#7a7a7f]" />
+                    </p>
+                  </div>
+                </div>
+                <button className=" text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">
+                  Search
+                </button>
+              </div>
+            </div>
           </>
         );
       default:
