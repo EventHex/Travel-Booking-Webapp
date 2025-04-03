@@ -25,9 +25,6 @@ import Input from "../../components/input";
 import CustomSelect from "../../components/dropdown";
 import { CustomDatePicker, FullCalendar } from "../../components/calender";
 import SideBar from "./sideBar";
-import 'react-image-crop/dist/ReactCrop.css';
-import { ReactCrop } from 'react-image-crop';
-
 const TravelVisaBooking = () => {
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
@@ -544,6 +541,22 @@ const TravelVisaBooking = () => {
     );
   };
 
+  // Define all states at the top of your component
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeOption, setActiveOption] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // Your existing handleImageChange function
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <>
@@ -678,6 +691,70 @@ const TravelVisaBooking = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium">Edit Image</h3>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setActiveOption(null);
+                }}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <img
+                src={selectedImage}
+                alt="Edit preview"
+                className="max-h-[400px] mx-auto object-contain"
+              />
+            </div>
+
+            <div className="flex justify-center gap-4">
+              <button 
+                onClick={() => setActiveOption(activeOption === 'crop' ? null : 'crop')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                  activeOption === 'crop' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <Crop className="h-5 w-5" />
+                Crop
+              </button>
+              <button 
+                onClick={() => setActiveOption(activeOption === 'rotate' ? null : 'rotate')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                  activeOption === 'rotate' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <RotateCw className="h-5 w-5" />
+                Rotate
+              </button>
+              <button 
+                onClick={() => setActiveOption(activeOption === 'flip' ? null : 'flip')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                  activeOption === 'flip' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <FlipHorizontal2 className="h-5 w-5" />
+                Flip
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

@@ -623,7 +623,7 @@ export const FrontPassportForm = () => {
                   
                   {/* Preview panel - shows the result of the crop in real-time */}
                   {imageTransform.crop && cropSelection.startX !== cropSelection.endX && cropSelection.startY !== cropSelection.endY && (
-                    <div className="w-full md:w-64 border border-gray-300 rounded-md p-3">
+                    <div className="w-full md:w-64 border   border-gray-300 rounded-md p-3">
                       <div className="text-sm text-center mb-2 font-medium">Crop Preview</div>
                       <div className="flex justify-center bg-gray-50 p-2 rounded">
                         <img 
@@ -640,20 +640,20 @@ export const FrontPassportForm = () => {
                 </div>
               </div>
               
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="grid gap-2 grid-cols-3 ">
                 <button
                   type="button"
                   onClick={handleCropImage}
-                  className={`flex flex-col items-center justify-center p-3 border ${imageTransform.crop ? 'bg-blue-100 border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
+                  className={`flex flex-col items-center justify-center border ${imageTransform.crop ? ' border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
                 >
-                  <Crop size={24} className="text-blue-600 mb-2" />
-                  <span className="text-sm">Crop</span>
+                  <Crop size={ 18} className="text-blue-600" />
+                  <span className="text-[12px]">Crop</span>
                 </button>
                 
                 <button
                   type="button"
                   onClick={handleFlipImage}
-                  className={`flex flex-col items-center justify-center p-3 border ${imageTransform.flipX ? 'bg-blue-100 border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
+                  className={`flex flex-col items-center justify-center p-3 border ${imageTransform.flipX ? ' border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
                 >
                   <FlipHorizontal size={24} className="text-blue-600 mb-2" />
                   <span className="text-sm">Flip</span>
