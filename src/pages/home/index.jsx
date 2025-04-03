@@ -376,7 +376,7 @@ const HeroSection = () => {
         </div>
         {/* *****************footer***************************** */}
         <div className="w-full flex justify-center rounded-t-[30px] py-10 items-center bg-gradient-to-r from-[#1C1C82] to-[#24186C]">
-          <div className="max-w-[1300px] flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
+          <div className="max-w-[1300px] md:pb-32 flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
             <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">
               <img src={Logo} alt="Logo" className="max-w-full h-auto" />
             </div>
