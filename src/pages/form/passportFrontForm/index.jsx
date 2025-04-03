@@ -360,6 +360,62 @@ export const FrontPassportForm = () => {
     };
   };
 
+  // Magnifier effect function
+  const addMagnifierEffect = (imageElement) => {
+    if (!imageElement) return;
+    
+    const magnifierSize = 120; // Size of magnifier lens in pixels
+    const zoomLevel = 2.5; // Magnification level
+    
+    // Create and append magnifier element
+    const createMagnifier = () => {
+      // Check if magnifier already exists
+      const existingMagnifier = document.getElementById('image-magnifier');
+      if (existingMagnifier) return existingMagnifier;
+      
+      // Create new magnifier
+      const magnifier = document.createElement('div');
+      magnifier.id = 'image-magnifier';
+      magnifier.style.position = 'absolute';
+      magnifier.style.width = `${magnifierSize}px`;
+      magnifier.style.height = `${magnifierSize}px`;
+      magnifier.style.borderRadius = '50%';
+      magnifier.style.border = '1px solid #ddd';
+      magnifier.style.overflow = 'hidden';
+      magnifier.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+      magnifier.style.pointerEvents = 'none';
+      magnifier.style.zIndex = '1000';
+      magnifier.style.display = 'none';
+      magnifier.style.backgroundRepeat = 'no-repeat';
+      
+      document.body.appendChild(magnifier);
+      return magnifier;
+    };
+    
+    const magnifier = createMagnifier();
+    
+    // Add event listeners
+    imageElement.addEventListener('mousemove', (e) => {
+      // Get image and cursor positions
+      const imageRect = imageElement.getBoundingClientRect();
+      const x = (e.clientX - imageRect.left) / imageRect.width;
+      const y = (e.clientY - imageRect.top) / imageRect.height;
+      
+      // Position magnifier near cursor
+      magnifier.style.left = `${e.clientX}px`;
+      magnifier.style.top = `${e.clientY}px`;
+      magnifier.style.transform = 'translate(-50%, -50%)';
+      magnifier.style.backgroundImage = `url(${imageElement.src})`;
+      magnifier.style.backgroundPosition = `${x * 100}% ${y * 100}%`;
+      magnifier.style.backgroundSize = `${imageRect.width * zoomLevel}px ${imageRect.height * zoomLevel}px`;
+      magnifier.style.display = 'block';
+    });
+    
+    imageElement.addEventListener('mouseleave', () => {
+      magnifier.style.display = 'none';
+    });
+  };
+
   return (
     <div className="w-full mx-auto py-4 px-4 md:py-8 md:px-8">
       <div className="mb-6">
@@ -385,72 +441,73 @@ export const FrontPassportForm = () => {
                   Passport Front Page Image
                   <span className="text-red-500">*</span>
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-6 text-center">
-                  {!previewImage ? (
-                    <>
-                      <input
-                        type="file"
-                        className="hidden"
-                        id="passport-upload"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                      />
-                      <label
-                        htmlFor="passport-upload"
-                        className="cursor-pointer flex flex-col items-center"
-                      >
-                        <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
-                        <span className="text-xs md:text-sm text-gray-600">
-                          Choose a file or drag & drop it here
-                        </span>
-                        <span className="text-xs text-gray-400 mt-1">
-                          JPEG, PNG, PDF and NPF formats, up to 50 MB
-                        </span>
-                        <button
-                          type="button"
-                          className="mt-3 px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-md text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
-                        >
-                          Browse File
-                        </button>
-                      </label>
-                    </>
-                  ) : (
-                    <div className="relative">
-                      <button 
-                        type="button" 
-                        className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100" 
-                        onClick={openEditModal}
-                      >
-                        <Edit size={20} className="text-blue-600" />
-                      </button>
-                      
-                      {/* Display current preview image */}
-                      <div className="flex justify-center">
-                        <img 
-                          src={previewImage} 
-                          alt="Passport Preview" 
-                          className="max-w-full max-h-64 object-contain" 
-                        />
-                      </div>
-                      
-                      <div className="mt-3 flex justify-center">
+                  <div className="border-2  border-dashed border-gray-300 rounded-lg p-4 md:p-6 text-center">
+                    {!previewImage ? (
+                      <>
                         <input
                           type="file"
-                          id="passport-upload-replace"
                           className="hidden"
+                          id="passport-upload"
                           accept="image/*"
                           onChange={handleFileChange}
                         />
                         <label
-                          htmlFor="passport-upload-replace"
-                          className="cursor-pointer px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-md text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          htmlFor="passport-upload"
+                          className="cursor-pointer flex flex-col items-center"
                         >
-                          Replace Image
+                          <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
+                          <span className="text-xs md:text-sm text-gray-600">
+                            Choose a file or drag & drop it here
+                          </span>
+                          <span className="text-xs text-gray-400 mt-1">
+                            JPEG, PNG, PDF and NPF formats, up to 50 MB
+                          </span>
+                          <button
+                            type="button"
+                            className="mt-3 px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-md text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
+                            Browse File
+                          </button>
                         </label>
+                      </>
+                    ) : (
+                      <div className="relative">
+                        <button 
+                          type="button" 
+                          className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100" 
+                          onClick={openEditModal}
+                        >
+                          <Edit size={20} className="text-blue-600" />
+                        </button>
+                        
+                        {/* Display current preview image with magnifier effect */}
+                        <div className="flex justify-center">
+                          <img 
+                            src={previewImage} 
+                            alt="Passport Preview" 
+                            className="max-w-full max-h-64 object-contain" 
+                            ref={imgEl => imgEl && addMagnifierEffect(imgEl)}
+                          />
+                        </div>
+                        
+                        <div className="mt-3 flex justify-center">
+                          <input
+                            type="file"
+                            id="passport-upload-replace"
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                          />
+                          <label
+                            htmlFor="passport-upload-replace"
+                            className="cursor-pointer px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-md text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
+                            Replace Image
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
               </div>
             </div>
 
@@ -556,9 +613,9 @@ export const FrontPassportForm = () => {
         {/* Image Edit Modal */}
         {showEditModal && (
           <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-lg">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Edit Image</h3>
+            <div className=" bg-white rounded-lg p-3 w-full max-w-lg">
+              <div className="flex justify-end  items-center mb-4">
+                {/* <h3 className="text-lg font-medium">Edit Image</h3> */}
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
@@ -640,47 +697,47 @@ export const FrontPassportForm = () => {
                 </div>
               </div>
               
-              <div className="grid gap-2 grid-cols-3 ">
+              <div className="grid gap-2   grid-cols-3 ">
                 <button
                   type="button"
                   onClick={handleCropImage}
                   className={`flex flex-col items-center justify-center border ${imageTransform.crop ? ' border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
                 >
-                  <Crop size={ 18} className="text-blue-600" />
+                  <Crop size={16} className="text-blue-600" />
                   <span className="text-[12px]">Crop</span>
                 </button>
                 
                 <button
                   type="button"
                   onClick={handleFlipImage}
-                  className={`flex flex-col items-center justify-center p-3 border ${imageTransform.flipX ? ' border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
+                  className={`flex flex-col items-center p-1 justify-center border ${imageTransform.flipX ? ' border-blue-300' : 'border-gray-200'} rounded-lg hover:bg-gray-50`}
                 >
-                  <FlipHorizontal size={24} className="text-blue-600 mb-2" />
-                  <span className="text-sm">Flip</span>
+                  <FlipHorizontal size={16} className="text-blue-600 " />
+                  <span className="text-[12px]">Flip</span>
                 </button>
                 
                 <button
                   type="button"
                   onClick={handleRotateImage}
-                  className="flex flex-col items-center justify-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                  className="flex flex-col items-center justify-center  border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
-                  <RotateCw size={24} className="text-blue-600 mb-2" />
-                  <span className="text-sm">Rotate {imageTransform.rotate}°</span>
+                  <RotateCw size={16} className="text-blue-600 " />
+                  <span className="text-[12px]">Rotate {imageTransform.rotate}°</span>
                 </button>
               </div>
               
-              <div className="flex justify-end gap-2">
+              <div className="flex justify-end mt-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                  className="px-3 py-1 border border-gray-300  text-[12px] text-gray-700 rounded-md hover:bg-gray-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={applyChanges}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  className="px-3 py-1 bg-blue-600 text-[12px] text-white rounded-md hover:bg-blue-700"
                 >
                   Apply
                 </button>
