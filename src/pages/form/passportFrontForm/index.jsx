@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Upload,
   Info,
@@ -26,12 +26,24 @@ export const FrontPassportForm = () => {
   const [frontImage, setFrontImage] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editedImage, setEditedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null); // New state for preview
   const [imageTransform, setImageTransform] = useState({
     rotate: 0,
     flipX: false,
     flipY: false,
     crop: false
   });
+  
+  // Refs and state for crop functionality
+  const imageRef = useRef(null);
+  const [cropSelection, setCropSelection] = useState({
+    startX: 0,
+    startY: 0,
+    endX: 0,
+    endY: 0,
+    isDragging: false
+  });
+  
   const [formData, setFormData] = useState({
     passportNumber: "",
     firstName: "",
@@ -58,6 +70,7 @@ export const FrontPassportForm = () => {
       
       const imageURL = URL.createObjectURL(file);
       setFrontImage(imageURL);
+      setPreviewImage(imageURL); // Set initial preview
     }
   };
   
@@ -84,16 +97,38 @@ export const FrontPassportForm = () => {
       flipY: false,
       crop: false
     });
-    setShowEditModal(true);
+    setCropSelection({
+      startX: 0,
+      startY: 0,
+      endX: 0,
+      endY: 0,
+      isDragging: false
+    });
+    
+    // Short delay to ensure image is loaded properly before showing modal
+    setTimeout(() => {
+      setShowEditModal(true);
+    }, 50);
   };
   
   // Image editing functions with real-time preview
   const handleCropImage = () => {
-    // Toggle crop mode (actual cropping would need a more complex implementation)
+    // Toggle crop mode without causing the image to disappear
     setImageTransform(prev => ({
       ...prev,
       crop: !prev.crop
     }));
+    
+    // Reset crop selection when turning off crop mode
+    if (imageTransform.crop) {
+      setCropSelection({
+        startX: 0,
+        startY: 0,
+        endX: 0,
+        endY: 0,
+        isDragging: false
+      });
+    }
   };
   
   const handleFlipImage = () => {
@@ -112,11 +147,217 @@ export const FrontPassportForm = () => {
     }));
   };
   
+  // Mouse event handlers for crop selection
+  const handleMouseDown = (e) => {
+    if (!imageTransform.crop || !imageRef.current) return;
+    
+    // Prevent default behavior to avoid browser's default drag behavior
+    e.preventDefault();
+    
+    // Get precise position relative to the image container
+    const rect = e.currentTarget.getBoundingClientRect();
+    const startX = e.clientX - rect.left;
+    const startY = e.clientY - rect.top;
+    
+    setCropSelection({
+      startX,
+      startY,
+      endX: startX,
+      endY: startY,
+      isDragging: true
+    });
+  };
+  
+  const handleMouseMove = (e) => {
+    if (!imageTransform.crop || !cropSelection.isDragging) return;
+    
+    // Use currentTarget to get the container element for more accurate position
+    const rect = e.currentTarget.getBoundingClientRect();
+    
+    // Calculate position within bounds of the container
+    const endX = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const endY = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
+    
+    setCropSelection(prev => ({
+      ...prev,
+      endX,
+      endY
+    }));
+  };
+  
+  const handleMouseUp = () => {
+    if (!imageTransform.crop) return;
+    
+    setCropSelection(prev => ({
+      ...prev,
+      isDragging: false
+    }));
+  };
+  
+  // Create live preview of crop - update in real-time
+  useEffect(() => {
+    if (imageTransform.crop && imageRef.current && 
+        cropSelection.startX !== cropSelection.endX && 
+        cropSelection.startY !== cropSelection.endY) {
+      
+      // Create preview for the selected area
+      const createPreview = () => {
+        const width = Math.abs(cropSelection.endX - cropSelection.startX);
+        const height = Math.abs(cropSelection.endY - cropSelection.startY);
+        
+        if (width > 5 && height > 5) { // Lower threshold to make preview more responsive
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const img = new Image();
+          
+          img.onload = () => {
+            try {
+              // Get dimensions and scaling
+              const rect = imageRef.current.getBoundingClientRect();
+              const imgWidth = img.width;
+              const imgHeight = img.height;
+              
+              // Calculate displayed dimensions with rotation if needed
+              const isRotated = imageTransform.rotate % 180 !== 0;
+              const displayedWidth = isRotated ? rect.height : rect.width;
+              const displayedHeight = isRotated ? rect.width : rect.height;
+              
+              // Get actual image dimensions displayed on screen (accounting for object-contain scaling)
+              let displayScale = 1;
+              if (imgWidth / imgHeight > displayedWidth / displayedHeight) {
+                // Image is wider than container ratio
+                displayScale = displayedWidth / imgWidth;
+              } else {
+                // Image is taller than container ratio
+                displayScale = displayedHeight / imgHeight;
+              }
+              
+              const actualDisplayedWidth = imgWidth * displayScale;
+              const actualDisplayedHeight = imgHeight * displayScale;
+              
+              // Calculate offsets if image doesn't fill the container
+              const offsetX = (displayedWidth - actualDisplayedWidth) / 2;
+              const offsetY = (displayedHeight - actualDisplayedHeight) / 2;
+              
+              // Adjust selection coordinates to account for centering
+              let adjustedStartX = (cropSelection.startX - offsetX) / displayScale;
+              let adjustedStartY = (cropSelection.startY - offsetY) / displayScale;
+              let adjustedEndX = (cropSelection.endX - offsetX) / displayScale;
+              let adjustedEndY = (cropSelection.endY - offsetY) / displayScale;
+              
+              // Ensure coordinates are within the image bounds
+              adjustedStartX = Math.max(0, Math.min(adjustedStartX, imgWidth));
+              adjustedStartY = Math.max(0, Math.min(adjustedStartY, imgHeight));
+              adjustedEndX = Math.max(0, Math.min(adjustedEndX, imgWidth));
+              adjustedEndY = Math.max(0, Math.min(adjustedEndY, imgHeight));
+              
+              // Calculate crop coordinates
+              const minX = Math.min(adjustedStartX, adjustedEndX);
+              const minY = Math.min(adjustedStartY, adjustedEndY);
+              const cropWidth = Math.abs(adjustedEndX - adjustedStartX);
+              const cropHeight = Math.abs(adjustedEndY - adjustedStartY);
+              
+              // Set canvas dimensions and draw cropped portion
+              canvas.width = cropWidth;
+              canvas.height = cropHeight;
+              
+              ctx.drawImage(
+                img,
+                minX, minY, cropWidth, cropHeight,
+                0, 0, cropWidth, cropHeight
+              );
+              
+              // Set preview image
+              const dataUrl = canvas.toDataURL('image/jpeg');
+              setPreviewImage(dataUrl);
+            } catch (error) {
+              console.error("Error creating preview:", error);
+            }
+          };
+          
+          img.src = editedImage;
+        }
+      };
+      
+      // Generate preview in real-time, even during dragging
+      createPreview();
+    }
+  }, [cropSelection, imageTransform.crop, imageTransform.rotate, editedImage]);
+  
+  // Apply the crop when saving changes
   const applyChanges = () => {
-    // In a real implementation, you would apply the transformations to the actual image
-    // For now, we'll just keep the preview as our "edited" image
-    setFrontImage(editedImage);
+    // If we're in crop mode and have a valid selection, use the already generated preview
+    if (imageTransform.crop && 
+        cropSelection.startX !== cropSelection.endX && 
+        cropSelection.startY !== cropSelection.endY && 
+        previewImage !== frontImage) {
+      
+      // We already have the correct preview image generated by the useEffect
+      setFrontImage(previewImage);
+      setEditedImage(previewImage);
+      
+      // Turn off crop mode
+      setImageTransform(prev => ({
+        ...prev,
+        crop: false
+      }));
+    } else if (!imageTransform.crop && (imageTransform.rotate !== 0 || imageTransform.flipX || imageTransform.flipY)) {
+      // Apply other transformations (rotate/flip)
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        // Set canvas dimensions
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        // Save context state
+        ctx.save();
+        
+        // Move to center of canvas
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        
+        // Apply transformations
+        ctx.rotate((imageTransform.rotate * Math.PI) / 180);
+        ctx.scale(imageTransform.flipX ? -1 : 1, imageTransform.flipY ? -1 : 1);
+        
+        // Draw image centered
+        ctx.drawImage(img, -img.width / 2, -img.height / 2);
+        
+        // Restore context state
+        ctx.restore();
+        
+        // Set as front image and preview
+        const transformedImageUrl = canvas.toDataURL('image/jpeg');
+        setFrontImage(transformedImageUrl);
+        setPreviewImage(transformedImageUrl);
+        setEditedImage(transformedImageUrl);
+      };
+      
+      img.src = editedImage;
+    }
+    
+    // Close modal
     setShowEditModal(false);
+  };
+  
+  // Calculate crop selection style
+  const getCropSelectionStyle = () => {
+    const left = Math.min(cropSelection.startX, cropSelection.endX);
+    const top = Math.min(cropSelection.startY, cropSelection.endY);
+    const width = Math.abs(cropSelection.endX - cropSelection.startX);
+    const height = Math.abs(cropSelection.endY - cropSelection.startY);
+    
+    return {
+      left: `${left}px`,
+      top: `${top}px`,
+      width: `${width}px`,
+      height: `${height}px`,
+      // Ensure the selection is visible (background is transparent to see the image)
+      backgroundColor: 'rgba(255, 255, 255, 0.1)', // Very slight white highlight
+      display: width > 0 && height > 0 ? 'block' : 'none'
+    };
   };
 
   return (
@@ -145,47 +386,70 @@ export const FrontPassportForm = () => {
                   <span className="text-red-500">*</span>
                 </label>
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-6 text-center">
-                  <input
-                    type="file"
-                    className="hidden"
-                    id="passport-upload"
-                    accept="image/*"
-                  />
-                  <label
-                    htmlFor="passport-upload"
-                    className="cursor-pointer flex flex-col items-center"
-                  >
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" 
-                      onChange={handleFileChange} 
-                    />
-                    {frontImage && (
-                      <div className="relative mt-2">
-                        <button 
-                          type="button" 
-                          className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100" 
-                          onClick={openEditModal}
+                  {!previewImage ? (
+                    <>
+                      <input
+                        type="file"
+                        className="hidden"
+                        id="passport-upload"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                      />
+                      <label
+                        htmlFor="passport-upload"
+                        className="cursor-pointer flex flex-col items-center"
+                      >
+                        <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
+                        <span className="text-xs md:text-sm text-gray-600">
+                          Choose a file or drag & drop it here
+                        </span>
+                        <span className="text-xs text-gray-400 mt-1">
+                          JPEG, PNG, PDF and NPF formats, up to 50 MB
+                        </span>
+                        <button
+                          type="button"
+                          className="mt-3 px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-md text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
                         >
-                          <Edit size={20} className="text-blue-600" />
+                          Browse File
                         </button>
-                        <img src={frontImage} alt="image" width="500" />
+                      </label>
+                    </>
+                  ) : (
+                    <div className="relative">
+                      <button 
+                        type="button" 
+                        className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100" 
+                        onClick={openEditModal}
+                      >
+                        <Edit size={20} className="text-blue-600" />
+                      </button>
+                      
+                      {/* Display current preview image */}
+                      <div className="flex justify-center">
+                        <img 
+                          src={previewImage} 
+                          alt="Passport Preview" 
+                          className="max-w-full max-h-64 object-contain" 
+                        />
                       </div>
-                    )}
-                    <span className="text-xs md:text-sm text-gray-600">
-                      Choose a file or drag & drop it here
-                    </span>
-                    <span className="text-xs text-gray-400 mt-1">
-                      JPEG, PNG, PDF and NPF formats, up to 50 MB
-                    </span>
-                    <button
-                      type="button"
-                      className="mt-3 px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-md text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      Browse File
-                    </button>
-                  </label>
+                      
+                      <div className="mt-3 flex justify-center">
+                        <input
+                          type="file"
+                          id="passport-upload-replace"
+                          className="hidden"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                        />
+                        <label
+                          htmlFor="passport-upload-replace"
+                          className="cursor-pointer px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-md text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        >
+                          Replace Image
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -304,18 +568,75 @@ export const FrontPassportForm = () => {
                 </button>
               </div>
               
-              {/* Image Preview */}
-              <div className="mb-6 flex justify-center">
-                <div className="relative  flex justify-center overflow-hidden" style={{ maxWidth: '100%', maxHeight: '300px' }}>
-                  <img 
-                    src={editedImage} 
-                    alt="Preview" 
-                    className={`max-w-full max-h-full object-contain ${imageTransform.crop ? 'border-2 border-blue-500' : ''}`}
-                    style={{
-                      transform: `rotate(${imageTransform.rotate}deg) scaleX(${imageTransform.flipX ? -1 : 1}) scaleY(${imageTransform.flipY ? -1 : 1})`,
-                      transition: 'transform 0.3s ease'
+              <div className="mb-6">
+                <div className="flex flex-col md:flex-row gap-4">
+                  {/* Main image editing area */}
+                  <div 
+                    className="relative flex-grow" 
+                    style={{ 
+                      maxHeight: '300px',
+                      cursor: imageTransform.crop ? 'crosshair' : 'default'
                     }}
-                  />
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseUp}
+                  >
+                    {/* Main image - ensure this stays visible */}
+                    <div className="flex justify-center items-center bg-gray-100 rounded-md" style={{ minHeight: '200px' }}>
+                      <img 
+                        ref={imageRef}
+                        src={editedImage} 
+                        alt="Preview" 
+                        className="max-w-full max-h-64 object-contain"
+                        style={{
+                          transform: `rotate(${imageTransform.rotate}deg) scaleX(${imageTransform.flipX ? -1 : 1}) scaleY(${imageTransform.flipY ? -1 : 1})`,
+                          transition: 'transform 0.3s ease',
+                          position: 'relative',
+                          zIndex: 1
+                        }}
+                      />
+                    </div>
+                    
+                    {/* Crop selection overlay - show only when crop mode is active */}
+                    {imageTransform.crop && (
+                      <>
+                        {/* Very light overlay to indicate crop mode */}
+                        <div className="absolute inset-0 bg-black/20 bg-opacity-20 z-10" />
+                        
+                        {/* Crop selection box - only show when there's an actual selection */}
+                        {(cropSelection.endX !== cropSelection.startX || cropSelection.endY !== cropSelection.startY) && (
+                          <div 
+                            className="absolute border-2 border-white z-20"
+                            style={getCropSelectionStyle()}
+                          >
+                            {/* Corner handles for visual feedback */}
+                            <div className="absolute w-2 h-2 bg-white top-0 left-0" />
+                            <div className="absolute w-2 h-2 bg-white top-0 right-0" />
+                            <div className="absolute w-2 h-2 bg-white bottom-0 left-0" />
+                            <div className="absolute w-2 h-2 bg-white bottom-0 right-0" />
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Preview panel - shows the result of the crop in real-time */}
+                  {imageTransform.crop && cropSelection.startX !== cropSelection.endX && cropSelection.startY !== cropSelection.endY && (
+                    <div className="w-full md:w-64 border border-gray-300 rounded-md p-3">
+                      <div className="text-sm text-center mb-2 font-medium">Crop Preview</div>
+                      <div className="flex justify-center bg-gray-50 p-2 rounded">
+                        <img 
+                          src={previewImage} 
+                          alt="Crop Preview" 
+                          className="max-w-full max-h-40 object-contain" 
+                        />
+                      </div>
+                      <div className="text-xs text-center mt-2 text-gray-500">
+                        This is how your cropped image will appear
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               
