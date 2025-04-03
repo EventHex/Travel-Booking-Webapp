@@ -569,9 +569,9 @@ const TravelVisaBooking = () => {
       >
         <Header />
 
-        <div className="max-w-[1300px] w-full mx-auto p-4 rounded-lg">
-          <div className="flex gap-5 w-full">
-            <div className="flex gap-3 justify-center w-[50%] flex-col">
+        <div className="max-w-[1300px] w-full mx-auto rounded-lg">
+          <div className="flex gap-5 flex-col  md:flex-row p-5 w-full">
+            <div className="flex gap-3 justify-center    w-full md:w-[50%] flex-col">
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
                 <div className="w-full">
                   <div className="flex items-center p-3">
@@ -618,7 +618,7 @@ const TravelVisaBooking = () => {
               </div>
               <div className="flex justify-end"></div>
             </div>
-            <div className="flex gap-3 w-[50%] flex-col">
+            <div className="flex gap-3w-full md:w-[50%] flex-col">
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
                 <div className="w-full">
                   <div className="flex items-center p-3">
@@ -679,8 +679,8 @@ const TravelVisaBooking = () => {
 
               {/* <Sidebar /> */}
             </div>
-            <div className=" w-full md:w-[70%] border-l   border-[#868C98]   flex flex-col justify-center">
-              <div className=" md:p-5">
+            <div className="w-full md:w-[70%] border-l border-[#bbbdc2] flex flex-col justify-center">
+            <div className=" md:p-5">
               <FrontPassportForm />
               <BackPassportForm />
               <UploadTravelerPhoto />

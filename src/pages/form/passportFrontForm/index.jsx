@@ -448,7 +448,7 @@ export const FrontPassportForm = () => {
   };
 
   return (
-    <div className="w-full mx-auto py-4 px-4 md:py-8 md:px-8">
+    <div className="w-full mx-auto  px-4  md:px-8">
       <div className="mb-6">
         <h1 className="text-xl md:text-2xl font-semibold text-blue-600 mb-2">
           Traveler 1

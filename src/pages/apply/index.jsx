@@ -130,7 +130,7 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
         {/* Search Form */}
      
         <div className="flex gap-5 flex-col md:flex-row justify-center items-center w-full">
-      <div className="flex gap-3 justify-center   w-full md:w-[50%] flex-col">
+      <div className="flex gap-3 justify-center    w-full md:w-[50%] flex-col">
         <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
           <div className="w-full">
             <div className="flex items-center p-3">
