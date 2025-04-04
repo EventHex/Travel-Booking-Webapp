@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Calander from "../../ui/calander";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, MapPin } from "lucide-react";
 
 import {
   Men,
@@ -18,7 +18,7 @@ import {
   User,
   Placeholder,
 } from "../../assets";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
 import Header from "../../components/header";
@@ -47,39 +47,28 @@ const HeroSection = () => {
 
     const citizenOptions = [
       {
-        image: Placeholder,
-        type: "location",
+        icon: <MapPin className="text-[#b1b5be]" />,
         title: "Dubai",
-        subtitle: "United Arab Emirates",
         id: 1,
       },
       {
-        image: Placeholder,
-        type: "location",
-        title: "Singapore",
-        subtitle: "Singapore",
+        icon: <MapPin className="text-[#b1b5be]" />,
+        title: "Mumbai",
         id: 2,
       },
       {
-        image: Placeholder,
-        type: "attraction",
-        title:
-          "Combo: Burj Khalifa At The Top SKY (Level 148) + Sky Views Observatory Entry Tickets",
-        subtitle: "Dubai, United Arab Emirates",
+        icon: <MapPin className="text-[#b1b5be]" />,
+        title: "Oman",
         id: 3,
       },
       {
-        image: Placeholder,
-        type: "attraction",
-        title: "Andamanda Phuket Water Park Ticket With Transfers",
-        subtitle: "Phuket, Thailand",
+        icon: <MapPin className="text-[#b1b5be]" />,
+        title: "Kochi",
         id: 4,
       },
       {
-        image: Placeholder,
-        type: "attraction",
-        title: "Dubai Frame Tickets",
-        subtitle: "Dubai, United Arab Emirates",
+        icon: <MapPin className="text-[#b1b5be]" />,
+        title: "Goa",
         id: 5,
       },
     ];
@@ -92,15 +81,9 @@ const HeroSection = () => {
       goingToInputRef.current.focus();
     };
 
-    const handleTravelDateIconClick = () => {
-      travelDateInputRef.current.focus();
-    };
-
     const handleReturnDateIconClick = () => {
       returnDateInputRef.current.focus();
     };
-
-  
 
     const [tripType, setTripType] = useState("oneWay");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -200,77 +183,85 @@ const HeroSection = () => {
       passengers.adults + passengers.children + passengers.infants;
     const travelerText =
       totalTravelers === 1 ? "1 Traveler" : `${totalTravelers} Travelers`;
-      const [showDropdown, setShowDropdown] = useState(false);
-      const [searchOptions, setSearchOptions] = useState([]);
-      const searchInputRef = useRef(null);
-      const dropdownRef = useRef(null);
-    
-      // Sample options - replace with your actual data
-      const sampleOptions = [
-        {
-          id: 1,
-          title: "Burj Khalifa",
-          subtitle: "Dubai, United Arab Emirates",
-          type: "attraction",
-            image: Placeholder
-        },
-        {
-          id: 2,
-          title: "Universal Studios",
-          subtitle: "Orlando, Florida, USA",
-          type: "theme park",
-          image: Placeholder
-        },
-        {
-          id: 3,
-          title: "Eiffel Tower",
-          subtitle: "Paris, France",
-          type: "landmark",
-            image: Placeholder
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [searchOptions, setSearchOptions] = useState([]);
+    const searchInputRef = useRef(null);
+    const dropdownRef = useRef(null);
+
+    // Sample options - replace with your actual data
+    const sampleOptions = [
+      {
+        id: 1,
+        title: "Burj Khalifa",
+        subtitle: "Dubai, United Arab Emirates",
+        type: "attraction",
+        image: Placeholder,
+      },
+      {
+        id: 2,
+        title: "Universal Studios",
+        subtitle: "Orlando, Florida, USA",
+        type: "theme park",
+        image: Placeholder,
+      },
+      {
+        id: 3,
+        title: "Eiffel Tower",
+        subtitle: "Paris, France",
+        type: "landmark",
+        image: Placeholder,
+      },
+    ];
+
+    const handleInputFocus = () => {
+      setSearchOptions(sampleOptions);
+      setShowDropdown(true);
+    };
+
+    const handleInputBlur = (e) => {
+      // Delay hiding dropdown to allow click events on options
+      setTimeout(() => {
+        if (document.activeElement !== dropdownRef.current) {
+          setShowDropdown(false);
         }
-      ];
-    
-      const handleInputFocus = () => {
-        setSearchOptions(sampleOptions);
-        setShowDropdown(true);
-      };
-    
-      const handleInputBlur = (e) => {
-        // Delay hiding dropdown to allow click events on options
-        setTimeout(() => {
-          if (document.activeElement !== dropdownRef.current) {
-            setShowDropdown(false);
-          }
-        }, 100);
-      };
-    
-      const handleOptionSelect = (option) => {
-        if (searchInputRef.current) {
-          searchInputRef.current.value = option.title;
+      }, 100);
+    };
+
+    const handleOptionSelect = (option) => {
+      if (searchInputRef.current) {
+        searchInputRef.current.value = option.title;
+      }
+      setShowDropdown(false);
+      // Handle the selected option (e.g., navigate to details page)
+      console.log("Selected:", option);
+    };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target) &&
+          !searchInputRef.current.contains(event.target)
+        ) {
+          setShowDropdown(false);
         }
-        setShowDropdown(false);
-        // Handle the selected option (e.g., navigate to details page)
-        console.log("Selected:", option);
       };
-    
-      // Close dropdown when clicking outside
-      useEffect(() => {
-        const handleClickOutside = (event) => {
-          if (
-            dropdownRef.current && 
-            !dropdownRef.current.contains(event.target) &&
-            !searchInputRef.current.contains(event.target)
-          ) {
-            setShowDropdown(false);
-          }
-        };
-    
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
-        };
-      }, []);
-    
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
+    // Update your handleTravelDateIconClick function to focus the date input
+const handleTravelDateIconClick = () => {
+  if (travelDateInputRef.current) {
+    travelDateInputRef.current.focus();
+    travelDateInputRef.current.showPicker(); // This will open the date picker
+  }
+};
+
     switch (activeTab) {
       case "Visas":
         return (
@@ -309,22 +300,10 @@ const HeroSection = () => {
                           className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
                           onClick={() => handleOptionSelect(option)}
                         >
-                          <div className="flex-shrink-0 mr-3">
-                            <img
-                              src={option.image}
-                              alt={option.title}
-                              className="w-12 h-12 object-cover rounded"
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-medium text-gray-800">
+                          <div className="">
+                            <div className="flex gap-2 justify-center text-[12px]  text-gray-800">
+                              <p className="text-[12px]">{option.icon}</p>
                               {option.title}
-                            </div>
-                            <div className="text-xs text-gray-500 mt-1">
-                              {option.subtitle}
-                            </div>
-                            <div className="text-xs text-blue-500 mt-1 capitalize">
-                              {option.type}
                             </div>
                           </div>
                         </div>
@@ -377,6 +356,7 @@ const HeroSection = () => {
                     />
                   </div>
                 </div>
+
                 <div className="w-full">
                   <div className="flex items-center p-3">
                     <span
@@ -410,52 +390,52 @@ const HeroSection = () => {
       case "Activities":
         return (
           <div className="relative mb-24 w-full">
-      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-        <img src={Search} alt="Search icon" />
-      </div>
-      <input
-        ref={searchInputRef}
-        type="text"
-        placeholder={`Search for ${activeTab} (e.g. Burj Khalifa, Universal Studio)`}
-        className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white border border-[#A6BFFF82] border-solid rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm sm:text-base text-gray-600 placeholder-gray-400 transition-all duration-300 delay-150 hover:border-blue-500"
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-      />
-
-      {showDropdown && (
-        <div
-          ref={dropdownRef}
-          className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
-        >
-          {searchOptions.map((option) => (
-            <div
-              key={option.id}
-              className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-              onClick={() => handleOptionSelect(option)}
-            >
-              <div className="flex-shrink-0 mr-3">
-                <img
-                  src={option.image}
-                  alt={option.title}
-                  className="w-12 h-12 object-cover rounded"
-                />
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-gray-800">
-                  {option.title}
-                </div>
-                <div className="text-xs text-gray-500 mt-1">
-                  {option.subtitle}
-                </div>
-                <div className="text-xs text-blue-500 mt-1 capitalize">
-                  {option.type}
-                </div>
-              </div>
+            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <img src={Search} alt="Search icon" />
             </div>
-          ))}
-        </div>
-      )}
-    </div>
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder={`Search for ${activeTab} (e.g. Burj Khalifa, Universal Studio)`}
+              className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white border border-[#A6BFFF82] border-solid rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm sm:text-base text-gray-600 placeholder-gray-400 transition-all duration-300 delay-150 hover:border-blue-500"
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
+            />
+
+            {showDropdown && (
+              <div
+                ref={dropdownRef}
+                className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              >
+                {searchOptions.map((option) => (
+                  <div
+                    key={option.id}
+                    className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleOptionSelect(option)}
+                  >
+                    <div className="flex-shrink-0 mr-3">
+                      <img
+                        src={option.image}
+                        alt={option.title}
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-800">
+                        {option.title}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {option.subtitle}
+                      </div>
+                      <div className="text-xs text-blue-500 mt-1 capitalize">
+                        {option.type}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         );
       case "Insurance":
         return (
@@ -979,33 +959,33 @@ const HeroSection = () => {
         </div>
         {/* *****************footer***************************** */}
         <div className="w-full flex justify-center rounded-t-[30px] py-6 sm:py-8 md:py-10 items-center bg-gradient-to-r from-[#1C1C82] to-[#24186C]">
-  <div className="max-w-[1300px] flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
-    <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">
-      {/* Responsive logo size */}
-     <Link to="/">
-              <img   className="w-[100px]" src={Logo} alt="" />
-            </Link>
-    </div>
-    <div className="w-full md:w-[50%] flex flex-col md:flex-row md:justify-end items-center md:items-end space-y-2 md:space-y-0 md:space-x-4">
-      <div className="text-center md:text-right">
-        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
-          CNN Holidays, ZAIKAS EF COMPLEX,{" "}
-        </p>
-        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
-          Fort Road, Cannanore, Kannur - 670001
-        </p>
-      </div>
-      <div className="text-center md:text-right">
-        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
-          CNN Holidays, ZAIKAS EF COMPLEX,{" "}
-        </p>
-        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
-          Fort Road, Cannanore, Kannur - 670001
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
+          <div className="max-w-[1300px] flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
+            <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">
+              {/* Responsive logo size */}
+              <Link to="/">
+                <img className="w-[100px]" src={Logo} alt="" />
+              </Link>
+            </div>
+            <div className="w-full md:w-[50%] flex flex-col md:flex-row md:justify-end items-center md:items-end space-y-2 md:space-y-0 md:space-x-4">
+              <div className="text-center md:text-right">
+                <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+                  CNN Holidays, ZAIKAS EF COMPLEX,{" "}
+                </p>
+                <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+                  Fort Road, Cannanore, Kannur - 670001
+                </p>
+              </div>
+              <div className="text-center md:text-right">
+                <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+                  CNN Holidays, ZAIKAS EF COMPLEX,{" "}
+                </p>
+                <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+                  Fort Road, Cannanore, Kannur - 670001
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
