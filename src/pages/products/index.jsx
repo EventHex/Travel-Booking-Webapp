@@ -22,7 +22,7 @@ import {
 
 } from "../../assets";
 // import SearchInput from "../../components/searchInput";
-import { SearchinputText, SearchinputDate } from "../../components/searchInput";
+// import { SearchinputText, SearchinputDate } from "../../components/searchInput";
 import { Link} from "react-router-dom";
 const index = () => {
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);

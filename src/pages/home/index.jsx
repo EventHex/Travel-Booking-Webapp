@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
 import Header from "../../components/header";
-import { SearchinputText, SearchinputDate } from "../../components/searchInput";
+import SearchInput from "../../components/searchInput";
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("Visas");
   const tabs = [
@@ -223,12 +223,7 @@ const HeroSection = () => {
         return (
           <>
             <div className="flex gap-3  flex-col ">
-              <SearchinputText Dropdown={citizenOptions} />
-              <SearchinputDate />
-
-
-              
-              {/* <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row ">
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
                 <div className="w-full relative">
                   <div className="flex items-center p-3">
                     <span
@@ -344,8 +339,8 @@ const HeroSection = () => {
                     </div>
                   )}
                 </div>
-              </div> */}
-              {/* <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row ">
+              </div>
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
                 <div className="w-full">
                   <div className="flex items-center p-3">
                     <span
@@ -388,7 +383,7 @@ const HeroSection = () => {
                     />
                   </div>
                 </div>
-              </div> */}
+              </div>
               <div className="flex justify-end">
                 <button className=" text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">
                   Search
@@ -414,7 +409,7 @@ const HeroSection = () => {
         return (
           <>
             <div className="flex gap-3  flex-col ">
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row ">
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
                 <div className="w-full">
                   <div className="flex items-center p-3">
                     <span
@@ -437,7 +432,7 @@ const HeroSection = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
                 <div className="w-full">
                   <div className="flex items-center p-3">
                     <span
@@ -575,7 +570,7 @@ const HeroSection = () => {
                   )}
                 </div>
               </div>
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
                 <div className="w-full relative">
                   <div className="flex items-center p-3">
                     <span
@@ -692,7 +687,7 @@ const HeroSection = () => {
                   )}
                 </div>
               </div>
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row ">
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
                 <div className="w-full">
                   <div className="flex items-center p-3">
                     <span

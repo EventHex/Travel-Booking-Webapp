@@ -11,7 +11,7 @@ import {
 } from "../../assets";
 import { Calendar } from "lucide-react";
 // import SearchInput from "../../components/searchInput";
-import { SearchinputText, SearchinputDate } from "../../components/searchInput";
+// import { SearchinputText, SearchinputDate } from "../../components/searchInput";
 const index = () => {
   const [date, setDate] = useState("");
   return (
