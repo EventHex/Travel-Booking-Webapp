@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { CalenderDown, CalenderUp, Flight, Home, Search } from "../../assets";
 
-const SearchInputText = ({ dropDownData, dropDownPlace }) => {
+const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
@@ -24,14 +24,19 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
   const handleCitizenIconClick = () => {
     citizenInputRef.current.focus();
   };
+  
   const handleOptionSelect = (option, inputRef, isFromInput) => {
     if (inputRef.current) {
       inputRef.current.value = option.title;
-    }
-    if (isFromInput) {
-      setShowFromDropdown(false);
-    } else {
-      setShowGoingToDropdown(false);
+      
+      // Update parent component state through the callback
+      if (isFromInput) {
+        onInputChange("destination", option.title);
+        setShowFromDropdown(false);
+      } else {
+        onInputChange("goingTo", option.title);
+        setShowGoingToDropdown(false);
+      }
     }
   };
 
@@ -48,6 +53,8 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
   const handleGoingToBlur = () => {
     setGoingToIsFocused(false);
   };
+
+
 
   const goingToDropdownRef = useRef(null);
 
@@ -71,6 +78,7 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
             className="w-full bg-transparent outline-none"
             onFocus={handleFromInputFocus}
             onBlur={handleFromInputBlur}
+            onChange={(e) => onInputChange("destination", e.target.value)}
           />
         </div>
 
@@ -87,23 +95,11 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
                   handleOptionSelect(option, citizenInputRef, true)
                 }
               >
-                <div className="flex-shrink-0 mr-3">
-                  <img
-                    src={option.image}
-                    alt={option.title}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-gray-800">
-                    {option.title}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    {option.subtitle}
-                  </div>
-                  <div className="text-xs text-blue-500 mt-1 capitalize">
-                    {option.type}
-                  </div>
+                <div className="flex">
+                  <p className="flex items-center text-[14px] gap-2">
+                    {option.icon}
+                    <span>{option.title}</span>
+                  </p>
                 </div>
               </div>
             ))}
@@ -129,6 +125,7 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
             className="w-full bg-transparent outline-none"
             onFocus={handleGoingToFocus}
             onBlur={handleGoingToBlur}
+            onChange={(e) => onInputChange("goingTo", e.target.value)}
           />
         </div>
 
@@ -160,20 +157,24 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
   );
 };
 
-const SearchInputDate = () => {
+const SearchInputDate = ({ onDateChange }) => {
   const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
   const travelDateInputRef = useRef(null);
   const returnDateInputRef = useRef(null);
 
   const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
+  
   const handleTravelDateIconClick = () => {
-    setTravelDateIsFocused(true);
+    travelDateInputRef.current.focus();
   };
+  
   const handleReturnDateIconClick = () => {
     returnDateInputRef.current.focus();
   };
+  
+  
   return (
-    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row ">
+    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
       <div className="w-full">
         <div className="flex items-center p-3">
           <span
@@ -192,6 +193,7 @@ const SearchInputDate = () => {
             className="w-full bg-transparent outline-none"
             onFocus={() => setTravelDateIsFocused(true)}
             onBlur={() => setTravelDateIsFocused(false)}
+            onChange={(e) => onDateChange("travelDate", e.target.value)}
           />
         </div>
       </div>
@@ -213,11 +215,11 @@ const SearchInputDate = () => {
             className="w-full bg-transparent outline-none"
             onFocus={() => setReturnDateIsFocused(true)}
             onBlur={() => setReturnDateIsFocused(false)}
+            onChange={(e) => onDateChange("returnDate", e.target.value)}
           />
         </div>
       </div>
     </div>
   );
 };
-
 export { SearchInputText, SearchInputDate };

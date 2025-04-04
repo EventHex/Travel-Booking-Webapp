@@ -19,7 +19,7 @@ import {
   Placeholder,
 } from "../../assets";
 import { Link } from "react-router-dom";
-import { ChevronRight,MapPin  } from "lucide-react";
+import { ChevronRight, MapPin } from "lucide-react";
 
 import Header from "../../components/header";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
@@ -47,61 +47,38 @@ const HeroSection = () => {
 
     const citizenOptions = [
       {
-        image: Placeholder,
-        type: "location",
-        title: "Dubai",
-        subtitle: "United Arab Emirates",
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "dubai",
         id: 1,
       },
       {
-        image: Placeholder,
-        type: "location",
-        title: "Singapore",
-        subtitle: "Singapore",
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "mumbai",
         id: 2,
       },
       {
-        image: Placeholder,
-        type: "attraction",
-        title:
-          "Combo: Burj Khalifa At The Top SKY (Level 148) + Sky Views Observatory Entry Tickets",
-        subtitle: "Dubai, United Arab Emirates",
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "kochin",
         id: 3,
-      },
-      {
-        image: Placeholder,
-        type: "attraction",
-        title: "Andamanda Phuket Water Park Ticket With Transfers",
-        subtitle: "Phuket, Thailand",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        type: "attraction",
-        title: "Dubai Frame Tickets",
-        subtitle: "Dubai, United Arab Emirates",
-        id: 5,
       },
     ];
 
     const dropDownPlace = [
       {
-        icon: <MapPin  size={14} className="text-[gray]"/>,
+        icon: <MapPin size={14} className="text-[gray]" />,
         title: "dubai",
         id: 1,
       },
       {
-        icon: <MapPin  size={14} className="text-[gray]"/>,
+        icon: <MapPin size={14} className="text-[gray]" />,
         title: "mumbai",
         id: 2,
       },
       {
-        icon: <MapPin  size={14} className="text-[gray]"/>,
+        icon: <MapPin size={14} className="text-[gray]" />,
         title: "kochin",
         id: 3,
       },
-      
-      
     ];
     const handleCitizenIconClick = () => {
       citizenInputRef.current.focus();
@@ -227,27 +204,58 @@ const HeroSection = () => {
     const handleDone = () => {
       setShowSelector(false);
     };
+    const [searchData, setSearchData] = useState({
+      destination: "",
+      goingTo: "",
+      travelDate: "",
+      returnDate: "",
+    });
 
+    const handleInputChange = (field, value) => {
+      setSearchData((prevState) => ({
+        ...prevState,
+        [field]: value,
+      }));
+    };
+
+    // Add this function to handle search button click
+    const handleSearchClick = () => {
+      // Log the search data to console
+      console.log("Search Data:", searchData);
+
+      // You can then navigate or perform other actions
+      // The Link component will handle navigation, but this ensures data is logged
+    };
     // Import would be handled in your actual project
     // This is just a placeholder for the component demonstration
     const User = "user-icon-placeholder";
 
-    // Calculate total travelers
-    const totalTravelers =
-      passengers.adults + passengers.children + passengers.infants;
-    const travelerText =
-      totalTravelers === 1 ? "1 Traveler" : `${totalTravelers} Travelers`;
     switch (activeTab) {
       case "Visas":
         return (
           <>
-            <div className="flex gap-3  flex-col ">
-              <SearchInputText  dropDownPlace={dropDownPlace} dropDownData={citizenOptions} />
-              <SearchInputDate />
+            <div className="flex gap-3 flex-col">
+              <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+                onInputChange={handleInputChange}
+              />
+              <SearchInputDate onDateChange={handleInputChange} />
               <div className="flex justify-end">
-                <button className=" text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">
-                  Search
-                </button>
+                <Link
+                  to={{
+                    pathname: "/form",
+                    search: `?${new URLSearchParams(searchData).toString()}`,
+                    state: searchData,
+                  }}
+                >
+                  <button
+                    className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
+                    onClick={handleSearchClick}
+                  >
+                    Search
+                  </button>
+                </Link>
               </div>
             </div>
           </>
@@ -268,21 +276,25 @@ const HeroSection = () => {
       case "Insurance":
         return (
           <>
-          <div className="flex gap-3  flex-col ">
-
-              <SearchInputText  dropDownPlace={dropDownPlace} dropDownData={citizenOptions} />
+            <div className="flex gap-3  flex-col ">
+              <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+              />
               <SearchInputDate />
-          </div>
+            </div>
           </>
         );
       case "Flights":
         return (
           <>
-          <div className="flex gap-3  flex-col ">
-
-              <SearchInputText  dropDownPlace={dropDownPlace} dropDownData={citizenOptions} />
+            <div className="flex gap-3  flex-col ">
+              <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+              />
               <SearchInputDate />
-          </div>
+            </div>
           </>
         );
       default:
