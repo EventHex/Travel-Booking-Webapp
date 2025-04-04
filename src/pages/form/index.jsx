@@ -31,35 +31,29 @@ import { CustomDatePicker, FullCalendar } from "../../components/calender";
 import SideBar from "./sideBar";
 const TravelVisaBooking = () => {
   const [searchParams] = useSearchParams();
-  
-  // Extract each parameter individually
-  const citizenship = searchParams.get('citizenship') || '';
+  const goingTo = searchParams.get('goingTo') || '';
   const destination = searchParams.get('destination') || '';
   const travelDate = searchParams.get('travelDate') || '';
-  
-  // Combine them into an object
+  const returnDate = searchParams.get('returnDate') || '';
+
   const searchData = {
-    citizenship,
+    goingTo,
     destination,
     travelDate,
+    returnDate,
   };
   
   useEffect(() => {
     console.log('Received search data:', searchData);
-    
-    // Check if required data is missing
-    if (!citizenship) {
-      console.warn('Warning: Citizenship data is missing');
-    }
-    
-    // Continue with form processing using the available data
-    // ...
-  }, [citizenship, destination, travelDate]);
+  }, [goingTo, destination, travelDate,returnDate]);
+
+
+
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
-  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
 
-  // Track focus state for all four inputs
+
+  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [goingToIsFocused, setGoingToIsFocused] = useState(false);
   const [TravellingDateFocused, setTravellingDateFocused] = useState(false);
@@ -574,9 +568,8 @@ const TravelVisaBooking = () => {
       <div
         style={{
           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "100%", // Don't scale the image
-          backgroundPosition: "center", // Start from top left
-          backgroundRepeat: "repeat", // Repeat in both directions
+          backgroundSize: "100%", 
+          backgroundPosition: "center",
           width: "100%",
 
             }}
@@ -586,8 +579,8 @@ const TravelVisaBooking = () => {
           <div className="flex gap-5 flex-col  justify-between md:flex-row p-5 w-full">
             <div className="flex gap-3">
 
-         <SearchInputText  />
-         <SearchInputDate />
+         <SearchInputText    data={{ destination, goingTo  }}  />
+         <SearchInputDate   data={{  travelDate, returnDate }} />
             </ div>
            
             <div className="flex items-center">

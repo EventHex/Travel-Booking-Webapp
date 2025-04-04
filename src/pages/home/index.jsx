@@ -244,7 +244,7 @@ const HeroSection = () => {
               <div className="flex justify-end">
                 <Link
                   to={{
-                    pathname: "/form",
+                    pathname: "/apply",
                     search: `?${new URLSearchParams(searchData).toString()}`,
                     state: searchData,
                   }}

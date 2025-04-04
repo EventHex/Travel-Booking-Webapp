@@ -1,11 +1,31 @@
-import React, { useState, useRef } from "react";
+import React, { useState,useEffect, useRef } from "react";
 import { Search, AlertTriangle, Shield } from "lucide-react";
 import { Calendar, Info, MapPin, Plane, ArrowRight } from 'lucide-react';
 
 import Header from "../../components/header";
 import { Flight, Home,CalenderUp,CalenderDown, MainBackground } from "../../assets";
 import { Link } from "react-router-dom";
+import { useSearchParams } from 'react-router-dom';
+import { SearchInputDate, SearchInputText } from "../../components/searchInput";
+
 const TravelVisaBooking = () => {
+  const [searchParams] = useSearchParams();
+  const goingTo = searchParams.get('goingTo') || '';
+  const destination = searchParams.get('destination') || '';
+  const travelDate = searchParams.get('travelDate') || '';
+  const returnDate = searchParams.get('returnDate') || '';
+
+  const searchData = {
+    goingTo,
+    destination,
+    travelDate,
+    returnDate,
+  };
+  
+  useEffect(() => {
+    console.log('Received search data:', searchData);
+  }, [goingTo, destination, travelDate,returnDate]);
+
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
   const TravellingInputDateRef = useRef(null);
@@ -129,102 +149,19 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
       <div className="max-w-[1300px] w-full mx-auto p-4 rounded-lg">
         {/* Search Form */}
      
-        <div className="flex gap-5 flex-col md:flex-row justify-center items-center w-full">
-      <div className="flex gap-3 justify-center    w-full md:w-[50%] flex-col">
-        <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row">
-          <div className="w-full">
-            <div className="flex items-center p-3">
-              <span
-                className={`mr-2 cursor-pointer ${
-                  citizenIsFocused ? "opacity-100" : "opacity-20"
-                }`}
-                onClick={handleCitizenIconClick}
-              >
-                <img src={Home} alt="Home icon" />
-              </span>
-              <input
-                style={{ border: "none" }}
-                ref={citizenInputRef}
-                type="text"
-                placeholder="Citizen Of"
-                className="w-full bg-transparent outline-none"
-                onFocus={() => setCitizenIsFocused(true)}
-                onBlur={() => setCitizenIsFocused(false)}
-              />
-            </div>
+        <div className="flex gap-5 flex-col  justify-between md:flex-row p-5 w-full">
+            <div className="flex gap-3">
+
+         <SearchInputText    data={{ destination, goingTo  }}  />
+         <SearchInputDate   data={{  travelDate, returnDate }} />
+            </ div>
+           
+            <div className="flex items-center">
+              <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">
+                Search
+              </button>
+         
           </div>
-          <div className="w-full">
-            <div className="flex items-center p-3">
-              <span
-                className={`mr-2 cursor-pointer ${
-                  goingToIsFocused ? "opacity-100" : "opacity-20"
-                }`}
-                onClick={handleGoingToIconClick}
-              >
-                <img src={Flight} alt="Flight icon" />
-              </span>
-              <input
-                style={{ border: "none" }}
-                ref={goingToInputRef}
-                type="text"
-                placeholder="Going to"
-                className="w-full bg-transparent outline-none"
-                onFocus={() => setGoingToIsFocused(true)}
-                onBlur={() => setGoingToIsFocused(false)}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex gap-3 w-full md:w-[50%] flex-col">
-        <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row">
-          <div className="w-full">
-            <div className="flex items-center p-3">
-              <span
-                className={`mr-2 cursor-pointer ${
-                  TravellingFocuse ? "opacity-100" : "opacity-20"
-                }`}
-                onClick={handleTrevellingIconClick}
-              >
-                <img src={CalenderUp} alt="Calendar icon" />
-              </span>
-              <input
-                style={{ border: "none" }}
-                ref={TravellingInputDateRef}
-                type="text"
-                placeholder="Travel Date"
-                className="w-full bg-transparent outline-none"
-                onFocus={() => setTravellingFocuse(true)}
-                onBlur={() => setTravellingFocuse(false)}
-              />
-            </div>
-          </div>
-          <div className="w-full">
-            <div className="flex items-center p-3">
-              <span
-                className={`mr-2 cursor-pointer ${
-                  TrvellingEndFocus ? "opacity-100" : "opacity-20"
-                }`}
-                onClick={handleTravellingEndIconClick}
-              >
-                <img src={CalenderDown} alt="Calendar icon" />
-              </span>
-              <input
-                style={{ border: "none" }}
-                ref={TrvellingInputEndDateRef}
-                type="text"
-                placeholder="Return Date"
-                className="w-full bg-transparent outline-none"
-                onFocus={() => setTrvellingEndFocus(true)}
-                onBlur={() => setTrvellingEndFocus(false)}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center">
-        <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">Search</button>
-      </div>
     </div>
     {/* *************  ticket section ***************** */}
     <main className="max-w-7xl mx-auto py-4 sm:py-6   sm:px-6 lg:px-8">

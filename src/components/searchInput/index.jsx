@@ -1,7 +1,19 @@
-import React, { useState, useRef } from "react";
-import { CalenderDown, CalenderUp, Flight, Home, Search } from "../../assets";
+import React, { useState, useRef, useEffect } from "react";
+import { CalenderDown, CalenderUp, Flight, Home } from "../../assets";
 
-const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
+const SearchInputText = ({ 
+  data,
+  dropDownData, 
+  dropDownPlace, 
+  onInputChange,
+  initialDestination = "",
+  initialGoingTo = ""
+}) => {
+
+  const destination = initialDestination || (data && data.destination) || "";
+  const goingTo = initialGoingTo || (data && data.goingTo) || "";
+
+  
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
@@ -10,6 +22,17 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
   const citizenInputRef = useRef(null);
   const fromDropdownRef = useRef(null);
   const goingToInputRef = useRef(null);
+
+  // Set initial values when component mounts
+  useEffect(() => {
+    if (citizenInputRef.current && initialDestination) {
+      citizenInputRef.current.value = initialDestination;
+    }
+    
+    if (goingToInputRef.current && initialGoingTo) {
+      goingToInputRef.current.value = initialGoingTo;
+    }
+  }, [initialDestination, initialGoingTo]);
 
   const handleFromInputBlur = () => {
     setCitizenIsFocused(false);
@@ -54,8 +77,6 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
     setGoingToIsFocused(false);
   };
 
-
-
   const goingToDropdownRef = useRef(null);
 
   return (
@@ -74,11 +95,13 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
             style={{ border: "none" }}
             ref={citizenInputRef}
             type="text"
+            value={destination}
             placeholder="Search destinations, attractions..."
             className="w-full bg-transparent outline-none"
             onFocus={handleFromInputFocus}
             onBlur={handleFromInputBlur}
             onChange={(e) => onInputChange("destination", e.target.value)}
+            defaultValue={initialDestination}
           />
         </div>
 
@@ -121,11 +144,13 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
             style={{ border: "none" }}
             ref={goingToInputRef}
             type="text"
+            value={goingTo}
             placeholder="Going to"
             className="w-full bg-transparent outline-none"
             onFocus={handleGoingToFocus}
             onBlur={handleGoingToBlur}
             onChange={(e) => onInputChange("goingTo", e.target.value)}
+            defaultValue={initialGoingTo}
           />
         </div>
 
@@ -157,12 +182,36 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
   );
 };
 
-const SearchInputDate = ({ onDateChange }) => {
+const SearchInputDate = ({ 
+  data,
+  onDateChange,
+  initialTravelDate = "",
+  initialReturnDate = ""
+}) => {
+  // Either use data object values or the specific props
+  // console.log(data.travelDate,' traveldata');
+  // console.log(data.returnDate,' data');
+  
+  const travelDateValue = initialTravelDate || (data && data.travelDate) || "";
+  const returnDateValue = initialReturnDate || (data && data.returnDate) || "";
+  // console.log(travelDateValue,'start');
+  // console.log(returnDateValue,'End');
   const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
   const travelDateInputRef = useRef(null);
   const returnDateInputRef = useRef(null);
 
   const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
+  
+  // Set initial values when component mounts or props change
+  useEffect(() => {
+    if (travelDateInputRef.current) {
+      travelDateInputRef.current.value = travelDateValue;
+    }
+    
+    if (returnDateInputRef.current) {
+      returnDateInputRef.current.value = returnDateValue;
+    }
+  }, [travelDateValue, returnDateValue]);
   
   const handleTravelDateIconClick = () => {
     travelDateInputRef.current.focus();
@@ -171,7 +220,6 @@ const SearchInputDate = ({ onDateChange }) => {
   const handleReturnDateIconClick = () => {
     returnDateInputRef.current.focus();
   };
-  
   
   return (
     <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
@@ -222,4 +270,5 @@ const SearchInputDate = ({ onDateChange }) => {
     </div>
   );
 };
+
 export { SearchInputText, SearchInputDate };
