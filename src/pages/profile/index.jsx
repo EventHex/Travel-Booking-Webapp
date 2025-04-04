@@ -74,7 +74,7 @@ const Index = () => {
 
   return (
     <div className=" w-full">
-    <div className="flex   flex-col   md:flex-row gap-4 w-full max-w-6xl mx-auto  mb-10">
+    <div className="flex   flex-col   md:flex-row gap-4 w-full max-w-6xl   mb-10">
       {/* Emergency Hotline Card */}
       <div className="bg-gray-100 rounded-xl p-6 flex-1 shadow-sm">
         <div className="flex items-center gap-2 mb-3">
@@ -462,8 +462,8 @@ const Index = () => {
       
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
-          <div className="w-full  p-4 flex-col flex">
-            <div className="flex items-center space-x-4">
+          <div className="w-full  relative  flex-col flex">
+            <div className="flex items-center   p-2 space-x-4">
               {/* Avatar/Logo Circle */}
               <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
                 <svg
@@ -483,18 +483,18 @@ const Index = () => {
             </div>
             
             <div className="flex mt-10">
-              <div className="w-auto pr-3 mt-3 mb-10 md:w-[20%]">
+              <div className="w-auto pr-3 mt-3 mb-10 md:w-[16%]">
                 <div
                   className={`${
                     isNarrowScreen ? "sticky  top-5 w-[50px]" : "sticky top-5 w-full"
-                  } min-w-[50px] mb-6 md:mb-0 transition-all duration-300`}
+                  } min-w-[50px] mb-16  pb-10 md:mb-0 transition-all duration-300`}
                 >
                   {/* Pass the callback function to Sidebar */}
                   <Sidebar isNarrow={isNarrowScreen} onOptionSelect={handleOptionSelect} />
                 </div>
               </div>
-              <div className="w-full md:w-[80%]   flex flex-col ">
-                <div className="p-2 md:p-5">
+              <div className="w-full   md:w-[80%]   flex flex-col ">
+                <div className="">
                   {/* Render content based on selected option */}
                   {renderContent()}
                 </div>
