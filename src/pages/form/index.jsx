@@ -4,6 +4,8 @@ import {FrontPassportForm} from "./passportFrontForm";
 import {BackPassportForm} from "./passportBackForm";
 import {SearchInputText,SearchInputDate} from "../../components/searchInput";
 import File from "../../components/file";
+import { useSearchParams } from 'react-router-dom';
+
 import {
   Flight,
   Home,
@@ -28,11 +30,30 @@ import CustomSelect from "../../components/dropdown";
 import { CustomDatePicker, FullCalendar } from "../../components/calender";
 import SideBar from "./sideBar";
 const TravelVisaBooking = () => {
+  const [searchParams] = useSearchParams();
+  const goingTo = searchParams.get('goingTo') || '';
+  const destination = searchParams.get('destination') || '';
+  const travelDate = searchParams.get('travelDate') || '';
+  const returnDate = searchParams.get('returnDate') || '';
+
+  const searchData = {
+    goingTo,
+    destination,
+    travelDate,
+    returnDate,
+  };
+  
+  useEffect(() => {
+    console.log('Received search data:', searchData);
+  }, [goingTo, destination, travelDate,returnDate]);
+
+
+
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
-  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
 
-  // Track focus state for all four inputs
+
+  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [goingToIsFocused, setGoingToIsFocused] = useState(false);
   const [TravellingDateFocused, setTravellingDateFocused] = useState(false);
@@ -547,18 +568,20 @@ const TravelVisaBooking = () => {
       <div
         style={{
           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "100%", // Don't scale the image
-          backgroundPosition: "center", // Start from top left
-          backgroundRepeat: "repeat", // Repeat in both directions
+          backgroundSize: "100%", 
+          backgroundPosition: "center",
           width: "100%",
 
             }}
       >
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
-          <div className="flex gap-5 flex-col  md:flex-row p-5 w-full">
-         <SearchInputText  />
-         <SearchInputDate />
+          <div className="flex gap-5 flex-col  justify-between md:flex-row p-5 w-full">
+            <div className="flex gap-3">
+
+         <SearchInputText    data={{ destination, goingTo  }}  />
+         <SearchInputDate   data={{  travelDate, returnDate }} />
+            </ div>
            
             <div className="flex items-center">
               <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">
