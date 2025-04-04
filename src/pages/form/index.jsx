@@ -556,9 +556,12 @@ const TravelVisaBooking = () => {
       >
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
-          <div className="flex gap-5 flex-col justify-between  md:flex-row p-5 w-full">
+          <div className="flex gap-5 flex-col  justify-between md:flex-row p-5 w-full">
+            <div className="flex gap-3">
+
          <SearchInputText  />
          <SearchInputDate />
+            </ div>
            
             <div className="flex items-center">
               <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">
