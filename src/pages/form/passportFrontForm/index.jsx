@@ -550,8 +550,8 @@ export const FrontPassportForm = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="mb-4 md:mb-5">
+              <div className="mb-4 md:mb-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="">
                   <Input placeholder={"First Name"} label={"First Name"} />
                 </div>
                 <div>
@@ -559,15 +559,15 @@ export const FrontPassportForm = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="mb-4 md:mb-5">
+              <div className="mb-4 md:mb-5 grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
+                <div className="">
                   <Input
                     label={" Nationality"}
                     placeholder={" Nationality"}
                   />
                 </div>
                 <div>
-                  <CustomSelect label={"Sex"} options={Options} />
+                  <CustomSelect className={"py-[12px]"} label={"Sex"} options={Options} />
                 </div>
                 {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -582,7 +582,7 @@ export const FrontPassportForm = () => {
                   />
                 </div> */}
                 <div className="  ">
-                    <label className="block text-[12px] pb-1   font-medium text-gray-600 mb-1 ">
+                    <label className="block text-[12px] font-medium text-gray-600 mb-1 ">
                       Date of Birth<span className="text-red-500">*</span>
                     </label>
                     <input
@@ -590,9 +590,9 @@ export const FrontPassportForm = () => {
                       name="dob"
                       value={dob}
                       onChange={(e) => setDob(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs"
+                      className="w-full px-3 py-[14px] border border-gray-300 text-gray-400 bg-transparent rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs"
                     />
-                  </div>
+                  </div>
               </div>
 
               <div className="mb-4 md:mb-5">
@@ -609,13 +609,13 @@ export const FrontPassportForm = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-4">
                 <div>
-                  <CustomSelect options={Metiral} label="Marital Status" />
+                  <CustomSelect className={"py-[8.5px]"} options={Metiral} label="Marital Status" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-[12px] font-medium text-gray-700 mb-1">
                     Date of Issue<span className="text-red-500">*</span>
                   </label>
                   <input
@@ -623,12 +623,12 @@ export const FrontPassportForm = () => {
                     name="dateOfIssue"
                     value={formData.dateOfIssue}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full text-[12px] px-3 text-gray-400 bg-transparent  text py-[11px] border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-[11px] font-medium text-gray-700 mb-1">
                     Date of Expiry<span className="text-red-500">*</span>
                   </label>
                   <input
@@ -636,21 +636,21 @@ export const FrontPassportForm = () => {
                     name="dateOfExpiry"
                     value={formData.dateOfExpiry}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full px-3 py-[11px] text-gray-400 bg-transparent border text-[12px] border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end mt-6">
+          {/* <div className="flex justify-end mt-6">
             <button
               type="submit"
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Submit
             </button>
-          </div>
+          </div> */}
         </form>
 
         {/* Image Edit Modal */}

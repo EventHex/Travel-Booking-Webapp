@@ -224,19 +224,19 @@ const TravelVisaBooking = () => {
       { value: 3, label: "docter" },
     ];
     return (
-      <div className="mb-10 px-4 sm:px-6">
+      <div className="mb-10">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <h1 className="text-lg sm:text-xl font-medium mb-4 sm:mb-6">
+          <h1 className="text-lg sm:text-xl font-medium">
             Upload Traveler Photo
           </h1>
 
           {/* Main upload section */}
-          <div className="border border-gray-300 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
-            <div className="flex flex-col md:flex-row gap-6">
+          <div className="mb-6 sm:mb-8">
+            <div className="flex flex-col md:flex-row gap-6 items-center">
               {/* Left side - Text content */}
               <div className="w-full md:flex-1">
-                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-4 md:mb-0">
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                   Vietnam requires a scan of the traveler's passport. Upload a
                   clear passport image and your details will be filled
                   automatically. AI has built-in OCR which is 99.9% accurate.
@@ -255,7 +255,7 @@ const TravelVisaBooking = () => {
 
           {/* Additional Questions Section */}
           <div>
-            <h2 className="text-lg sm:text-xl text-blue-600 mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl text-blue-600 mb-4 sm:mb-6 border-b py-4 border-gray-300">
               Answer Additional Required Questions
             </h2>
 
