@@ -10,10 +10,11 @@ const CustomSelect = ({
   label = "Select", 
   placeholder = "Select",
   className,
+  labelClass,
 }) => {
   return (
     <div className="relative">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className={`text-[12px] block font-medium text-gray-700 mb-1`}>
         {label}{required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">

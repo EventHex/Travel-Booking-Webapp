@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Header from "../../components/header";
 import {FrontPassportForm} from "./passportFrontForm";
 import {BackPassportForm} from "./passportBackForm";
+import File from "../../components/file";
 import {
   Flight,
   Home,
@@ -159,11 +160,13 @@ const TravelVisaBooking = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 items-center md:grid-cols-3 gap-4">
             <div className="relative">
-              <div className="relative">
-                <CustomSelect
-                  className={"py-4"}
+              <div className="relative mb-4 md:mb-5">
+                <CustomSelect 
+                labelClass={'12px'}
+                  className={"py-[11px]"}
+                  placeholder={"Tourist Visa"}
                   label={"Visa Type"}
                   options={Visa}
                 />
@@ -189,24 +192,36 @@ const TravelVisaBooking = () => {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <Input
                 label="Internal Id"
                 onChange={() => {}}
                 placeholder="Internal Id"
                 labelClassName="block text-sm font-medium text-gray-700 mb-1"
                 InputClassName="shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
-              />
+              /> */}
+              <div className="mb-4 md:mb-5">
+                <Input
+                  placeholder={"Internal Id"}
+                  label={"Internal Id"}
+                />
             </div>
 
-            <div>
+            {/* <div>
               <Input
+              
                 label="Group Name"
                 onChange={() => {}}
                 placeholder="Internal Id"
                 labelClassName="block text-sm font-medium text-gray-700 mb-1"
                 InputClassName="shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
-              />
+              /> */}
+              <div className="mb-4 md:mb-5">
+                <Input
+                  placeholder={"Tourist Visa"}
+                  label={"Group Name"}
+                  
+                />
             </div>
           </div>
         </div>
@@ -249,7 +264,7 @@ const TravelVisaBooking = () => {
               </div>
 
               {/* Right side - Upload box */}
-              <div className="w-full md:flex-1">
+              {/* <div className="w-full md:flex-1">
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 md:p-8 text-center bg-gray-50">
                   <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
                   <p className="text-xs sm:text-sm text-gray-600 mb-2">
@@ -271,7 +286,12 @@ const TravelVisaBooking = () => {
                     />
                   </label>
                 </div>
-              </div>
+              </div> */}
+
+<div className=" w-full  md:w-[50%]">
+                  <File head={"Travel Photo"} />
+                </div>
+              
             </div>
           </div>
 
@@ -316,7 +336,7 @@ const TravelVisaBooking = () => {
                   </p>
                 </div>
                 <div className="relative w-full md:w-[50%]">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
+                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
                     <input
                       type="file"
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -347,7 +367,10 @@ const TravelVisaBooking = () => {
                         </button>
                       )}
                     </div>
-                  </div>
+                  </div> */}
+                  <div className="w-[100%]">
+                  <File head={"Round Trip Flight Ticket"} />
+                </div>
                 </div>
               </div>
 
@@ -363,7 +386,7 @@ const TravelVisaBooking = () => {
                   </p>
                 </div>
                 <div className="w-full md:w-[50%] relative">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
+                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
                     <input
                       type="file"
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -394,7 +417,10 @@ const TravelVisaBooking = () => {
                         </button>
                       )}
                     </div>
-                  </div>
+                  </div> */}
+                  <div className="w-[100%]">
+                  <File  className={''} head={"Hotel Booking"} />
+                </div>
                 </div>
               </div>
 
@@ -563,9 +589,12 @@ const TravelVisaBooking = () => {
       <div
         style={{
           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+          backgroundSize: "100%", // Don't scale the image
+          backgroundPosition: "center", // Start from top left
+          backgroundRepeat: "repeat", // Repeat in both directions
+          width: "100%",
+
+            }}
       >
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import {
     Upload,
   } from "lucide-react";
-  import Input from "../../../components/input";
+  import Input from "../../../components/input";  
   import CustomSelect from "../../../components/dropdown";
+  import File from "../../../components/file";
  
  export const BackPassportForm = () => {
     
@@ -14,7 +15,7 @@ import {
     }
   };
     return (
-      <div className="py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="border-b border-t md:my-3 my-1 py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-6 md:mb-8">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
@@ -29,12 +30,16 @@ import {
             </p>
           </div>
 
-          <div className="shadow rounded-lg">
+
+          <div className=" rounded-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {/* File Upload Column */}
-              <div className="p-4 sm:p-6 border-b md:border-b-0 md:border-r border-gray-200">
-                <div className="space-y-3 md:space-y-4">
-                  <label className="block text-sm font-medium text-gray-700">
+              <div className=" sm:p-6">
+                <div className="w-[100%]">
+                  <File head={"Passport Back Page Image"} />
+                </div>
+                {/* <div className="space-y-3 md:space-y-4">
+                  <label className="block text-[12px] font-medium text-gray-700">
                     Passport Back Page Image
                     <span className="text-red-500">*</span>
                   </label>
@@ -65,7 +70,7 @@ import {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* Form Column */}
