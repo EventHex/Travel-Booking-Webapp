@@ -81,10 +81,6 @@ const HeroSection = () => {
       goingToInputRef.current.focus();
     };
 
-    const handleReturnDateIconClick = () => {
-      returnDateInputRef.current.focus();
-    };
-
     const [tripType, setTripType] = useState("oneWay");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [cabinClass, setCabinClass] = useState("Economy");
@@ -259,6 +255,13 @@ const handleTravelDateIconClick = () => {
   if (travelDateInputRef.current) {
     travelDateInputRef.current.focus();
     travelDateInputRef.current.showPicker(); // This will open the date picker
+  }
+};
+
+const handleReturnDateIconClick = () => {
+  if (returnDateInputRef.current) {
+    returnDateInputRef.current.focus();
+    returnDateInputRef.current.showPicker(); // This is the key line that opens the date picker
   }
 };
 
