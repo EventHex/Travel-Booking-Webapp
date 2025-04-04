@@ -33,13 +33,13 @@ const TravelVisaBooking = () => {
   const [searchParams] = useSearchParams();
   
   // Extract each parameter individually
-  const citizenship = searchParams.get('citizenship') || '';
+  const goingTo = searchParams.get('goingTo') || '';
   const destination = searchParams.get('destination') || '';
   const travelDate = searchParams.get('travelDate') || '';
   
   // Combine them into an object
   const searchData = {
-    citizenship,
+    goingTo,
     destination,
     travelDate,
   };
@@ -48,13 +48,13 @@ const TravelVisaBooking = () => {
     console.log('Received search data:', searchData);
     
     // Check if required data is missing
-    if (!citizenship) {
+    if (!goingTo) {
       console.warn('Warning: Citizenship data is missing');
     }
     
     // Continue with form processing using the available data
     // ...
-  }, [citizenship, destination, travelDate]);
+  }, [goingTo, destination, travelDate]);
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
