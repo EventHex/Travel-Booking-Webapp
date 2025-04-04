@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Search, AlertTriangle, Shield } from "lucide-react";
 import { Calendar, Info, MapPin, Plane, ArrowRight } from 'lucide-react';
+import { Placeholder } from "../../assets";
 
 import Header from "../../components/header";
 import { Flight, Home,CalenderUp,CalenderDown, MainBackground } from "../../assets";
@@ -17,7 +18,61 @@ const TrvellingInputEndDateRef = useRef (null);
   const [TravellingFocuse, setTravellingFocuse] = useState(false);
 const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
 
+
+const [showDropdown, setShowDropdown] = useState(false);
+const dropdownRef = useRef(null);
+
+
+const citizenOptions = [
+  {
+    image: Placeholder,
+    type: "location",
+    title: "Dubai",
+    subtitle: "United Arab Emirates",
+    id: 1,
+  },
+  {
+    image: Placeholder,
+    type: "location",
+    title: "Singapore",
+    subtitle: "Singapore",
+    id: 2,
+  },
+  {
+    image: Placeholder,
+    type: "attraction",
+    title:
+      "Combo: Burj Khalifa At The Top SKY (Level 148) + Sky Views Observatory Entry Tickets",
+    subtitle: "Dubai, United Arab Emirates",
+    id: 3,
+  },
+  {
+    image: Placeholder,
+    type: "attraction",
+    title: "Andamanda Phuket Water Park Ticket With Transfers",
+    subtitle: "Phuket, Thailand",
+    id: 4,
+  },
+  {
+    image: Placeholder,
+    type: "attraction",
+    title: "Dubai Frame Tickets",
+    subtitle: "Dubai, United Arab Emirates",
+    id: 5,
+  },
+];
   // Track which input is focused
+
+  const handleInputFocus = () => {
+    setCitizenIsFocused(true);
+    setShowDropdown(true);
+  };
+
+  const handleInputBlur = () => {
+    setCitizenIsFocused(false);
+    // Don't immediately hide dropdown to allow for clicks on dropdown items
+    // setTimeout(() => setShowDropdown(false), 100);
+  };
 
   const handleCitizenIconClick = () => {
     citizenInputRef.current.focus();
@@ -132,27 +187,61 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
         <div className="flex gap-5 flex-col md:flex-row justify-center items-center w-full">
       <div className="flex gap-3 justify-center    w-full md:w-[50%] flex-col">
         <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
-          <div className="w-full">
-            <div className="flex items-center p-3">
-              <span
-                className={`mr-2 cursor-pointer ${
-                  citizenIsFocused ? "opacity-100" : "opacity-20"
-                }`}
-                onClick={handleCitizenIconClick}
-              >
-                <img src={Home} alt="Home icon" />
-              </span>
-              <input
-                style={{ border: "none" }}
-                ref={citizenInputRef}
-                type="text"
-                placeholder="Citizen Of"
-                className="w-full bg-transparent outline-none"
-                onFocus={() => setCitizenIsFocused(true)}
-                onBlur={() => setCitizenIsFocused(false)}
-              />
-            </div>
-          </div>
+        <div className="w-full relative">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        citizenIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleCitizenIconClick}
+                    >
+                      <img src={Home} alt="Home icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={citizenInputRef}
+                      type="text"
+                      placeholder="Search destinations, attractions..."
+                      className="w-full bg-transparent outline-none"
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
+                    />
+                  </div>
+
+                  {showDropdown && (
+                    <div
+                      ref={dropdownRef}
+                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
+                      {citizenOptions.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                          onClick={() => handleOptionSelect(option)}
+                        >
+                          <div className="flex-shrink-0 mr-3">
+                            <img
+                              src={option.image}
+                              alt={option.title}
+                              className="w-12 h-12 object-cover rounded"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium text-gray-800">
+                              {option.title}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {option.subtitle}
+                            </div>
+                            <div className="text-xs text-blue-500 mt-1 capitalize">
+                              {option.type}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
           <div className="w-full">
             <div className="flex items-center p-3">
               <span

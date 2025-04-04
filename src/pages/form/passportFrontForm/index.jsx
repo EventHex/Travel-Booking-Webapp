@@ -468,11 +468,11 @@ export const FrontPassportForm = () => {
           <div className="flex flex-col lg:flex-row w-full gap-x-4 lg:gap-x-8 gap-y-6">
             <div className="w-full lg:w-[50%]">
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-[12px] font-medium text-gray-700 mb-1">
                   Passport Front Page Image
                   <span className="text-red-500">*</span>
                 </label>
-                  <div className="border-2  border-dashed border-gray-300 rounded-lg p-4 md:p-6 text-center">
+                  <div className="bg-white border-2  border-dashed border-gray-300 rounded-lg p-4 md:p-6 text-center">
                     {!previewImage ? (
                       <>
                         <input
@@ -631,14 +631,14 @@ export const FrontPassportForm = () => {
             </div>
           </div>
 
-          <div className="flex justify-end mt-6">
+          {/* <div className="flex justify-end mt-6">
             <button
               type="submit"
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Submit
             </button>
-          </div>
+          </div> */}
         </form>
 
         {/* Image Edit Modal */}
