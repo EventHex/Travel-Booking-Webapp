@@ -19,7 +19,7 @@ import {
   Placeholder,
 } from "../../assets";
 import { Link } from "react-router-dom";
-import { ChevronRight,MapPin  } from "lucide-react";
+import { ChevronRight, MapPin } from "lucide-react";
 
 import Header from "../../components/header";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
@@ -47,41 +47,38 @@ const HeroSection = () => {
 
     const citizenOptions = [
       {
-        icon: <MapPin  size={14} className="text-[gray]"/>,
+        icon: <MapPin size={14} className="text-[gray]" />,
         title: "dubai",
         id: 1,
       },
       {
-        icon: <MapPin  size={14} className="text-[gray]"/>,
+        icon: <MapPin size={14} className="text-[gray]" />,
         title: "mumbai",
         id: 2,
       },
       {
-        icon: <MapPin  size={14} className="text-[gray]"/>,
+        icon: <MapPin size={14} className="text-[gray]" />,
         title: "kochin",
         id: 3,
       },
-      
     ];
 
     const dropDownPlace = [
       {
-        icon: <MapPin  size={14} className="text-[gray]"/>,
+        icon: <MapPin size={14} className="text-[gray]" />,
         title: "dubai",
         id: 1,
       },
       {
-        icon: <MapPin  size={14} className="text-[gray]"/>,
+        icon: <MapPin size={14} className="text-[gray]" />,
         title: "mumbai",
         id: 2,
       },
       {
-        icon: <MapPin  size={14} className="text-[gray]"/>,
+        icon: <MapPin size={14} className="text-[gray]" />,
         title: "kochin",
         id: 3,
       },
-      
-      
     ];
     const handleCitizenIconClick = () => {
       citizenInputRef.current.focus();
@@ -211,21 +208,21 @@ const HeroSection = () => {
       destination: "",
       goingTo: "",
       travelDate: "",
-      returnDate: ""
+      returnDate: "",
     });
-      
+
     const handleInputChange = (field, value) => {
-      setSearchData(prevState => ({
+      setSearchData((prevState) => ({
         ...prevState,
-        [field]: value
+        [field]: value,
       }));
     };
-    
+
     // Add this function to handle search button click
     const handleSearchClick = () => {
       // Log the search data to console
       console.log("Search Data:", searchData);
-      
+
       // You can then navigate or perform other actions
       // The Link component will handle navigation, but this ensures data is logged
     };
@@ -233,35 +230,34 @@ const HeroSection = () => {
     // This is just a placeholder for the component demonstration
     const User = "user-icon-placeholder";
 
-
-
-
     switch (activeTab) {
       case "Visas":
         return (
           <>
-              <div className="flex gap-3 flex-col">
-      <SearchInputText 
-        dropDownPlace={dropDownPlace} 
-        dropDownData={citizenOptions}
-        onInputChange={handleInputChange}
-      />
-      <SearchInputDate onDateChange={handleInputChange} />
-      <div className="flex justify-end">
-        <Link to={{
-          pathname: "/form",
-          search: `?${new URLSearchParams(searchData).toString()}`,
-          state: searchData
-        }}>
-          <button 
-            className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
-            onClick={handleSearchClick}
-          >
-            Search
-          </button>
-        </Link>
-      </div>
-    </div>
+            <div className="flex gap-3 flex-col">
+              <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+                onInputChange={handleInputChange}
+              />
+              <SearchInputDate onDateChange={handleInputChange} />
+              <div className="flex justify-end">
+                <Link
+                  to={{
+                    pathname: "/form",
+                    search: `?${new URLSearchParams(searchData).toString()}`,
+                    state: searchData,
+                  }}
+                >
+                  <button
+                    className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
+                    onClick={handleSearchClick}
+                  >
+                    Search
+                  </button>
+                </Link>
+              </div>
+            </div>
           </>
         );
       case "Activities":
@@ -280,21 +276,25 @@ const HeroSection = () => {
       case "Insurance":
         return (
           <>
-          <div className="flex gap-3  flex-col ">
-
-              <SearchInputText  dropDownPlace={dropDownPlace} dropDownData={citizenOptions} />
+            <div className="flex gap-3  flex-col ">
+              <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+              />
               <SearchInputDate />
-          </div>
+            </div>
           </>
         );
       case "Flights":
         return (
           <>
-          <div className="flex gap-3  flex-col ">
-
-              <SearchInputText  dropDownPlace={dropDownPlace} dropDownData={citizenOptions} />
+            <div className="flex gap-3  flex-col ">
+              <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+              />
               <SearchInputDate />
-          </div>
+            </div>
           </>
         );
       default:

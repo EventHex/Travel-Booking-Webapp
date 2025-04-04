@@ -54,14 +54,7 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
     setGoingToIsFocused(false);
   };
 
-  // Handle manual input changes
-  const handleDestinationChange = (e) => {
-    onInputChange("destination", e.target.value);
-  };
 
-  const handleGoingToChange = (e) => {
-    onInputChange("goingTo", e.target.value);
-  };
 
   const goingToDropdownRef = useRef(null);
 
@@ -85,7 +78,7 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
             className="w-full bg-transparent outline-none"
             onFocus={handleFromInputFocus}
             onBlur={handleFromInputBlur}
-            onChange={handleDestinationChange}
+            onChange={(e) => onInputChange("destination", e.target.value)}
           />
         </div>
 
@@ -132,7 +125,7 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
             className="w-full bg-transparent outline-none"
             onFocus={handleGoingToFocus}
             onBlur={handleGoingToBlur}
-            onChange={handleGoingToChange}
+            onChange={(e) => onInputChange("goingTo", e.target.value)}
           />
         </div>
 
@@ -164,20 +157,24 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
   );
 };
 
-const SearchInputDate = () => {
+const SearchInputDate = ({ onDateChange }) => {
   const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
   const travelDateInputRef = useRef(null);
   const returnDateInputRef = useRef(null);
 
   const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
+  
   const handleTravelDateIconClick = () => {
-    setTravelDateIsFocused(true);
+    travelDateInputRef.current.focus();
   };
+  
   const handleReturnDateIconClick = () => {
     returnDateInputRef.current.focus();
   };
+  
+  
   return (
-    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row ">
+    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
       <div className="w-full">
         <div className="flex items-center p-3">
           <span
@@ -196,6 +193,7 @@ const SearchInputDate = () => {
             className="w-full bg-transparent outline-none"
             onFocus={() => setTravelDateIsFocused(true)}
             onBlur={() => setTravelDateIsFocused(false)}
+            onChange={(e) => onDateChange("travelDate", e.target.value)}
           />
         </div>
       </div>
@@ -217,11 +215,11 @@ const SearchInputDate = () => {
             className="w-full bg-transparent outline-none"
             onFocus={() => setReturnDateIsFocused(true)}
             onBlur={() => setReturnDateIsFocused(false)}
+            onChange={(e) => onDateChange("returnDate", e.target.value)}
           />
         </div>
       </div>
     </div>
   );
 };
-
 export { SearchInputText, SearchInputDate };
