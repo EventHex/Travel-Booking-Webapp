@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Header from "../../components/header";
 import {FrontPassportForm} from "./passportFrontForm";
 import {BackPassportForm} from "./passportBackForm";
+import {SearchInputText,SearchInputDate} from "../../components/searchInput";
 import File from "../../components/file";
 import {
   Flight,
@@ -191,15 +192,6 @@ const TravelVisaBooking = () => {
                 )}
               </div>
             </div>
-
-            {/* <div>
-              <Input
-                label="Internal Id"
-                onChange={() => {}}
-                placeholder="Internal Id"
-                labelClassName="block text-sm font-medium text-gray-700 mb-1"
-                InputClassName="shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
-              /> */}
               <div className="mb-4 md:mb-5">
                 <Input
                   placeholder={"Internal Id"}
@@ -207,15 +199,7 @@ const TravelVisaBooking = () => {
                 />
             </div>
 
-            {/* <div>
-              <Input
-              
-                label="Group Name"
-                onChange={() => {}}
-                placeholder="Internal Id"
-                labelClassName="block text-sm font-medium text-gray-700 mb-1"
-                InputClassName="shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
-              /> */}
+         
               <div className="mb-4 md:mb-5">
                 <Input
                   placeholder={"Tourist Visa"}
@@ -262,32 +246,6 @@ const TravelVisaBooking = () => {
                   rejected if these guidelines are not followed.
                 </p>
               </div>
-
-              {/* Right side - Upload box */}
-              {/* <div className="w-full md:flex-1">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 md:p-8 text-center bg-gray-50">
-                  <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
-                  <p className="text-xs sm:text-sm text-gray-600 mb-2">
-                    Choose a file or drag & drop it here.
-                  </p>
-                  <p className="text-xs text-gray-500 mb-4">
-                    JPG, PNG, and MIME formats, up to 10 MB
-                  </p>
-
-                  <label className="inline-block">
-                    <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded bg-blue-500 text-white text-xs sm:text-sm cursor-pointer hover:bg-blue-600 transition-colors">
-                      Browse File
-                    </span>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="image/jpeg,image/png"
-                      onChange={handleFileChange}
-                    />
-                  </label>
-                </div>
-              </div> */}
-
 <div className=" w-full  md:w-[50%]">
                   <File head={"Travel Photo"} />
                 </div>
@@ -599,95 +557,9 @@ const TravelVisaBooking = () => {
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
           <div className="flex gap-5 flex-col  md:flex-row p-5 w-full">
-            <div className="flex gap-3 justify-center    w-full md:w-[50%] flex-col">
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        citizenIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleCitizenIconClick}
-                    >
-                      <img src={Home} alt="Home icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={citizenInputRef}
-                      type="text"
-                      placeholder="Citizen Of"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setCitizenIsFocused(true)}
-                      onBlur={() => setCitizenIsFocused(false)}
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        goingToIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleGoingToIconClick}
-                    >
-                      <img src={Flight} alt="Flight icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={goingToInputRef}
-                      type="text"
-                      placeholder="Going to"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setGoingToIsFocused(true)}
-                      onBlur={() => setGoingToIsFocused(false)}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-end"></div>
-            </div>
-            <div className="flex gap-3w-full md:w-[50%] flex-col">
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        TravellingDateFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                    >
-                      <img src={CalenderUp} alt="Calendar up icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      type="text"
-                      placeholder="Travel Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setTravellingDateFocused(true)}
-                      onBlur={() => setTravellingDateFocused(false)}
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        TravellingDateEndFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                    >
-                      <img src={CalenderDown} alt="Calendar down icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      type="text"
-                      placeholder="Return Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setTravellingDateEndFocused(true)}
-                      onBlur={() => setTravellingDateEndFocused(false)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+         <SearchInputText  />
+         <SearchInputDate />
+           
             <div className="flex items-center">
               <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">
                 Search

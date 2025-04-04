@@ -1,43 +1,223 @@
-import React, { useState, useRef } from 'react'
-import {
-    Search
-} from "../../assets";
+import React, { useState, useRef } from "react";
+import { CalenderDown, CalenderUp, Flight, Home, Search } from "../../assets";
 
-const index = () => {
+const SearchInputText = ({ dropDownData, dropDownPlace }) => {
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
+  const [showFromDropdown, setShowFromDropdown] = useState(false);
+  const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
+  const [goingToIsFocused, setGoingToIsFocused] = useState(false);
+
   const citizenInputRef = useRef(null);
+  const fromDropdownRef = useRef(null);
+  const goingToInputRef = useRef(null);
+
+  const handleFromInputBlur = () => {
+    setCitizenIsFocused(false);
+  };
+
+  const handleFromInputFocus = () => {
+    setCitizenIsFocused(true);
+    setShowFromDropdown(true);
+    setShowGoingToDropdown(false);
+  };
 
   const handleCitizenIconClick = () => {
     citizenInputRef.current.focus();
   };
+  const handleOptionSelect = (option, inputRef, isFromInput) => {
+    if (inputRef.current) {
+      inputRef.current.value = option.title;
+    }
+    if (isFromInput) {
+      setShowFromDropdown(false);
+    } else {
+      setShowGoingToDropdown(false);
+    }
+  };
+
+  const handleGoingToIconClick = () => {
+    goingToInputRef.current.focus();
+  };
+
+  const handleGoingToFocus = () => {
+    setGoingToIsFocused(true);
+    setShowGoingToDropdown(true);
+    setShowFromDropdown(false);
+  };
+
+  const handleGoingToBlur = () => {
+    setGoingToIsFocused(false);
+  };
+
+  const goingToDropdownRef = useRef(null);
 
   return (
-    <div>
-        <div className="flex bg-[#BBC2FF29]  bg-red-100 border-[#A6BFFF82] border-1 rounded-2xl py-1 sm:py-2 md:flex-row">
-                <div className="w-full">
-                  <div className="flex items-center p-2 sm:p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        citizenIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleCitizenIconClick}
-                    >
-                      <img src={Search} alt="Home icon" className="w-4 sm:w-auto" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={citizenInputRef}
-                      type="text"
-                      placeholder="Search for Activities ( eg. Burje Khalifa, Universal Studio)"
-                      className="w-full bg-transparent outline-none text-sm sm:text-base"
-                      onFocus={() => setCitizenIsFocused(true)}
-                      onBlur={() => setCitizenIsFocused(false)}
-                    />
+    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
+      <div className="w-full relative">
+        <div className="flex items-center p-3">
+          <span
+            className={`mr-2 cursor-pointer ${
+              citizenIsFocused ? "opacity-100" : "opacity-20"
+            }`}
+            onClick={handleCitizenIconClick}
+          >
+            <img src={Home} alt="Home icon" />
+          </span>
+          <input
+            style={{ border: "none" }}
+            ref={citizenInputRef}
+            type="text"
+            placeholder="Search destinations, attractions..."
+            className="w-full bg-transparent outline-none"
+            onFocus={handleFromInputFocus}
+            onBlur={handleFromInputBlur}
+          />
+        </div>
+
+        {showFromDropdown && (
+          <div
+            ref={fromDropdownRef}
+            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+          >
+            {dropDownData.map((option) => (
+              <div
+                key={option.id}
+                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                onClick={() =>
+                  handleOptionSelect(option, citizenInputRef, true)
+                }
+              >
+                <div className="flex-shrink-0 mr-3">
+                  <img
+                    src={option.image}
+                    alt={option.title}
+                    className="w-12 h-12 object-cover rounded"
+                  />
+                </div>
+                <div className="flex-1">
+                  <div className="font-medium text-gray-800">
+                    {option.title}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {option.subtitle}
+                  </div>
+                  <div className="text-xs text-blue-500 mt-1 capitalize">
+                    {option.type}
                   </div>
                 </div>
               </div>
-    </div>
-  )
-}
+            ))}
+          </div>
+        )}
+      </div>
 
-export default index
+      <div className="w-full relative">
+        <div className="flex items-center p-3">
+          <span
+            className={`mr-2 cursor-pointer ${
+              goingToIsFocused ? "opacity-100" : "opacity-20"
+            }`}
+            onClick={handleGoingToIconClick}
+          >
+            <img src={Flight} alt="Flight icon" />
+          </span>
+          <input
+            style={{ border: "none" }}
+            ref={goingToInputRef}
+            type="text"
+            placeholder="Going to"
+            className="w-full bg-transparent outline-none"
+            onFocus={handleGoingToFocus}
+            onBlur={handleGoingToBlur}
+          />
+        </div>
+
+        {showGoingToDropdown && (
+          <div
+            ref={goingToDropdownRef}
+            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+          >
+            {dropDownPlace.map((option) => (
+              <div
+                key={option.id}
+                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                onClick={() =>
+                  handleOptionSelect(option, goingToInputRef, false)
+                }
+              >
+                <div className="flex">
+                  <p className="flex items-center text-[14px] gap-2">
+                    {option.icon}
+                    <span>{option.title}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const SearchInputDate = () => {
+  const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
+  const travelDateInputRef = useRef(null);
+  const returnDateInputRef = useRef(null);
+
+  const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
+  const handleTravelDateIconClick = () => {
+    setTravelDateIsFocused(true);
+  };
+  const handleReturnDateIconClick = () => {
+    returnDateInputRef.current.focus();
+  };
+  return (
+    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row ">
+      <div className="w-full">
+        <div className="flex items-center p-3">
+          <span
+            className={`mr-2 cursor-pointer ${
+              travelDateIsFocused ? "opacity-100" : "opacity-20"
+            }`}
+            onClick={handleTravelDateIconClick}
+          >
+            <img src={CalenderUp} alt="Calendar icon" />
+          </span>
+          <input
+            style={{ border: "none" }}
+            ref={travelDateInputRef}
+            type="date"
+            placeholder="Travel Date"
+            className="w-full bg-transparent outline-none"
+            onFocus={() => setTravelDateIsFocused(true)}
+            onBlur={() => setTravelDateIsFocused(false)}
+          />
+        </div>
+      </div>
+      <div className="w-full">
+        <div className="flex items-center p-3">
+          <span
+            className={`mr-2 cursor-pointer ${
+              returnDateIsFocused ? "opacity-100" : "opacity-20"
+            }`}
+            onClick={handleReturnDateIconClick}
+          >
+            <img src={CalenderDown} alt="Calendar icon" />
+          </span>
+          <input
+            style={{ border: "none" }}
+            ref={returnDateInputRef}
+            type="date"
+            placeholder="Return Date"
+            className="w-full bg-transparent outline-none"
+            onFocus={() => setReturnDateIsFocused(true)}
+            onBlur={() => setReturnDateIsFocused(false)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export { SearchInputText, SearchInputDate };
