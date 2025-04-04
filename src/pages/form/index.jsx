@@ -160,12 +160,12 @@ const TravelVisaBooking = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 items-center md:grid-cols-3 gap-4">
             <div className="relative">
               <div className="relative mb-4 md:mb-5">
-                <CustomSelect
-                // <Input
-                  className={""}
+                <CustomSelect 
+                labelClass={'12px'}
+                  className={"py-[11px]"}
                   placeholder={"Tourist Visa"}
                   label={"Visa Type"}
                   options={Visa}
@@ -218,8 +218,9 @@ const TravelVisaBooking = () => {
               /> */}
               <div className="mb-4 md:mb-5">
                 <Input
-                  placeholder={"Visa Type"}
-                  label={"Tourist Visa"}
+                  placeholder={"Tourist Visa"}
+                  label={"Group Name"}
+                  
                 />
             </div>
           </div>
@@ -287,7 +288,7 @@ const TravelVisaBooking = () => {
                 </div>
               </div> */}
 
-<div className="w-[50%]">
+<div className=" w-full  md:w-[50%]">
                   <File head={"Travel Photo"} />
                 </div>
               
@@ -588,9 +589,12 @@ const TravelVisaBooking = () => {
       <div
         style={{
           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+          backgroundSize: "100%", // Don't scale the image
+          backgroundPosition: "center", // Start from top left
+          backgroundRepeat: "repeat", // Repeat in both directions
+          width: "100%",
+
+            }}
       >
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
     Upload,
   } from "lucide-react";
-  import Input from "../../../components/input";
+  import Input from "../../../components/input";  
   import CustomSelect from "../../../components/dropdown";
   import File from "../../../components/file";
  
@@ -34,7 +34,7 @@ import {
           <div className=" rounded-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {/* File Upload Column */}
-              <div className="p-4 sm:p-6">
+              <div className=" sm:p-6">
                 <div className="w-[100%]">
                   <File head={"Passport Back Page Image"} />
                 </div>
