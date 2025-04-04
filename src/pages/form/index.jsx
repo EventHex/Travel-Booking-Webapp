@@ -4,6 +4,8 @@ import {FrontPassportForm} from "./passportFrontForm";
 import {BackPassportForm} from "./passportBackForm";
 import {SearchInputText,SearchInputDate} from "../../components/searchInput";
 import File from "../../components/file";
+import { useSearchParams } from 'react-router-dom';
+
 import {
   Flight,
   Home,
@@ -28,6 +30,31 @@ import CustomSelect from "../../components/dropdown";
 import { CustomDatePicker, FullCalendar } from "../../components/calender";
 import SideBar from "./sideBar";
 const TravelVisaBooking = () => {
+  const [searchParams] = useSearchParams();
+  
+  // Extract each parameter individually
+  const citizenship = searchParams.get('citizenship') || '';
+  const destination = searchParams.get('destination') || '';
+  const travelDate = searchParams.get('travelDate') || '';
+  
+  // Combine them into an object
+  const searchData = {
+    citizenship,
+    destination,
+    travelDate,
+  };
+  
+  useEffect(() => {
+    console.log('Received search data:', searchData);
+    
+    // Check if required data is missing
+    if (!citizenship) {
+      console.warn('Warning: Citizenship data is missing');
+    }
+    
+    // Continue with form processing using the available data
+    // ...
+  }, [citizenship, destination, travelDate]);
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
