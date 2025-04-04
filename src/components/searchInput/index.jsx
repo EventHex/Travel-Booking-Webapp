@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { CalenderDown, CalenderUp, Flight, Home, Search } from "../../assets";
 
-const SearchInputText = ({ dropDownData, dropDownPlace }) => {
+const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
@@ -24,14 +24,19 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
   const handleCitizenIconClick = () => {
     citizenInputRef.current.focus();
   };
+  
   const handleOptionSelect = (option, inputRef, isFromInput) => {
     if (inputRef.current) {
       inputRef.current.value = option.title;
-    }
-    if (isFromInput) {
-      setShowFromDropdown(false);
-    } else {
-      setShowGoingToDropdown(false);
+      
+      // Update parent component state through the callback
+      if (isFromInput) {
+        onInputChange("destination", option.title);
+        setShowFromDropdown(false);
+      } else {
+        onInputChange("goingTo", option.title);
+        setShowGoingToDropdown(false);
+      }
     }
   };
 
@@ -47,6 +52,15 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
 
   const handleGoingToBlur = () => {
     setGoingToIsFocused(false);
+  };
+
+  // Handle manual input changes
+  const handleDestinationChange = (e) => {
+    onInputChange("destination", e.target.value);
+  };
+
+  const handleGoingToChange = (e) => {
+    onInputChange("goingTo", e.target.value);
   };
 
   const goingToDropdownRef = useRef(null);
@@ -71,6 +85,7 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
             className="w-full bg-transparent outline-none"
             onFocus={handleFromInputFocus}
             onBlur={handleFromInputBlur}
+            onChange={handleDestinationChange}
           />
         </div>
 
@@ -80,20 +95,20 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
             className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
           >
             {dropDownData.map((option) => (
-            <div
-            key={option.id}
-            className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-            onClick={() =>
-              handleOptionSelect(option, goingToInputRef, false)
-            }
-          >
-            <div className="flex">
-              <p className="flex items-center text-[14px] gap-2">
-                {option.icon}
-                <span>{option.title}</span>
-              </p>
-            </div>
-          </div>
+              <div
+                key={option.id}
+                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                onClick={() =>
+                  handleOptionSelect(option, citizenInputRef, true)
+                }
+              >
+                <div className="flex">
+                  <p className="flex items-center text-[14px] gap-2">
+                    {option.icon}
+                    <span>{option.title}</span>
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         )}
@@ -117,6 +132,7 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
             className="w-full bg-transparent outline-none"
             onFocus={handleGoingToFocus}
             onBlur={handleGoingToBlur}
+            onChange={handleGoingToChange}
           />
         </div>
 

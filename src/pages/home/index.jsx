@@ -213,23 +213,29 @@ const HeroSection = () => {
       travelDate: "",
       returnDate: ""
     });
-    
+      
     const handleInputChange = (field, value) => {
       setSearchData(prevState => ({
         ...prevState,
         [field]: value
       }));
     };
-
+    
+    // Add this function to handle search button click
+    const handleSearchClick = () => {
+      // Log the search data to console
+      console.log("Search Data:", searchData);
+      
+      // You can then navigate or perform other actions
+      // The Link component will handle navigation, but this ensures data is logged
+    };
     // Import would be handled in your actual project
     // This is just a placeholder for the component demonstration
     const User = "user-icon-placeholder";
 
-    // Calculate total travelers
-    const totalTravelers =
-      passengers.adults + passengers.children + passengers.infants;
-    const travelerText =
-      totalTravelers === 1 ? "1 Traveler" : `${totalTravelers} Travelers`;
+
+
+
     switch (activeTab) {
       case "Visas":
         return (
@@ -247,7 +253,10 @@ const HeroSection = () => {
           search: `?${new URLSearchParams(searchData).toString()}`,
           state: searchData
         }}>
-          <button className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">
+          <button 
+            className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
+            onClick={handleSearchClick}
+          >
             Search
           </button>
         </Link>
