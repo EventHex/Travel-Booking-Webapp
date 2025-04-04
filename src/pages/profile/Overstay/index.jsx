@@ -23,17 +23,17 @@ const OverstayTracker = () => {
   };
 
   return (
-    <div className="w-full px-4 sm:px-6 md:px-8 max-w-full mx-auto">
+    <div className=" max-w-6xl bg-green-200 w-full  ">
       {/* Navigation Tabs */}
-      <div className="flex border-b mb-4 sm:mb-6 overflow-x-auto pb-1">
+      <div className="flex  mb-4   sm:mb-6 overflow-x-auto pb-1 no-scrollbar">
         <div 
-          className={`text-xl sm:text-2xl pb-2 mr-4 cursor-pointer whitespace-nowrap ${activeTab === 'overstay' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-normal text-gray-400'}`}
+          className={`text-lg sm:text-xl md:text-2xl pb-2 mr-4 cursor-pointer whitespace-nowrap ${activeTab === 'overstay' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-normal text-gray-400'}`}
           onClick={() => toggleTab('overstay')}
         >
           Overstay
         </div>
         <div 
-          className={`text-xl sm:text-2xl pb-2 cursor-pointer whitespace-nowrap ${activeTab === 'history' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-normal text-gray-400'}`}
+          className={`text-lg sm:text-xl md:text-2xl pb-2 cursor-pointer whitespace-nowrap ${activeTab === 'history' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-normal text-gray-400'}`}
           onClick={() => toggleTab('history')}
         >
           History
@@ -41,61 +41,62 @@ const OverstayTracker = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="mb-4 sm:mb-6">
+      <div className="mb-4 sm:mb-6 w-full">
         <input
           type="text"
           placeholder="Search names..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full sm:max-w-md border border-gray-300 rounded-md px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full  sm:max-w-sm  rounded-md px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       {/* Table Container with horizontal scroll */}
       <div className="border border-gray-200 rounded-md w-full overflow-hidden">
         <div className="overflow-x-auto w-full">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 table-fixed sm:table-auto">
             <thead>
               <tr className="bg-white">
                 <th 
-                  className="px-2 sm:px-4 md:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-900 cursor-pointer whitespace-nowrap"
+                  className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-900 cursor-pointer whitespace-nowrap"
                   onClick={() => requestSort('name')}
                 >
                   Name <span className="inline-block ml-1">↕</span>
                 </th>
-                <th className="px-2 sm:px-4 md:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-900 whitespace-nowrap">
+                <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-900 whitespace-nowrap">
                   Passport number
                 </th>
                 {activeTab === 'overstay' ? (
                   <th 
-                    className="px-2 sm:px-4 md:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-900 cursor-pointer whitespace-nowrap"
+                    className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-900 cursor-pointer whitespace-nowrap"
                     onClick={() => requestSort('daysLeft')}
                   >
-                    Days left to overstay <span className="inline-block ml-1">↕</span>
+                    Days left <span className="hidden sm:inline-block">to overstay</span> <span className="inline-block ml-1">↕</span>
                   </th>
                 ) : (
                   <th 
-                    className="px-2 sm:px-4 md:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-900 cursor-pointer whitespace-nowrap"
+                    className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-900 cursor-pointer whitespace-nowrap"
                     onClick={() => requestSort('exitDate')}
                   >
                     Exit date <span className="inline-block ml-1">↕</span>
                   </th>
                 )}
                 <th 
-                  className="px-2 sm:px-4 md:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-900 cursor-pointer whitespace-nowrap"
+                  className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-900 cursor-pointer whitespace-nowrap"
                   onClick={() => requestSort('entryDate')}
                 >
                   Entry date <span className="inline-block ml-1">↕</span>
                 </th>
-                <th className="px-2 sm:px-4 md:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-900 whitespace-nowrap">
+                <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-900 whitespace-nowrap">
                   Status
                 </th>
                 {activeTab === 'overstay' && (
                   <>
-                    <th className="px-2 sm:px-4 md:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-900 whitespace-nowrap">
-                      Amount to pay
+                    <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-900 whitespace-nowrap">
+                      <span className="hidden sm:inline-block">Amount to pay</span>
+                      <span className="sm:hidden">Payment</span>
                     </th>
-                    <th className="px-2 sm:px-4 md:px-6 py-3 text-left text-xs sm:text-sm font-medium text-gray-900 whitespace-nowrap">
+                    <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-gray-900 whitespace-nowrap">
                       Actions
                     </th>
                   </>
@@ -104,12 +105,12 @@ const OverstayTracker = () => {
             </thead>
             <tbody>
               {/* Empty state */}
-              <tr className="h-64 sm:h-80 md:h-96">
-                <td colSpan={activeTab === 'overstay' ? "7" : "5"} className="text-center p-4">
+              <tr className="h-48 sm:h-64 md:h-80">
+                <td colSpan={activeTab === 'overstay' ? "7" : "5"} className="text-center p-2 sm:p-4">
                   <div className="flex flex-col items-center justify-center">
                     {activeTab === 'overstay' ? (
                       <>
-                        <div className="w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 mb-4 md:mb-6">
+                        <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 mb-3 md:mb-4">
                           <svg viewBox="0 0 200 200" className="w-full h-full">
                             <g>
                               <ellipse cx="100" cy="100" rx="90" ry="90" fill="transparent" />
@@ -152,11 +153,11 @@ const OverstayTracker = () => {
                             </g>
                           </svg>
                         </div>
-                        <p className="text-gray-500 text-sm sm:text-base md:text-lg px-2 text-center">None of your travellers have overstayed or absconded!</p>
+                        <p className="text-gray-500 text-xs sm:text-sm md:text-base px-2 text-center">None of your travellers have overstayed or absconded!</p>
                       </>
                     ) : (
                       <>
-                        <div className="w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 mb-4 md:mb-6">
+                        <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 mb-3 md:mb-4">
                           <svg viewBox="0 0 200 200" className="w-full h-full">
                             <g>
                               {/* Person with document */}
@@ -195,7 +196,7 @@ const OverstayTracker = () => {
                             </g>
                           </svg>
                         </div>
-                        <p className="text-gray-500 text-sm sm:text-base md:text-lg px-2 text-center">You do not have any history for overstay and absconding.</p>
+                        <p className="text-gray-500 text-xs sm:text-sm md:text-base px-2 text-center">You do not have any history for overstay and absconding.</p>
                       </>
                     )}
                   </div>

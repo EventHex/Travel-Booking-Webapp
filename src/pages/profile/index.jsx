@@ -74,7 +74,7 @@ const Index = () => {
 
   return (
     <div className=" w-full">
-    <div className="flex   flex-col   md:flex-row gap-4 w-full max-w-6xl mx-auto  mb-10">
+    <div className="flex   flex-col   md:flex-row gap-4 w-full max-w-6xl   mb-10">
       {/* Emergency Hotline Card */}
       <div className="bg-gray-100 rounded-xl p-6 flex-1 shadow-sm">
         <div className="flex items-center gap-2 mb-3">
@@ -462,8 +462,8 @@ const Index = () => {
       
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
-          <div className="w-full  p-4 flex-col flex">
-            <div className="flex items-center space-x-4">
+          <div className="w-full   flex-col flex">
+            <div className="flex items-center   p-2 space-x-4">
               {/* Avatar/Logo Circle */}
               <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
                 <svg
@@ -494,7 +494,7 @@ const Index = () => {
                 </div>
               </div>
               <div className="w-full md:w-[80%]   flex flex-col ">
-                <div className="p-2 md:p-5">
+                <div className="p-2 md:p-1">
                   {/* Render content based on selected option */}
                   {renderContent()}
                 </div>
