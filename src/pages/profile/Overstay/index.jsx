@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const OverstayTracker = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+const TravellerMonitoringComponent = () => {
   const [activeTab, setActiveTab] = useState('overstay');
-  const [sortConfig, setSortConfig] = useState({
-    key: null,
-    direction: 'ascending'
-  });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
+  const [travellers, setTravellers] = useState([]);
 
-  // Handle sorting when a column header is clicked
+  const toggleTab = (tab) => {
+    setActiveTab(tab);
+  };
+
   const requestSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -16,16 +17,17 @@ const OverstayTracker = () => {
     }
     setSortConfig({ key, direction });
   };
-  
-  // Toggle between tabs
-  const toggleTab = (tab) => {
-    setActiveTab(tab);
-  };
+
+  // Example data loading function
+  useEffect(() => {
+    // This would be replaced with your actual data fetching logic
+    // For now, we'll leave it empty since we're showing the empty state
+  }, []);
 
   return (
-    <div className=" max-w-6xl bg-green-200 w-full  ">
+    <div className="max-w-6xl w-full bg-green-200 overflow-x-auto">
       {/* Navigation Tabs */}
-      <div className="flex  mb-4   sm:mb-6 overflow-x-auto pb-1 no-scrollbar">
+      <div className="flex mb-4 sm:mb-6 overflow-x-auto pb-1 no-scrollbar">
         <div 
           className={`text-lg sm:text-xl md:text-2xl pb-2 mr-4 cursor-pointer whitespace-nowrap ${activeTab === 'overstay' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-normal text-gray-400'}`}
           onClick={() => toggleTab('overstay')}
@@ -47,13 +49,13 @@ const OverstayTracker = () => {
           placeholder="Search names..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full  sm:max-w-sm  rounded-md px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full sm:max-w-sm rounded-md px-3 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       {/* Table Container with horizontal scroll */}
       <div className="border border-gray-200 rounded-md w-full overflow-hidden">
-        <div className="overflow-x-auto w-full">
+        <div className="w-full overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 table-fixed sm:table-auto">
             <thead>
               <tr className="bg-white">
@@ -105,7 +107,7 @@ const OverstayTracker = () => {
             </thead>
             <tbody>
               {/* Empty state */}
-              <tr className="h-48 sm:h-64 md:h-80">
+              <tr className="">
                 <td colSpan={activeTab === 'overstay' ? "7" : "5"} className="text-center p-2 sm:p-4">
                   <div className="flex flex-col items-center justify-center">
                     {activeTab === 'overstay' ? (
@@ -210,4 +212,4 @@ const OverstayTracker = () => {
   );
 };
 
-export default OverstayTracker;
+export default TravellerMonitoringComponent;

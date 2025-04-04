@@ -483,7 +483,7 @@ const Index = () => {
             </div>
             
             <div className="flex mt-10">
-              <div className="w-auto pr-3 mt-3 mb-10 md:w-[20%]">
+              <div className="w-auto pr-3 mt-3 mb-10 md:w-[16%]">
                 <div
                   className={`${
                     isNarrowScreen ? "sticky  top-5 w-[50px]" : "sticky top-5 w-full"
