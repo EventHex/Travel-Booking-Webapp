@@ -21,7 +21,7 @@ const CustomSelect = ({
           name={name}
           value={value}
           onChange={onChange}
-          className={`${className} w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none`}
+          className={`${className} w-full px-3 py-2  text-[#B2B5C0] text-[14px] pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none`}
         >
           <option value="">{placeholder}</option>
           {options.map((option) => (
