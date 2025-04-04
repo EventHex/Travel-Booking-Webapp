@@ -100,60 +100,59 @@ const HeroSection = () => {
       returnDateInputRef.current.focus();
     };
 
-    const [showDropdown, setShowDropdown] = useState(false);
-    const dropdownRef = useRef(null);
+    const [showFromDropdown, setShowFromDropdown] = useState(false);
+    const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
+    const fromDropdownRef = useRef(null);
+    const goingToDropdownRef = useRef(null);
 
-    const handleInputFocus = () => {
+    const handleFromInputFocus = () => {
       setCitizenIsFocused(true);
-      setShowDropdown(true);
+      setShowFromDropdown(true);
+      setShowGoingToDropdown(false);
     };
 
-    const handleInputBlur = () => {
+    const handleGoingToFocus = () => {
+      setGoingToIsFocused(true);
+      setShowGoingToDropdown(true);
+      setShowFromDropdown(false);
+    };
+
+    const handleFromInputBlur = () => {
       setCitizenIsFocused(false);
-      // Don't immediately hide dropdown to allow for clicks on dropdown items
-      // setTimeout(() => setShowDropdown(false), 100);
     };
 
-    const handleOptionSelect = (option) => {
-      if (citizenInputRef.current) {
-        citizenInputRef.current.value = option;
+    const handleGoingToBlur = () => {
+      setGoingToIsFocused(false);
+    };
+
+    const handleOptionSelect = (option, inputRef, isFromInput) => {
+      if (inputRef.current) {
+        inputRef.current.value = option.title;
       }
-      setShowDropdown(false);
-    };
-
-    const [tripType, setTripType] = useState("oneWay");
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [cabinClass, setCabinClass] = useState("Economy");
-
-    const cabinOptions = [
-      "Economy",
-      "Premium Economy",
-      "Business",
-      "First Class",
-    ];
-
-    const handleTripTypeChange = (type) => {
-      setTripType(type);
-    };
-
-    const toggleDropdown = () => {
-      setIsDropdownOpen(!isDropdownOpen);
-    };
-
-    const selectCabinClass = (option) => {
-      setCabinClass(option);
-      setIsDropdownOpen(false);
+      if (isFromInput) {
+        setShowFromDropdown(false);
+      } else {
+        setShowGoingToDropdown(false);
+      }
     };
 
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (
-          dropdownRef.current &&
-          !dropdownRef.current.contains(event.target) &&
+          fromDropdownRef.current &&
+          !fromDropdownRef.current.contains(event.target) &&
           citizenInputRef.current &&
           !citizenInputRef.current.contains(event.target)
         ) {
-          setShowDropdown(false);
+          setShowFromDropdown(false);
+        }
+        if (
+          goingToDropdownRef.current &&
+          !goingToDropdownRef.current.contains(event.target) &&
+          goingToInputRef.current &&
+          !goingToInputRef.current.contains(event.target)
+        ) {
+          setShowGoingToDropdown(false);
         }
       };
 
@@ -246,21 +245,23 @@ const HeroSection = () => {
                       type="text"
                       placeholder="Search destinations, attractions..."
                       className="w-full bg-transparent outline-none"
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      onFocus={handleFromInputFocus}
+                      onBlur={handleFromInputBlur}
                     />
                   </div>
 
-                  {showDropdown && (
+                  {showFromDropdown && (
                     <div
-                      ref={dropdownRef}
+                      ref={fromDropdownRef}
                       className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
                     >
                       {citizenOptions.map((option) => (
                         <div
                           key={option.id}
                           className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                          onClick={() => handleOptionSelect(option)}
+                          onClick={() =>
+                            handleOptionSelect(option, citizenInputRef, true)
+                          }
                         >
                           <div className="flex-shrink-0 mr-3">
                             <img
@@ -286,7 +287,7 @@ const HeroSection = () => {
                   )}
                 </div>
 
-                <div className="w-full">
+                <div className="w-full relative">
                   <div className="flex items-center p-3">
                     <span
                       className={`mr-2 cursor-pointer ${
@@ -302,10 +303,46 @@ const HeroSection = () => {
                       type="text"
                       placeholder="Going to"
                       className="w-full bg-transparent outline-none"
-                      onFocus={() => setGoingToIsFocused(true)}
-                      onBlur={() => setGoingToIsFocused(false)}
+                      onFocus={handleGoingToFocus}
+                      onBlur={handleGoingToBlur}
                     />
                   </div>
+
+                  {showGoingToDropdown && (
+                    <div
+                      ref={goingToDropdownRef}
+                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
+                      {citizenOptions.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                          onClick={() =>
+                            handleOptionSelect(option, goingToInputRef, false)
+                          }
+                        >
+                          <div className="flex-shrink-0 mr-3">
+                            <img
+                              src={option.image}
+                              alt={option.title}
+                              className="w-12 h-12 object-cover rounded"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium text-gray-800">
+                              {option.title}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {option.subtitle}
+                            </div>
+                            <div className="text-xs text-blue-500 mt-1 capitalize">
+                              {option.type}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div> */}
               {/* <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row ">
@@ -555,21 +592,23 @@ const HeroSection = () => {
                       type="text"
                       placeholder="Search destinations, attractions..."
                       className="w-full bg-transparent outline-none"
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      onFocus={handleFromInputFocus}
+                      onBlur={handleFromInputBlur}
                     />
                   </div>
 
-                  {showDropdown && (
+                  {showFromDropdown && (
                     <div
-                      ref={dropdownRef}
+                      ref={fromDropdownRef}
                       className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
                     >
                       {citizenOptions.map((option) => (
                         <div
                           key={option.id}
                           className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                          onClick={() => handleOptionSelect(option)}
+                          onClick={() =>
+                            handleOptionSelect(option, citizenInputRef, true)
+                          }
                         >
                           <div className="flex-shrink-0 mr-3">
                             <img
@@ -595,7 +634,7 @@ const HeroSection = () => {
                   )}
                 </div>
 
-                <div className="w-full">
+                <div className="w-full relative">
                   <div className="flex items-center p-3">
                     <span
                       className={`mr-2 cursor-pointer ${
@@ -611,10 +650,46 @@ const HeroSection = () => {
                       type="text"
                       placeholder="Going to"
                       className="w-full bg-transparent outline-none"
-                      onFocus={() => setGoingToIsFocused(true)}
-                      onBlur={() => setGoingToIsFocused(false)}
+                      onFocus={handleGoingToFocus}
+                      onBlur={handleGoingToBlur}
                     />
                   </div>
+
+                  {showGoingToDropdown && (
+                    <div
+                      ref={goingToDropdownRef}
+                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
+                      {citizenOptions.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                          onClick={() =>
+                            handleOptionSelect(option, goingToInputRef, false)
+                          }
+                        >
+                          <div className="flex-shrink-0 mr-3">
+                            <img
+                              src={option.image}
+                              alt={option.title}
+                              className="w-12 h-12 object-cover rounded"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium text-gray-800">
+                              {option.title}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {option.subtitle}
+                            </div>
+                            <div className="text-xs text-blue-500 mt-1 capitalize">
+                              {option.type}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl  md:flex-row ">
