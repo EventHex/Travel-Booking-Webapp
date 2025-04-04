@@ -556,7 +556,7 @@ const TravelVisaBooking = () => {
       >
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
-          <div className="flex gap-5 flex-col  md:flex-row p-5 w-full">
+          <div className="flex gap-5 flex-col justify-between  md:flex-row p-5 w-full">
          <SearchInputText  />
          <SearchInputDate />
            
