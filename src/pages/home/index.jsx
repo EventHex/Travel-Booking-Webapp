@@ -18,7 +18,7 @@ import {
   User,
   Placeholder,
 } from "../../assets";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
 import Header from "../../components/header";
@@ -100,60 +100,59 @@ const HeroSection = () => {
       returnDateInputRef.current.focus();
     };
 
-    const [showDropdown, setShowDropdown] = useState(false);
-    const dropdownRef = useRef(null);
+    const [showFromDropdown, setShowFromDropdown] = useState(false);
+    const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
+    const fromDropdownRef = useRef(null);
+    const goingToDropdownRef = useRef(null);
 
-    const handleInputFocus = () => {
+    const handleFromInputFocus = () => {
       setCitizenIsFocused(true);
-      setShowDropdown(true);
+      setShowFromDropdown(true);
+      setShowGoingToDropdown(false);
     };
 
-    const handleInputBlur = () => {
+    const handleGoingToFocus = () => {
+      setGoingToIsFocused(true);
+      setShowGoingToDropdown(true);
+      setShowFromDropdown(false);
+    };
+
+    const handleFromInputBlur = () => {
       setCitizenIsFocused(false);
-      // Don't immediately hide dropdown to allow for clicks on dropdown items
-      // setTimeout(() => setShowDropdown(false), 100);
     };
 
-    const handleOptionSelect = (option) => {
-      if (citizenInputRef.current) {
-        citizenInputRef.current.value = option;
+    const handleGoingToBlur = () => {
+      setGoingToIsFocused(false);
+    };
+
+    const handleOptionSelect = (option, inputRef, isFromInput) => {
+      if (inputRef.current) {
+        inputRef.current.value = option.title;
       }
-      setShowDropdown(false);
-    };
-
-    const [tripType, setTripType] = useState("oneWay");
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [cabinClass, setCabinClass] = useState("Economy");
-
-    const cabinOptions = [
-      "Economy",
-      "Premium Economy",
-      "Business",
-      "First Class",
-    ];
-
-    const handleTripTypeChange = (type) => {
-      setTripType(type);
-    };
-
-    const toggleDropdown = () => {
-      setIsDropdownOpen(!isDropdownOpen);
-    };
-
-    const selectCabinClass = (option) => {
-      setCabinClass(option);
-      setIsDropdownOpen(false);
+      if (isFromInput) {
+        setShowFromDropdown(false);
+      } else {
+        setShowGoingToDropdown(false);
+      }
     };
 
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (
-          dropdownRef.current &&
-          !dropdownRef.current.contains(event.target) &&
+          fromDropdownRef.current &&
+          !fromDropdownRef.current.contains(event.target) &&
           citizenInputRef.current &&
           !citizenInputRef.current.contains(event.target)
         ) {
-          setShowDropdown(false);
+          setShowFromDropdown(false);
+        }
+        if (
+          goingToDropdownRef.current &&
+          !goingToDropdownRef.current.contains(event.target) &&
+          goingToInputRef.current &&
+          !goingToInputRef.current.contains(event.target)
+        ) {
+          setShowGoingToDropdown(false);
         }
       };
 
@@ -241,21 +240,23 @@ const HeroSection = () => {
                       type="text"
                       placeholder="Search destinations, attractions..."
                       className="w-full bg-transparent outline-none"
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      onFocus={handleFromInputFocus}
+                      onBlur={handleFromInputBlur}
                     />
                   </div>
 
-                  {showDropdown && (
+                  {showFromDropdown && (
                     <div
-                      ref={dropdownRef}
+                      ref={fromDropdownRef}
                       className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
                     >
                       {citizenOptions.map((option) => (
                         <div
                           key={option.id}
                           className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                          onClick={() => handleOptionSelect(option)}
+                          onClick={() =>
+                            handleOptionSelect(option, citizenInputRef, true)
+                          }
                         >
                           <div className="flex-shrink-0 mr-3">
                             <img
@@ -281,7 +282,7 @@ const HeroSection = () => {
                   )}
                 </div>
 
-                <div className="w-full">
+                <div className="w-full relative">
                   <div className="flex items-center p-3">
                     <span
                       className={`mr-2 cursor-pointer ${
@@ -297,10 +298,46 @@ const HeroSection = () => {
                       type="text"
                       placeholder="Going to"
                       className="w-full bg-transparent outline-none"
-                      onFocus={() => setGoingToIsFocused(true)}
-                      onBlur={() => setGoingToIsFocused(false)}
+                      onFocus={handleGoingToFocus}
+                      onBlur={handleGoingToBlur}
                     />
                   </div>
+
+                  {showGoingToDropdown && (
+                    <div
+                      ref={goingToDropdownRef}
+                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
+                      {citizenOptions.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                          onClick={() =>
+                            handleOptionSelect(option, goingToInputRef, false)
+                          }
+                        >
+                          <div className="flex-shrink-0 mr-3">
+                            <img
+                              src={option.image}
+                              alt={option.title}
+                              className="w-12 h-12 object-cover rounded"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium text-gray-800">
+                              {option.title}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {option.subtitle}
+                            </div>
+                            <div className="text-xs text-blue-500 mt-1 capitalize">
+                              {option.type}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
@@ -550,21 +587,23 @@ const HeroSection = () => {
                       type="text"
                       placeholder="Search destinations, attractions..."
                       className="w-full bg-transparent outline-none"
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      onFocus={handleFromInputFocus}
+                      onBlur={handleFromInputBlur}
                     />
                   </div>
 
-                  {showDropdown && (
+                  {showFromDropdown && (
                     <div
-                      ref={dropdownRef}
+                      ref={fromDropdownRef}
                       className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
                     >
                       {citizenOptions.map((option) => (
                         <div
                           key={option.id}
                           className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                          onClick={() => handleOptionSelect(option)}
+                          onClick={() =>
+                            handleOptionSelect(option, citizenInputRef, true)
+                          }
                         >
                           <div className="flex-shrink-0 mr-3">
                             <img
@@ -590,7 +629,7 @@ const HeroSection = () => {
                   )}
                 </div>
 
-                <div className="w-full">
+                <div className="w-full relative">
                   <div className="flex items-center p-3">
                     <span
                       className={`mr-2 cursor-pointer ${
@@ -606,10 +645,46 @@ const HeroSection = () => {
                       type="text"
                       placeholder="Going to"
                       className="w-full bg-transparent outline-none"
-                      onFocus={() => setGoingToIsFocused(true)}
-                      onBlur={() => setGoingToIsFocused(false)}
+                      onFocus={handleGoingToFocus}
+                      onBlur={handleGoingToBlur}
                     />
                   </div>
+
+                  {showGoingToDropdown && (
+                    <div
+                      ref={goingToDropdownRef}
+                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
+                      {citizenOptions.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                          onClick={() =>
+                            handleOptionSelect(option, goingToInputRef, false)
+                          }
+                        >
+                          <div className="flex-shrink-0 mr-3">
+                            <img
+                              src={option.image}
+                              alt={option.title}
+                              className="w-12 h-12 object-cover rounded"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-medium text-gray-800">
+                              {option.title}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {option.subtitle}
+                            </div>
+                            <div className="text-xs text-blue-500 mt-1 capitalize">
+                              {option.type}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
@@ -890,33 +965,33 @@ const HeroSection = () => {
         </div>
         {/* *****************footer***************************** */}
         <div className="w-full flex justify-center rounded-t-[30px] py-6 sm:py-8 md:py-10 items-center bg-gradient-to-r from-[#1C1C82] to-[#24186C]">
-  <div className="max-w-[1300px] flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
-    <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">
-      {/* Responsive logo size */}
-     <Link to="/">
-              <img   className="w-[100px]" src={Logo} alt="" />
-            </Link>
-    </div>
-    <div className="w-full md:w-[50%] flex flex-col md:flex-row md:justify-end items-center md:items-end space-y-2 md:space-y-0 md:space-x-4">
-      <div className="text-center md:text-right">
-        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
-          CNN Holidays, ZAIKAS EF COMPLEX,{" "}
-        </p>
-        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
-          Fort Road, Cannanore, Kannur - 670001
-        </p>
-      </div>
-      <div className="text-center md:text-right">
-        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
-          CNN Holidays, ZAIKAS EF COMPLEX,{" "}
-        </p>
-        <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
-          Fort Road, Cannanore, Kannur - 670001
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
+          <div className="max-w-[1300px] flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
+            <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">
+              {/* Responsive logo size */}
+              <Link to="/">
+                <img className="w-[100px]" src={Logo} alt="" />
+              </Link>
+            </div>
+            <div className="w-full md:w-[50%] flex flex-col md:flex-row md:justify-end items-center md:items-end space-y-2 md:space-y-0 md:space-x-4">
+              <div className="text-center md:text-right">
+                <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+                  CNN Holidays, ZAIKAS EF COMPLEX,{" "}
+                </p>
+                <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+                  Fort Road, Cannanore, Kannur - 670001
+                </p>
+              </div>
+              <div className="text-center md:text-right">
+                <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+                  CNN Holidays, ZAIKAS EF COMPLEX,{" "}
+                </p>
+                <p className="text-[#B3B3B3] text-[12px] sm:text-[13px] md:text-[14px] font-[400]">
+                  Fort Road, Cannanore, Kannur - 670001
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
