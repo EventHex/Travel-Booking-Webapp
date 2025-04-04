@@ -100,26 +100,7 @@ const HeroSection = () => {
       returnDateInputRef.current.focus();
     };
 
-    const [showDropdown, setShowDropdown] = useState(false);
-    const dropdownRef = useRef(null);
-
-    const handleInputFocus = () => {
-      setCitizenIsFocused(true);
-      setShowDropdown(true);
-    };
-
-    const handleInputBlur = () => {
-      setCitizenIsFocused(false);
-      // Don't immediately hide dropdown to allow for clicks on dropdown items
-      // setTimeout(() => setShowDropdown(false), 100);
-    };
-
-    const handleOptionSelect = (option) => {
-      if (citizenInputRef.current) {
-        citizenInputRef.current.value = option;
-      }
-      setShowDropdown(false);
-    };
+  
 
     const [tripType, setTripType] = useState("oneWay");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -219,6 +200,77 @@ const HeroSection = () => {
       passengers.adults + passengers.children + passengers.infants;
     const travelerText =
       totalTravelers === 1 ? "1 Traveler" : `${totalTravelers} Travelers`;
+      const [showDropdown, setShowDropdown] = useState(false);
+      const [searchOptions, setSearchOptions] = useState([]);
+      const searchInputRef = useRef(null);
+      const dropdownRef = useRef(null);
+    
+      // Sample options - replace with your actual data
+      const sampleOptions = [
+        {
+          id: 1,
+          title: "Burj Khalifa",
+          subtitle: "Dubai, United Arab Emirates",
+          type: "attraction",
+            image: Placeholder
+        },
+        {
+          id: 2,
+          title: "Universal Studios",
+          subtitle: "Orlando, Florida, USA",
+          type: "theme park",
+          image: Placeholder
+        },
+        {
+          id: 3,
+          title: "Eiffel Tower",
+          subtitle: "Paris, France",
+          type: "landmark",
+            image: Placeholder
+        }
+      ];
+    
+      const handleInputFocus = () => {
+        setSearchOptions(sampleOptions);
+        setShowDropdown(true);
+      };
+    
+      const handleInputBlur = (e) => {
+        // Delay hiding dropdown to allow click events on options
+        setTimeout(() => {
+          if (document.activeElement !== dropdownRef.current) {
+            setShowDropdown(false);
+          }
+        }, 100);
+      };
+    
+      const handleOptionSelect = (option) => {
+        if (searchInputRef.current) {
+          searchInputRef.current.value = option.title;
+        }
+        setShowDropdown(false);
+        // Handle the selected option (e.g., navigate to details page)
+        console.log("Selected:", option);
+      };
+    
+      // Close dropdown when clicking outside
+      useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (
+            dropdownRef.current && 
+            !dropdownRef.current.contains(event.target) &&
+            !searchInputRef.current.contains(event.target)
+          ) {
+            setShowDropdown(false);
+          }
+        };
+    
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+      }, []);
+    
     switch (activeTab) {
       case "Visas":
         return (
@@ -358,15 +410,52 @@ const HeroSection = () => {
       case "Activities":
         return (
           <div className="relative mb-24 w-full">
-            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-              <img src={Search} alt="" />
+      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+        <img src={Search} alt="Search icon" />
+      </div>
+      <input
+        ref={searchInputRef}
+        type="text"
+        placeholder={`Search for ${activeTab} (e.g. Burj Khalifa, Universal Studio)`}
+        className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white border border-[#A6BFFF82] border-solid rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm sm:text-base text-gray-600 placeholder-gray-400 transition-all duration-300 delay-150 hover:border-blue-500"
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+      />
+
+      {showDropdown && (
+        <div
+          ref={dropdownRef}
+          className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+        >
+          {searchOptions.map((option) => (
+            <div
+              key={option.id}
+              className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+              onClick={() => handleOptionSelect(option)}
+            >
+              <div className="flex-shrink-0 mr-3">
+                <img
+                  src={option.image}
+                  alt={option.title}
+                  className="w-12 h-12 object-cover rounded"
+                />
+              </div>
+              <div className="flex-1">
+                <div className="font-medium text-gray-800">
+                  {option.title}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {option.subtitle}
+                </div>
+                <div className="text-xs text-blue-500 mt-1 capitalize">
+                  {option.type}
+                </div>
+              </div>
             </div>
-            <input
-              type="text"
-              placeholder={`Search for ${activeTab} (e.g. Burj Khalifa, Universal Studio)`}
-              className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white border border-[#A6BFFF82] border-solid rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm sm:text-base text-gray-600 placeholder-gray-400 transition-all duration-300 delay-150 hover:border-blue-500"
-            />
-          </div>
+          ))}
+        </div>
+      )}
+    </div>
         );
       case "Insurance":
         return (
