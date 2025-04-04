@@ -1,7 +1,20 @@
-import React, { useState, useRef } from "react";
-import { CalenderDown, CalenderUp, Flight, Home, Search } from "../../assets";
+import React, { useState, useRef, useEffect } from "react";
+import { CalenderDown, CalenderUp, Flight, Home } from "../../assets";
 
-const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
+const SearchInputText = ({ 
+  data,
+  dropDownData, 
+  dropDownPlace, 
+  onInputChange,
+  initialDestination = "",
+  initialGoingTo = ""
+}) => {
+  console.log(data,'data');
+  const destination = initialDestination || (data && data.destination) || "";
+  const goingTo = initialGoingTo || (data && data.goingTo) || "";
+  console.log(destination,'destination');
+  console.log(goingTo,'goingTo');
+  
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
@@ -10,6 +23,17 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
   const citizenInputRef = useRef(null);
   const fromDropdownRef = useRef(null);
   const goingToInputRef = useRef(null);
+
+  // Set initial values when component mounts
+  useEffect(() => {
+    if (citizenInputRef.current && initialDestination) {
+      citizenInputRef.current.value = initialDestination;
+    }
+    
+    if (goingToInputRef.current && initialGoingTo) {
+      goingToInputRef.current.value = initialGoingTo;
+    }
+  }, [initialDestination, initialGoingTo]);
 
   const handleFromInputBlur = () => {
     setCitizenIsFocused(false);
@@ -54,8 +78,6 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
     setGoingToIsFocused(false);
   };
 
-
-
   const goingToDropdownRef = useRef(null);
 
   return (
@@ -79,6 +101,7 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
             onFocus={handleFromInputFocus}
             onBlur={handleFromInputBlur}
             onChange={(e) => onInputChange("destination", e.target.value)}
+            defaultValue={initialDestination}
           />
         </div>
 
@@ -126,6 +149,7 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
             onFocus={handleGoingToFocus}
             onBlur={handleGoingToBlur}
             onChange={(e) => onInputChange("goingTo", e.target.value)}
+            defaultValue={initialGoingTo}
           />
         </div>
 
@@ -157,12 +181,34 @@ const SearchInputText = ({ dropDownData, dropDownPlace, onInputChange }) => {
   );
 };
 
-const SearchInputDate = ({ onDateChange }) => {
+const SearchInputDate = ({ 
+  data,
+  onDateChange,
+  initialTravelDate = "",
+  initialReturnDate = ""
+}) => {
+
+  const travelDate = initialTravelDate || (data && data.travelDate) || "";
+  const returnDate = initialReturnDate || (data && data.returnDate) || "";
+  console.log(travelDate,'travelDate');
+  console.log(returnDate,'returnDate');
+  
   const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
   const travelDateInputRef = useRef(null);
   const returnDateInputRef = useRef(null);
 
   const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
+  
+  // Set initial values when component mounts
+  useEffect(() => {
+    if (travelDateInputRef.current && initialTravelDate) {
+      travelDateInputRef.current.value = initialTravelDate;
+    }
+    
+    if (returnDateInputRef.current && initialReturnDate) {
+      returnDateInputRef.current.value = initialReturnDate;
+    }
+  }, [initialTravelDate, initialReturnDate]);
   
   const handleTravelDateIconClick = () => {
     travelDateInputRef.current.focus();
@@ -171,7 +217,6 @@ const SearchInputDate = ({ onDateChange }) => {
   const handleReturnDateIconClick = () => {
     returnDateInputRef.current.focus();
   };
-  
   
   return (
     <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
@@ -194,6 +239,7 @@ const SearchInputDate = ({ onDateChange }) => {
             onFocus={() => setTravelDateIsFocused(true)}
             onBlur={() => setTravelDateIsFocused(false)}
             onChange={(e) => onDateChange("travelDate", e.target.value)}
+            defaultValue={initialTravelDate}
           />
         </div>
       </div>
@@ -216,10 +262,12 @@ const SearchInputDate = ({ onDateChange }) => {
             onFocus={() => setReturnDateIsFocused(true)}
             onBlur={() => setReturnDateIsFocused(false)}
             onChange={(e) => onDateChange("returnDate", e.target.value)}
+            defaultValue={initialReturnDate}
           />
         </div>
       </div>
     </div>
   );
 };
+
 export { SearchInputText, SearchInputDate };
