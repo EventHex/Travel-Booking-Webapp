@@ -189,8 +189,8 @@ const SearchInputDate = ({
   initialReturnDate = ""
 }) => {
   // Either use data object values or the specific props
-  console.log(data.travelDate,' travel data');
-  console.log(data.returnDate,' return data');
+  // console.log(data.travelDate,' traveldata');
+  // console.log(data.returnDate,' data');
   
   const travelDateValue = initialTravelDate || (data && data.travelDate) || "";
   const returnDateValue = initialReturnDate || (data && data.returnDate) || "";

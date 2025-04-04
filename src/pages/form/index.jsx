@@ -568,9 +568,8 @@ const TravelVisaBooking = () => {
       <div
         style={{
           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "100%", // Don't scale the image
-          backgroundPosition: "center", // Start from top left
-          backgroundRepeat: "repeat", // Repeat in both directions
+          backgroundSize: "100%", 
+          backgroundPosition: "center",
           width: "100%",
 
             }}
