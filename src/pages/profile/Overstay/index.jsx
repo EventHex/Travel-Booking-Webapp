@@ -25,17 +25,17 @@ const TravellerMonitoringComponent = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl w-full bg-green-200 overflow-x-auto">
+    <div className="max-w-6xl min-w-[300px] w-full overflow-x-auto">
       {/* Navigation Tabs */}
       <div className="flex mb-4 sm:mb-6 overflow-x-auto pb-1 no-scrollbar">
         <div 
-          className={`text-lg sm:text-xl md:text-2xl pb-2 mr-4 cursor-pointer whitespace-nowrap ${activeTab === 'overstay' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-normal text-gray-400'}`}
+          className={`text-[14px] sm:text-[12px] md:text-xl pb-2 mr-4 cursor-pointer whitespace-nowrap ${activeTab === 'overstay' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-normal text-gray-400'}`}
           onClick={() => toggleTab('overstay')}
         >
           Overstay
         </div>
         <div 
-          className={`text-lg sm:text-xl md:text-2xl pb-2 cursor-pointer whitespace-nowrap ${activeTab === 'history' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-normal text-gray-400'}`}
+          className={`text-[12px] sm:text-[12px] md:text-xl pb-2 cursor-pointer whitespace-nowrap ${activeTab === 'history' ? 'font-bold text-gray-900 border-b-2 border-gray-900' : 'font-normal text-gray-400'}`}
           onClick={() => toggleTab('history')}
         >
           History
@@ -105,14 +105,14 @@ const TravellerMonitoringComponent = () => {
                 )}
               </tr>
             </thead>
-            <tbody>
+            <tbody className=''>
               {/* Empty state */}
               <tr className="">
                 <td colSpan={activeTab === 'overstay' ? "7" : "5"} className="text-center p-2 sm:p-4">
                   <div className="flex flex-col items-center justify-center">
                     {activeTab === 'overstay' ? (
                       <>
-                        <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 mb-3 md:mb-4">
+                        <div className="mb-3 md:mb-4">
                           <svg viewBox="0 0 200 200" className="w-full h-full">
                             <g>
                               <ellipse cx="100" cy="100" rx="90" ry="90" fill="transparent" />
@@ -159,8 +159,8 @@ const TravellerMonitoringComponent = () => {
                       </>
                     ) : (
                       <>
-                        <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 mb-3 md:mb-4">
-                          <svg viewBox="0 0 200 200" className="w-full h-full">
+                        <div className=" mb-3 md:mb-4">
+                          <svg viewBox="0 0 200 200" className="w-full">
                             <g>
                               {/* Person with document */}
                               <g transform="translate(40, 25)">

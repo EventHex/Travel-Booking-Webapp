@@ -462,7 +462,7 @@ const Index = () => {
       
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
-          <div className="w-full   flex-col flex">
+          <div className="w-full  relative  flex-col flex">
             <div className="flex items-center   p-2 space-x-4">
               {/* Avatar/Logo Circle */}
               <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
@@ -487,14 +487,14 @@ const Index = () => {
                 <div
                   className={`${
                     isNarrowScreen ? "sticky  top-5 w-[50px]" : "sticky top-5 w-full"
-                  } min-w-[50px] mb-6 md:mb-0 transition-all duration-300`}
+                  } min-w-[50px] mb-16  pb-10 md:mb-0 transition-all duration-300`}
                 >
                   {/* Pass the callback function to Sidebar */}
                   <Sidebar isNarrow={isNarrowScreen} onOptionSelect={handleOptionSelect} />
                 </div>
               </div>
-              <div className="w-full md:w-[80%]   flex flex-col ">
-                <div className="p-2 md:p-1">
+              <div className="w-full   md:w-[80%]   flex flex-col ">
+                <div className="">
                   {/* Render content based on selected option */}
                   {renderContent()}
                 </div>
