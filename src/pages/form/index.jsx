@@ -581,7 +581,7 @@ const TravelVisaBooking = () => {
             <div className="flex gap-3">
 
          <SearchInputText    data={{ destination, goingTo  }}  />
-         <SearchInputDate   data={{  travelDate,  }} />
+         <SearchInputDate   data={{  travelDate, returnDate }} />
             </ div>
            
             <div className="flex items-center">

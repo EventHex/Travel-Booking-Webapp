@@ -9,11 +9,10 @@ const SearchInputText = ({
   initialDestination = "",
   initialGoingTo = ""
 }) => {
-  console.log(data,'data');
+
   const destination = initialDestination || (data && data.destination) || "";
   const goingTo = initialGoingTo || (data && data.goingTo) || "";
-  console.log(destination,'destination');
-  console.log(goingTo,'goingTo');
+
   
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
@@ -96,6 +95,7 @@ const SearchInputText = ({
             style={{ border: "none" }}
             ref={citizenInputRef}
             type="text"
+            value={destination}
             placeholder="Search destinations, attractions..."
             className="w-full bg-transparent outline-none"
             onFocus={handleFromInputFocus}
@@ -144,6 +144,7 @@ const SearchInputText = ({
             style={{ border: "none" }}
             ref={goingToInputRef}
             type="text"
+            value={goingTo}
             placeholder="Going to"
             className="w-full bg-transparent outline-none"
             onFocus={handleGoingToFocus}
@@ -187,28 +188,30 @@ const SearchInputDate = ({
   initialTravelDate = "",
   initialReturnDate = ""
 }) => {
-
-  const travelDate = initialTravelDate || (data && data.travelDate) || "";
-  const returnDate = initialReturnDate || (data && data.returnDate) || "";
-  console.log(travelDate,'travelDate');
-  console.log(returnDate,'returnDate');
+  // Either use data object values or the specific props
+  console.log(data.travelDate,' travel data');
+  console.log(data.returnDate,' return data');
   
+  const travelDateValue = initialTravelDate || (data && data.travelDate) || "";
+  const returnDateValue = initialReturnDate || (data && data.returnDate) || "";
+  // console.log(travelDateValue,'start');
+  // console.log(returnDateValue,'End');
   const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
   const travelDateInputRef = useRef(null);
   const returnDateInputRef = useRef(null);
 
   const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
   
-  // Set initial values when component mounts
+  // Set initial values when component mounts or props change
   useEffect(() => {
-    if (travelDateInputRef.current && initialTravelDate) {
-      travelDateInputRef.current.value = initialTravelDate;
+    if (travelDateInputRef.current) {
+      travelDateInputRef.current.value = travelDateValue;
     }
     
-    if (returnDateInputRef.current && initialReturnDate) {
-      returnDateInputRef.current.value = initialReturnDate;
+    if (returnDateInputRef.current) {
+      returnDateInputRef.current.value = returnDateValue;
     }
-  }, [initialTravelDate, initialReturnDate]);
+  }, [travelDateValue, returnDateValue]);
   
   const handleTravelDateIconClick = () => {
     travelDateInputRef.current.focus();
@@ -239,7 +242,6 @@ const SearchInputDate = ({
             onFocus={() => setTravelDateIsFocused(true)}
             onBlur={() => setTravelDateIsFocused(false)}
             onChange={(e) => onDateChange("travelDate", e.target.value)}
-            defaultValue={initialTravelDate}
           />
         </div>
       </div>
@@ -262,7 +264,6 @@ const SearchInputDate = ({
             onFocus={() => setReturnDateIsFocused(true)}
             onBlur={() => setReturnDateIsFocused(false)}
             onChange={(e) => onDateChange("returnDate", e.target.value)}
-            defaultValue={initialReturnDate}
           />
         </div>
       </div>
