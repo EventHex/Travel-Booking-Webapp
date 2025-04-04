@@ -21,7 +21,8 @@ import {
   Placeholder,
 
 } from "../../assets";
-import SearchInput from "../../components/searchInput";
+// import SearchInput from "../../components/searchInput";
+import { SearchinputText, SearchinputDate } from "../../components/searchInput";
 import { Link} from "react-router-dom";
 const index = () => {
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
@@ -296,7 +297,7 @@ const index = () => {
         <div className="max-w-[1300px] w-full flex-col   flex justify-center">
           <div className="w-full flex items-center   justify-center">
             <div className="flex gap-3   w-[80%] mt-15 mb-15 flex-col ">
-              <SearchInput /> 
+              {/* <SearchInput />  */}
             </div>
           </div>
           {/* *************tabs***************** */}
