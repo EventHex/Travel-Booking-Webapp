@@ -15,7 +15,11 @@ import {
   Upload,
   Info,
   Clock,
-  X
+  X,
+  Edit2,
+  Crop,
+  RotateCw,
+  FlipHorizontal2
 } from "lucide-react";
 import Input from "../../components/input";
 import CustomSelect from "../../components/dropdown";
@@ -537,6 +541,22 @@ const TravelVisaBooking = () => {
     );
   };
 
+  // Define all states at the top of your component
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeOption, setActiveOption] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // Your existing handleImageChange function
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <>
@@ -549,9 +569,9 @@ const TravelVisaBooking = () => {
       >
         <Header />
 
-        <div className="max-w-[1300px] w-full mx-auto p-4 rounded-lg">
-          <div className="flex gap-5 w-full">
-            <div className="flex gap-3 justify-center w-[50%] flex-col">
+        <div className="max-w-[1300px] w-full mx-auto rounded-lg">
+          <div className="flex gap-5 flex-col  md:flex-row p-5 w-full">
+            <div className="flex gap-3 justify-center    w-full md:w-[50%] flex-col">
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
                 <div className="w-full">
                   <div className="flex items-center p-3">
@@ -598,7 +618,7 @@ const TravelVisaBooking = () => {
               </div>
               <div className="flex justify-end"></div>
             </div>
-            <div className="flex gap-3 w-[50%] flex-col">
+            <div className="flex gap-3w-full md:w-[50%] flex-col">
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
                 <div className="w-full">
                   <div className="flex items-center p-3">
@@ -659,8 +679,8 @@ const TravelVisaBooking = () => {
 
               {/* <Sidebar /> */}
             </div>
-            <div className=" w-full md:w-[70%] border-l   border-[#868C98]   flex flex-col justify-center">
-              <div className=" md:p-5">
+            <div className="w-full md:w-[70%] border-l border-[#bbbdc2] flex flex-col justify-center">
+            <div className=" md:p-5">
               <FrontPassportForm />
               <BackPassportForm />
               <UploadTravelerPhoto />
@@ -671,6 +691,70 @@ const TravelVisaBooking = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium">Edit Image</h3>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setActiveOption(null);
+                }}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <img
+                src={selectedImage}
+                alt="Edit preview"
+                className="max-h-[400px] mx-auto object-contain"
+              />
+            </div>
+
+            <div className="flex justify-center gap-4">
+              <button 
+                onClick={() => setActiveOption(activeOption === 'crop' ? null : 'crop')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                  activeOption === 'crop' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <Crop className="h-5 w-5" />
+                Crop
+              </button>
+              <button 
+                onClick={() => setActiveOption(activeOption === 'rotate' ? null : 'rotate')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                  activeOption === 'rotate' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <RotateCw className="h-5 w-5" />
+                Rotate
+              </button>
+              <button 
+                onClick={() => setActiveOption(activeOption === 'flip' ? null : 'flip')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                  activeOption === 'flip' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <FlipHorizontal2 className="h-5 w-5" />
+                Flip
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

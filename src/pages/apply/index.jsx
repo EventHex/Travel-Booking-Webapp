@@ -129,8 +129,8 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
       <div className="max-w-[1300px] w-full mx-auto p-4 rounded-lg">
         {/* Search Form */}
      
-        <div className="flex gap-5 w-full">
-      <div className="flex gap-3 justify-center w-[50%] flex-col">
+        <div className="flex gap-5 flex-col md:flex-row justify-center items-center w-full">
+      <div className="flex gap-3 justify-center    w-full md:w-[50%] flex-col">
         <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
           <div className="w-full">
             <div className="flex items-center p-3">
@@ -176,7 +176,7 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
           </div>
         </div>
       </div>
-      <div className="flex gap-3 w-[50%] flex-col">
+      <div className="flex gap-3 w-full md:w-[50%] flex-col">
         <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
           <div className="w-full">
             <div className="flex items-center p-3">
@@ -227,15 +227,15 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
       </div>
     </div>
     {/* *************  ticket section ***************** */}
-    <main className="max-w-7xl mx-auto  py-8">
-      <div className="space-y-4">
+    <main className="max-w-7xl mx-auto py-4 sm:py-6   sm:px-6 lg:px-8">
+      <div className="space-y-4 md:space-y-6">
         {visaOption.map((option, index) => (
           <div 
             key={index} 
             className={`bg-gradient-to-br from-white to-gray-50/80 rounded-[20px] shadow-sm overflow-hidden`}
           >
             <div 
-              className={`px-6 py-4 text-white font-medium ${
+              className={`px-4 sm:px-6 py-3 sm:py-4 text-white font-medium ${
                 option.status === 'warning' 
                   ? 'bg-gradient-to-r from-orange-500 to-orange-400' 
                   : option.variant === 'green' 
@@ -245,14 +245,14 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
             >
               {option.title}
             </div>
-            <div className="p-6">
-              <div className="flex items-start space-x-3 mb-6">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-start space-x-3 mb-4 sm:mb-6">
                 {option.status === 'warning' ? (
-                  <div className="h-6 w-6 rounded-full bg-orange-100 flex items-center justify-center">
+                  <div className="h-6 w-6 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
                     <Info className="h-4 w-4 text-orange-500" />
                   </div>
                 ) : (
-                  <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center">
+                  <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                     <Shield className="h-4 w-4 text-blue-500" />
                   </div>
                 )}
@@ -267,23 +267,23 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
                 </p>
               </div>
 
-              <div className="grid grid-cols-6 gap-4 mb-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 mb-6">
                 {Object.entries(option.details).map(([key, value]) => (
                   <div key={key}>
-                    <div className="text-sm font-medium text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+                    <div className="text-xs sm:text-sm font-medium text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
                     <div className="mt-1">
                       {key === 'documents' ? (
-                        <a href="#" className="text-sm text-blue-600 hover:text-blue-700 hover:underline">View Here</a>
+                        <a href="#" className="text-xs sm:text-sm text-blue-600 hover:text-blue-700 hover:underline">View Here</a>
                       ) : (
-                        <span className="text-sm text-gray-600">{value}</span>
+                        <span className="text-xs sm:text-sm text-gray-600">{value}</span>
                       )}
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <div className="flex items-baseline gap-2">
                     <span className="text-sm text-gray-400 line-through">{option.price.original}</span>
                     <span className="text-xl font-semibold text-gray-900">{option.price.discounted}</span>
@@ -298,10 +298,10 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
                   </div>
                   <span className="text-xs text-gray-400">(Includes Discounted Visa & Insurance)</span>
                 </div>
-                <Link to='/form'>
-                <button className="px-6 py-2 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-700 hover:text-white transition-colors">
-                Select
-                </button>
+                <Link to='/form' className="flex justify-end sm:justify-start">
+                  <button className="px-4 sm:px-6 py-2 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-700 hover:text-white transition-colors whitespace-nowrap">
+                    Select
+                  </button>
                 </Link>
               </div>
             </div>
