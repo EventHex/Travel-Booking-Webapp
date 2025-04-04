@@ -80,32 +80,20 @@ const SearchInputText = ({ dropDownData, dropDownPlace }) => {
             className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
           >
             {dropDownData.map((option) => (
-              <div
-                key={option.id}
-                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() =>
-                  handleOptionSelect(option, citizenInputRef, true)
-                }
-              >
-                <div className="flex-shrink-0 mr-3">
-                  <img
-                    src={option.image}
-                    alt={option.title}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-gray-800">
-                    {option.title}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    {option.subtitle}
-                  </div>
-                  <div className="text-xs text-blue-500 mt-1 capitalize">
-                    {option.type}
-                  </div>
-                </div>
-              </div>
+            <div
+            key={option.id}
+            className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+            onClick={() =>
+              handleOptionSelect(option, goingToInputRef, false)
+            }
+          >
+            <div className="flex">
+              <p className="flex items-center text-[14px] gap-2">
+                {option.icon}
+                <span>{option.title}</span>
+              </p>
+            </div>
+          </div>
             ))}
           </div>
         )}

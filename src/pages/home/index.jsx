@@ -47,41 +47,21 @@ const HeroSection = () => {
 
     const citizenOptions = [
       {
-        image: Placeholder,
-        type: "location",
-        title: "Dubai",
-        subtitle: "United Arab Emirates",
+        icon: <MapPin  size={14} className="text-[gray]"/>,
+        title: "dubai",
         id: 1,
       },
       {
-        image: Placeholder,
-        type: "location",
-        title: "Singapore",
-        subtitle: "Singapore",
+        icon: <MapPin  size={14} className="text-[gray]"/>,
+        title: "mumbai",
         id: 2,
       },
       {
-        image: Placeholder,
-        type: "attraction",
-        title:
-          "Combo: Burj Khalifa At The Top SKY (Level 148) + Sky Views Observatory Entry Tickets",
-        subtitle: "Dubai, United Arab Emirates",
+        icon: <MapPin  size={14} className="text-[gray]"/>,
+        title: "kochin",
         id: 3,
       },
-      {
-        image: Placeholder,
-        type: "attraction",
-        title: "Andamanda Phuket Water Park Ticket With Transfers",
-        subtitle: "Phuket, Thailand",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        type: "attraction",
-        title: "Dubai Frame Tickets",
-        subtitle: "Dubai, United Arab Emirates",
-        id: 5,
-      },
+      
     ];
 
     const dropDownPlace = [
@@ -227,6 +207,19 @@ const HeroSection = () => {
     const handleDone = () => {
       setShowSelector(false);
     };
+    const [searchData, setSearchData] = useState({
+      destination: "",
+      goingTo: "",
+      travelDate: "",
+      returnDate: ""
+    });
+    
+    const handleInputChange = (field, value) => {
+      setSearchData(prevState => ({
+        ...prevState,
+        [field]: value
+      }));
+    };
 
     // Import would be handled in your actual project
     // This is just a placeholder for the component demonstration
@@ -241,15 +234,25 @@ const HeroSection = () => {
       case "Visas":
         return (
           <>
-            <div className="flex gap-3  flex-col ">
-              <SearchInputText  dropDownPlace={dropDownPlace} dropDownData={citizenOptions} />
-              <SearchInputDate />
-              <div className="flex justify-end">
-                <button className=" text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">
-                  Search
-                </button>
-              </div>
-            </div>
+              <div className="flex gap-3 flex-col">
+      <SearchInputText 
+        dropDownPlace={dropDownPlace} 
+        dropDownData={citizenOptions}
+        onInputChange={handleInputChange}
+      />
+      <SearchInputDate onDateChange={handleInputChange} />
+      <div className="flex justify-end">
+        <Link to={{
+          pathname: "/form",
+          search: `?${new URLSearchParams(searchData).toString()}`,
+          state: searchData
+        }}>
+          <button className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">
+            Search
+          </button>
+        </Link>
+      </div>
+    </div>
           </>
         );
       case "Activities":
