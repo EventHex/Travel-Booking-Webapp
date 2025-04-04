@@ -13,7 +13,7 @@ const index = () => {
 
   return (
     <div>
-        <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-1 sm:py-2 md:flex-row">
+        <div className="flex bg-[#BBC2FF29]  bg-red-100 border-[#A6BFFF82] border-1 rounded-2xl py-1 sm:py-2 md:flex-row">
                 <div className="w-full">
                   <div className="flex items-center p-2 sm:p-3">
                     <span
