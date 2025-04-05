@@ -21,7 +21,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const sidebarRef = useRef(null);
 
   const filterOptions = [
-    { id: "rofile", label: "Profile", icon: Visa },
+    { id: "Profile", label: "Profile", icon: Visa },
     { id: "Transactions", label: "Transactions", icon: Date },
     { id: "LoadWallet", label: "Load Wallet", icon: Location },
   ];
@@ -150,7 +150,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
             : 'slideIn 0.3s ease-out forwards'
         }}
       >
-        <div className="rounded-xl bg-gradient-to-b">
+        <div className="rounded-xl  bgred bg-gradient-to-b">
           {/* Filter options - Internal ID, Group Name, Traveller 1 */}
           {filterOptions.map((option) => (
             <div
@@ -236,20 +236,20 @@ const Index = ({ isNarrow, onOptionSelect }) => {
 
   // Normal/expanded sidebar with text and icons
   return (
-    <div className="w-full flex flex-col  gap-5 rounded-xl overflow-hidden">
-      <div className="rounded-xl bg-gradient-to-b">
+    <div className="w-full flex flex-col  rounded-xl overflow-hidden">
+      <div className="rounded-xl flex flex-col gap-4 bg-gradient-to-b">
         {/* Filter options - Internal ID, Group Name, Traveller 1 */}
         {filterOptions.map((option) => (
           <div
             key={option.id}
             onClick={() => handleOptionSelect(option.id)}
-            className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
+            className={`flex    cursor-pointer    items-center justify-between rounded-lg p-3 transition-colors ${
               selectedOption === option.id
                 ? "bg-white shadow-sm"
                 : "hover:bg-white/50"
             }`}
           >
-            <div className="flex items-center space-x-3">
+            <div className="flex    items-center   space-x-3">
               <span className="text-gray-600 font-medium text-sm">
                 {option.label}
               </span>
@@ -259,9 +259,9 @@ const Index = ({ isNarrow, onOptionSelect }) => {
         ))}
       </div>
       
-      <div className="rounded-xl bg-gradient-to-b">
+      <div className="rounded-xl flex flex-col gap-4 bg-gradient-to-b">
         {/* Blue links section */}
-        {renderBlueLink("passport", "passport")}
+        {renderBlueLink("Passport", "Passport")}
         {renderBlueLink("Traveller Photo", "traveller-photo")}
         
         {/* Review and Submit options */}

@@ -71,7 +71,7 @@ const Index = () => {
   // Render different content based on selected option
   const renderContent = () => {
     switch (selectedOption) {
-      case "profile":
+      case "Profile":
         return (
           <div className=" w-full">
             <div className="flex   flex-col   md:flex-row gap-4 w-full max-w-6xl   mb-10">
