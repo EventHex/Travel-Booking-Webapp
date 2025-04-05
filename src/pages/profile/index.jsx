@@ -573,8 +573,8 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="flex mt-10">
-              <div className="w-auto pr-3 mt-3 mb-10 md:w-[16%]">
+            <div className="flex overflow-x-hidden mt-10">
+              <div className="w-auto  mt-3 mb-10 md:w-[16%]">
                 <div
                   className={`${
                     isNarrowScreen
@@ -589,7 +589,7 @@ const Index = () => {
                   />
                 </div>
               </div>
-              <div className="w-full   md:w-[80%]   flex flex-col ">
+              <div className="w-[85%]   bg-green-400   sm:w-[90%] md:w-[80%]  p-2  flex flex-col ">
                 <div className="">
                   {/* Render content based on selected option */}
                   {renderContent()}
