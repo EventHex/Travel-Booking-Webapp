@@ -10,6 +10,7 @@ import { PhoneCall, AlertTriangle, Upload, Save } from "lucide-react";
 import { MainBackground } from "../../assets";
 import Input from "../../components/input";
 import { CustomSelect } from "../../components/dropdown";
+import FileComponent from "../../components/file";
 const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
@@ -122,12 +123,9 @@ const Index = () => {
             {/* ************form ********** */}
 
             <div className="w-full  mx-auto bg-white rounded-xl overflow-hidden shadow-sm">
-              <div className="relative">
-                {/* Background Gradient */}
-                <div className="absolute top-0 right-0 w-1/2 h-full  rounded-bl-full z-0"></div>
-
-                {/* Content Container */}
-                <div className="relative z-10 p-8">
+              <div className="  relative">
+       
+                <div className=" p-4">
                   <h1 className="text-3xl font-bold text-gray-900 mb-8">
                     Agency Information
                   </h1>
@@ -175,291 +173,43 @@ const Index = () => {
                   </div>
 
                   {/* GST Certificate */}
-                  <div className="mt-8 space-y-2">
-                    <label className="block text-sm font-medium text-gray-900">
-                      GST Certificate
-                    </label>
-                    <p className="text-sm text-gray-600">
-                      GST Input Credit will not be available if GST certificate
-                      is not uploaded
-                    </p>
-
-                    <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-8">
-                      <div className="flex flex-col items-center justify-center text-center">
-                        <p className="text-gray-500 text-lg">
-                          Drag and drop files to upload
-                        </p>
-                        <p className="text-gray-400 mt-2">or</p>
-                        <button className="mt-4 px-6 py-2 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                          Select file
-                        </button>
-                        <p className="text-gray-400 text-sm mt-4">
-                          Supports PDF.
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                          Max file size 5MB
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full max-w-4xl mx-auto p-6">
-                <div className="space-y-6">
-                  {/* Cancelled Cheque Section */}
-                  <div>
-                    <h2 className="text-lg font-medium text-gray-900 mb-4">
-                      Cancelled Cheque
-                    </h2>
-
-                    {/* Upload Box */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8">
-                      <div className="flex flex-col items-center justify-center text-center">
-                        <p className="text-gray-500">
-                          Drag and drop files to upload
-                        </p>
-                        <p className="text-gray-400 mt-2">or</p>
-                        <button className="mt-4 px-6 py-2 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                          Select file
-                        </button>
-                        <p className="text-gray-400 text-sm mt-4">
-                          Supports JPEG, JPG, PDF, PNG.
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                          Max file size 5MB
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Divider */}
-                  <div className="w-full border-t border-gray-200"></div>
-
-                  {/* Address Form */}
-                  <div className="space-y-6">
-                    {/* Address Line 1 */}
+                  <div className="w-full flex flex-col  border-b  border-gray-300 pb-10 gap-4 p-4">
                     <div>
-                      <label
-                        htmlFor="address-line-1"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Address Line 1
-                      </label>
-                      <input
-                        type="text"
-                        id="address-line-1"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={addressLine1}
-                        onChange={(e) => setAddressLine1(e.target.value)}
-                      />
+                        <FileComponent head={"GST Certificate"} />
                     </div>
-
-                    {/* Address Line 2 */}
                     <div>
-                      <label
-                        htmlFor="address-line-2"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Address Line 2
-                      </label>
-                      <input
-                        type="text"
-                        id="address-line-2"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={addressLine2}
-                        onChange={(e) => setAddressLine2(e.target.value)}
-                      />
-                    </div>
+                    <FileComponent head={"Cancelled Cheque"} />
 
-                    {/* City, State, Zip Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {/* City */}
-                      <div>
-                        <label
-                          htmlFor="city"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          City
-                        </label>
-                        <input
-                          type="text"
-                          id="city"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          value={city}
-                          onChange={(e) => setCity(e.target.value)}
-                        />
-                      </div>
-
-                      {/* State */}
-                      <div>
-                        <label
-                          htmlFor="state"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          State
-                        </label>
-                        <input
-                          type="text"
-                          id="state"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          value={state}
-                          onChange={(e) => setState(e.target.value)}
-                        />
-                      </div>
-
-                      {/* Zip Code */}
-                      <div>
-                        <label
-                          htmlFor="zip-code"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Zip Code
-                        </label>
-                        <input
-                          type="text"
-                          id="zip-code"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          value={zipCode}
-                          onChange={(e) => setZipCode(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Save Button */}
-                  <div className="flex justify-end mt-6">
-                    <button className="px-6 py-3 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center">
-                      <Save className="w-5 h-5 mr-2" />
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-full  mx-auto pt-5">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                {/* Heading */}
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">
-                  Aadhar details
-                </h1>
-
-                {/* Divider */}
-                <div className="w-full border-t border-gray-200 mb-8"></div>
-
-                {/* Form Fields */}
-                <div className="space-y-8">
-                  {/* Name and Aadhar Number Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Name Field */}
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="aadhar-name"
-                        className="block text-base text-gray-700"
-                      >
-                        Name as per Aadhar
-                      </label>
-                      <input
-                        type="text"
-                        id="aadhar-name"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-
-                    {/* Aadhar Number Field */}
-                    <div className="">
-                      <label
-                        htmlFor="aadhar-number"
-                        className="block text-base text-gray-700"
-                      >
-                        Aadhar number
-                      </label>
-                      <input
-                        type="text"
-                        id="aadhar-number"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={aadharNumber}
-                        onChange={(e) => setAadharNumber(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Address Field */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="address"
-                      className="block text-base text-gray-700"
-                    >
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-full  mx-auto mt-10">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                {/* Heading */}
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">
-                  Office Photo
-                </h1>
-
-                {/* Divider */}
-                <div className="w-full border-t border-gray-200 mb-8"></div>
-
-                {/* Upload Section */}
-                <div className="space-y-2">
-                  <label className="block text-base text-gray-700 mb-2">
-                    Office photo
-                  </label>
-
-                  {/* Drag and Drop Area */}
-                  <div
-                    className="border-2 border-dashed border-gray-300 rounded-lg p-8"
-                    onDrop={handleDrop}
-                    onDragOver={handleDragOver}
-                  >
-                    <div className="flex flex-col items-center justify-center text-center">
-                      <p className="text-gray-500">
-                        Drag and drop files to upload
-                      </p>
-                      <p className="text-gray-400 mt-2">or</p>
-
-                      {/* File Input Button */}
-                      <label className="mt-4 px-6 py-2 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer">
-                        <span>Select file</span>
-                        <input
-                          type="file"
-                          className="hidden"
-                          onChange={handleFileChange}
-                          accept=".jpeg,.jpg,.pdf,.png"
-                        />
-                      </label>
-
-                      {/* File Type Info */}
-                      <p className="text-gray-400 text-sm mt-4">
-                        Supports JPEG, JPG, PDF, PNG.
-                      </p>
-                      <p className="text-gray-400 text-sm">Max file size 5MB</p>
-
-                      {/* Show selected file if any */}
-                      {file && (
-                        <div className="mt-4 text-sm text-indigo-600">
-                          Selected file: {file.name}
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
               </div>
+            <div className="w-full p-4">
+<div><Input label="Address Line 1" placeholder={"Address Line 1"}/></div>
+<div><Input label="Address Line 2" placeholder={"Address Line 2"}/></div>
+
+
+<div className="flex gap-4 w-full ">
+  <div className="w-[33.3%] ">
+
+  <Input label="City" placeholder={"City"}/>
+  </div>
+  <div className="w-[33.3%] ">
+  <Input label="State" placeholder={"State"}/>
+  </div>
+  <div className="w-[33.3%] ">
+  <Input label="Zip Code" placeholder={"Zip Code"}/>
+  </div>
+</div>
+<div className="w-full flex justify-end p-4">
+  <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 rounded-full  text-[16px] font-[400] transition duration-200">
+    Save  
+  </button>
+</div>
             </div>
+            </div>
+        
+          
           </div>
         );
       case "Transactions":
