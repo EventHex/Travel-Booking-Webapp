@@ -15,7 +15,7 @@ const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedOption, setSelectedOption] = useState("profile"); // Default option
+  const [selectedOption, setSelectedOption] = useState("Profile"); // Default option
   const [country, setCountry] = useState("India");
   const [addressLine1, setAddressLine1] = useState(
     "LII-5350, CNN HOLIDAYS, KANNUR, Kannur, Kannur, Kerala, 670001"
@@ -78,7 +78,7 @@ const Index = () => {
     e.preventDefault();
   };
 
-  // Render different content based on selected option
+
   const renderContent = () => {
     switch (selectedOption) {
       case "Profile":
@@ -106,7 +106,7 @@ const Index = () => {
               </div>
 
               {/* Product Questions Card */}
-              <div className="bg-gray-100 rounded-xl  p-6 flex-1 shadow-sm">
+              <div className="  rounded-xl  p-6 flex-1 shadow-sm">
                 <div className="flex items-center    gap-2 mb-4">
                   <PhoneCall className="text-gray-700" size={20} />
                   <h2 className="font-medium text-md text-gray-800">
@@ -121,10 +121,9 @@ const Index = () => {
               </div>
             </div>
             {/* ************form ********** */}
-
-            <div className="w-full  mx-auto bg-white rounded-xl overflow-hidden shadow-sm">
+<div className="w-full flex flex-col gap-5" >
+            <div className="w-full  mx-auto rounded-xl overflow-hidden shadow-sm">
               <div className="  relative">
-       
                 <div className=" p-4">
                   <h1 className="text-3xl font-bold text-gray-900 mb-8">
                     Agency Information
@@ -175,41 +174,91 @@ const Index = () => {
                   {/* GST Certificate */}
                   <div className="w-full flex flex-col  border-b  border-gray-300 pb-10 gap-4 p-4">
                     <div>
-                        <FileComponent head={"GST Certificate"} />
+                      <FileComponent head={"GST Certificate"} />
                     </div>
                     <div>
-                    <FileComponent head={"Cancelled Cheque"} />
-
+                      <FileComponent head={"Cancelled Cheque"} />
                     </div>
                   </div>
                 </div>
               </div>
-            <div className="w-full p-4">
-<div><Input label="Address Line 1" placeholder={"Address Line 1"}/></div>
-<div><Input label="Address Line 2" placeholder={"Address Line 2"}/></div>
+              <div className="w-full p-4">
+                <div>
+                  <Input
+                    label="Address Line 1"
+                    placeholder={"Address Line 1"}
+                  />
+                </div>
+                <div>
+                  <Input
+                    label="Address Line 2"
+                    placeholder={"Address Line 2"}
+                  />
+                </div>
 
-
-<div className="flex gap-4 w-full ">
-  <div className="w-[33.3%] ">
-
-  <Input label="City" placeholder={"City"}/>
-  </div>
-  <div className="w-[33.3%] ">
-  <Input label="State" placeholder={"State"}/>
-  </div>
-  <div className="w-[33.3%] ">
-  <Input label="Zip Code" placeholder={"Zip Code"}/>
-  </div>
-</div>
-<div className="w-full flex justify-end p-4">
-  <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 rounded-full  text-[16px] font-[400] transition duration-200">
-    Save  
-  </button>
-</div>
+                <div className="flex gap-4 w-full ">
+                  <div className="w-[33.3%] ">
+                    <Input label="City" placeholder={"City"} />
+                  </div>
+                  <div className="w-[33.3%] ">
+                    <Input label="State" placeholder={"State"} />
+                  </div>
+                  <div className="w-[33.3%] ">
+                    <Input label="Zip Code" placeholder={"Zip Code"} />
+                  </div>
+                </div>
+                <div className="w-full flex justify-end p-4">
+                  <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 rounded-full  text-[16px] font-[400] transition duration-200">
+                    Save
+                  </button>
+                </div>
+              </div>
             </div>
+            <div className="w-full p-4  shadow-sm rounded-xl ">
+              <div className="md:py-7 py-4  w-full border-b border-gray-300">
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Aadhar details
+                </h1>
+              </div>
+
+              <div className="md:py-7 py-4 w-full flex-col flex gap-4">
+                <div className="md:flex-row flex-col flex gap-4 w-full">
+                  <div className="md:w-[50%] w-full">
+                    <Input
+                      label="Name as per Aadhar"
+                      placeholder={"Name as per Aadhar"}
+                    />
+                  </div>
+                  <div className="md:w-[50%] w-full">
+                    <Input
+                      label="Aadhar Number"
+                      placeholder={"Aadhar Number"}
+                    />
+                  </div>
+                </div>
+                <div className=" w-full">
+                  <Input
+                    label="Address"
+                    placeholder={
+                      "abc House,  PO,abc, Kannur, Kannur, Kerala, India"
+                    }
+                  />
+                </div>
+              </div>
             </div>
-        
-          
+            <div>
+            <div className="w-full  shadow-sm rounded-xl p-4">
+            <div className="md:py-7 py-4  w-full border-b border-gray-300">
+                <h1 className="text-3xl font-bold text-gray-900">
+                Office Photo
+                </h1>
+              </div>
+              <div>
+                <FileComponent head={"Office Photo"} />
+              </div>
+              </div>
+            </div>
+          </div>
           </div>
         );
       case "Transactions":
@@ -264,7 +313,6 @@ const Index = () => {
       }}
     >
       <Header />
-
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
           <div className="w-full  relative  flex-col flex">
@@ -295,7 +343,6 @@ const Index = () => {
                       : "sticky top-5 w-full"
                   } min-w-[50px] mb-16  pb-10 md:mb-0 transition-all duration-300`}
                 >
-                  {/* Pass the callback function to Sidebar */}
                   <Sidebar
                     isNarrow={isNarrowScreen}
                     onOptionSelect={handleOptionSelect}
@@ -304,7 +351,6 @@ const Index = () => {
               </div>
               <div className="w-[85%]     sm:w-[90%] md:w-[80%]  p-2  flex flex-col ">
                 <div className="">
-                  {/* Render content based on selected option */}
                   {renderContent()}
                 </div>
               </div>
