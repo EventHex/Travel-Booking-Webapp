@@ -8,7 +8,6 @@ import Password from "./password";
 import Loadwallet from "./LaodWallet";
 import { PhoneCall, AlertTriangle, Upload, Save } from "lucide-react";
 import { MainBackground } from "../../assets";
-
 const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
@@ -550,7 +549,6 @@ const Index = () => {
       backgroundPosition: "center",
       backgroundRepeat: "repeat", 
       width: "100%",
-
     }}
     >
       <Header />
