@@ -573,7 +573,7 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="flex overflow-x-hidden mt-10">
+            <div className="flex  justify-between overflow-x-hidden mt-10">
               <div className="w-auto  mt-3 mb-10 md:w-[16%]">
                 <div
                   className={`${
