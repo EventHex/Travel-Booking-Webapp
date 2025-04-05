@@ -8,6 +8,8 @@ import Password from "./password";
 import Loadwallet from "./LaodWallet";
 import { PhoneCall, AlertTriangle, Upload, Save } from "lucide-react";
 import { MainBackground } from "../../assets";
+import Input from "../../components/input";
+import { CustomSelect } from "../../components/dropdown";
 const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
@@ -26,6 +28,13 @@ const Index = () => {
   const [address, setAddress] = useState(
     "Keloth House, Cherumavilayi, Mavilayi PO, Mundalur, Kannur, Kannur, Kerala, India, Mundalur"
   );
+
+  const countryOptions = [
+    { value: "India", label: "India" },
+    { value: "USA", label: "USA" },
+    { value: "UK", label: "UK" },
+    { value: "Australia", label: "Australia" },
+  ];
 
   useEffect(() => {
     const handleResize = () => {
@@ -125,90 +134,43 @@ const Index = () => {
 
                   <div className="w-full border-t border-gray-200 mb-8"></div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Country */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        Country
-                      </label>
-                      <div className="relative">
-                        <select
-                          className="w-full p-3 border border-gray-300 rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  <div className="flex flex-col  gap-4">
+                    <div className="flex flex-col md:flex-row items-center w-[70%] gap-4">
+                      <div className="  md:w-[50%] w-full py-1">
+                        <CustomSelect
+                          options={countryOptions}
+                          name="country"
                           value={country}
                           onChange={(e) => setCountry(e.target.value)}
-                        >
-                          <option value="India">India</option>
-                          <option value="USA">USA</option>
-                          <option value="UK">UK</option>
-                        </select>
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                          <svg
-                            className="h-5 w-5 text-gray-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
+                          label="Country"
+                          placeholder={"Select Country"}
+                        />
+                      </div>
+                      <div className="  md:w-[50%] w-full py-1">
+                        <Input
+                          className=""
+                          label="Agency Name"
+                          placeholder={"Enter Agency Name"}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex w-[70%]  gap-4">
+                      <div className="w-[100%]">
+                        <div className="  md:w-[50%] w-full py-1">
+                          <Input
+                            label="Agency Name"
+                            placeholder={"Enter Agency Name"}
+                          />
                         </div>
                       </div>
                     </div>
-
-                    {/* Account Type */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        Account Type
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="b2b"
-                        defaultValue="b2b"
-                      />
-                    </div>
-
-                    {/* Contact Number */}
-                    <div className="space-y-2 md:col-span-1">
-                      <label className="block text-sm text-gray-500">
-                        Contact Number
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="+919072951259"
-                        defaultValue="+919072951259"
-                      />
-                    </div>
-
-                    <div className="md:col-span-1"></div>
-
-                    {/* GST Number */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        GST Number
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="32AATFC0952A1ZV"
-                        defaultValue="32AATFC0952A1ZV"
-                      />
-                    </div>
-
-                    {/* PAN Card */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        PAN Card
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder=""
-                      />
+                    <div className="w-full  flex  md:flex-row flex-col gap-4 ">
+                      <div className="  md:w-[50%] w-full py-1">
+                        <Input label="GST Number" placeholder={"GST Number"} />
+                      </div>
+                      <div className="  md:w-[50%] w-full py-1">
+                        <Input label="PAN Number" placeholder={"PAN Number"} />
+                      </div>
                     </div>
                   </div>
 
@@ -543,13 +505,13 @@ const Index = () => {
 
   return (
     <div
-    style={{
-      backgroundImage:` url(${MainBackground})`,
-      backgroundSize: "100%", 
-      backgroundPosition: "center",
-      backgroundRepeat: "repeat", 
-      width: "100%",
-    }}
+      style={{
+        backgroundImage: ` url(${MainBackground})`,
+        backgroundSize: "100%",
+        backgroundPosition: "center",
+        backgroundRepeat: "repeat",
+        width: "100%",
+      }}
     >
       <Header />
 
