@@ -11,7 +11,7 @@ import {
   FlipHorizontal
 } from "lucide-react";
 import Input from "../../../components/input";
-import CustomSelect from "../../../components/dropdown";
+import {CustomSelect} from "../../../components/dropdown";
 
 export const FrontPassportForm = () => {
   const Options = [
@@ -448,12 +448,12 @@ export const FrontPassportForm = () => {
   };
 
   return (
-    <div className="w-full mx-auto  px-4  md:px-8">
-      <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-semibold text-blue-600 mb-2">
+    <div className="w-full mx-auto  px-4  md:px-8 pb-4">
+      <div className="w-[80%]">
+        <h1 className="text-xl md:text-2xl font-semibold text-blue-600 border-b border-gray-200 pb-4">
           Traveler 1
         </h1>
-        <h2 className="text-lg md:text-xl font-medium text-gray-900 mb-4">
+        <h2 className="text-lg md:text-xl font-medium text-gray-900 py-4">
           Upload Traveler's Front Passport Page
         </h2>
         <p className="text-xs md:text-sm text-gray-600">
@@ -463,12 +463,12 @@ export const FrontPassportForm = () => {
           submitting to ensure there are no mistakes.
         </p>
       </div>
-      <div>
+      <div className="">
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex flex-col lg:flex-row w-full gap-x-4 lg:gap-x-8 gap-y-6">
+          <div className="flex flex-col w-[100%] lg:flex-row justify-center gap-x-4 lg:gap-x-8 gap-y-6 py-4">
             <div className="w-full lg:w-[50%]">
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="">
+                <label className="block text-[16px] py-1 font-medium text-gray-700 mb-1">
                   Passport Front Page Image
                   <span className="text-red-500">*</span>
                 </label>
@@ -479,7 +479,7 @@ export const FrontPassportForm = () => {
                           type="file"
                           className="hidden"
                           id="passport-upload"
-                          accept="image/*"
+                          accept="image/*,application/pdf"
                           onChange={handleFileChange}
                         />
                         <label
@@ -487,15 +487,15 @@ export const FrontPassportForm = () => {
                           className="cursor-pointer flex flex-col items-center"
                         >
                           <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
-                          <span className="text-xs md:text-sm text-gray-600">
+                          <span className="text-xs md:text-[14px] text-gray-600">
                             Choose a file or drag & drop it here
                           </span>
-                          <span className="text-xs text-gray-400 mt-1">
+                          <span className="text-[12px] text-gray-400 mt-1">
                             JPEG, PNG, PDF and NPF formats, up to 50 MB
                           </span>
                           <button
                             type="button"
-                            className="mt-3 px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-md text-xs md:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            className="mt-3 px-3 py-1 md:px-4 md:py-2 bg-white border border-[#375DFB] rounded-md text-[14px] md:text-sm font-medium text-[#375DFB] hover:bg-gray-50"
                           >
                             Browse File
                           </button>
@@ -582,7 +582,7 @@ export const FrontPassportForm = () => {
                   />
                 </div> */}
                 <div className="  ">
-                    <label className="block text-[12px] font-medium text-gray-600 mb-1 ">
+                    <label className="block text-[16px] font-[400] text-gray-600 mb-1 ">
                       Date of Birth<span className="text-red-500">*</span>
                     </label>
                     <input
@@ -615,7 +615,7 @@ export const FrontPassportForm = () => {
                 </div>
 
                 <div>
-                  <label className="block text-[12px] font-medium text-gray-700 mb-1">
+                  <label className="block text-[16px] font-[400] text-gray-700 mb-1">
                     Date of Issue<span className="text-red-500">*</span>
                   </label>
                   <input
@@ -623,12 +623,12 @@ export const FrontPassportForm = () => {
                     name="dateOfIssue"
                     value={formData.dateOfIssue}
                     onChange={handleInputChange}
-                    className="w-full text-[12px] px-3 text-gray-400 bg-transparent  text py-[11px] border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full text-[12px] px-3 text-gray-400 bg-transparent py-[11px] border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-700 mb-1">
+                  <label className="block text-[16px] font-[400] text-gray-700 mb-1">
                     Date of Expiry<span className="text-red-500">*</span>
                   </label>
                   <input
