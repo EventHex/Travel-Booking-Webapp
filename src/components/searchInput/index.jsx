@@ -188,22 +188,16 @@ const SearchInputDate = ({
   initialTravelDate = "",
   initialReturnDate = ""
 }) => {
-  // Either use data object values or the specific props
-  // console.log(data.travelDate,' traveldata');
-  // console.log(data.returnDate,' data');
+
   
   const travelDateValue = initialTravelDate || (data && data.travelDate) || "";
   const returnDateValue = initialReturnDate || (data && data.returnDate) || "";
-  // console.log(travelDateValue,'start');
-  // console.log(returnDateValue,'End');
+
   const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
   const travelDateInputRef = useRef(null);
   const returnDateInputRef = useRef(null);
-
   const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
-  
-  // Set initial values when component mounts or props change
-  useEffect(() => {
+    useEffect(() => {
     if (travelDateInputRef.current) {
       travelDateInputRef.current.value = travelDateValue;
     }
