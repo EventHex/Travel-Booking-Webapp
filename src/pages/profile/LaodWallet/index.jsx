@@ -328,7 +328,7 @@ const [formData, setFormData] = useState({
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+    <div className="max-w-4xl mx-auto p-3 bg-white rounded-xl shadow-sm border border-gray-100">
       <h1 className="text-2xl font-bold text-gray-800 mb-4">Load Wallet</h1>
       
       <p className="text-gray-700 mb-6">
@@ -339,7 +339,7 @@ const [formData, setFormData] = useState({
       
       <div className="border-t border-gray-200 pt-6">
         {/* Tabs */}
-        <div className="flex items-center justify-center mb-2 text-gray-600">
+        <div className="flex items-center  flex-wrap justify-center mb-2   text-gray-600">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -413,7 +413,7 @@ const CreditCardTab = () => {
 // Bank Transfer Tab Component
 const BankTransferTab = ({ accounts, handleCopy, copiedText }) => {
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-2">
       <div className="text-center mb-8">
         <p className="text-gray-800 font-medium">
           Only add money to the details mentioned below and do not send money to any other account. Atlys will not be 

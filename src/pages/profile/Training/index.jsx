@@ -54,11 +54,6 @@ const VideoTutorials = () => {
       <div className="px-8 py-5 border-b border-gray-200">
         <h2 className="text-2xl font-bold text-gray-900">Video Tutorials</h2>
       </div>
-
-      {/* Content */}
-   
-  
-
   <div className="flex justify-center flex-col md:flex-row mb-15 flex-wrap gap-4">
     {tutorials.map((tutorial) => (
       <div key={tutorial.id} className="flex flex-col">

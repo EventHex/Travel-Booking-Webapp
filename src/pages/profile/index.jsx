@@ -544,11 +544,14 @@ const Index = () => {
 
   return (
     <div
-      style={{
-        backgroundImage: `url(${MainBackground})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+    style={{
+      backgroundImage:` url(${MainBackground})`,
+      backgroundSize: "100%", 
+      backgroundPosition: "center",
+      backgroundRepeat: "repeat", 
+      width: "100%",
+
+    }}
     >
       <Header />
 
