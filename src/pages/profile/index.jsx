@@ -589,7 +589,7 @@ const Index = () => {
                   />
                 </div>
               </div>
-              <div className="w-[85%]   bg-green-400   sm:w-[90%] md:w-[80%]  p-2  flex flex-col ">
+              <div className="w-[85%]     sm:w-[90%] md:w-[80%]  p-2  flex flex-col ">
                 <div className="">
                   {/* Render content based on selected option */}
                   {renderContent()}
