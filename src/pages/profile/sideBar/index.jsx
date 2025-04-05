@@ -21,7 +21,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const sidebarRef = useRef(null);
 
   const filterOptions = [
-    { id: "profile", label: "profile", icon: Visa },
+    { id: "rofile", label: "Profile", icon: Visa },
     { id: "Transactions", label: "Transactions", icon: Date },
     { id: "LoadWallet", label: "Load Wallet", icon: Location },
   ];
@@ -29,7 +29,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const filterOption = [
     { id: "Overstay", label: "Overstay", icon: Acitivty },
     { id: "Training", label: "Training", icon: Inurance },
-    { id: "changepassword", label: "change password", icon: Inurance },
+    { id: "changepassword", label: "Change password", icon: Inurance },
     { id: "Signout", label: "Sign Out", icon: Inurance },
   ];
 
@@ -156,7 +156,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
             <div
               key={option.id}
               onClick={() => handleOptionSelect(option.id)}
-              className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
+              className={`flex cursor-pointer  gap-4 items-center justify-between rounded-lg p-3 transition-colors ${
                 selectedOption === option.id
                   ? "bg-white shadow-sm"
                   : "hover:bg-white/50"
@@ -206,9 +206,9 @@ const Index = ({ isNarrow, onOptionSelect }) => {
     return (
       <div 
         onClick={(e) => sidebarOpen(e)}
-        className="w-full rounded-xl overflow-hidden cursor-pointer"
+        className="w-full rounded-xl   overflow-hidden cursor-pointer"
       >
-        <div className="rounded-xl bg-gradient-to-b">
+        <div className="rounded-xl  bg-gradient-to-b">
           <div className="space-y-1">
            
           </div>
@@ -216,7 +216,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
             <div
               key={option.id}
               onClick={() => handleOptionSelect(option.id)}
-              className={`flex cursor-pointer items-center justify-center rounded-lg p-3 transition-colors ${
+              className={`flex cursor-pointer items-center justify-center  rounded-lg p-3 transition-colors ${
                 selectedOption === option.id
                   ? "bg-white shadow-sm"
                   : "hover:bg-white/50"
@@ -236,7 +236,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
 
   // Normal/expanded sidebar with text and icons
   return (
-    <div className="w-full flex flex-col gap-4 rounded-xl overflow-hidden">
+    <div className="w-full flex flex-col  gap-5 rounded-xl overflow-hidden">
       <div className="rounded-xl bg-gradient-to-b">
         {/* Filter options - Internal ID, Group Name, Traveller 1 */}
         {filterOptions.map((option) => (

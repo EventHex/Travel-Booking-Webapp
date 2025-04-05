@@ -556,7 +556,7 @@ const Index = () => {
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
           <div className="w-full  relative  flex-col flex">
-            <div className="flex items-center    pl-10 py-2 space-x-4">
+            <div className="flex items-center   pt-10 space-x-4">
               <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
                 <svg
                   className="w-8 h-8 text-gray-500"

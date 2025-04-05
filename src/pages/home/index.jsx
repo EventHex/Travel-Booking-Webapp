@@ -24,7 +24,6 @@ import { ChevronRight, MapPin } from "lucide-react";
 import Header from "../../components/header";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
 
-
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("Visas");
   const tabs = [
@@ -371,60 +370,60 @@ const HeroSection = () => {
           <>
             <div className="flex gap-3  flex-col ">
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
-            <div className="w-full relative">
-        <div className="flex items-center p-3">
-          <span
-            className={`mr-2 cursor-pointer ${
-              goingToIsFocused ? "opacity-100" : "opacity-20"
-            }`}
-            onClick={handleGoingToIconClick}
-          >
-            <img src={Flight} alt="Flight icon" />
-          </span>
-          <input
-            style={{ border: "none" }}
-            ref={goingToInputRef}
-            type="text"
-            value={''}
-            placeholder="Going to"
-            className="w-full bg-transparent outline-none"
-            onFocus={handleGoingToFocus}
-            onBlur={handleGoingToBlur}
-          
-          />
-        </div>
+                <div className="w-full relative">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        goingToIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleGoingToIconClick}
+                    >
+                      <img src={Flight} alt="Flight icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={goingToInputRef}
+                      type="text"
+                      value={""}
+                      placeholder="Going to"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={handleGoingToFocus}
+                      onBlur={handleGoingToBlur}
+                    />
+                  </div>
 
-        {showGoingToDropdown && (
-          <div
-            ref={goingToDropdownRef}
-            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
-          >
-            {dropDownPlace.map((option) => (
-              <div
-                key={option.id}
-                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() =>
-                  handleOptionSelect(option, goingToInputRef, false)
-                }
-              >
-                <div className="flex">
-                  <p className="flex items-center text-[14px] gap-2">
-                    {option.icon}
-                    <span>{option.title}</span>
-                  </p>
+                  {showGoingToDropdown && (
+                    <div
+                      ref={goingToDropdownRef}
+                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
+                      {dropDownPlace.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                          onClick={() =>
+                            handleOptionSelect(option, goingToInputRef, false)
+                          }
+                        >
+                          <div className="flex">
+                            <p className="flex items-center text-[14px] gap-2">
+                              {option.icon}
+                              <span>{option.title}</span>
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-              </div>
-
-              {/* <SearchInputText
-                dropDownPlace={dropDownPlace}
-                dropDownData={citizenOptions}
-              /> */}
               <SearchInputDate />
+              <div>
+
+                <button>
+                  <img src="" alt="" />  <p>1 Traveler</p>
+                </button>
+              </div>
             </div>
           </>
         );

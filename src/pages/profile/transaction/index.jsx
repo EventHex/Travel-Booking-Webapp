@@ -72,9 +72,9 @@ const AtlysWallet = () => {
       <div className="w-full  overflow-hidden">
         <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
           <div className="inline-block min-w-full">
-            <table className="min-w-full table-fixed" style={{ width: '800px' }}>
+            <table className="min-w-full " style={{ width: '800px' }}>
               {/* Fixed Header */}
-              <thead className="sticky top-0 bg-indigo-800 text-white">
+              <thead className=" bg-indigo-800 text-white">
                 <tr>
                   <th className="p-4 text-left font-medium w-1/6">DATE/TIME</th>
                   <th className="p-4 text-left font-medium w-1/6">DESCRIPTION</th>
