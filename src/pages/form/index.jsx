@@ -608,8 +608,6 @@ const TravelVisaBooking = () => {
               >
                 <SideBar isNarrow={isNarrowScreen} />
               </div>
-
-              {/* <Sidebar /> */}
             </div>
             <div className="w-full md:w-[70%] border-l border-[#bbbdc2] flex flex-col justify-center">
             <div className=" md:p-5">

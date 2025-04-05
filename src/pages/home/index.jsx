@@ -23,6 +23,8 @@ import { ChevronRight, MapPin } from "lucide-react";
 
 import Header from "../../components/header";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
+
+
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("Visas");
   const tabs = [
@@ -100,7 +102,9 @@ const HeroSection = () => {
     const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
     const fromDropdownRef = useRef(null);
     const goingToDropdownRef = useRef(null);
-
+    const [searchQuery, setSearchQuery] = useState("");
+    const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+    const searchDropdownRef = useRef(null);
     const handleFromInputFocus = () => {
       setCitizenIsFocused(true);
       setShowFromDropdown(true);
@@ -222,14 +226,71 @@ const HeroSection = () => {
     const handleSearchClick = () => {
       // Log the search data to console
       console.log("Search Data:", searchData);
-
-      // You can then navigate or perform other actions
-      // The Link component will handle navigation, but this ensures data is logged
     };
-    // Import would be handled in your actual project
-    // This is just a placeholder for the component demonstration
-    const User = "user-icon-placeholder";
 
+    const User = "user-icon-placeholder";
+    const handleSearchOptionSelect = (option) => {
+      setSearchQuery(option.title);
+      setShowSearchDropdown(false);
+      // Add any additional actions you want to perform when an option is selected
+    };
+
+    const dropDownData = [
+      {
+        image: Placeholder,
+        subtitle: "united arab emirates",
+        title: "dubai",
+        id: 1,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Chhatrapati Shivaji Maharaj International Airport",
+        title: "mumbai",
+        id: 2,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Cochin International Airport",
+        title: "kochin",
+        id: 3,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+    ];
     switch (activeTab) {
       case "Visas":
         return (
@@ -270,17 +331,99 @@ const HeroSection = () => {
               type="text"
               placeholder={`Search for ${activeTab} (e.g. Burj Khalifa, Universal Studio)`}
               className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white border border-[#A6BFFF82] border-solid rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm sm:text-base text-gray-600 placeholder-gray-400 transition-all duration-300 delay-150 hover:border-blue-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setShowSearchDropdown(true)}
+              onBlur={() => setShowSearchDropdown(false)}
             />
+
+            {showSearchDropdown && (
+              <div
+                ref={searchDropdownRef}
+                className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+              >
+                {dropDownData.map((option) => (
+                  <div
+                    key={option.id}
+                    className="flex gap-5  px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleSearchOptionSelect(option)}
+                  >
+                    <div className="flex">
+                      <img className="w-[70px] " src={option.image} alt="" />
+                    </div>
+                    <div className="flex  w-full ">
+                      <p className="flex flex-col text-[16px] gap-2">
+                        <span>{option.title}</span>
+                        <span className="text-[gray] text-[14px]">
+                          {option.subtitle}
+                        </span>
+                      </p>
+                    </div>
+                    <div></div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         );
       case "Insurance":
         return (
           <>
             <div className="flex gap-3  flex-col ">
-              <SearchInputText
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
+            <div className="w-full relative">
+        <div className="flex items-center p-3">
+          <span
+            className={`mr-2 cursor-pointer ${
+              goingToIsFocused ? "opacity-100" : "opacity-20"
+            }`}
+            onClick={handleGoingToIconClick}
+          >
+            <img src={Flight} alt="Flight icon" />
+          </span>
+          <input
+            style={{ border: "none" }}
+            ref={goingToInputRef}
+            type="text"
+            value={''}
+            placeholder="Going to"
+            className="w-full bg-transparent outline-none"
+            onFocus={handleGoingToFocus}
+            onBlur={handleGoingToBlur}
+          
+          />
+        </div>
+
+        {showGoingToDropdown && (
+          <div
+            ref={goingToDropdownRef}
+            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+          >
+            {dropDownPlace.map((option) => (
+              <div
+                key={option.id}
+                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                onClick={() =>
+                  handleOptionSelect(option, goingToInputRef, false)
+                }
+              >
+                <div className="flex">
+                  <p className="flex items-center text-[14px] gap-2">
+                    {option.icon}
+                    <span>{option.title}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+              </div>
+
+              {/* <SearchInputText
                 dropDownPlace={dropDownPlace}
                 dropDownData={citizenOptions}
-              />
+              /> */}
               <SearchInputDate />
             </div>
           </>

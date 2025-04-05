@@ -43,7 +43,7 @@ const TravellerMonitoringComponent = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="mb-4 sm:mb-6 w-full">
+      <div className="mb-4 p-2 sm:mb-6 w-full">
         <input
           type="text"
           placeholder="Search names..."
