@@ -237,7 +237,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   // Normal/expanded sidebar with text and icons
   return (
     <div className="w-full flex flex-col  rounded-xl overflow-hidden">
-      <div className="rounded-xl flex flex-col gap-4 bg-gradient-to-b">
+      <div className="rounded-xl flex flex-col gap-2 bg-gradient-to-b">
         {/* Filter options - Internal ID, Group Name, Traveller 1 */}
         {filterOptions.map((option) => (
           <div
@@ -259,7 +259,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
         ))}
       </div>
       
-      <div className="rounded-xl flex flex-col gap-4 bg-gradient-to-b">
+      <div className="rounded-xl flex flex-col gap-2 bg-gradient-to-b">
         {/* Blue links section */}
         {renderBlueLink("Passport", "Passport")}
         {renderBlueLink("Traveller Photo", "traveller-photo")}
