@@ -5,6 +5,7 @@ import {BackPassportForm} from "./passportBackForm";
 import {SearchInputText,SearchInputDate} from "../../components/searchInput";
 import File from "../../components/file";
 import { useSearchParams } from 'react-router-dom';
+import {SingleSelect} from "../../components/dropdown"
 
 import {
   Flight,
@@ -26,7 +27,7 @@ import {
   FlipHorizontal2
 } from "lucide-react";
 import Input from "../../components/input";
-import CustomSelect from "../../components/dropdown";
+import {CustomSelect} from "../../components/dropdown";
 import { CustomDatePicker, FullCalendar } from "../../components/calender";
 import SideBar from "./sideBar";
 const TravelVisaBooking = () => {
@@ -245,18 +246,19 @@ const TravelVisaBooking = () => {
       { value: 3, label: "docter" },
     ];
     return (
-      <div className="mb-10">
+      <div className="">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <h1 className="text-lg sm:text-xl font-medium">
-            Upload Traveler Photo
-          </h1>
+         
 
           {/* Main upload section */}
-          <div className="mb-6 sm:mb-8">
-            <div className="flex flex-col md:flex-row gap-6 items-center">
+          <div className="w-full flex flex-col md:flex-row gap-6 mb-4">
+            <div className="  w-full md:w-[50%]">
+            <h1 className="text-[24px] sm:text-xl font-[600] py-4">
+            Upload Traveler Photo
+          </h1>
               {/* Left side - Text content */}
-              <div className="w-full md:flex-1">
+              <div className=" md:flex-1">
                 <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                   Vietnam requires a scan of the traveler's passport. Upload a
                   clear passport image and your details will be filled
@@ -267,29 +269,36 @@ const TravelVisaBooking = () => {
                   rejected if these guidelines are not followed.
                 </p>
               </div>
-<div className=" w-full  md:w-[50%]">
+            </div>
+                <div className=" md:w-[50%]  w-full py-2">
                   <File head={"Travel Photo"} />
                 </div>
-              
-            </div>
           </div>
 
           {/* Additional Questions Section */}
-          <div>
-            <h2 className="text-lg sm:text-xl text-blue-600 mb-4 sm:mb-6 border-b py-4 border-gray-300">
+          <div className="">
+            <h2 className="text-[30px] text-[#375DFB] font-[600] border-b py-4 border-[#868C98] w-full md:w-[80%]">
               Answer Additional Required Questions
             </h2>
 
-            <div className="space-y-3 w-full  md:w-[60%] sm:space-y-4">
-              <h3 className="text-sm sm:text-base font-medium">
+            <div className=" w-full md:w-[60%]">
+              <h3 className="text-[24px] text-[#0A0D14]  font-[600] py-3">
                 What is the traveler's occupation (optional)?
               </h3>
-              <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-4">
+              <p className="text-[14px] text-gray-600">
                 This is an optional occupation field. Most people use the
                 default - Service. Occupation does not influence the decision of
                 the visa.
               </p>
-              <CustomSelect options={Occupations} label="" />
+              <div className="py-4">
+              <SingleSelect 
+                labelClass={'12px'}
+                  className={"py-[11px]"}
+                  placeholder={"Select Occupation"}
+                  label=""
+                />
+                
+              </div>
             </div>
           </div>
         </div>
@@ -576,8 +585,8 @@ const TravelVisaBooking = () => {
       >
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
-          <div className="flex gap-5 flex-col  justify-between md:flex-row p-5 w-full">
-            <div className="flex gap-3">
+          <div className="flex gap-5 flex-col flex-wrap  justify-between md:flex-row p-5 w-full">
+            <div className="flex   md:flex-row flex-col gap-3">
 
          <SearchInputText    data={{ destination, goingTo  }}  />
          <SearchInputDate   data={{  travelDate, returnDate }} />

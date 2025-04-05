@@ -3,7 +3,7 @@ import {
     Upload,
   } from "lucide-react";
   import Input from "../../../components/input";  
-  import CustomSelect from "../../../components/dropdown";
+  import {CustomSelect} from "../../../components/dropdown";
   import File from "../../../components/file";
  
  export const BackPassportForm = () => {
@@ -15,13 +15,13 @@ import {
     }
   };
     return (
-      <div className="border-b border-t md:my-3 my-1 py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8">
+      <div className=" border-b border-t py-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-6 md:mb-8">
+          <div className="w-[80%]">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
               Upload Traveler's Back Passport Page
             </h1>
-            <p className="mt-2 text-xs sm:text-sm text-gray-600">
+            <p className=" text-xs sm:text-sm text-gray-600 py-4">
               Vietnam requires a scan of the traveler's passport. Upload a clear
               passport image and your details will be filled automatically. AI
               has built its own OCR which is 99.9% accurate. However, it is
@@ -34,7 +34,7 @@ import {
           <div className=" rounded-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {/* File Upload Column */}
-              <div className=" sm:p-6">
+              <div className="">
                 <div className="w-[100%]">
                   <File head={"Passport Back Page Image"} />
                 </div>
@@ -74,7 +74,7 @@ import {
               </div>
 
               {/* Form Column */}
-              <div className="p-4 sm:p-6">
+              <div className="">
                 <div className="space-y-4 sm:space-y-6">
                   <div>
                     <Input
