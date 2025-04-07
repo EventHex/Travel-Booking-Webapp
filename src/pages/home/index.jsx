@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Calander from "../../ui/calander";
-import { ChevronDown,Users } from "lucide-react";
+import { ChevronDown, Users } from "lucide-react";
 
 import {
   Men,
@@ -15,10 +15,8 @@ import {
   Home,
   CalenderDown,
   CalenderUp,
-
   Placeholder,
   UserAdd,
-
 } from "../../assets";
 import { Link } from "react-router-dom";
 import { ChevronRight, MapPin } from "lucide-react";
@@ -420,24 +418,24 @@ const HeroSection = () => {
                 </div>
               </div>
               <SearchInputDate />
-              <div className="  flex justify-between">
-                <button className=" gap-2  shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-blue-600 duration-500 delay-300 hover:text-white flex py-2 ">
+              <div className="  flex   justify-between">
+                <button className=" gap-2  shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-[#211A77] duration-500 delay-300 hover:text-white flex py-2 ">
                   <p>1 Travelers</p>
                 </button>
-               <Link
-                to={{
-                  pathname: "/apply",
-                  search: `?${new URLSearchParams(searchData).toString()}`,
-                  state: searchData,
-                }}
-              >
-                <button
-                  className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
-                  onClick={handleSearchClick}
+                <Link
+                  to={{
+                    pathname: "/apply",
+                    search: `?${new URLSearchParams(searchData).toString()}`,
+                    state: searchData,
+                  }}
                 >
-                  veiw plans
-                </button>
-              </Link>
+                  <button
+                    className="text-white py-2 px-5 rounded-xl bg-[#211A77] border text-[16px]"
+                    onClick={handleSearchClick}
+                  >
+                    veiw plans
+                  </button>
+                </Link>
               </div>
             </div>
           </>
@@ -445,36 +443,43 @@ const HeroSection = () => {
       case "Flights":
         return (
           <>
-          <div className="flex gap-3 flex-col">
-            <SearchInputText
-              dropDownPlace={dropDownPlace}
-              dropDownData={citizenOptions}
-              onInputChange={handleInputChange}
-            />
-            <SearchInputDate onDateChange={handleInputChange} />
-            <div className="flex   justify-between">
-            <div className=" ">
-                <button className=" gap-2   shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-blue-600 duration-500 delay-300 hover:text-white flex py-2 ">
-                 <p className="flex justify-center items-center"> <span> <Users size={16} /></span> 1 Travelers</p>
-                </button>
-              </div>
-              <Link
-                to={{
-                  pathname: "/apply",
-                  search: `?${new URLSearchParams(searchData).toString()}`,
-                  state: searchData,
-                }}
-              >
-                <button
-                  className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
-                  onClick={handleSearchClick}
+            <div className="flex gap-3 flex-col">
+              <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+                onInputChange={handleInputChange}
+              />
+              <SearchInputDate onDateChange={handleInputChange} />
+              <div className="flex   justify-between">
+                <div className=" ">
+                  <button className=" gap-2   shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-[#211A77] duration-500 delay-300 hover:text-white flex py-2 ">
+                    <p className="flex justify-center items-center">
+                      {" "}
+                      <span>
+                        {" "}
+                        <Users size={16} />
+                      </span>{" "}
+                      1 Travelers
+                    </p>
+                  </button>
+                </div>
+                <Link
+                  to={{
+                    pathname: "/apply",
+                    search: `?${new URLSearchParams(searchData).toString()}`,
+                    state: searchData,
+                  }}
                 >
-                  Search
-                </button>
-              </Link>
+                  <button
+                    className="text-white py-2 px-5 rounded-xl bg-[#211A77] border text-[16px]"
+                    onClick={handleSearchClick}
+                  >
+                    Search
+                  </button>
+                </Link>
+              </div>
             </div>
-          </div>
-        </>
+          </>
         );
       default:
         return null;
@@ -493,7 +498,6 @@ const HeroSection = () => {
       <div className="w-full">
         <Header />
         {/* *******************sectionhero ****************** */}
-
         <div className="flex justify-center w-full">
           <div className="w-full max-w-[1300px] px-4 sm:px-5 flex flex-col">
             <div className="w-full flex flex-col md:flex-row">
