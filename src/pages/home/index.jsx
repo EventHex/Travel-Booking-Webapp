@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Calander from "../../ui/calander";
-import { ChevronDown, Users } from "lucide-react";
+import { ChevronDown, Users, Minus, Plus, X } from "lucide-react";
 
 import {
   Men,
@@ -290,6 +290,26 @@ const HeroSection = () => {
         id: 4,
       },
     ];
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [travellers, setTravellers] = useState(1);
+  
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+  
+    const decreaseTravellers = () => {
+      if (travellers > 1) {
+        setTravellers(travellers - 1);
+      }
+    };
+  
+    const increaseTravellers = () => {
+      setTravellers(travellers + 1);
+    };
+  
+    const handleDone1 = () => {
+      console.log(`Selected ${travellers} travellers`);
+      closeModal();
+    };
     switch (activeTab) {
       case "Visas":
         return (
@@ -419,9 +439,57 @@ const HeroSection = () => {
               </div>
               <SearchInputDate />
               <div className="  flex   justify-between">
-                <button className=" gap-2  shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-[#211A77] duration-500 delay-300 hover:text-white flex py-2 ">
-                  <p>1 Travelers</p>
+              <button 
+        className="gap-2 shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-[#211A77] duration-500 delay-300 hover:text-white flex py-2"
+        onClick={openModal}
+      >
+        <p>{travellers} {travellers === 1 ? 'Traveler' : 'Travelers'}</p>
+      </button>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-full max-w-md mx-4 overflow-hidden shadow-xl">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">Traveller Details</h2>
+                <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
+                  <X size={24} />
                 </button>
+              </div>
+
+              <div className="mb-6">
+                <div className="border border-gray-200 rounded-lg p-4 flex justify-between items-center">
+                  <span className="text-gray-700">No. of travellers</span>
+                  <div className="flex items-center">
+                    <button 
+                      onClick={decreaseTravellers} 
+                      className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100"
+                      disabled={travellers <= 1}
+                    >
+                      <Minus size={20} />
+                    </button>
+                    <span className="w-10 mx-2 text-center">{travellers}</span>
+                    <button 
+                      onClick={increaseTravellers} 
+                      className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100"
+                    >
+                      <Plus size={20} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                onClick={handleDone1} 
+                className="w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
                 <Link
                   to={{
                     pathname: "/apply",
