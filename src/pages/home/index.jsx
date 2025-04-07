@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Calander from "../../ui/calander";
 import { ChevronDown, Users, Minus, Plus, X } from "lucide-react";
-
+import { CustomSelect, SingleSelect } from "../../components/dropdown";
 import {
   Men,
   MainBackground,
@@ -309,6 +309,7 @@ const HeroSection = () => {
 
     const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
     const passengerDropdownRef = useRef(null);
+    const [tripType, setTripType] = useState("oneWay");
 
     const passengertoggle = () => {
       console.log("passengertoggle");
@@ -349,6 +350,10 @@ const HeroSection = () => {
       if (type === "infants" && infants > 0) setInfants((prev) => prev - 1);
     };
 
+    const options = [
+      { value: "oneWay", label: "One Way" },
+      { value: "roundTrip", label: "Round Trip" },
+    ];
     switch (activeTab) {
       case "Visas":
         return (
@@ -562,6 +567,60 @@ const HeroSection = () => {
         return (
           <>
             <div className="flex gap-3 flex-col">
+              <div>
+                <div className="flex  gap-5  items-center ">
+                <div className="flex items-center space-x-3">
+                  {/* One Way Option */}
+                  <div className="flex items-center">
+                    <button
+                      className="flex items-center focus:outline-none"
+                      onClick={() => setTripType("oneWay")}
+                    >
+                      <div
+                        className={`w-5 h-5 rounded-full border   flex items-center justify-center ${
+                          tripType === "oneWay"
+                            ? "border-blue-600"
+                            : "border-gray-400"
+                        }`}
+                      >
+                        {tripType === "oneWay" && (
+                          <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                        )}
+                      </div>
+                      <span className="ml-2 text-[14px] font-[400]">
+                        One Way
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Round Trip Option */}
+                  <div className="flex items-center">
+                    <button
+                      className="flex items-center focus:outline-none"
+                      onClick={() => setTripType("roundTrip")}
+                    >
+                      <div
+                        className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                          tripType === "roundTrip"
+                            ? "border-blue-600"
+                            : "border-gray-400"
+                        }`}
+                      >
+                        {tripType === "roundTrip" && (
+                          <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                        )}
+                      </div>
+                      <span className="ml-2 text-[14px] font-[400]">
+                        Round Trip
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <SingleSelect options={options} />
+                </div>
+                </div>
+              </div>
               <SearchInputText
                 dropDownPlace={dropDownPlace}
                 dropDownData={citizenOptions}
@@ -569,7 +628,6 @@ const HeroSection = () => {
               />
               <SearchInputDate onDateChange={handleInputChange} />
               <div className="flex   justify-between">
-               
                 <Link
                   to={{
                     pathname: "/apply",
