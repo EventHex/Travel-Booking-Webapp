@@ -162,11 +162,6 @@ const HeroSection = () => {
     }, []);
 
     const [showSelector, setShowSelector] = useState(false);
-    const [passengers, setPassengers] = useState({
-      adults: 1,
-      children: 0,
-      infants: 0,
-    });
     const selectorRef = useRef(null);
 
     // Close the dropdown when clicking outside
@@ -292,24 +287,68 @@ const HeroSection = () => {
     ];
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [travellers, setTravellers] = useState(1);
-  
+
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-  
+
     const decreaseTravellers = () => {
       if (travellers > 1) {
         setTravellers(travellers - 1);
       }
     };
-  
+
     const increaseTravellers = () => {
       setTravellers(travellers + 1);
     };
-  
+
     const handleDone1 = () => {
       console.log(`Selected ${travellers} travellers`);
       closeModal();
     };
+    // ***************************flight tabs functions*************************
+
+    const [showPassengerDropdown, setShowPassengerDropdown] = useState(false);
+    const passengerDropdownRef = useRef(null);
+
+    const passengertoggle = () => {
+      console.log("passengertoggle");
+      setShowPassengerDropdown(!showPassengerDropdown);
+    };
+
+    // Passenger counts
+    const [adults, setAdults] = useState(1);
+    const [children, setChildren] = useState(0);
+    const [infants, setInfants] = useState(0);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (
+          passengerDropdownRef.current &&
+          !passengerDropdownRef.current.contains(event.target)
+        ) {
+          setShowPassengerDropdown(false);
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    // Increment/decrement functions
+    const incrementCount = (type) => {
+      if (type === "adults") setAdults((prev) => prev + 1);
+      if (type === "children") setChildren((prev) => prev + 1);
+      if (type === "infants") setInfants((prev) => prev + 1);
+    };
+
+    const decrementCount = (type) => {
+      if (type === "adults" && adults > 1) setAdults((prev) => prev - 1);
+      if (type === "children" && children > 0) setChildren((prev) => prev - 1);
+      if (type === "infants" && infants > 0) setInfants((prev) => prev - 1);
+    };
+
     switch (activeTab) {
       case "Visas":
         return (
@@ -439,57 +478,68 @@ const HeroSection = () => {
               </div>
               <SearchInputDate />
               <div className="  flex   justify-between">
-              <button 
-        className="gap-2 shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-[#211A77] duration-500 delay-300 hover:text-white flex py-2"
-        onClick={openModal}
-      >
-        <p>{travellers} {travellers === 1 ? 'Traveler' : 'Travelers'}</p>
-      </button>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg w-full max-w-md mx-4 overflow-hidden shadow-xl">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Traveller Details</h2>
-                <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
-                  <X size={24} />
+                <button
+                  className="gap-2 shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-[#211A77] duration-500 delay-300 hover:text-white flex py-2"
+                  onClick={openModal}
+                >
+                  <p>
+                    {travellers} {travellers === 1 ? "Traveler" : "Travelers"}
+                  </p>
                 </button>
-              </div>
 
-              <div className="mb-6">
-                <div className="border border-gray-200 rounded-lg p-4 flex justify-between items-center">
-                  <span className="text-gray-700">No. of travellers</span>
-                  <div className="flex items-center">
-                    <button 
-                      onClick={decreaseTravellers} 
-                      className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100"
-                      disabled={travellers <= 1}
-                    >
-                      <Minus size={20} />
-                    </button>
-                    <span className="w-10 mx-2 text-center">{travellers}</span>
-                    <button 
-                      onClick={increaseTravellers} 
-                      className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100"
-                    >
-                      <Plus size={20} />
-                    </button>
+                {/* Modal */}
+                {isModalOpen && (
+                  <div className="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg w-full max-w-md mx-4 overflow-hidden shadow-xl">
+                      <div className="p-6">
+                        <div className="flex justify-between items-center mb-6">
+                          <h2 className="text-2xl font-bold text-gray-800">
+                            Traveller Details
+                          </h2>
+                          <button
+                            onClick={closeModal}
+                            className="text-gray-500 hover:text-gray-700"
+                          >
+                            <X size={24} />
+                          </button>
+                        </div>
+
+                        <div className="mb-6">
+                          <div className="border border-gray-200 rounded-lg p-4 flex justify-between items-center">
+                            <span className="text-gray-700">
+                              No. of travellers
+                            </span>
+                            <div className="flex items-center">
+                              <button
+                                onClick={decreaseTravellers}
+                                className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100"
+                                disabled={travellers <= 1}
+                              >
+                                <Minus size={20} />
+                              </button>
+                              <span className="w-10 mx-2 text-center">
+                                {travellers}
+                              </span>
+                              <button
+                                onClick={increaseTravellers}
+                                className="w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-100"
+                              >
+                                <Plus size={20} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={handleDone1}
+                          className="w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium"
+                        >
+                          Done
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              <button 
-                onClick={handleDone1} 
-                className="w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium"
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+                )}
                 <Link
                   to={{
                     pathname: "/apply",
@@ -519,18 +569,7 @@ const HeroSection = () => {
               />
               <SearchInputDate onDateChange={handleInputChange} />
               <div className="flex   justify-between">
-                <div className=" ">
-                  <button className=" gap-2   shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-[#211A77] duration-500 delay-300 hover:text-white flex py-2 ">
-                    <p className="flex justify-center items-center">
-                      {" "}
-                      <span>
-                        {" "}
-                        <Users size={16} />
-                      </span>{" "}
-                      1 Travelers
-                    </p>
-                  </button>
-                </div>
+               
                 <Link
                   to={{
                     pathname: "/apply",
@@ -545,6 +584,123 @@ const HeroSection = () => {
                     Search
                   </button>
                 </Link>
+                <div className="   relative">
+                  {showPassengerDropdown && (
+                    <div
+                      ref={passengerDropdownRef}
+                      className="absolute bottom-12 left-12    bg-white border border-gray-200 rounded-lg shadow-lg w-64 z-10"
+                    >
+                      <div className="p-4 space-y-4">
+                        {/* Adults */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium">Adults</div>
+                            <div className="text-sm text-gray-500">
+                              Age 12 and above
+                            </div>
+                          </div>
+                          <div className="flex items-center">
+                            <button
+                              onClick={() => decrementCount("adults")}
+                              className="w-8 h-8 flex items-center justify-center rounded-full border border-indigo-500 text-indigo-500"
+                              disabled={adults <= 1}
+                            >
+                              <span>-</span>
+                            </button>
+                            <span className="mx-3 w-4 text-center">
+                              {adults}
+                            </span>
+                            <button
+                              onClick={() => incrementCount("adults")}
+                              className="w-8 h-8 flex items-center justify-center rounded-full border border-indigo-500 text-indigo-500"
+                            >
+                              <span>+</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Children */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium">Children</div>
+                            <div className="text-sm text-gray-500">
+                              Age 2 to 11
+                            </div>
+                          </div>
+                          <div className="flex items-center">
+                            <button
+                              onClick={() => decrementCount("children")}
+                              className="w-8 h-8 flex items-center justify-center rounded-full border border-indigo-500 text-indigo-500"
+                              disabled={children <= 0}
+                            >
+                              <span>-</span>
+                            </button>
+                            <span className="mx-3 w-4 text-center">
+                              {children}
+                            </span>
+                            <button
+                              onClick={() => incrementCount("children")}
+                              className="w-8 h-8 flex items-center justify-center rounded-full border border-indigo-500 text-indigo-500"
+                            >
+                              <span>+</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Infants */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium">Infants</div>
+                            <div className="text-sm text-gray-500">
+                              younger than 2 years
+                            </div>
+                          </div>
+                          <div className="flex items-center">
+                            <button
+                              onClick={() => decrementCount("infants")}
+                              className="w-8 h-8 flex items-center justify-center rounded-full border border-indigo-500 text-indigo-500"
+                              disabled={infants <= 0}
+                            >
+                              <span>-</span>
+                            </button>
+                            <span className="mx-3 w-4 text-center">
+                              {infants}
+                            </span>
+                            <button
+                              onClick={() => incrementCount("infants")}
+                              className="w-8 h-8 flex items-center justify-center rounded-full border border-indigo-500 text-indigo-500"
+                            >
+                              <span>+</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Done button */}
+                        <div className="mt-4 flex justify-end">
+                          <button
+                            onClick={() => setShowPassengerDropdown(false)}
+                            className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700"
+                          >
+                            Done
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <button
+                    ref={passengerDropdownRef}
+                    onClick={passengertoggle}
+                    className=" gap-2   shadow-md border rounded-full px-4 border-[#B5C0CA] hover:shadow-2xl hover:bg-[#211A77] duration-500 delay-300 hover:text-white flex py-2 "
+                  >
+                    <p className="flex justify-center items-center">
+                      <span>
+                        <Users size={16} />
+                      </span>
+                      1 Travelers
+                    </p>
+                  </button>
+                </div>
               </div>
             </div>
           </>
