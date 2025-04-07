@@ -1,9 +1,9 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import {
   LogoBlue,
   CreditCard,
-  QuestionMark,
-  User,
+  QuestionMark,User,
   HeadSet,
 } from "../../assets";
 import {
@@ -142,7 +142,7 @@ const Index = () => {
       {showHelp && (
         <div 
           ref={helpRef}
-          className="absolute md:top-20 md:right-58 top-34 bg-white p-4 md:p-6 rounded-lg shadow-lg w-[90%] md:w-80 mx-4 md:mx-0 z-50"
+          className="absolute  bg-white md:top-20 md:right-58 top-34  p-4 md:p-6 rounded-lg shadow-lg w-[50%] md:w-90 mx-4 md:mx-0 z-50"
           onClick={handleModalContentClick}
         >
           <div className="flex justify-between items-center mb-4">
@@ -176,7 +176,7 @@ const Index = () => {
       {showModal && (
         <div 
           ref={modalRef}
-          className="absolute   top-34 md:top-20 z-20 right-0 p-6 bg-white rounded-lg shadow-md max-w-lg"
+          className="absolute   top-34 md:top-20 z-20 right-0 p-6   bg-white rounded-lg shadow-md max-w-lg"
           onClick={handleModalContentClick}
         >
           <div className="flex justify-between items-center mb-6">
@@ -283,7 +283,7 @@ const Index = () => {
               <div className="flex items-start mb-2">
                 <Clock className="mr-2 text-gray-600" size={20} />
                 <div>
-                  <h2 className="font-bold text-gray-800">
+                  <h2 className="font-medium text-gray-800">
                     Atlys Support Hours (IST)
                   </h2>
                   <span className="text-sm text-gray-600">
@@ -309,7 +309,7 @@ const Index = () => {
               <div className="flex items-start mb-2">
                 <AlertTriangle className="mr-2 text-red-500" size={20} />
                 <div>
-                  <h2 className="font-bold text-gray-800">
+                  <h2 className="font-medium text-gray-800">
                     Atlys Emergency 24x7 Hotline:{" "}
                     <span className="text-blue-500">+91 22 48934242</span>
                   </h2>
@@ -328,13 +328,13 @@ const Index = () => {
             <div className="bg-gray-100 rounded-lg p-4">
               <div className="flex items-start mb-3">
                 <Headphones className="mr-2 text-gray-600" size={20} />
-                <h2 className="font-bold text-gray-800">
+                <h2 className="font-medium text-gray-800">
                   Have questions about the product?
                 </h2>
               </div>
 
               <div className="pl-7">
-                <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white font-[400] text-[14px] py-2 px-4 rounded-lg">
                   Join product demo call
                 </button>
               </div>
