@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import Header from "../../components/header";
 import {FrontPassportForm} from "./passportFrontForm";
 import {BackPassportForm} from "./passportBackForm";
+import {SearchInputText,SearchInputDate} from "../../components/searchInput";
+import File from "../../components/file";
+import { useSearchParams } from 'react-router-dom';
+import {SingleSelect} from "../../components/dropdown"
+
 import {
   Flight,
   Home,
@@ -22,15 +27,34 @@ import {
   FlipHorizontal2
 } from "lucide-react";
 import Input from "../../components/input";
-import CustomSelect from "../../components/dropdown";
+import {CustomSelect} from "../../components/dropdown";
 import { CustomDatePicker, FullCalendar } from "../../components/calender";
 import SideBar from "./sideBar";
 const TravelVisaBooking = () => {
+  const [searchParams] = useSearchParams();
+  const goingTo = searchParams.get('goingTo') || '';
+  const destination = searchParams.get('destination') || '';
+  const travelDate = searchParams.get('travelDate') || '';
+  const returnDate = searchParams.get('returnDate') || '';
+
+  const searchData = {
+    goingTo,
+    destination,
+    travelDate,
+    returnDate,
+  };
+  
+  useEffect(() => {
+    console.log('Received search data:', searchData);
+  }, [goingTo, destination, travelDate,returnDate]);
+
+
+
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
-  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
 
-  // Track focus state for all four inputs
+
+  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [goingToIsFocused, setGoingToIsFocused] = useState(false);
   const [TravellingDateFocused, setTravellingDateFocused] = useState(false);
@@ -159,11 +183,13 @@ const TravelVisaBooking = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 items-center md:grid-cols-3 gap-4">
             <div className="relative">
-              <div className="relative">
-                <CustomSelect
-                  className={"py-4"}
+              <div className="relative mb-4 md:mb-5">
+                <CustomSelect 
+                labelClass={'12px'}
+                  className={"py-[11px]"}
+                  placeholder={"Tourist Visa"}
                   label={"Visa Type"}
                   options={Visa}
                 />
@@ -188,25 +214,20 @@ const TravelVisaBooking = () => {
                 )}
               </div>
             </div>
-
-            <div>
-              <Input
-                label="Internal Id"
-                onChange={() => {}}
-                placeholder="Internal Id"
-                labelClassName="block text-sm font-medium text-gray-700 mb-1"
-                InputClassName="shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
-              />
+              <div className="mb-4 md:mb-5">
+                <Input
+                  placeholder={"Internal Id"}
+                  label={"Internal Id"}
+                />
             </div>
 
-            <div>
-              <Input
-                label="Group Name"
-                onChange={() => {}}
-                placeholder="Internal Id"
-                labelClassName="block text-sm font-medium text-gray-700 mb-1"
-                InputClassName="shadow-sm py-5 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md px-3 text-gray-500 bg-white"
-              />
+         
+              <div className="mb-4 md:mb-5">
+                <Input
+                  placeholder={"Tourist Visa"}
+                  label={"Group Name"}
+                  
+                />
             </div>
           </div>
         </div>
@@ -225,19 +246,20 @@ const TravelVisaBooking = () => {
       { value: 3, label: "docter" },
     ];
     return (
-      <div className="mb-10 px-4 sm:px-6">
+      <div className="">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <h1 className="text-lg sm:text-xl font-medium mb-4 sm:mb-6">
-            Upload Traveler Photo
-          </h1>
+         
 
           {/* Main upload section */}
-          <div className="border border-gray-300 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
-            <div className="flex flex-col md:flex-row gap-6">
+          <div className="w-full flex flex-col md:flex-row gap-6 mb-4">
+            <div className="  w-full md:w-[50%]">
+            <h1 className="text-[24px] sm:text-xl font-[600] py-4">
+            Upload Traveler Photo
+          </h1>
               {/* Left side - Text content */}
-              <div className="w-full md:flex-1">
-                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-4 md:mb-0">
+              <div className=" md:flex-1">
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                   Vietnam requires a scan of the traveler's passport. Upload a
                   clear passport image and your details will be filled
                   automatically. AI has built-in OCR which is 99.9% accurate.
@@ -247,50 +269,36 @@ const TravelVisaBooking = () => {
                   rejected if these guidelines are not followed.
                 </p>
               </div>
-
-              {/* Right side - Upload box */}
-              <div className="w-full md:flex-1">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 md:p-8 text-center bg-gray-50">
-                  <Upload className="mx-auto h-6 w-6 text-gray-400 mb-2" />
-                  <p className="text-xs sm:text-sm text-gray-600 mb-2">
-                    Choose a file or drag & drop it here.
-                  </p>
-                  <p className="text-xs text-gray-500 mb-4">
-                    JPG, PNG, and MIME formats, up to 10 MB
-                  </p>
-
-                  <label className="inline-block">
-                    <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded bg-blue-500 text-white text-xs sm:text-sm cursor-pointer hover:bg-blue-600 transition-colors">
-                      Browse File
-                    </span>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="image/jpeg,image/png"
-                      onChange={handleFileChange}
-                    />
-                  </label>
-                </div>
-              </div>
             </div>
+                <div className=" md:w-[50%]  w-full py-2">
+                  <File head={"Travel Photo"} />
+                </div>
           </div>
 
           {/* Additional Questions Section */}
-          <div>
-            <h2 className="text-lg sm:text-xl text-blue-600 mb-4 sm:mb-6">
+          <div className="">
+            <h2 className="text-[30px] text-[#375DFB] font-[600] border-b py-4 border-[#868C98] w-full md:w-[80%]">
               Answer Additional Required Questions
             </h2>
 
-            <div className="space-y-3 w-full  md:w-[60%] sm:space-y-4">
-              <h3 className="text-sm sm:text-base font-medium">
+            <div className=" w-full md:w-[60%]">
+              <h3 className="text-[24px] text-[#0A0D14]  font-[600] py-3">
                 What is the traveler's occupation (optional)?
               </h3>
-              <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-4">
+              <p className="text-[14px] text-gray-600">
                 This is an optional occupation field. Most people use the
                 default - Service. Occupation does not influence the decision of
                 the visa.
               </p>
-              <CustomSelect options={Occupations} label="" />
+              <div className="py-4">
+              <SingleSelect 
+                labelClass={'12px'}
+                  className={"py-[11px]"}
+                  placeholder={"Select Occupation"}
+                  label=""
+                />
+                
+              </div>
             </div>
           </div>
         </div>
@@ -316,7 +324,7 @@ const TravelVisaBooking = () => {
                   </p>
                 </div>
                 <div className="relative w-full md:w-[50%]">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
+                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
                     <input
                       type="file"
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -347,7 +355,10 @@ const TravelVisaBooking = () => {
                         </button>
                       )}
                     </div>
-                  </div>
+                  </div> */}
+                  <div className="w-[100%]">
+                  <File head={"Round Trip Flight Ticket"} />
+                </div>
                 </div>
               </div>
 
@@ -363,7 +374,7 @@ const TravelVisaBooking = () => {
                   </p>
                 </div>
                 <div className="w-full md:w-[50%] relative">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
+                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
                     <input
                       type="file"
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -394,7 +405,10 @@ const TravelVisaBooking = () => {
                         </button>
                       )}
                     </div>
-                  </div>
+                  </div> */}
+                  <div className="w-[100%]">
+                  <File  className={''} head={"Hotel Booking"} />
+                </div>
                 </div>
               </div>
 
@@ -563,103 +577,21 @@ const TravelVisaBooking = () => {
       <div
         style={{
           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "cover",
+          backgroundSize: "100%", 
           backgroundPosition: "center",
-        }}
+          width: "100%",
+
+            }}
       >
         <Header />
-
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
-          <div className="flex gap-5 flex-col  md:flex-row p-5 w-full">
-            <div className="flex gap-3 justify-center    w-full md:w-[50%] flex-col">
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        citizenIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleCitizenIconClick}
-                    >
-                      <img src={Home} alt="Home icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={citizenInputRef}
-                      type="text"
-                      placeholder="Citizen Of"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setCitizenIsFocused(true)}
-                      onBlur={() => setCitizenIsFocused(false)}
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        goingToIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleGoingToIconClick}
-                    >
-                      <img src={Flight} alt="Flight icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={goingToInputRef}
-                      type="text"
-                      placeholder="Going to"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setGoingToIsFocused(true)}
-                      onBlur={() => setGoingToIsFocused(false)}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-end"></div>
-            </div>
-            <div className="flex gap-3w-full md:w-[50%] flex-col">
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row">
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        TravellingDateFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                    >
-                      <img src={CalenderUp} alt="Calendar up icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      type="text"
-                      placeholder="Travel Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setTravellingDateFocused(true)}
-                      onBlur={() => setTravellingDateFocused(false)}
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        TravellingDateEndFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                    >
-                      <img src={CalenderDown} alt="Calendar down icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      type="text"
-                      placeholder="Return Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setTravellingDateEndFocused(true)}
-                      onBlur={() => setTravellingDateEndFocused(false)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="flex gap-5 flex-col flex-wrap  justify-between md:flex-row p-5 w-full">
+            <div className="flex   md:flex-row flex-col gap-3">
+
+         <SearchInputText    data={{ destination, goingTo  }}  />
+         <SearchInputDate   data={{  travelDate, returnDate }} />
+            </ div>
+           
             <div className="flex items-center">
               <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">
                 Search
@@ -676,8 +608,6 @@ const TravelVisaBooking = () => {
               >
                 <SideBar isNarrow={isNarrowScreen} />
               </div>
-
-              {/* <Sidebar /> */}
             </div>
             <div className="w-full md:w-[70%] border-l border-[#bbbdc2] flex flex-col justify-center">
             <div className=" md:p-5">

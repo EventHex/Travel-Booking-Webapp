@@ -49,7 +49,7 @@ const AtlysWallet = () => {
   const currentBalance = 152.67;
 
   return (
-    <div className="w-full max-w-5xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="w-full max-w-5xl min-w-[300px]   bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       {/* Header Section */}
       <div className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <h1 className="text-2xl font-bold text-gray-900">Atlys Wallet</h1>
@@ -69,7 +69,7 @@ const AtlysWallet = () => {
       </div>
       
       {/* Transaction Table - Fixed Width Container with Horizontal Scroll */}
-      <div className="w-full overflow-hidden">
+      <div className="w-full  overflow-hidden">
         <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
           <div className="inline-block min-w-full">
             <table className="min-w-full table-fixed" style={{ width: '800px' }}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Calander from "../../ui/calander";
-import { ChevronDown, MapPin } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 import {
   Men,
@@ -19,10 +19,12 @@ import {
   Placeholder,
 } from "../../assets";
 import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, MapPin } from "lucide-react";
 
 import Header from "../../components/header";
-import SearchInput from "../../components/searchInput";
+import { SearchInputText, SearchInputDate } from "../../components/searchInput";
+
+
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("Visas");
   const tabs = [
@@ -47,32 +49,39 @@ const HeroSection = () => {
 
     const citizenOptions = [
       {
-        icon: <MapPin className="text-[#b1b5be]" />,
-        title: "Dubai",
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "dubai",
         id: 1,
       },
       {
-        icon: <MapPin className="text-[#b1b5be]" />,
-        title: "Mumbai",
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "mumbai",
         id: 2,
       },
       {
-        icon: <MapPin className="text-[#b1b5be]" />,
-        title: "Oman",
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "kochin",
         id: 3,
-      },
-      {
-        icon: <MapPin className="text-[#b1b5be]" />,
-        title: "Kochi",
-        id: 4,
-      },
-      {
-        icon: <MapPin className="text-[#b1b5be]" />,
-        title: "Goa",
-        id: 5,
       },
     ];
 
+    const dropDownPlace = [
+      {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "dubai",
+        id: 1,
+      },
+      {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "mumbai",
+        id: 2,
+      },
+      {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "kochin",
+        id: 3,
+      },
+    ];
     const handleCitizenIconClick = () => {
       citizenInputRef.current.focus();
     };
@@ -81,39 +90,69 @@ const HeroSection = () => {
       goingToInputRef.current.focus();
     };
 
-    const [tripType, setTripType] = useState("oneWay");
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [cabinClass, setCabinClass] = useState("Economy");
-
-    const cabinOptions = [
-      "Economy",
-      "Premium Economy",
-      "Business",
-      "First Class",
-    ];
-
-    const handleTripTypeChange = (type) => {
-      setTripType(type);
+    const handleTravelDateIconClick = () => {
+      travelDateInputRef.current.focus();
     };
 
-    const toggleDropdown = () => {
-      setIsDropdownOpen(!isDropdownOpen);
+    const handleReturnDateIconClick = () => {
+      returnDateInputRef.current.focus();
     };
 
-    const selectCabinClass = (option) => {
-      setCabinClass(option);
-      setIsDropdownOpen(false);
+    const [showFromDropdown, setShowFromDropdown] = useState(false);
+    const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
+    const fromDropdownRef = useRef(null);
+    const goingToDropdownRef = useRef(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+    const searchDropdownRef = useRef(null);
+    const handleFromInputFocus = () => {
+      setCitizenIsFocused(true);
+      setShowFromDropdown(true);
+      setShowGoingToDropdown(false);
+    };
+
+    const handleGoingToFocus = () => {
+      setGoingToIsFocused(true);
+      setShowGoingToDropdown(true);
+      setShowFromDropdown(false);
+    };
+
+    const handleFromInputBlur = () => {
+      setCitizenIsFocused(false);
+    };
+
+    const handleGoingToBlur = () => {
+      setGoingToIsFocused(false);
+    };
+
+    const handleOptionSelect = (option, inputRef, isFromInput) => {
+      if (inputRef.current) {
+        inputRef.current.value = option.title;
+      }
+      if (isFromInput) {
+        setShowFromDropdown(false);
+      } else {
+        setShowGoingToDropdown(false);
+      }
     };
 
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (
-          dropdownRef.current &&
-          !dropdownRef.current.contains(event.target) &&
+          fromDropdownRef.current &&
+          !fromDropdownRef.current.contains(event.target) &&
           citizenInputRef.current &&
           !citizenInputRef.current.contains(event.target)
         ) {
-          setShowDropdown(false);
+          setShowFromDropdown(false);
+        }
+        if (
+          goingToDropdownRef.current &&
+          !goingToDropdownRef.current.contains(event.target) &&
+          goingToInputRef.current &&
+          !goingToInputRef.current.contains(event.target)
+        ) {
+          setShowGoingToDropdown(false);
         }
       };
 
@@ -169,223 +208,115 @@ const HeroSection = () => {
     const handleDone = () => {
       setShowSelector(false);
     };
+    const [searchData, setSearchData] = useState({
+      destination: "",
+      goingTo: "",
+      travelDate: "",
+      returnDate: "",
+    });
 
-    // Import would be handled in your actual project
-    // This is just a placeholder for the component demonstration
+    const handleInputChange = (field, value) => {
+      setSearchData((prevState) => ({
+        ...prevState,
+        [field]: value,
+      }));
+    };
+
+    // Add this function to handle search button click
+    const handleSearchClick = () => {
+      // Log the search data to console
+      console.log("Search Data:", searchData);
+    };
+
     const User = "user-icon-placeholder";
+    const handleSearchOptionSelect = (option) => {
+      setSearchQuery(option.title);
+      setShowSearchDropdown(false);
+      // Add any additional actions you want to perform when an option is selected
+    };
 
-    // Calculate total travelers
-    const totalTravelers =
-      passengers.adults + passengers.children + passengers.infants;
-    const travelerText =
-      totalTravelers === 1 ? "1 Traveler" : `${totalTravelers} Travelers`;
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [searchOptions, setSearchOptions] = useState([]);
-    const searchInputRef = useRef(null);
-    const dropdownRef = useRef(null);
-
-    // Sample options - replace with your actual data
-    const sampleOptions = [
+    const dropDownData = [
       {
+        image: Placeholder,
+        subtitle: "united arab emirates",
+        title: "dubai",
         id: 1,
-        title: "Burj Khalifa",
-        subtitle: "Dubai, United Arab Emirates",
-        type: "attraction",
-        image: Placeholder,
       },
       {
+        image: Placeholder,
+        subtitle: "Chhatrapati Shivaji Maharaj International Airport",
+        title: "mumbai",
         id: 2,
-        title: "Universal Studios",
-        subtitle: "Orlando, Florida, USA",
-        type: "theme park",
-        image: Placeholder,
       },
       {
-        id: 3,
-        title: "Eiffel Tower",
-        subtitle: "Paris, France",
-        type: "landmark",
         image: Placeholder,
+        subtitle: "Cochin International Airport",
+        title: "kochin",
+        id: 3,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
+      },
+      {
+        image: Placeholder,
+        subtitle: "Dubai International Airport",
+        title: "dubai",
+        id: 4,
       },
     ];
-
-    const handleInputFocus = () => {
-      setSearchOptions(sampleOptions);
-      setShowDropdown(true);
-    };
-
-    const handleInputBlur = (e) => {
-      // Delay hiding dropdown to allow click events on options
-      setTimeout(() => {
-        if (document.activeElement !== dropdownRef.current) {
-          setShowDropdown(false);
-        }
-      }, 100);
-    };
-
-    const handleOptionSelect = (option) => {
-      if (searchInputRef.current) {
-        searchInputRef.current.value = option.title;
-      }
-      setShowDropdown(false);
-      // Handle the selected option (e.g., navigate to details page)
-      console.log("Selected:", option);
-    };
-
-    // Close dropdown when clicking outside
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (
-          dropdownRef.current &&
-          !dropdownRef.current.contains(event.target) &&
-          !searchInputRef.current.contains(event.target)
-        ) {
-          setShowDropdown(false);
-        }
-      };
-
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
-
-    // Update your handleTravelDateIconClick function to focus the date input
-const handleTravelDateIconClick = () => {
-  if (travelDateInputRef.current) {
-    travelDateInputRef.current.focus();
-    travelDateInputRef.current.showPicker(); // This will open the date picker
-  }
-};
-
-const handleReturnDateIconClick = () => {
-  if (returnDateInputRef.current) {
-    returnDateInputRef.current.focus();
-    returnDateInputRef.current.showPicker(); // This is the key line that opens the date picker
-  }
-};
-
     switch (activeTab) {
       case "Visas":
         return (
           <>
-            <div className="flex gap-3  flex-col ">
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-                <div className="w-full relative">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        citizenIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleCitizenIconClick}
-                    >
-                      <img src={Home} alt="Home icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={citizenInputRef}
-                      type="text"
-                      placeholder="Search destinations, attractions..."
-                      className="w-full bg-transparent outline-none"
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
-                    />
-                  </div>
-
-                  {showDropdown && (
-                    <div
-                      ref={dropdownRef}
-                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
-                    >
-                      {citizenOptions.map((option) => (
-                        <div
-                          key={option.id}
-                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                          onClick={() => handleOptionSelect(option)}
-                        >
-                          <div className="">
-                            <div className="flex gap-2 justify-center text-[12px]  text-gray-800">
-                              <p className="text-[12px]">{option.icon}</p>
-                              {option.title}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        goingToIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleGoingToIconClick}
-                    >
-                      <img src={Flight} alt="Flight icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={goingToInputRef}
-                      type="text"
-                      placeholder="Going to"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setGoingToIsFocused(true)}
-                      onBlur={() => setGoingToIsFocused(false)}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        travelDateIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleTravelDateIconClick}
-                    >
-                      <img src={CalenderUp} alt="Calendar icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={travelDateInputRef}
-                      type="date"
-                      placeholder="Travel Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setTravelDateIsFocused(true)}
-                      onBlur={() => setTravelDateIsFocused(false)}
-                    />
-                  </div>
-                </div>
-
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        returnDateIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleReturnDateIconClick}
-                    >
-                      <img src={CalenderDown} alt="Calendar icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={returnDateInputRef}
-                      type="date"
-                      placeholder="Return Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setReturnDateIsFocused(true)}
-                      onBlur={() => setReturnDateIsFocused(false)}
-                    />
-                  </div>
-                </div>
-              </div>
+            <div className="flex gap-3 flex-col">
+              <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+                onInputChange={handleInputChange}
+              />
+              <SearchInputDate onDateChange={handleInputChange} />
               <div className="flex justify-end">
-                <button className=" text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">
-                  Search
-                </button>
+                <Link
+                  to={{
+                    pathname: "/apply",
+                    search: `?${new URLSearchParams(searchData).toString()}`,
+                    state: searchData,
+                  }}
+                >
+                  <button
+                    className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
+                    onClick={handleSearchClick}
+                  >
+                    Search
+                  </button>
+                </Link>
               </div>
             </div>
           </>
@@ -394,46 +325,41 @@ const handleReturnDateIconClick = () => {
         return (
           <div className="relative mb-24 w-full">
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-              <img src={Search} alt="Search icon" />
+              <img src={Search} alt="" />
             </div>
             <input
-              ref={searchInputRef}
               type="text"
               placeholder={`Search for ${activeTab} (e.g. Burj Khalifa, Universal Studio)`}
               className="w-full pl-10 pr-4 py-2 sm:py-3 bg-white border border-[#A6BFFF82] border-solid rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm sm:text-base text-gray-600 placeholder-gray-400 transition-all duration-300 delay-150 hover:border-blue-500"
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setShowSearchDropdown(true)}
+              onBlur={() => setShowSearchDropdown(false)}
             />
 
-            {showDropdown && (
+            {showSearchDropdown && (
               <div
-                ref={dropdownRef}
+                ref={searchDropdownRef}
                 className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
               >
-                {searchOptions.map((option) => (
+                {dropDownData.map((option) => (
                   <div
                     key={option.id}
-                    className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                    onClick={() => handleOptionSelect(option)}
+                    className="flex gap-5  px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleSearchOptionSelect(option)}
                   >
-                    <div className="flex-shrink-0 mr-3">
-                      <img
-                        src={option.image}
-                        alt={option.title}
-                        className="w-12 h-12 object-cover rounded"
-                      />
+                    <div className="flex">
+                      <img className="w-[70px] " src={option.image} alt="" />
                     </div>
-                    <div className="flex-1">
-                      <div className="font-medium text-gray-800">
-                        {option.title}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {option.subtitle}
-                      </div>
-                      <div className="text-xs text-blue-500 mt-1 capitalize">
-                        {option.type}
-                      </div>
+                    <div className="flex  w-full ">
+                      <p className="flex flex-col text-[16px] gap-2">
+                        <span>{option.title}</span>
+                        <span className="text-[gray] text-[14px]">
+                          {option.subtitle}
+                        </span>
+                      </p>
                     </div>
+                    <div></div>
                   </div>
                 ))}
               </div>
@@ -444,431 +370,73 @@ const handleReturnDateIconClick = () => {
         return (
           <>
             <div className="flex gap-3  flex-col ">
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        goingToIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleGoingToIconClick}
-                    >
-                      <img src={Flight} alt="Flight icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={goingToInputRef}
-                      type="text"
-                      placeholder="Going to"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setGoingToIsFocused(true)}
-                      onBlur={() => setGoingToIsFocused(false)}
-                    />
-                  </div>
+              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
+            <div className="w-full relative">
+        <div className="flex items-center p-3">
+          <span
+            className={`mr-2 cursor-pointer ${
+              goingToIsFocused ? "opacity-100" : "opacity-20"
+            }`}
+            onClick={handleGoingToIconClick}
+          >
+            <img src={Flight} alt="Flight icon" />
+          </span>
+          <input
+            style={{ border: "none" }}
+            ref={goingToInputRef}
+            type="text"
+            value={''}
+            placeholder="Going to"
+            className="w-full bg-transparent outline-none"
+            onFocus={handleGoingToFocus}
+            onBlur={handleGoingToBlur}
+          
+          />
+        </div>
+
+        {showGoingToDropdown && (
+          <div
+            ref={goingToDropdownRef}
+            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+          >
+            {dropDownPlace.map((option) => (
+              <div
+                key={option.id}
+                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                onClick={() =>
+                  handleOptionSelect(option, goingToInputRef, false)
+                }
+              >
+                <div className="flex">
+                  <p className="flex items-center text-[14px] gap-2">
+                    {option.icon}
+                    <span>{option.title}</span>
+                  </p>
                 </div>
               </div>
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        travelDateIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleTravelDateIconClick}
-                    >
-                      <img src={CalenderUp} alt="Calendar icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={travelDateInputRef}
-                      type="text"
-                      placeholder="Travel Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setTravelDateIsFocused(true)}
-                      onBlur={() => setTravelDateIsFocused(false)}
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        returnDateIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleReturnDateIconClick}
-                    >
-                      <img src={CalenderDown} alt="Calendar icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={returnDateInputRef}
-                      type="text"
-                      placeholder="Return Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setReturnDateIsFocused(true)}
-                      onBlur={() => setReturnDateIsFocused(false)}
-                    />
-                  </div>
-                </div>
+            ))}
+          </div>
+        )}
+      </div>
               </div>
-              <div className="">
-                <div className=" w-[80%]">
-                  <button className="flex py-3  rounded-2xl gap-5 text-[14px] bg-white/40 px-5 shadow-lg">
-                    <img src={User} alt="" /> <span> 1 Traveler</span>{" "}
-                    <span>
-                      {" "}
-                      <ChevronRight className="text-[#7a7a7f]" />
-                    </span>
-                  </button>
-                </div>
-              </div>
+
+              {/* <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+              /> */}
+              <SearchInputDate />
             </div>
           </>
         );
       case "Flights":
         return (
           <>
-            <div className="flex gap-3 flex-col ">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-2  ">
-                {/* Trip Type Toggle */}
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center cursor-pointer">
-                    <div
-                      className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                        tripType === "oneWay"
-                          ? "border-blue-600"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      {tripType === "oneWay" && (
-                        <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
-                      )}
-                    </div>
-                    <input
-                      type="radio"
-                      className="hidden"
-                      checked={tripType === "oneWay"}
-                      onChange={() => handleTripTypeChange("oneWay")}
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700">
-                      One Way
-                    </span>
-                  </label>
-
-                  <label className="flex items-center cursor-pointer">
-                    <div
-                      className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                        tripType === "roundTrip"
-                          ? "border-blue-600"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      {tripType === "roundTrip" && (
-                        <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
-                      )}
-                    </div>
-                    <input
-                      type="radio"
-                      className="hidden"
-                      checked={tripType === "roundTrip"}
-                      onChange={() => handleTripTypeChange("roundTrip")}
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700">
-                      Round Trip
-                    </span>
-                  </label>
-                </div>
-
-                {/* Cabin Class Dropdown */}
-                <div className="relative">
-                  <button
-                    type="button"
-                    className="flex items-center justify-between w-48 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none"
-                    onClick={toggleDropdown}
-                  >
-                    <span>{cabinClass}</span>
-                    <ChevronDown size={16} />
-                  </button>
-
-                  {isDropdownOpen && (
-                    <div className="absolute z-10 w-48 mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
-                      {cabinOptions.map((option) => (
-                        <div
-                          key={option}
-                          className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-                          onClick={() => selectCabinClass(option)}
-                        >
-                          {option}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-                <div className="w-full relative">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        citizenIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleCitizenIconClick}
-                    >
-                      <img src={Home} alt="Home icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={citizenInputRef}
-                      type="text"
-                      placeholder="Search destinations, attractions..."
-                      className="w-full bg-transparent outline-none"
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
-                    />
-                  </div>
-
-                  {showDropdown && (
-                    <div
-                      ref={dropdownRef}
-                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
-                    >
-                      {citizenOptions.map((option) => (
-                        <div
-                          key={option.id}
-                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                          onClick={() => handleOptionSelect(option)}
-                        >
-                          <div className="flex-shrink-0 mr-3">
-                            <img
-                              src={option.image}
-                              alt={option.title}
-                              className="w-12 h-12 object-cover rounded"
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-medium text-gray-800">
-                              {option.title}
-                            </div>
-                            <div className="text-xs text-gray-500 mt-1">
-                              {option.subtitle}
-                            </div>
-                            <div className="text-xs text-blue-500 mt-1 capitalize">
-                              {option.type}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        goingToIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleGoingToIconClick}
-                    >
-                      <img src={Flight} alt="Flight icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={goingToInputRef}
-                      type="text"
-                      placeholder="Going to"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setGoingToIsFocused(true)}
-                      onBlur={() => setGoingToIsFocused(false)}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl py-2 md:flex-row ">
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        travelDateIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleTravelDateIconClick}
-                    >
-                      <img src={CalenderUp} alt="Calendar icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={travelDateInputRef}
-                      type="date"
-                      placeholder="Travel Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setTravelDateIsFocused(true)}
-                      onBlur={() => setTravelDateIsFocused(false)}
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <div className="flex items-center p-3">
-                    <span
-                      className={`mr-2 cursor-pointer ${
-                        returnDateIsFocused ? "opacity-100" : "opacity-20"
-                      }`}
-                      onClick={handleReturnDateIconClick}
-                    >
-                      <img src={CalenderDown} alt="Calendar icon" />
-                    </span>
-                    <input
-                      style={{ border: "none" }}
-                      ref={returnDateInputRef}
-                      type="date"
-                      placeholder="Return Date"
-                      className="w-full bg-transparent outline-none"
-                      onFocus={() => setReturnDateIsFocused(true)}
-                      onBlur={() => setReturnDateIsFocused(false)}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-between">
-                <div className=" w-[30%] ">
-                  <div className="relative max-w-md mx-auto" ref={selectorRef}>
-                    <div
-                      className="bg-white/40 px-5 rounded-2xl shadow-lg flex justify-center items-center cursor-pointer"
-                      onClick={() => setShowSelector(!showSelector)}
-                    >
-                      <button className="flex py-3 w-full text-[14px]">
-                        <img src={User} alt="" /> <span> {travelerText}</span>{" "}
-                      </button>
-                      <p>
-                        {" "}
-                        <ChevronRight className="text-[#7a7a7f]" />
-                      </p>
-                    </div>
-                    {showSelector && (
-                      <div className="absolute maw-w-[500px] left-0 bottom-10 right-0 z-10 bg-white rounded-lg shadow-lg ">
-                        <div className="p-2">
-                          <div className="space-y-6">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h2 className="text-[14px] font-medium text-gray-800">
-                                  Adults
-                                </h2>
-                                <p className="text-[12px] text-gray-500">
-                                  Age 12 and above
-                                </p>
-                              </div>
-                              <div className="flex items-center space-x-3">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDecrement("adults");
-                                  }}
-                                  className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold"
-                                >
-                                  −
-                                </button>
-                                <span className="w-6 text-center">
-                                  {passengers.adults}
-                                </span>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleIncrement("adults");
-                                  }}
-                                  className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold"
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
-
-                            {/* Children */}
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h2 className="text-[14px] font-medium text-gray-800">
-                                  Children
-                                </h2>
-                                <p className="text-[12px] text-gray-500">
-                                  Age 2 to 11
-                                </p>
-                              </div>
-                              <div className="flex items-center space-x-3">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDecrement("children");
-                                  }}
-                                  className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold"
-                                >
-                                  −
-                                </button>
-                                <span className="w-6 text-center">
-                                  {passengers.children}
-                                </span>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleIncrement("children");
-                                  }}
-                                  className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold"
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
-
-                            {/* Infants */}
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <h2 className="text-[14px]font-medium text-gray-800">
-                                  Infants
-                                </h2>
-                                <p className="text-[12px] text-gray-500">
-                                  younger than 2 years
-                                </p>
-                              </div>
-                              <div className="flex items-center space-x-3">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDecrement("infants");
-                                  }}
-                                  className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold"
-                                >
-                                  −
-                                </button>
-                                <span className="w-6 text-center">
-                                  {passengers.infants}
-                                </span>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleIncrement("infants");
-                                  }}
-                                  className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold"
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-8">
-                            <button
-                              onClick={handleDone}
-                              className="w-full py-3 text-[12px] bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
-                            >
-                              Done
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <button className=" text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]">
-                  Search
-                </button>
-              </div>
+            <div className="flex gap-3  flex-col ">
+              <SearchInputText
+                dropDownPlace={dropDownPlace}
+                dropDownData={citizenOptions}
+              />
+              <SearchInputDate />
             </div>
           </>
         );

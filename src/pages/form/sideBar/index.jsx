@@ -170,30 +170,7 @@ const Index = ({ isNarrow, onClose }) => {
           ))}
         </div>
 
-        <div className="rounded-xl bg-gradient-to-b">
-          {/* Blue links section */}
-          {renderBlueLink("passport")}
-          {renderBlueLink("Traveller Photo")}
-
-          {/* Review and Submit options */}
-          {filterOptions.map((option) => (
-            <div
-              key={option.id}
-              onClick={() => setSelectedOption(option.id)}
-              className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${selectedOption === option.id
-                  ? "bg-white shadow-sm"
-                  : "hover:bg-white/50"
-                }`}
-            >
-              <div className="flex items-center space-x-3">
-                <span className="text-gray-600 font-medium text-sm">
-                  {option.label}
-                </span>
-              </div>
-              {renderRadioButton(option.id)}
-            </div>
-          ))}
-        </div>
+      
       </div>
     );
   }
@@ -258,7 +235,7 @@ const Index = ({ isNarrow, onClose }) => {
         ))}
       </div>
 
-      <div className="rounded-xl bg-gradient-to-b">
+      {/* <div className="rounded-xl bg-gradient-to-b"> */}
         {/* Blue links section */}
         {/* {renderBlueLink("passport")}
         {renderBlueLink("Traveller Photo")} */}
@@ -282,7 +259,7 @@ const Index = ({ isNarrow, onClose }) => {
             {renderRadioButton(option.id)}
           </div>
         ))} */}
-      </div>
+      {/* </div> */}
     </div>
   );
 };
