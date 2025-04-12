@@ -29,8 +29,9 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const filterOption = [
     { id: "Overstay", label: "Overstay", icon: Acitivty },
     { id: "Training", label: "Training", icon: Inurance },
-    { id: "changepassword", label: "Change password", icon: Inurance },
-    { id: "Signout", label: "Sign Out", icon: Inurance },
+    { id: "changepassword", label: "Change password", icon: Destination },
+    { id: "Signout", label: "Sign Out", icon:   Visa,
+    },
   ];
 
   // Handle option selection and pass the ID to parent component
@@ -151,7 +152,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
         }}
       >
         <div className="rounded-xl  bgred bg-gradient-to-b">
-          {/* Filter options - Internal ID, Group Name, Traveller 1 */}
+  
           {filterOptions.map((option) => (
             <div
               key={option.id}
@@ -206,13 +207,14 @@ const Index = ({ isNarrow, onOptionSelect }) => {
     return (
       <div 
         onClick={(e) => sidebarOpen(e)}
-        className="w-full rounded-xl   overflow-hidden cursor-pointer"
+        className="w-full rounded-xl   mb:[100vh]  overflow-hidden cursor-pointer"
       >
         <div className="rounded-xl  bg-gradient-to-b">
           <div className="space-y-1">
            
           </div>
-          {filterOption.map((option) => (
+        
+          {filterOptions.map((option) => (
             <div
               key={option.id}
               onClick={() => handleOptionSelect(option.id)}
@@ -229,6 +231,24 @@ const Index = ({ isNarrow, onOptionSelect }) => {
               </div>
             </div>
           ))}
+            {filterOption.map((option) => (
+            <div
+              key={option.id}
+              onClick={() => handleOptionSelect(option.id)}
+              className={`flex cursor-pointer items-center justify-center  rounded-lg p-3 transition-colors ${
+                selectedOption === option.id
+                  ? "bg-white shadow-sm"
+                  : "hover:bg-white/50"
+              }`}
+            >
+              <div className="flex items-center">
+                <div className="text-gray-500">
+                  <img src={option.icon} alt={option.label} />
+                </div>
+              </div>
+            </div>
+          ))}
+
         </div>
       </div>
     );

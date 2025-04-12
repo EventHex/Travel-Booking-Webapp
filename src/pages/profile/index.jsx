@@ -123,7 +123,7 @@ const Index = () => {
             {/* ************form ********** */}
 <div className="w-full flex flex-col gap-5" >
             <div className="w-full  mx-auto rounded-xl overflow-hidden shadow-sm">
-              <div className="  relative">
+              <div className="  ">
                 <div className=" p-4">
                   <h1 className="text-3xl font-bold text-gray-900 mb-8">
                     Agency Information
@@ -341,7 +341,7 @@ const Index = () => {
                     isNarrowScreen
                       ? "sticky  top-5 w-[50px]"
                       : "sticky top-5 w-full"
-                  } min-w-[50px] mb-16  pb-10 md:mb-0 transition-all duration-300`}
+                  } min-w-[50px] mb-[100vh]    pb-10 md:mb-0 transition-all duration-300`}
                 >
                   <Sidebar
                     isNarrow={isNarrowScreen}

@@ -76,7 +76,7 @@ const Index = () => {
 
   return (
     <div 
-      className="w-full shadow-sm py-4 bg-white justify-center flex"
+      className="w-full shadow-sm py-4    bg-white justify-center flex"
       onClick={() => {
         setShowHelp(false);
         setShowModal(false);

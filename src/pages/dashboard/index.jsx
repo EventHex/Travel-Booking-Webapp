@@ -279,21 +279,24 @@ const Index = () => {
   return (
     <>
       <div
-        style={{
-           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+     style={{
+            backgroundImage: `url(${MainBackground})`,
+            backgroundSize: "100%", 
+            backgroundPosition: "center", 
+            backgroundRepeat: "repeat", 
+            width: "100%",
+            marginBottom:'0px',
+          }}
       >
         <Header />
-        <div className="w-full">
+        <div className="w-full  ">
           <div className="w-full max-w-[1300px] mx-auto  sm:px-5">
             <div className="w-full mt-10 flex gap-1 md:gap-4">
               {/* Sidebar container - fixed 20% width on larger screens */}
               <div
                 className={`${
                   isNarrowScreen ? "w-[50px]" : "w-[20%]"
-                } min-w-[50px]   mb-6 md:mb-0 transition-all duration-300`}
+                } min-w-[50px]   mb-6 md:mb-10 transition-all duration-300`}
               >
                 <SideBar isNarrow={isNarrowScreen} />
               </div>
@@ -340,7 +343,7 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="rounded-lg p-2 sm:p-4 mt-2">
+                  <div className="rounded-lg p-2  sm:p-4  mt-2">
                     {renderTabContent()}
                   </div>
                 </div>

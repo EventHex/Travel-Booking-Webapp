@@ -13,11 +13,11 @@ const CustomSelect = ({
   labelClass,
 }) => {
   return (
-    <div className="relative">
+    <div className="">
       <label className={`text-[16px] block font-[400] text-gray-700 mb-1`}>
         {label}{required && <span className="text-red-500">*</span>}
       </label>
-      <div className="relative">
+      <div className="">
         <select
           name={name}
           value={value}
