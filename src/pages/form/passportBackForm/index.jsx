@@ -87,7 +87,7 @@ export const BackPassportForm = () => {
     <div className="border-b border-t py-6">
       <div className="max-w-4xl mx-auto">
         <div className="w-[80%]">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+          <h1 className="text-[14px] sm:text-2xl font-medium text-gray-900">
             Upload Traveler's Back Passport Page
           </h1>
           <p className="text-xs sm:text-sm text-gray-600 py-4">
