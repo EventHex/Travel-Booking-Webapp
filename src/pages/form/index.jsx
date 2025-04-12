@@ -6,6 +6,7 @@ import {SearchInputText,SearchInputDate} from "../../components/searchInput";
 import File from "../../components/file";
 import { useSearchParams } from 'react-router-dom';
 import {SingleSelect} from "../../components/dropdown"
+import {TravelPhoto} from './travelPhoto'
 
 import {
   Flight,
@@ -306,131 +307,7 @@ const TravelVisaBooking = () => {
     );
   };
 
-  const TicketBooking = () => {
-    return (
-      <div className="px-4 py-6 md:py-8">
-        <div className="max-w-6xl mx-auto overflow-hidden">
-          <form onSubmit={handleSubmitTicketBooking} className="">
-            <div className="w-full">
-              {/* Flight Ticket Section */}
-              <div className="w-full flex flex-col md:flex-row gap-4 md:gap-5 border-b pb-6 md:pb-8 md:border-b-0  border-gray-200">
-                <div className="w-full md:w-[50%]">
-                  <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
-                    Round Trip Flight Ticket
-                  </h2>
-                  <p className="text-xs md:text-sm text-gray-600 mb-4 md:mb-8">
-                    Ensure all round trip tickets (both onward and return).
-                    Highlight the passenger's name clearly.
-                  </p>
-                </div>
-                <div className="relative w-full md:w-[50%]">
-                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
-                    <input
-                      type="file"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      onChange={(e) =>
-                        handleFileChangeTicketBooking(
-                          "flightTicket",
-                          e.target.files?.[0] || null
-                        )
-                      }
-                      accept=".jpg,.jpeg,.png,.pdf"
-                    />
-                    <div className="text-center">
-                      <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
-                      <p className="mt-2 md:mt-4 text-xs md:text-sm text-gray-600">
-                        {documents.flightTicket
-                          ? documents.flightTicket.name
-                          : "Choose a file or drag & drop it here."}
-                      </p>
-                      <p className="mt-1 md:mt-2 text-xs text-gray-500">
-                        JPEG, PNG, PDF, and MP4 formats, up to 50 MB
-                      </p>
-                      {!documents.flightTicket && (
-                        <button
-                          type="button"
-                          className="mt-2 md:mt-4 px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
-                        >
-                          Browse File
-                        </button>
-                      )}
-                    </div>
-                  </div> */}
-                  <div className="w-[100%]">
-                  <File head={"Round Trip Flight Ticket"} />
-                </div>
-                </div>
-              </div>
 
-              {/* Hotel Booking Section */}
-              <div className="w-full flex flex-col md:flex-row gap-4 md:gap-5  ">
-                <div className="w-full md:w-[50%]">
-                  <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
-                    Hotel Booking
-                  </h2>
-                  <p className="text-xs md:text-sm text-gray-600 mb-4 md:mb-8">
-                    Hotel booking should be for the same day as the passenger's
-                    arrival in Dubai. Highlight the passenger's name clearly.
-                  </p>
-                </div>
-                <div className="w-full md:w-[50%] relative">
-                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
-                    <input
-                      type="file"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      onChange={(e) =>
-                        handleFileChangeTicketBooking(
-                          "hotelBooking",
-                          e.target.files?.[0] || null
-                        )
-                      }
-                      accept=".jpg,.jpeg,.png,.pdf"
-                    />
-                    <div className="text-center">
-                      <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
-                      <p className="mt-2 md:mt-4 text-xs md:text-sm text-gray-600">
-                        {documents.hotelBooking
-                          ? documents.hotelBooking.name
-                          : "Choose a file or drag & drop it here."}
-                      </p>
-                      <p className="mt-1 md:mt-2 text-xs text-gray-500">
-                        JPEG, PNG, PDF, and MP4 formats, up to 50 MB
-                      </p>
-                      {!documents.hotelBooking && (
-                        <button
-                          type="button"
-                          className="mt-2 md:mt-4 px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
-                        >
-                          Browse File
-                        </button>
-                      )}
-                    </div>
-                  </div> */}
-                  <div className="w-[100%]">
-                  <File  className={''} head={"Hotel Booking"} />
-                </div>
-                </div>
-              </div>
-
-              {/* Buttons Section */}
-              <div className="w-full mt-10 px-4 md:px-0">
-                <div className="w-full md:w-[50%]">
-                  <div className="flex flex-col sm:flex-row py-4 md:py-5 border-t border-[#CDD0D5] gap-3 sm:gap-5">
-                    <button className=" gap-2 bg-blue-600 hover:bg-blue-700  w-full justify-center py-2  flex text-[14px] font-[400] text-white rounded-md ">
-                      <img src={UserAdd} alt="" /> Add Another Traveller
-                    </button>
-                    <button className=" gap-2 bg-blue-600 hover:bg-blue-700 flex w-full justify-center py-2 text-[14px] font-[400] text-white rounded-md ">
-                     <img src={Saveline} alt="" />  Review & Save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
 
   const VisaInformation = () => {
     return (
@@ -614,7 +491,7 @@ const TravelVisaBooking = () => {
               <FrontPassportForm />
               <BackPassportForm />
               <UploadTravelerPhoto />
-              <TicketBooking />
+              <TravelPhoto />
               <VisaInformation />
               </div>
             </div>
