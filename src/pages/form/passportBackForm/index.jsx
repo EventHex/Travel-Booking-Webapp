@@ -3,50 +3,60 @@ import Input from "../../../components/input";
 import File from "../../../components/file";
 
 export const BackPassportForm = () => {
-  const [formData, setFormData] = useState({
+  const [backFormData, setBackFormData] = useState({
     fathersName: "",
     mothersName: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingError, setProcessingError] = useState(null);
+  const [backImageUrl, setBackImageUrl] = useState(null);
 
   const handleFileUpload = async (file) => {
     if (!file) return;
 
-    setLoading(true);
-    setError(null);
+    setIsProcessing(true);
+    setProcessingError(null);
 
     try {
       const formData = new FormData();
       formData.append("passportImage", file);
 
-      const response = await fetch("/api/v1/passport/process-back", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "http://localhost:8078/api/v1/passport/process-back",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to process passport");
+      }
 
       const result = await response.json();
 
       if (result.success && result.data) {
-        setFormData({
+        // Only update back passport specific fields
+        setBackFormData({
           fathersName: result.data.fathersName || "",
           mothersName: result.data.mothersName || "",
         });
+        setBackImageUrl(result.data.backImageUrl || null);
       } else {
-        setError(result.error || "Failed to process passport");
+        setProcessingError(result.error || "Failed to process passport");
         console.error("Error processing passport:", result.error);
       }
     } catch (error) {
-      setError("Failed to upload file");
+      setProcessingError("Failed to upload file");
       console.error("Error uploading file:", error);
     } finally {
-      setLoading(false);
+      setIsProcessing(false);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setBackFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -74,10 +84,21 @@ export const BackPassportForm = () => {
                 <File
                   head={"Passport Back Page Image"}
                   onFileSelect={handleFileUpload}
-                  loading={loading}
+                  loading={isProcessing}
                 />
               </div>
-              {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+              {processingError && (
+                <p className="mt-2 text-sm text-red-600">{processingError}</p>
+              )}
+              {backImageUrl && (
+                <div className="mt-4">
+                  <img
+                    src={backImageUrl}
+                    alt="Back Passport Preview"
+                    className="max-w-full h-auto rounded-lg shadow-sm"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Form Column */}
@@ -86,7 +107,7 @@ export const BackPassportForm = () => {
                 <div>
                   <Input
                     name="fathersName"
-                    value={formData.fathersName}
+                    value={backFormData.fathersName}
                     onChange={handleInputChange}
                     placeholder="Father's Name"
                     label="Father's Name"
@@ -97,7 +118,7 @@ export const BackPassportForm = () => {
                 <div>
                   <Input
                     name="mothersName"
-                    value={formData.mothersName}
+                    value={backFormData.mothersName}
                     onChange={handleInputChange}
                     placeholder="Mother's Name"
                     label="Mother's Name"
