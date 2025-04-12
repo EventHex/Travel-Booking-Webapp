@@ -1,6 +1,7 @@
 import React, { useState,useEffect, useRef } from "react";
 import { Search, AlertTriangle, Shield } from "lucide-react";
 import { Calendar, Info, MapPin, Plane, ArrowRight } from 'lucide-react';
+import axios from 'axios';
 
 import Header from "../../components/header";
 import { Flight, Home,CalenderUp,CalenderDown, MainBackground } from "../../assets";
@@ -14,6 +15,9 @@ const TravelVisaBooking = () => {
   const destination = searchParams.get('destination') || '';
   const travelDate = searchParams.get('travelDate') || '';
   const returnDate = searchParams.get('returnDate') || '';
+  const [visaOptions, setVisaOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const searchData = {
     goingTo,
@@ -25,6 +29,44 @@ const TravelVisaBooking = () => {
   useEffect(() => {
     console.log('Received search data:', searchData);
   }, [goingTo, destination, travelDate,returnDate]);
+
+  useEffect(() => {
+    const fetchVisaData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8078/api/v1/visa');
+        
+        if (response.data.success && response.data.response) {
+          const visaData = response.data.response.map(visa => ({
+            title: visa.title,
+            status: visa.status === 'Active' ? 'approved' : 'warning',
+            message: `Estimated visa arrival by ${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}`,
+            details: {
+              entry: visa.entry,
+              validity: visa.validity,
+              duration: visa.duration,
+              processingTime: visa.processingTime,
+              absconding: 'AED 5,000',
+            },
+            price: {
+              original: visa.publicPrice,
+              discounted: visa.publicOfferPrice,
+              savings: 'Save up to 39%'
+            },
+            variant: visa.status === 'Active' ? 'green' : 'blue'
+          }));
+          setVisaOptions(visaData);
+        } else {
+          setError('Failed to fetch visa data');
+        }
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchVisaData();
+  }, []);
 
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
@@ -55,82 +97,15 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
     TrvellingEndFocus.current.focus ();
   }
   
+  
 
-  const visaOption = [
-    {
-      title: 'Combo offer ⭐: Vietnam E-Visa + Reliance Travel Insurance',
-      status: 'warning',
-      message: 'Your visa will not come in time before your departure date. Your visa will be delivered on 6th Mar, 2025',
-      details: {
-        entry: 'Single',
-        validity: '30 Days',
-        duration: '30 Days',
-        processingTime: '7 business days',
-        absconding: 'AED 5,000',
-      },
-      price: {
-        original: '₹5,013',
-        discounted: '₹3,891',
-        savings: 'Save up to 39%'
-      },
-      variant: 'blue'
-    },
-    {
-      title: 'Combo offer ⭐: Vietnam E-Visa + Reliance Travel Insurance',
-      status: 'approved',
-      message: 'Estimated visa arrival by 4th Mar, 2025',
-      details: {
-        entry: 'Single',
-        validity: '30 Days',
-        duration: '30 Days',
-        processingTime: '7 business days',
-        absconding: 'AED 5,000',
-      },
-      price: {
-        original: '₹5,013',
-        discounted: '₹3,891',
-        savings: 'Save up to 39%'
-      },
-      variant: 'green'
-    },
-    {
-      title: 'Combo offer ⭐: Vietnam E-Visa + Reliance Travel Insurance',
-      status: 'approved',
-      message: 'Estimated visa arrival by 4th Mar, 2025',
-      details: {
-        entry: 'Single',
-        validity: '30 Days',
-        duration: '30 Days',
-        processingTime: '7 business days',
-        absconding: 'AED 5,000',
-      },
-      price: {
-        original: '₹5,013',
-        discounted: '₹3,891',
-        savings: 'Save up to 39%'
-      },
-      variant: 'blue'
-    },
-    {
-      title: 'UAE 30 Days Single Entry Super Fast Express(24 Working Hours)',
-      status: 'approved',
-      message: 'Estimated visa arrival by 4th Mar, 2025',
-      details: {
-        entry: 'Single',
-        validity: '30 Days',
-        duration: '30 Days',
-        processingTime: '7 business days',
-        absconding: 'AED 5,000',
-      },
-      price: {
-        original: '₹5,013',
-        discounted: '₹3,891',
-        savings: 'Save up to 39%'
-      },
-      variant: 'blue'
-    }
-  ];
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
 
+  if (error) {
+    return <div className="flex justify-center items-center h-screen text-red-500">Error: {error}</div>;
+  }
 
   return (
     <>
@@ -166,7 +141,7 @@ const [TrvellingEndFocus,setTrvellingEndFocus] = useState(false);
     {/* *************  ticket section ***************** */}
     <main className="max-w-7xl mx-auto py-4 sm:py-6   sm:px-6 lg:px-8">
       <div className="space-y-4 md:space-y-6">
-        {visaOption.map((option, index) => (
+        {visaOptions.map((option, index) => (
           <div 
             key={index} 
             className={`bg-gradient-to-br from-white to-gray-50/80 rounded-[20px] shadow-sm overflow-hidden`}
