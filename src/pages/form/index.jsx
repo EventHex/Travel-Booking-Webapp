@@ -6,8 +6,8 @@ import {SearchInputText,SearchInputDate} from "../../components/searchInput";
 import File from "../../components/file";
 import { useSearchParams } from 'react-router-dom';
 import {SingleSelect} from "../../components/dropdown"
-import {TravelPhoto} from './travelPhoto'
-
+import {FlightHotelBooking} from './FlightHotalBooking'
+import {UploadTravelerPhoto} from './travelBooking'
 import {
   Flight,
   Home,
@@ -240,73 +240,7 @@ const TravelVisaBooking = () => {
 
  
 
-  const UploadTravelerPhoto = () => {
-    const Occupations = [
-      { value: 1, label: "developer" },
-      { value: 2, label: "enginear" },
-      { value: 3, label: "docter" },
-    ];
-    return (
-      <div className="">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-         
-
-          {/* Main upload section */}
-          <div className="w-full flex flex-col md:flex-row gap-6 mb-4">
-            <div className="  w-full md:w-[50%]">
-            <h1 className="text-[24px] sm:text-xl font-[600] py-4">
-            Upload Traveler Photo
-          </h1>
-              {/* Left side - Text content */}
-              <div className=" md:flex-1">
-                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                  Vietnam requires a scan of the traveler's passport. Upload a
-                  clear passport image and your details will be filled
-                  automatically. AI has built-in OCR which is 99.9% accurate.
-                  However, it is mandatory to review the information before
-                  submitting to ensure there are no mistakes. See detailed
-                  guidelines for the perfect passport here. Your visa can get
-                  rejected if these guidelines are not followed.
-                </p>
-              </div>
-            </div>
-                <div className=" md:w-[50%]  w-full py-2">
-                  <File head={"Travel Photo"} />
-                </div>
-          </div>
-
-          {/* Additional Questions Section */}
-          <div className="">
-            <h2 className="text-[30px] text-[#375DFB] font-[600] border-b py-4 border-[#868C98] w-full md:w-[80%]">
-              Answer Additional Required Questions
-            </h2>
-
-            <div className=" w-full md:w-[60%]">
-              <h3 className="text-[24px] text-[#0A0D14]  font-[600] py-3">
-                What is the traveler's occupation (optional)?
-              </h3>
-              <p className="text-[14px] text-gray-600">
-                This is an optional occupation field. Most people use the
-                default - Service. Occupation does not influence the decision of
-                the visa.
-              </p>
-              <div className="py-4">
-              <SingleSelect 
-                labelClass={'12px'}
-                  className={"py-[11px]"}
-                  placeholder={"Select Occupation"}
-                  label=""
-                />
-                
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
+  
 
 
   const VisaInformation = () => {
@@ -491,7 +425,7 @@ const TravelVisaBooking = () => {
               <FrontPassportForm />
               <BackPassportForm />
               <UploadTravelerPhoto />
-              <TravelPhoto />
+              <FlightHotelBooking />
               <VisaInformation />
               </div>
             </div>
