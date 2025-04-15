@@ -92,12 +92,26 @@ const Index = () => {
         // Transform the API data into the required format
         const transformedApplications = applications.map(app => {
           const status = app.status;
+          
+          // Define the order of application details statuses
+          const statusOrder = [
+            "Errors Fixed",
+            "Application Complete",
+            "Application Paid",
+            "Submitted to Sponsor",
+            "Visa Approved"
+          ];
+          
+          // Get the current status index
+          const currentStatusIndex = statusOrder.indexOf(app.applicationDetails);
+          
+          // Create details object based on status progression
           const details = {
-            errorFixed: app.applicationDetails === "Errors Fixed",
-            applicationComplete: app.applicationDetails === "Application Complete",
-            applicationPaid: app.status !== "Pending Payment", // Set based on status
-            submittedToSpencer: app.applicationDetails === "Submitted to Sponsor",
-            visaApproved: status === "Approved"
+            errorFixed: currentStatusIndex >= 0,
+            applicationComplete: currentStatusIndex >= 1,
+            applicationPaid: currentStatusIndex >= 2,
+            submittedToSponsor: currentStatusIndex >= 3,
+            visaApproved: currentStatusIndex >= 4
           };
 
           const statusMessage = {
