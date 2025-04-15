@@ -63,6 +63,16 @@ const HeroSection = () => {
         title: "kochin",
         id: 3,
       },
+      {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "kannur",
+        id: 5,
+      }, {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "goa",
+        id: 6,
+      },
+      
     ];
 
     const dropDownPlace = [
@@ -80,6 +90,15 @@ const HeroSection = () => {
         icon: <MapPin size={14} className="text-[gray]" />,
         title: "kochin",
         id: 3,
+      },
+      {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "kannur",
+        id: 5,
+      }, {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "goa",
+        id: 6,
       },
     ];
     const handleCitizenIconClick = () => {
@@ -256,39 +275,21 @@ const HeroSection = () => {
       },
       {
         image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
+        subtitle: "muzhappiland beach",
+        title: "kannur",
         id: 4,
       },
       {
         image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
+        subtitle: "Goa beach",
+        title: "goa",
+        id: 5,
       },
       {
         image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
+        subtitle: "hilte business park",
+        title: "kozhikode",
+        id: 6,
       },
     ];
     switch (activeTab) {
