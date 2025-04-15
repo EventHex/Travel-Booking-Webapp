@@ -1,15 +1,59 @@
 import React, { useState } from "react";
 import { Mail, Eye, EyeOff } from "lucide-react";
 import { Logo, LoginBackgorund } from "../../assets";
+import { useNavigate } from "react-router-dom";
 
-const index = () => {
+const Index = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:8078/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          authenticationType: "email"
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        navigate("/dashboard");
+      } else {
+        setError(data.message || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Failed to connect to server");
+    }
+  };
+
+  const handleReset = () => {
+    setEmail("");
+    setPassword("");
+    setError("");
+  };
+
   return (
     <div className="w-full flex flex-col md:flex-row">
       <div
@@ -46,7 +90,13 @@ const index = () => {
               </h1>
             </div>
 
-            <form className="space-y-5 md:space-y-6">
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
               <div className="space-y-2">
                 <label
                   htmlFor="email"
@@ -112,24 +162,25 @@ const index = () => {
                     )}
                   </button>
                 </div>
-                <a
-                  href="#"
-                  className="block text-xs md:text-sm text-blue-500 hover:underline mt-1"
+                <span
+                  onClick={() => navigate("/reset-password")}
+                  className="block text-xs md:text-sm text-blue-500 hover:underline mt-1 cursor-pointer"
                 >
                   Reset My Password
-                </a>
+                </span>
               </div>
 
-              <div className="flex  w-[full]   justify-center gap-1 md:gap-4 mt-14">
+              <div className="flex w-[full] justify-center gap-1 md:gap-4 mt-14">
                 <button
                   type="submit"
-                  className="py-3  w-[65%] px-4 text-[14px] font-[400]  bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="py-3 w-[65%] px-4 text-[14px] font-[400] bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   Sign in
                 </button>
                 <button
                   type="button"
-                  className="border-[#375DFB]   w-[30%]  flex-none py-3 px-4 md:px-6 bg-white border text-[14px] font-[400] hover:bg-gray-50 text-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2"
+                  onClick={handleReset}
+                  className="border-[#375DFB] w-[30%] flex-none py-3 px-4 md:px-6 bg-white border text-[14px] font-[400] hover:bg-gray-50 text-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2"
                 >
                   Reset
                 </button>
@@ -140,7 +191,12 @@ const index = () => {
         <div className="h-1/5 flex justify-center items-center">
           <p className="text-gray-800 text-sm md:text-base">
             Don't have an Account?{" "}
-            <span className="text-[#375DFB] cursor-pointer"> Sign up</span>
+            <span 
+              onClick={() => navigate("/signup")} 
+              className="text-[#375DFB] cursor-pointer"
+            > 
+              Sign up
+            </span>
           </p>
         </div>
       </div>
@@ -148,4 +204,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
