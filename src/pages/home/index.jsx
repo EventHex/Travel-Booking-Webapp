@@ -300,14 +300,24 @@ const HeroSection = () => {
                 dropDownPlace={dropDownPlace}
                 dropDownData={citizenOptions}
                 onInputChange={handleInputChange}
+                value={{
+                  destination: searchData.destination,
+                  goingTo: searchData.goingTo
+                }}
               />
-              <SearchInputDate onDateChange={handleInputChange} />
+              <SearchInputDate 
+                onDateChange={handleInputChange}
+                value={{
+                  travelDate: searchData.travelDate,
+                  returnDate: searchData.returnDate
+                }}
+              />
               <div className="flex justify-end">
                 <Link
                   to={{
                     pathname: "/apply",
                     search: `?${new URLSearchParams(searchData).toString()}`,
-                    state: searchData,
+                    state: searchData
                   }}
                 >
                   <button
