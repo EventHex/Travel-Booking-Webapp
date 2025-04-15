@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Header from "../../components/header";
 import SideBar from "../../components/sideBar";
+import Axiosinstance from "../../instance/index";
 import {
   MainBackground,
   Allicon,
@@ -21,6 +22,25 @@ const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const tabsRef = useRef(null);
+
+  const [visaApplications, setVisaApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchVisaApplications = async () => {
+      try { 
+        const response = await Axiosinstance.get('/visa-application');
+        console.log(response,'data gotted')
+        setVisaApplications(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+    fetchVisaApplications();
+  }, []); 
 
   // Function to scroll to active tab
   const scrollToActiveTab = () => {
