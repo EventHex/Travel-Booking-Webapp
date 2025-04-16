@@ -63,6 +63,16 @@ const HeroSection = () => {
         title: "kochin",
         id: 3,
       },
+      {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "kannur",
+        id: 5,
+      }, {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "goa",
+        id: 6,
+      },
+      
     ];
 
     const dropDownPlace = [
@@ -80,6 +90,15 @@ const HeroSection = () => {
         icon: <MapPin size={14} className="text-[gray]" />,
         title: "kochin",
         id: 3,
+      },
+      {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "kannur",
+        id: 5,
+      }, {
+        icon: <MapPin size={14} className="text-[gray]" />,
+        title: "goa",
+        id: 6,
       },
     ];
     const handleCitizenIconClick = () => {
@@ -256,39 +275,21 @@ const HeroSection = () => {
       },
       {
         image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
+        subtitle: "muzhappiland beach",
+        title: "kannur",
         id: 4,
       },
       {
         image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
+        subtitle: "Goa beach",
+        title: "goa",
+        id: 5,
       },
       {
         image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
+        subtitle: "hilte business park",
+        title: "kozhikode",
+        id: 6,
       },
     ];
     switch (activeTab) {
@@ -300,14 +301,24 @@ const HeroSection = () => {
                 dropDownPlace={dropDownPlace}
                 dropDownData={citizenOptions}
                 onInputChange={handleInputChange}
+                value={{
+                  destination: searchData.destination,
+                  goingTo: searchData.goingTo
+                }}
               />
-              <SearchInputDate onDateChange={handleInputChange} />
+              <SearchInputDate 
+                onDateChange={handleInputChange}
+                value={{
+                  travelDate: searchData.travelDate,
+                  returnDate: searchData.returnDate
+                }}
+              />
               <div className="flex justify-end">
                 <Link
                   to={{
                     pathname: "/apply",
                     search: `?${new URLSearchParams(searchData).toString()}`,
-                    state: searchData,
+                    state: searchData
                   }}
                 >
                   <button

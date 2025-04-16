@@ -1,7 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { CalenderDown, CalenderUp, Flight, Home } from "../../assets";
 
-const SearchInputText = ({ 
+const SearchInputText = ({  
+  value = {
+    destination: '',
+    goingTo: ''
+  },
   data,
   dropDownData, 
   dropDownPlace, 
@@ -9,11 +13,10 @@ const SearchInputText = ({
   initialDestination = "",
   initialGoingTo = ""
 }) => {
+  // Use value object properties or fall back to other sources
+  const destination = value.destination || initialDestination || "";
+  const goingTo = value.goingTo || initialGoingTo || "";
 
-  const destination = initialDestination || (data && data.destination) || "";
-  const goingTo = initialGoingTo || (data && data.goingTo) || "";
-
-  
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
@@ -23,16 +26,16 @@ const SearchInputText = ({
   const fromDropdownRef = useRef(null);
   const goingToInputRef = useRef(null);
 
-  // Set initial values when component mounts
+  // Update input values when data changes
   useEffect(() => {
-    if (citizenInputRef.current && initialDestination) {
-      citizenInputRef.current.value = initialDestination;
+    if (citizenInputRef.current) {
+      citizenInputRef.current.value = destination;
     }
     
-    if (goingToInputRef.current && initialGoingTo) {
-      goingToInputRef.current.value = initialGoingTo;
+    if (goingToInputRef.current) {
+      goingToInputRef.current.value = goingTo;
     }
-  }, [initialDestination, initialGoingTo]);
+  }, [destination, goingTo]);
 
   const handleFromInputBlur = () => {
     setCitizenIsFocused(false);
@@ -101,7 +104,6 @@ const SearchInputText = ({
             onFocus={handleFromInputFocus}
             onBlur={handleFromInputBlur}
             onChange={(e) => onInputChange("destination", e.target.value)}
-            defaultValue={initialDestination}
           />
         </div>
 
@@ -150,7 +152,6 @@ const SearchInputText = ({
             onFocus={handleGoingToFocus}
             onBlur={handleGoingToBlur}
             onChange={(e) => onInputChange("goingTo", e.target.value)}
-            defaultValue={initialGoingTo}
           />
         </div>
 

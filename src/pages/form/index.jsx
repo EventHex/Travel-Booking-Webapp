@@ -6,7 +6,8 @@ import {SearchInputText,SearchInputDate} from "../../components/searchInput";
 import File from "../../components/file";
 import { useSearchParams } from 'react-router-dom';
 import {SingleSelect} from "../../components/dropdown"
-
+import {FlightHotelBooking} from './FlightHotalBooking'
+import {UploadTravelerPhoto} from './travelBooking'
 import {
   Flight,
   Home,
@@ -239,198 +240,8 @@ const TravelVisaBooking = () => {
 
  
 
-  const UploadTravelerPhoto = () => {
-    const Occupations = [
-      { value: 1, label: "developer" },
-      { value: 2, label: "enginear" },
-      { value: 3, label: "docter" },
-    ];
-    return (
-      <div className="">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-         
+  
 
-          {/* Main upload section */}
-          <div className="w-full flex flex-col md:flex-row gap-6 mb-4">
-            <div className="  w-full md:w-[50%]">
-            <h1 className="text-[24px] sm:text-xl font-[600] py-4">
-            Upload Traveler Photo
-          </h1>
-              {/* Left side - Text content */}
-              <div className=" md:flex-1">
-                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                  Vietnam requires a scan of the traveler's passport. Upload a
-                  clear passport image and your details will be filled
-                  automatically. AI has built-in OCR which is 99.9% accurate.
-                  However, it is mandatory to review the information before
-                  submitting to ensure there are no mistakes. See detailed
-                  guidelines for the perfect passport here. Your visa can get
-                  rejected if these guidelines are not followed.
-                </p>
-              </div>
-            </div>
-                <div className=" md:w-[50%]  w-full py-2">
-                  <File head={"Travel Photo"} />
-                </div>
-          </div>
-
-          {/* Additional Questions Section */}
-          <div className="">
-            <h2 className="text-[30px] text-[#375DFB] font-[600] border-b py-4 border-[#868C98] w-full md:w-[80%]">
-              Answer Additional Required Questions
-            </h2>
-
-            <div className=" w-full md:w-[60%]">
-              <h3 className="text-[24px] text-[#0A0D14]  font-[600] py-3">
-                What is the traveler's occupation (optional)?
-              </h3>
-              <p className="text-[14px] text-gray-600">
-                This is an optional occupation field. Most people use the
-                default - Service. Occupation does not influence the decision of
-                the visa.
-              </p>
-              <div className="py-4">
-              <SingleSelect 
-                labelClass={'12px'}
-                  className={"py-[11px]"}
-                  placeholder={"Select Occupation"}
-                  label=""
-                />
-                
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const TicketBooking = () => {
-    return (
-      <div className="px-4 py-6 md:py-8">
-        <div className="max-w-6xl mx-auto overflow-hidden">
-          <form onSubmit={handleSubmitTicketBooking} className="">
-            <div className="w-full">
-              {/* Flight Ticket Section */}
-              <div className="w-full flex flex-col md:flex-row gap-4 md:gap-5 border-b pb-6 md:pb-8 md:border-b-0  border-gray-200">
-                <div className="w-full md:w-[50%]">
-                  <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
-                    Round Trip Flight Ticket
-                  </h2>
-                  <p className="text-xs md:text-sm text-gray-600 mb-4 md:mb-8">
-                    Ensure all round trip tickets (both onward and return).
-                    Highlight the passenger's name clearly.
-                  </p>
-                </div>
-                <div className="relative w-full md:w-[50%]">
-                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
-                    <input
-                      type="file"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      onChange={(e) =>
-                        handleFileChangeTicketBooking(
-                          "flightTicket",
-                          e.target.files?.[0] || null
-                        )
-                      }
-                      accept=".jpg,.jpeg,.png,.pdf"
-                    />
-                    <div className="text-center">
-                      <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
-                      <p className="mt-2 md:mt-4 text-xs md:text-sm text-gray-600">
-                        {documents.flightTicket
-                          ? documents.flightTicket.name
-                          : "Choose a file or drag & drop it here."}
-                      </p>
-                      <p className="mt-1 md:mt-2 text-xs text-gray-500">
-                        JPEG, PNG, PDF, and MP4 formats, up to 50 MB
-                      </p>
-                      {!documents.flightTicket && (
-                        <button
-                          type="button"
-                          className="mt-2 md:mt-4 px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
-                        >
-                          Browse File
-                        </button>
-                      )}
-                    </div>
-                  </div> */}
-                  <div className="w-[100%]">
-                  <File head={"Round Trip Flight Ticket"} />
-                </div>
-                </div>
-              </div>
-
-              {/* Hotel Booking Section */}
-              <div className="w-full flex flex-col md:flex-row gap-4 md:gap-5  ">
-                <div className="w-full md:w-[50%]">
-                  <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
-                    Hotel Booking
-                  </h2>
-                  <p className="text-xs md:text-sm text-gray-600 mb-4 md:mb-8">
-                    Hotel booking should be for the same day as the passenger's
-                    arrival in Dubai. Highlight the passenger's name clearly.
-                  </p>
-                </div>
-                <div className="w-full md:w-[50%] relative">
-                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
-                    <input
-                      type="file"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      onChange={(e) =>
-                        handleFileChangeTicketBooking(
-                          "hotelBooking",
-                          e.target.files?.[0] || null
-                        )
-                      }
-                      accept=".jpg,.jpeg,.png,.pdf"
-                    />
-                    <div className="text-center">
-                      <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
-                      <p className="mt-2 md:mt-4 text-xs md:text-sm text-gray-600">
-                        {documents.hotelBooking
-                          ? documents.hotelBooking.name
-                          : "Choose a file or drag & drop it here."}
-                      </p>
-                      <p className="mt-1 md:mt-2 text-xs text-gray-500">
-                        JPEG, PNG, PDF, and MP4 formats, up to 50 MB
-                      </p>
-                      {!documents.hotelBooking && (
-                        <button
-                          type="button"
-                          className="mt-2 md:mt-4 px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
-                        >
-                          Browse File
-                        </button>
-                      )}
-                    </div>
-                  </div> */}
-                  <div className="w-[100%]">
-                  <File  className={''} head={"Hotel Booking"} />
-                </div>
-                </div>
-              </div>
-
-              {/* Buttons Section */}
-              <div className="w-full mt-10 px-4 md:px-0">
-                <div className="w-full md:w-[50%]">
-                  <div className="flex flex-col sm:flex-row py-4 md:py-5 border-t border-[#CDD0D5] gap-3 sm:gap-5">
-                    <button className=" gap-2 bg-blue-600 hover:bg-blue-700  w-full justify-center py-2  flex text-[14px] font-[400] text-white rounded-md ">
-                      <img src={UserAdd} alt="" /> Add Another Traveller
-                    </button>
-                    <button className=" gap-2 bg-blue-600 hover:bg-blue-700 flex w-full justify-center py-2 text-[14px] font-[400] text-white rounded-md ">
-                     <img src={Saveline} alt="" />  Review & Save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
 
   const VisaInformation = () => {
     return (
@@ -614,7 +425,7 @@ const TravelVisaBooking = () => {
               <FrontPassportForm />
               <BackPassportForm />
               <UploadTravelerPhoto />
-              <TicketBooking />
+              <FlightHotelBooking />
               <VisaInformation />
               </div>
             </div>
