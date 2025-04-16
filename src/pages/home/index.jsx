@@ -27,12 +27,43 @@ import { SearchInputText, SearchInputDate } from "../../components/searchInput";
 
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("Visas");
+  const [citizenOptions, setCitizenOptions] = useState([]);
+  const [dropDownPlace, setDropDownPlace] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const tabs = [
     { id: "Visas", icon: Visa },
     { id: "Activities", icon: Acitivty },
     { id: "Insurance", icon: Inurance },
     { id: "Flights", icon: Flight },
   ];
+
+  // Fetch country data from API
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('http://localhost:8078/api/v1/country');
+        const data = await response.json();
+        
+        if (data.success && data.response) {
+          const countries = data.response.map(country => ({
+            icon: <MapPin size={14} className="text-[gray]" />,
+            title: country.countryName,
+            id: country._id
+          }));
+          
+          setCitizenOptions(countries);
+          setDropDownPlace(countries);
+        }
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCountries();
+  }, []);
 
   // Function to render different content based on active tab
   const renderTabContent = () => {
@@ -47,60 +78,6 @@ const HeroSection = () => {
     const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
     const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
 
-    const citizenOptions = [
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "dubai",
-        id: 1,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "mumbai",
-        id: 2,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kochin",
-        id: 3,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kannur",
-        id: 5,
-      }, {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "goa",
-        id: 6,
-      },
-      
-    ];
-
-    const dropDownPlace = [
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "dubai",
-        id: 1,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "mumbai",
-        id: 2,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kochin",
-        id: 3,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kannur",
-        id: 5,
-      }, {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "goa",
-        id: 6,
-      },
-    ];
     const handleCitizenIconClick = () => {
       citizenInputRef.current.focus();
     };
@@ -242,7 +219,13 @@ const HeroSection = () => {
     };
 
     // Add this function to handle search button click
-    const handleSearchClick = () => {
+    const handleSearchClick = (e) => {
+      // Validate required fields
+      if (!searchData.destination || !searchData.goingTo || !searchData.travelDate) {
+        e.preventDefault();
+        // You can add a toast or alert here if needed
+        return;
+      }
       // Log the search data to console
       console.log("Search Data:", searchData);
     };
@@ -258,31 +241,31 @@ const HeroSection = () => {
       {
         image: Placeholder,
         subtitle: "united arab emirates",
-        title: "dubai",
+        title: "UAE",
         id: 1,
       },
       {
         image: Placeholder,
         subtitle: "Chhatrapati Shivaji Maharaj International Airport",
-        title: "mumbai",
+        title: "Mumbai",
         id: 2,
       },
       {
         image: Placeholder,
         subtitle: "Cochin International Airport",
-        title: "kochin",
+        title: "Kochin",
         id: 3,
       },
       {
         image: Placeholder,
         subtitle: "muzhappiland beach",
-        title: "kannur",
+        title: "Kannur",
         id: 4,
       },
       {
         image: Placeholder,
         subtitle: "Goa beach",
-        title: "goa",
+        title: "Goa",
         id: 5,
       },
       {
@@ -305,6 +288,7 @@ const HeroSection = () => {
                   destination: searchData.destination,
                   goingTo: searchData.goingTo
                 }}
+                isLoading={isLoading}
               />
               <SearchInputDate 
                 onDateChange={handleInputChange}
@@ -317,13 +301,18 @@ const HeroSection = () => {
                 <Link
                   to={{
                     pathname: "/apply",
-                    search: `?${new URLSearchParams(searchData).toString()}`,
+                    search:` ?${new URLSearchParams(searchData).toString()}`,
                     state: searchData
                   }}
                 >
                   <button
-                    className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
+                    className={`text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px] ${
+                      (!searchData.destination || !searchData.goingTo || !searchData.travelDate) 
+                        ? 'opacity-50 cursor-not-allowed' 
+                        : 'hover:bg-[#0000cc]'
+                    }`}
                     onClick={handleSearchClick}
+                    disabled={!searchData.destination || !searchData.goingTo || !searchData.travelDate}
                   >
                     Search
                   </button>
@@ -539,7 +528,7 @@ const HeroSection = () => {
             </div>
           </div>
         </div>
-        {/* *****************footer***************************** */}
+        {/* ****************footer**************************** */}
         <div className="w-full flex justify-center rounded-t-[30px] py-6 sm:py-8 md:py-10 items-center bg-gradient-to-r from-[#1C1C82] to-[#24186C]">
           <div className="max-w-[1300px] flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
             <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">

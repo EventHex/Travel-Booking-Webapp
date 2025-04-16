@@ -454,24 +454,6 @@ const Index = () => {
               </div>
             </div>
           </div>
-          <div className="w-full max-w-[1300px] mx-auto px-5 mt-4">
-            <SearchInputText
-              value={{
-                destination: searchData.destination,
-                goingTo: searchData.goingTo
-              }}
-              dropDownPlace={dropDownPlace}
-              dropDownData={citizenOptions}
-              onInputChange={handleInputChange}
-              data={searchData}
-            />
-            <div className="mt-4">
-              <SearchInputDate
-                data={searchData}
-                onDateChange={handleInputChange}
-              />
-            </div>
-          </div>
         </div>
       </div>
     </>
