@@ -7,6 +7,8 @@ import FormPage from './pages/form'
 import Productpge from './pages/products'
 import DetailsPage from './pages/details'
 import ProflePage from "./pages/profile"
+import Signup from './pages/signup'
+import ResetPassword from './pages/resetPassword'
 // import NotFound from "./pages/NotFound";
 import "./App.css";
 
@@ -17,6 +19,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/apply" element={<ApplyPage />} />
           <Route path="/form" element={<FormPage />} />

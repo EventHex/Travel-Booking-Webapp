@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Header from "../../components/header";
 import SideBar from "../../components/sideBar";
+import Axiosinstance from "../../instance/index";
 import {
   MainBackground,
   Allicon,
@@ -15,6 +16,7 @@ import {
 import Ticket from "../../components/ticket";
 import {SuccessIcon,PendingIcon,RejectIcon} from '../../assets'
 import axios from "axios";
+import { SearchInputText, SearchInputDate } from "../../components/searchInput";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -27,6 +29,61 @@ const Index = () => {
   const [submittedApplications, setSubmittedApplications] = useState([]);
   const [pendingApplications, setPendingApplications] = useState([]);
   const [refundedApplications, setRefundedApplications] = useState([]);
+
+  const [visaApplications, setVisaApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchData, setSearchData] = useState({
+    destination: "",
+    goingTo: "",
+    travelDate: "",
+    returnDate: ""
+  });
+
+  // Add dropdown options
+  const dropDownPlace = [
+    { id: 1, title: "Dubai", icon: "🇦🇪" },
+    { id: 2, title: "Abu Dhabi", icon: "🇦🇪" }
+  ];
+
+  const citizenOptions = [
+    { id: 1, title: "UAE", icon: "🇦🇪" },
+    { id: 2, title: "India", icon: "🇮🇳" }
+  ];
+
+  useEffect(() => {
+    const fetchVisaApplications = async () => {
+      try {
+        const response = await Axiosinstance.get('/visa-application');
+        setVisaApplications(response.data);
+        
+        // Set search data from first visa application
+        if (response.data && response.data[0]) {
+          const visa = response.data[0];
+          const formattedData = {
+            destination: visa.visaCountry || "",
+            goingTo: visa.travellerInformation || "",
+            travelDate: visa.travelDateFrom ? new Date(visa.travelDateFrom).toISOString().split('T')[0] : "",
+            returnDate: visa.travelDateTo ? new Date(visa.travelDateTo).toISOString().split('T')[0] : ""
+          };
+          console.log('Setting form data:', formattedData); // Debug log
+          setSearchData(formattedData);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error:', error);
+        setLoading(false);
+      }
+    };
+    fetchVisaApplications();
+  }, []);
+
+  const handleInputChange = (field, value) => {
+    setSearchData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
   // Function to scroll to active tab
   const scrollToActiveTab = () => {
@@ -395,6 +452,24 @@ const Index = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="w-full max-w-[1300px] mx-auto px-5 mt-4">
+            <SearchInputText
+              value={{
+                destination: searchData.destination,
+                goingTo: searchData.goingTo
+              }}
+              dropDownPlace={dropDownPlace}
+              dropDownData={citizenOptions}
+              onInputChange={handleInputChange}
+              data={searchData}
+            />
+            <div className="mt-4">
+              <SearchInputDate
+                data={searchData}
+                onDateChange={handleInputChange}
+              />
             </div>
           </div>
         </div>
