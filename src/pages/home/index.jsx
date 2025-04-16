@@ -50,26 +50,26 @@ const HeroSection = () => {
     const citizenOptions = [
       {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "dubai",
+        title: "UAE",
         id: 1,
       },
       {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "mumbai",
+        title: "Mumbai",
         id: 2,
       },
       {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kochin",
+        title: "Kochin",
         id: 3,
       },
       {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kannur",
+        title: "Kannur",
         id: 5,
       }, {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "goa",
+        title: "Goa",
         id: 6,
       },
       
@@ -78,26 +78,26 @@ const HeroSection = () => {
     const dropDownPlace = [
       {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "dubai",
+        title: "UAE",
         id: 1,
       },
       {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "mumbai",
+        title: "Mumbai",
         id: 2,
       },
       {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kochin",
+        title: "Kochin",
         id: 3,
       },
       {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kannur",
+        title: "Kannur",
         id: 5,
       }, {
         icon: <MapPin size={14} className="text-[gray]" />,
-        title: "goa",
+        title: "Goa",
         id: 6,
       },
     ];
@@ -242,7 +242,13 @@ const HeroSection = () => {
     };
 
     // Add this function to handle search button click
-    const handleSearchClick = () => {
+    const handleSearchClick = (e) => {
+      // Validate required fields
+      if (!searchData.destination || !searchData.goingTo || !searchData.travelDate) {
+        e.preventDefault();
+        // You can add a toast or alert here if needed
+        return;
+      }
       // Log the search data to console
       console.log("Search Data:", searchData);
     };
@@ -258,31 +264,31 @@ const HeroSection = () => {
       {
         image: Placeholder,
         subtitle: "united arab emirates",
-        title: "dubai",
+        title: "UAE",
         id: 1,
       },
       {
         image: Placeholder,
         subtitle: "Chhatrapati Shivaji Maharaj International Airport",
-        title: "mumbai",
+        title: "Mumbai",
         id: 2,
       },
       {
         image: Placeholder,
         subtitle: "Cochin International Airport",
-        title: "kochin",
+        title: "Kochin",
         id: 3,
       },
       {
         image: Placeholder,
         subtitle: "muzhappiland beach",
-        title: "kannur",
+        title: "Kannur",
         id: 4,
       },
       {
         image: Placeholder,
         subtitle: "Goa beach",
-        title: "goa",
+        title: "Goa",
         id: 5,
       },
       {
@@ -322,8 +328,13 @@ const HeroSection = () => {
                   }}
                 >
                   <button
-                    className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
+                    className={`text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px] ${
+                      (!searchData.destination || !searchData.goingTo || !searchData.travelDate) 
+                        ? 'opacity-50 cursor-not-allowed' 
+                        : 'hover:bg-[#0000cc]'
+                    }`}
                     onClick={handleSearchClick}
+                    disabled={!searchData.destination || !searchData.goingTo || !searchData.travelDate}
                   >
                     Search
                   </button>
