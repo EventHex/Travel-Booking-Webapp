@@ -228,6 +228,7 @@ const Ticket = ({
                       {getStatusText(application.status)}
                     </div>
                   </div>
+                  
                   <div className="flex flex-col w-full p-3 sm:p-5">
                     {/* Desktop layout (lg and above) */}
                     <div className="hidden lg:flex lg:flex-row lg:justify-between lg:gap-4 lg:w-full">
