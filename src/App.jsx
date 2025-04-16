@@ -9,6 +9,7 @@ import DetailsPage from './pages/details'
 import ProflePage from "./pages/profile"
 import Signup from './pages/signup'
 import ResetPassword from './pages/resetPassword'
+import Print from './pages/print/print'
 // import NotFound from "./pages/NotFound";
 import "./App.css";
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="/products" element={<Productpge />} /> 
         <Route path="/details" element={<DetailsPage />} />
         <Route path="/profle" element={<ProflePage />} />
+        <Route path="/download" element={<Print />} />
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </Router>
