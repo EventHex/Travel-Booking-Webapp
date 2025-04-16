@@ -4,32 +4,40 @@ import { True, TicIcon, CloseIconTicket } from "../../assets";
 import PassportPopup from "./popup";
 
 const Ticket = ({
-  approvedApplication,
-  rejectedApplication,
-  submittedApplication,
-  refuntApplication,
-  pendingApplication,
+  approvedApplications = [],
+  rejectedApplications = [],
+  submittedApplications = [],
+  refundedApplications = [],
+  pendingApplications = [],
 }) => {
-  // Create an array of applications, filtering out undefined ones
+  // Create an array of all applications, filtering out empty arrays
   const applicationData = [
-    approvedApplication,
-    refuntApplication,
-    rejectedApplication,
-    pendingApplication,
-    submittedApplication,
-  ].filter((app) => app !== undefined);
+    ...approvedApplications,
+    ...rejectedApplications,
+    ...submittedApplications,
+    ...pendingApplications,
+    ...refundedApplications,
+  ];
+
+  if (applicationData.length === 0) {
+    return (
+      <div className="w-full flex justify-center items-center p-8">
+        <p className="text-gray-500">No applications found</p>
+      </div>
+    );
+  }
 
   const getStatusBarColor = (status) => {
     switch (status) {
-      case "approved":
+      case "Approved":
         return "bg-blue-500 ";
-      case "rejected":
+      case "Rejected":
         return "bg-red-500";
-      case "refunded":
+      case "Refunded":
         return "bg-orange-500";
-      case "submitted":
+      case "Submitted":
         return "bg-blue-800";
-      case "pending":
+      case "Pending Payment":
         return "bg-green-500";
       default:
         return "bg-blue-500";
@@ -38,14 +46,16 @@ const Ticket = ({
 
   const getStatusText = (status) => {
     switch (status) {
-      case "approved":
+      case "Approved":
         return "Approved";
-      case "rejected":
+      case "Rejected":
         return "Rejected";
-      case "submitted":
+      case "Submitted":
         return "Submitted";
-      case "refunded":
+      case "Refunded":
         return "Refunded";
+      case "Pending Payment":
+        return "Pending Payment";
       default:
         return "Processing";
     }
@@ -200,11 +210,11 @@ const Ticket = ({
                         </h2>
                         <div
                           className={`${
-                            application.status === "approved"
+                            application.status === "Approved"
                               ? "bg-blue-100"
-                              : application.status === "pending"
+                              : application.status === "Pending Payment"
                               ? "bg-green-100"
-                              : application.status === "submitted"
+                              : application.status === "Submitted"
                               ? "bg-blue-200"
                               : application.statusMessage.cardBg
                           } rounded-xl sm:rounded-2xl sm:p-2`}
@@ -214,11 +224,11 @@ const Ticket = ({
                             {application.status !== "refunded" && (
                               <div
                                 className={`h-10 w-10 sm:h-12 sm:w-12 ${
-                                  application.status === "pending"
+                                  application.status === "Pending Payment"
                                     ? "bg-green-200"
-                                    : application.status === "submitted" || application.status === "submitting"
+                                    : application.status === "Submitted" || application.status === "submitting"
                                     ? "bg-blue-100"
-                                    : application.status === "approved"
+                                    : application.status === "Approved"
                                     ? "bg-blue-200"
                                     : application.statusMessage.iconBg
                                 } rounded-lg sm:rounded-xl flex items-center justify-center`}
@@ -233,25 +243,25 @@ const Ticket = ({
                                 ) : (
                                   <div
                                     className={`${
-                                      application.status === "pending"
+                                      application.status === "Pending Payment"
                                         ? "text-green-500"
-                                        : application.status === "submitted" || application.status === "submitting"
+                                        : application.status === "Submitted" || application.status === "submitting"
                                         ? "text-orange-500"
-                                        : application.status === "approved"
+                                        : application.status === "Approved"
                                         ? "text-yellow-500"
                                         : application.statusMessage.iconColor
                                     }`}
                                   >
-                                    {application.status === "approved" && (
+                                    {application.status === "Approved" && (
                                       <Shield className="h-6 w-6" />
                                     )}
-                                    {application.status === "rejected" && (
+                                    {application.status === "Rejected" && (
                                       <X className="h-6 w-6" />
                                     )}
-                                    {application.status === "pending" && (
+                                    {application.status === "Pending Payment" && (
                                       <Shield className="h-6 w-6" />
                                     )}
-                                    {(application.status === "submitted" || application.status === "submitting") && (
+                                    {(application.status === "Submitted" || application.status === "submitting") && (
                                       <span className="text-lg font-bold">!</span>
                                     )}
                                   </div>
@@ -261,16 +271,16 @@ const Ticket = ({
                             <div className="w-[80%] justify-between flex">
                               <h4
                                 className={`font-medium ${
-                                  application.status === "pending"
+                                  application.status === "Pending Payment"
                                     ? "text-green-500  "
                                     : application.statusMessage.iconColor
                                 } sm:text-[16px]`}
                               >
-                                {application.status === "pending"
+                                {application.status === "Pending Payment"
                                   ? "Your application is being processed"
                                   : application.statusMessage.title}
                               </h4>
-                              {application.status === "approved" && (
+                              {application.status === "Approved" && (
                                 <div>
                                   <button className="text-[12px] text-white px-1 gap-1 flex justify-center bg-green-500 rounded-full">
                                     <span className="flex justify-center">
@@ -285,16 +295,16 @@ const Ticket = ({
 
                           {/* Description */}
                           {(application.statusMessage.description ||
-                            application.status === "pending") && (
+                            application.status === "Pending Payment") && (
                             <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
-                              {application.status === "pending"
+                              {application.status === "Pending Payment"
                                 ? "We are reviewing your application. This usually takes 2-3 business days."
                                 : application.statusMessage.description}
                             </p>
                           )}
 
                           {/* Delivery status */}
-                          {application.status === "pending" && (
+                          {application.status === "Pending Payment" && (
                             <div className="mt-2">
                               <span className="text-xs sm:text-sm text-gray-600">
                                 Yet to be delivered
@@ -303,14 +313,14 @@ const Ticket = ({
                           )}
 
                           {/* Dates for rejected */}
-                          {application.status === "rejected" && (
+                          {application.status === "Rejected" && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-700">
                               <p className="flex justify-between">
                                 <span className="text-[14px] font-[400]">
                                   Estimated on:
                                 </span>
                                 <span className="text-[14px] font-[400]">
-                                  Mar 4, 2025
+                                  {new Date(application.expectedVisaApprovalDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                                 </span>
                               </p>
                               <p className="flex justify-between">
@@ -318,23 +328,23 @@ const Ticket = ({
                                   Delivery on:
                                 </span>
                                 <span className="text-[14px] font-[400]">
-                                  Mar 4, 2025
+                                  {new Date(application.deliveredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                                 </span>
                               </p>
                             </div>
                           )}
 
                           {/* Dates for approved or pending */}
-                          {(application.status === "approved" ||
-                            application.status === "pending" ||
-                            application.status === "submitted") && (
+                          {(application.status === "Approved" ||
+                            application.status === "Pending Payment" ||
+                            application.status === "Submitted") && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm">
                               <p className="flex justify-between">
                                 <span className="text-gray-700 text-[14px] font-[400]">
                                   Estimated on:
                                 </span>
                                 <span className="text-gray-700 text-[14px] font-[400]">
-                                  Mar 4, 2025
+                                  {new Date(application.expectedVisaApprovalDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                                 </span>
                               </p>
                               <p className="flex justify-between">
@@ -342,7 +352,7 @@ const Ticket = ({
                                   Delivery on:
                                 </span>
                                 <span className="text-[14px] font-[400]">
-                                  Mar 4, 2025
+                                  {new Date(application.deliveredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                                 </span>
                               </p>
                             </div>
@@ -462,9 +472,9 @@ const Ticket = ({
                       <div className="mt-6 ">
                         <div
                           className={`${
-                            application.status === "pending"
+                            application.status === "Pending Payment"
                               ? "bg-green-100 border-blue-100 border"
-                              : application.status === "approved"
+                              : application.status === "Approved"
                               ? "bg-blue-50 border-blue-100 border"
                               : application.statusMessage.cardBg +
                                 " " +
@@ -477,11 +487,11 @@ const Ticket = ({
                             {application.status !== "refunded" && (
                               <div
                                 className={`h-10 w-10 sm:h-12 sm:w-12 ${
-                                  application.status === "pending"
+                                  application.status === "Pending Payment"
                                     ? "bg-green-200"
-                                    : application.status === "submitted" || application.status === "submitting"
+                                    : application.status === "Submitted" || application.status === "submitting"
                                     ? "bg-blue-100"
-                                    : application.status === "approved"
+                                    : application.status === "Approved"
                                     ? "bg-blue-100"
                                     : application.statusMessage.iconBg
                                 } rounded-lg sm:rounded-xl flex items-center justify-center`}
@@ -496,22 +506,22 @@ const Ticket = ({
                                 ) : (
                                   <div
                                     className={`${
-                                      application.status === "pending"
+                                      application.status === "Pending Payment"
                                         ? "text-green-500"
-                                        : application.status === "submitted" || application.status === "submitting"
+                                        : application.status === "Submitted" || application.status === "submitting"
                                         ? "text-orange-500"
-                                        : application.status === "approved"
+                                        : application.status === "Approved"
                                         ? "text-yellow-500"
                                         : application.statusMessage.iconColor
                                     }`}
                                   >
-                                    {application.status === "approved" && (
+                                    {application.status === "Approved" && (
                                       <Shield className="h-6 w-6" />
                                     )}
-                                    {application.status === "rejected" && (
+                                    {application.status === "Rejected" && (
                                       <X className="h-6 w-6" />
                                     )}
-                                    {application.status === "pending" && (
+                                    {application.status === "Pending Payment" && (
                                       <Shield className="h-6 w-6" />
                                     )}
                                     {(application.status === "submitted" || application.status === "submitting") && (
@@ -529,11 +539,11 @@ const Ticket = ({
                                     : application.statusMessage.iconColor
                                 } text-base sm:text-lg`}
                               >
-                                {application.status === "pending"
+                                {application.status === "Pending Payment"
                                   ? "Your application is being processed"
                                   : application.statusMessage.title}
                               </h4>
-                              {application.status === "approved" && (
+                              {application.status === "Approved" && (
                                 <div className="text-xs bg-green-500 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full mt-1 inline-flex items-center gap-1">
                                   <img src={True} alt="" className="h-3 w-3" />
                                   Before Time
@@ -544,16 +554,16 @@ const Ticket = ({
 
                           {/* Description */}
                           {(application.statusMessage.description ||
-                            application.status === "pending") && (
+                            application.status === "Pending Payment") && (
                             <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
-                              {application.status === "pending"
+                              {application.status === "Pending Payment"
                                 ? "We are reviewing your application. This usually takes 2-3 business days."
                                 : application.statusMessage.description}
                             </p>
                           )}
 
                           {/* Delivery status */}
-                          {application.status === "pending" && (
+                          {application.status === "Pending Payment" && (
                             <div className="mt-2">
                               <span className="text-xs sm:text-sm text-gray-600">
                                 Yet to be delivered
@@ -562,27 +572,27 @@ const Ticket = ({
                           )}
 
                           {/* Dates for rejected */}
-                          {application.status === "rejected" && (
+                          {application.status === "Rejected" && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
                               <p className="flex justify-between">
                                 <span>Estimated on:</span>
-                                <span>Mar 4, 2025</span>
+                                <span>{new Date(application.expectedVisaApprovalDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                               </p>
                               <p className="flex justify-between">
                                 <span>Delivery on:</span>
-                                <span>Mar 4, 2025</span>
+                                <span>{new Date(application.deliveredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                               </p>
                             </div>
                           )}
-                          {application.status === "submitted" && (
+                          {application.status === "Submitted" && (
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
                               <p className="flex justify-between">
-                                <span>Estixgcmated on:</span>
-                                <span>Mar 4, 2025</span>
+                                <span>Estimated on:</span>
+                                <span>{new Date(application.expectedVisaApprovalDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                               </p>
                               <p className="flex justify-between">
                                 <span>Delivery on:</span>
-                                <span>Mar 4, 2025</span>
+                                <span>{new Date(application.deliveredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                               </p>
                             </div>
                           )}
