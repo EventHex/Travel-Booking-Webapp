@@ -77,7 +77,7 @@ const HeroSection = () => {
     const [goingToIsFocused, setGoingToIsFocused] = useState(false);
     const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
     const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
-
+    
     const handleCitizenIconClick = () => {
       citizenInputRef.current.focus();
     };
