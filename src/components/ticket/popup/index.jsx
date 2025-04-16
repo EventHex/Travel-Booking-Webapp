@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 const PassportPopup = ({ isOpen, onClose, passportData }) => {
+  // console.log("PassportPopup rendered with:", { isOpen, passportData });
+
   const [formData, setFormData] = useState({
     front: {
       name: "",
@@ -12,19 +14,19 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
       dateOfIssue: "",
       dateOfExpiry: "",
       nationality: "",
+      occupation: "",
     },
     back: {
       address: "",
       fatherName: "",
       motherName: "",
       emergencyContact: "",
-      bloodGroup: "",
     },
     pan: {
       panNumber: "",
-      nameOnCard: "",
-      fatherName: "",
-      dateOfBirth: "",
+      visaType: "",
+      visaCountry: "",
+      travelDates: { from: "", to: "" }
     }
   });
 
@@ -39,7 +41,7 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
         front: {
           ...prev.front,
           name: passportData.name || '',
-          passportNumber: passportData.passportNumber || '',
+          passportNumber: passportData.passportNumber || 'N/A',
           gender: passportData.gender || '',
           dateOfBirth: passportData.dateOfBirth || '',
           placeOfBirth: passportData.placeOfBirth || '',
@@ -47,21 +49,22 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
           dateOfIssue: passportData.dateOfIssue || '',
           dateOfExpiry: passportData.dateOfExpiry || '',
           nationality: passportData.nationality || '',
+          occupation: passportData.occupation || '',
         },
         back: {
           ...prev.back,
-          address: passportData.address || '',
           fatherName: passportData.fatherName || '',
           motherName: passportData.motherName || '',
-          emergencyContact: passportData.emergencyContact || '',
-          bloodGroup: passportData.bloodGroup || '',
         },
         pan: {
           ...prev.pan,
           panNumber: passportData.panNumber || '',
-          nameOnCard: passportData.nameOnCard || '',
-          fatherName: passportData.fatherName || '',
-          dateOfBirth: passportData.dateOfBirth || '',
+          visaType: passportData.visaType || '',
+          visaCountry: passportData.visaCountry || '',
+          travelDates: {
+            from: passportData.travelDates?.from || '',
+            to: passportData.travelDates?.to || ''
+          },
         }
       }));
     }
@@ -82,14 +85,17 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
     }
   }, [isOpen]);
 
-  if (!mounted) return null;
+  if (!isOpen || !passportData) {
+    // console.log("PassportPopup not showing because:", { isOpen, hasData: !!passportData });
+    return null;
+  }
 
   // Field item component
   const FieldItem = ({ label, value }) => (
     <div className="flex items-center bg-green-50 hover:bg-green-100 rounded-md p-2 mb-2">
       <span className="text-green-500 mr-2">✓</span>
       <span className="text-gray-600 font-medium mr-2">{label}:</span>
-      <span className="text-green-600 font-medium">{value}</span>
+      <span className="text-green-600 font-medium">{value || 'N/A'}</span>
     </div>
   );
 
@@ -148,27 +154,26 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
             <div className="space-y-4">
               <div className="bg-gray-100 p-2 sm:p-4 rounded-lg">
                 <img
-                  src="/path/to/passport/image"
+                  src={passportData?.passportImageFront || "/path/to/passport/image"}
                   alt="Front Passport"
                   className="w-full h-32 sm:h-38 md:h-48 object-contain"
                 />
               </div>
               <div className="text-sm">
-                <div className="w-full flex justify-center items-center">
-
-                <p className="text-[18px] font-medium"> {formData.front.name}</p>
+                <div className="w-full flex justify-center items-center mb-4">
+                  <p className="text-[18px] font-medium">{formData.front.name}</p>
                 </div>
-                {/* <FieldItem    label="Name" value={formData.front.name}  /> */}
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <FieldItem label="Passport" value={formData.front.passportNumber} />
-                <FieldItem label="Sex" value={formData.front.gender} />
-                <FieldItem label="DOB" value={formData.front.dateOfBirth} />
-                <FieldItem label="POB" value={formData.front.placeOfBirth} />
-                <FieldItem label="Marital Status" value={formData.front.maritalStatus} />
-                <FieldItem label="Date of Issue" value={formData.front.dateOfIssue} />
-                <FieldItem label="Date of Expiry" value={formData.front.dateOfExpiry} />
-                <FieldItem label="Nationality" value={formData.front.nationality} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <FieldItem label="Passport" value={formData.front.passportNumber} />
+                  <FieldItem label="Gender" value={formData.front.gender} />
+                  <FieldItem label="DOB" value={formData.front.dateOfBirth} />
+                  <FieldItem label="POB" value={formData.front.placeOfBirth} />
+                  <FieldItem label="Marital Status" value={formData.front.maritalStatus} />
+                  <FieldItem label="Date of Issue" value={formData.front.dateOfIssue} />
+                  <FieldItem label="Date of Expiry" value={formData.front.dateOfExpiry} />
+                  <FieldItem label="Nationality" value={formData.front.nationality} />
+                  <FieldItem label="Occupation" value={formData.front.occupation} />
+                </div>
               </div>
             </div>
           )}
@@ -177,10 +182,14 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
             <div className="space-y-4">
               <div className="bg-gray-100 p-4 rounded-lg">
                 <img
-                  src="/path/to/passport/back/image"
+                  src={passportData?.passportImageBack || "/path/to/passport/back/image"}
                   alt="Back Passport"
                   className="w-full h-38 object-contain"
                 />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <FieldItem label="Father's Name" value={formData.back.fatherName} />
+                <FieldItem label="Mother's Name" value={formData.back.motherName} />
               </div>
             </div>
           )}
@@ -189,16 +198,17 @@ const PassportPopup = ({ isOpen, onClose, passportData }) => {
             <div className="space-y-4">
               <div className="bg-gray-100 p-4 rounded-lg">
                 <img
-                  src="/path/to/pan/image"
+                  src={passportData?.panPhoto || "/path/to/pan/image"}
                   alt="Pan Card"
                   className="w-full h-38 object-contain"
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <FieldItem label="PAN Number" value={formData.pan.panNumber} />
-                {/* <FieldItem label="Name on Card" value={formData.pan.nameOnCard} />
-                <FieldItem label="Father's Name" value={formData.pan.fatherName} />
-                <FieldItem label="Date of Birth" value={formData.pan.dateOfBirth} /> */}
+                <FieldItem label="Visa Type" value={formData.pan.visaType} />
+                <FieldItem label="Visa Country" value={formData.pan.visaCountry} />
+                <FieldItem label="Travel Date From" value={formData.pan.travelDates.from} />
+                <FieldItem label="Travel Date To" value={formData.pan.travelDates.to} />
               </div>
             </div>
           )}

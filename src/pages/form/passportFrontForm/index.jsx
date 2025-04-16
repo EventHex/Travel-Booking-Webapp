@@ -704,8 +704,8 @@ export const FrontPassportForm = () => {
                   <Input
                     type="text"
                     name="sex"
-                    placeholder="Sex"
-                    label="Sex"
+                    placeholder="Gender"
+                    label="Gender"
                     value={frontFormData.sex}
                     onChange={(e) =>
                       setFrontFormData((prev) => ({
