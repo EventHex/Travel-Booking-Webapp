@@ -14,7 +14,7 @@ import {
   SearchGray,
 } from "../../assets";
 
-const Index = ({ isNarrow, onClose }) => {
+const Index = ({ isNarrow, onClose, onFilterSelect }) => {
   const [isClicksideBar, setClicksideBar] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -45,6 +45,10 @@ const Index = ({ isNarrow, onClose }) => {
         return [...prev, optionId];
       }
     });
+    // Call the parent's onFilterSelect with the selected option
+    if (onFilterSelect) {
+      onFilterSelect(optionId);
+    }
   };
 
   const sidebarOpen = (e) => {
@@ -229,6 +233,11 @@ const Index = ({ isNarrow, onClose }) => {
             </div>
           ))}
         </div>
+
+
+        
+
+        
       </div>
     );
   }
