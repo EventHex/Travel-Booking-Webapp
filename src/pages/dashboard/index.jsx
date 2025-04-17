@@ -37,8 +37,11 @@ const Index = () => {
     destination: "",
     goingTo: "",
     travelDate: "",
-    returnDate: ""
+    returnDate: "",
+    createdDate: ""
   });
+
+  const [selectedFilter, setSelectedFilter] = useState([]);
 
   // Add dropdown options
   const dropDownPlace = [
@@ -83,6 +86,16 @@ const Index = () => {
       ...prev,
       [field]: value
     }));
+  };
+
+  const handleFilterSelect = (filter) => {
+    setSelectedFilter(prev => {
+      if (prev.includes(filter)) {
+        return prev.filter(f => f !== filter);
+      } else {
+        return [...prev, filter];
+      }
+    });
   };
 
   // Function to scroll to active tab
@@ -336,46 +349,73 @@ const Index = () => {
     getVisaApplication();
   }, []);
 
+  const filterApplicationsByDate = (applications) => {
+    return applications.filter(app => {
+      let matchesCreatedDate = true;
+      let matchesDepartureDate = true;
+
+      if (selectedFilter.includes("created") && searchData.createdDate) {
+        const createdDate = new Date(app.submittedOn);
+        const selectedCreatedDate = new Date(searchData.createdDate);
+        matchesCreatedDate = createdDate.toDateString() === selectedCreatedDate.toDateString();
+      }
+
+      if (selectedFilter.includes("departure") && searchData.travelDate) {
+        const departureDate = new Date(app.travelDates.split(" — ")[0]);
+        const selectedDepartureDate = new Date(searchData.travelDate);
+        matchesDepartureDate = departureDate.toDateString() === selectedDepartureDate.toDateString();
+      }
+
+      return matchesCreatedDate && matchesDepartureDate;
+    });
+  };
+
   const renderTabContent = () => {
+    const filteredApproved = filterApplicationsByDate(approvedApplications);
+    const filteredRejected = filterApplicationsByDate(rejectedApplications);
+    const filteredSubmitted = filterApplicationsByDate(submittedApplications);
+    const filteredPending = filterApplicationsByDate(pendingApplications);
+    const filteredRefunded = filterApplicationsByDate(refundedApplications);
+
     switch (activeTab) {
       case "all":
         return (
           <Ticket 
-            approvedApplications={approvedApplications}
-            rejectedApplications={rejectedApplications}
-            submittedApplications={submittedApplications}
-            pendingApplications={pendingApplications}
-            refundedApplications={refundedApplications}
+            approvedApplications={filteredApproved}
+            rejectedApplications={filteredRejected}
+            submittedApplications={filteredSubmitted}
+            pendingApplications={filteredPending}
+            refundedApplications={filteredRefunded}
           />    
         );
       case "approved":
         return (
           <Ticket 
-            approvedApplications={approvedApplications}
+            approvedApplications={filteredApproved}
           />         
         );
       case "rejected":
         return (
           <Ticket 
-            rejectedApplications={rejectedApplications}
+            rejectedApplications={filteredRejected}
           /> 
         );
       case "submitted":
         return (
           <Ticket 
-            submittedApplications={submittedApplications}
+            submittedApplications={filteredSubmitted}
           /> 
         );
       case "pending":
         return (
           <Ticket 
-            pendingApplications={pendingApplications}
+            pendingApplications={filteredPending}
           /> 
         );
       case "refunded":
         return (
           <Ticket 
-            refundedApplications={refundedApplications}
+            refundedApplications={filteredRefunded}
           /> 
         );
       default:
@@ -402,7 +442,10 @@ const Index = () => {
                   isNarrowScreen ? "w-[50px]" : "w-[20%]"
                 } min-w-[50px]   mb-6 md:mb-0 transition-all duration-300`}
               >
-                <SideBar isNarrow={isNarrowScreen} />
+                <SideBar 
+                  isNarrow={isNarrowScreen} 
+                  onFilterSelect={(filter) => handleFilterSelect(filter)}
+                />
               </div>
               
               {/* Content container - remaining width (80% on larger screens) */}
@@ -447,29 +490,56 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
+                  
+                  {activeTab === "all" && (
+                    <div className="flex gap-2">
+                      {selectedFilter.includes("created") && (
+                        <div className="w-44 flex justify-between items-center px-4 border-1 border-gray-300 rounded-4xl mt-4">
+                          <div className="w-28">
+                            <p className="text-[12px] text-gray-500">Created</p>
+                            <input 
+                              type="date" 
+                              className="w-full text-[14px] text-gray-500 font-bold outline-none"
+                              value={searchData.createdDate}
+                              onChange={(e) => handleInputChange('createdDate', e.target.value)}
+                            />
+                          </div>
+                          <div 
+                            className="cursor-pointer"
+                            onClick={() => handleFilterSelect("created")}
+                          >
+                            x
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedFilter.includes("departure") && (
+                        <div className="w-44 flex justify-between items-center px-4 border-1 border-gray-300 rounded-4xl mt-4">
+                          <div className="w-28">
+                            <p className="text-[12px] text-gray-500">Departure</p>
+                            <input 
+                              type="date" 
+                              className="w-full text-[14px] text-gray-500 font-bold outline-none"
+                              value={searchData.travelDate}
+                              onChange={(e) => handleInputChange('travelDate', e.target.value)}
+                            />
+                          </div>
+                          <div 
+                            className="cursor-pointer"
+                            onClick={() => handleFilterSelect("departure")}
+                          >
+                            x
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <div className="rounded-lg p-2 sm:p-4 mt-2">
                     {renderTabContent()}
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="w-full max-w-[1300px] mx-auto px-5 mt-4">
-            <SearchInputText
-              value={{
-                destination: searchData.destination,
-                goingTo: searchData.goingTo
-              }}
-              dropDownPlace={dropDownPlace}
-              dropDownData={citizenOptions}
-              onInputChange={handleInputChange}
-              data={searchData}
-            />
-            <div className="mt-4">
-              <SearchInputDate
-                data={searchData}
-                onDateChange={handleInputChange}
-              />
             </div>
           </div>
         </div>

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Shield, X } from "lucide-react";
 import { True, TicIcon, CloseIconTicket } from "../../assets";
 import PassportPopup from "./popup";
+import axios from "axios";
+import { generateInvoicePDF } from "../../utils/pdfGenerator";
 
 const Ticket = ({
   approvedApplications = [],
@@ -10,6 +12,23 @@ const Ticket = ({
   refundedApplications = [],
   pendingApplications = [],
 }) => {
+  const [travellerInformationList, setTravellerInformationList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedPassport, setSelectedPassport] = useState(null);
+
+  // Update the base URL to use DigitalOcean Spaces CDN
+  const CDN_BASE_URL = 'https://event-manager.syd1.cdn.digitaloceanspaces.com';
+
+  // Function to format image URL
+  const formatImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    // If the path already starts with http/https, return as is
+    if (imagePath.startsWith('http')) return imagePath;
+    // Otherwise, combine with CDN base URL
+    return `${CDN_BASE_URL}/${imagePath}`;
+  };
+
   // Create an array of all applications, filtering out empty arrays
   const applicationData = [
     ...approvedApplications,
@@ -19,13 +38,75 @@ const Ticket = ({
     ...refundedApplications,
   ];
 
-  if (applicationData.length === 0) {
-    return (
-      <div className="w-full flex justify-center items-center p-8">
-        <p className="text-gray-500">No applications found</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    let isMounted = true;
+    let controller = new AbortController();
+
+    const fetchTravellerInformation = async () => {
+      if (isLoading) return; // Prevent duplicate calls while loading
+      
+      setIsLoading(true);
+      try {
+        const response = await axios.get('http://localhost:8078/api/v1/traveller-information', {
+          signal: controller.signal
+        });
+        
+        if (isMounted && response.data && response.data.success && Array.isArray(response.data.response)) {
+          setTravellerInformationList(response.data.response);
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          // Handle abort error silently
+          return;
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchTravellerInformation();
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []); // Remove applicationData dependency
+
+  const findMatchingTravellerInfo = (application) => {
+    if (!Array.isArray(travellerInformationList)) {
+      return {};
+    }
+
+    // Try to find matching traveller information based on available data
+    const matchingInfo = travellerInformationList.find(info => {
+      // Match based on name if available (case insensitive)
+      if (application.name && info.firstName) {
+        const appName = application.name.toLowerCase();
+        const infoName = info.firstName.toLowerCase();
+        if (appName === infoName) {
+          return true;
+        }
+        // Also try matching full name
+        const fullName = `${info.firstName} ${info.lastName || ''}`.trim().toLowerCase();
+        if (appName === fullName) {
+          return true;
+        }
+      }
+      
+      // Match based on passport number if available
+      if (application.passportNumber && application.passportNumber !== 'N/A' && 
+          info.passportNumber === application.passportNumber) {
+        return true;
+      }
+
+      return false;
+    });
+
+    return matchingInfo || {};
+  };
 
   const getStatusBarColor = (status) => {
     switch (status) {
@@ -61,24 +142,94 @@ const Ticket = ({
     }
   };
 
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectedPassport, setSelectedPassport] = useState(null);
+  const openPassportPopup = (application) => {
+    try {
+      const travellerInfo = findMatchingTravellerInfo(application);
+      
+      // Create passport data combining application and traveller information
+      const passportData = {
+        // Basic Information
+        name: `${travellerInfo.firstName || ''} ${travellerInfo.lastName || ''}` || application.name || '',
+        passportNumber: travellerInfo.passportNumber || application.passportNumber || 'N/A',
+        gender: travellerInfo.sex || '',
+        dateOfBirth: travellerInfo.dateOfBirth ? 
+          new Date(travellerInfo.dateOfBirth).toLocaleDateString() : '',
+        placeOfBirth: travellerInfo.placeOfBirth || '',
+        maritalStatus: travellerInfo.maritalStatus || '',
+        dateOfIssue: travellerInfo.dateOfIssue ? 
+          new Date(travellerInfo.dateOfIssue).toLocaleDateString() : '',
+        dateOfExpiry: travellerInfo.dateOfExpiry ? 
+          new Date(travellerInfo.dateOfExpiry).toLocaleDateString() : '',
+        nationality: travellerInfo.nationality || application.country || '',
+        occupation: travellerInfo.occupation || '',
 
-  const passportData = {
-    name: "James Cameroon",
-    passportNumber: "M903152415y5u6",
-    gender: "Male",
-    dateOfBirth: "29-10-2022",
-    placeOfBirth: "singapur Jattan, Punchab",
-    maritalStatus: "Single",
-    dateOfIssue: "29-10-2022",
-    dateOfExpiry: "29-10-2022",
-    nationality: "Indian",
+        // Additional Information
+        fatherName: travellerInfo.fathersName || '',
+        motherName: travellerInfo.mothersName || '',
+
+        // Images with CDN URLs
+        travellerPhoto: formatImageUrl(travellerInfo.travellerPhoto) || '',
+        passportImageFront: formatImageUrl(travellerInfo.passportImageFront) || '',
+        passportImageBack: formatImageUrl(travellerInfo.passportImageBack) || '',
+        panPhoto: formatImageUrl(travellerInfo.panPhoto) || '',
+
+        // Visa and Travel Information
+        panNumber: travellerInfo.indianPanCard || '',
+        status: application.status || '',
+        visaType: application.visa || '',
+        visaCountry: application.country || '',
+        travelDates: {
+          from: application.travelDates ? application.travelDates.split('—')[0].trim() : '',
+          to: application.travelDates ? application.travelDates.split('—')[1].trim() : ''
+        },
+        
+        // Include the traveller information ID if available
+        travellerId: travellerInfo._id || null,
+
+        // Include place of issue if available
+        placeOfIssue: travellerInfo.placeOfIssue || ''
+      };
+
+      setSelectedPassport(passportData);
+      setIsPopupOpen(true);
+    } catch (error) {
+    }
   };
 
-  const openPassportPopup = () => {
-    setSelectedPassport(passportData);
-    setIsPopupOpen(true);
+  if (applicationData.length === 0) {
+    return (
+      <div className="w-full flex justify-center items-center p-8">
+        <p className="text-gray-500">No applications found</p>
+      </div>
+    );
+  }
+
+  const handleDownloadInvoice = async (application) => {
+    try {
+      const pdfBytes = await generateInvoicePDF(application);
+      
+      // Create a blob from the PDF bytes
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      
+      // Create a URL for the blob
+      const url = URL.createObjectURL(blob);
+      
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `invoice_${application.passportNumber}.pdf`;
+      
+      // Append to body, click, and remove
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Clean up the URL
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating invoice PDF:', error);
+      // You might want to show an error message to the user here
+    }
   };
 
   return (
@@ -106,6 +257,7 @@ const Ticket = ({
                       {getStatusText(application.status)}
                     </div>
                   </div>
+                  
                   <div className="flex flex-col w-full p-3 sm:p-5">
                     {/* Desktop layout (lg and above) */}
                     <div className="hidden lg:flex lg:flex-row lg:justify-between lg:gap-4 lg:w-full">
@@ -197,16 +349,9 @@ const Ticket = ({
 
                       {/* Status Card Section */}
                       <div className="flex-shrink-0 w-72">
-                        <h2
-                          className="w-full rounded-lg text-gray-500 underline text-sm   font-semibold mb-3 py-1"
-                          onClick={() => openPassportPopup()}
-                        >
-                          {
-                            Object.values(application.details).filter(Boolean)
-                              .length
-                          }
-                          /{Object.keys(application.details).length} Parameters
-                          checked
+                        <h2 className="w-full rounded-lg text-gray-500 underline text-sm font-semibold mb-3 py-1">
+                          {Object.values(application.details).filter(Boolean).length}/
+                          {Object.keys(application.details).length} Parameters checked
                         </h2>
                         <div
                           className={`${
@@ -361,16 +506,23 @@ const Ticket = ({
 
                         {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
-                          <button
-                            // onClick={() => openPassportPopup()}
-                            className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            onClick={() => {
+                              openPassportPopup(application);
+                            }}
                           >
-                            View Application
+                            View
                           </button>
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          <button 
+                            onClick={() => handleDownloadInvoice(application)}
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
                             Invoice
                           </button>
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          <button 
+                            // onClick={() => handleDownloadInsurance(application)}
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
                             Download Insurance
                           </button>
                         </div>
@@ -603,13 +755,25 @@ const Ticket = ({
 
                         {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
-                            View Application
+                          <button 
+                            onClick={() => {
+                              console.log("Mobile view button clicked");
+                              openPassportPopup(application);
+                            }}
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
+                            View
                           </button>
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          <button 
+                            onClick={() => handleDownloadInvoice(application)}
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
                             Invoice
                           </button>
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          <button 
+                            onClick={() => handleDownloadInsurance(application)}
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
                             Download Insurance
                           </button>
                         </div>
@@ -623,12 +787,16 @@ const Ticket = ({
         </div>
       </main>
 
-      {/* Add the PassportPopup component at the root level */}
-      <PassportPopup
-        isOpen={isPopupOpen}
-        onClose={() => setIsPopupOpen(false)}
-        passportData={passportData}
-      />
+      {isPopupOpen && selectedPassport && (
+        <PassportPopup
+          isOpen={isPopupOpen}
+          onClose={() => {
+            console.log("Closing popup");
+            setIsPopupOpen(false);
+          }}
+          passportData={selectedPassport}
+        />
+      )}
     </div>
   );
 };

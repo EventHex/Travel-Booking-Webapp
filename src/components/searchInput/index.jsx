@@ -7,8 +7,8 @@ const SearchInputText = ({
     goingTo: ''
   },
   data,
-  dropDownData, 
-  dropDownPlace, 
+  dropDownData = [], 
+  dropDownPlace = [], 
   onInputChange,
   initialDestination = "",
   initialGoingTo = ""
@@ -25,6 +25,7 @@ const SearchInputText = ({
   const citizenInputRef = useRef(null);
   const fromDropdownRef = useRef(null);
   const goingToInputRef = useRef(null);
+  const goingToDropdownRef = useRef(null);
 
   // Update input values when data changes
   useEffect(() => {
@@ -38,7 +39,11 @@ const SearchInputText = ({
   }, [destination, goingTo]);
 
   const handleFromInputBlur = () => {
-    setCitizenIsFocused(false);
+    // Add a small delay to allow for click events on dropdown items
+    setTimeout(() => {
+      setCitizenIsFocused(false);
+      setShowFromDropdown(false);
+    }, 200);
   };
 
   const handleFromInputFocus = () => {
@@ -48,7 +53,9 @@ const SearchInputText = ({
   };
 
   const handleCitizenIconClick = () => {
-    citizenInputRef.current.focus();
+    if (citizenInputRef.current) {
+      citizenInputRef.current.focus();
+    }
   };
   
   const handleOptionSelect = (option, inputRef, isFromInput) => {
@@ -67,7 +74,9 @@ const SearchInputText = ({
   };
 
   const handleGoingToIconClick = () => {
-    goingToInputRef.current.focus();
+    if (goingToInputRef.current) {
+      goingToInputRef.current.focus();
+    }
   };
 
   const handleGoingToFocus = () => {
@@ -77,13 +86,15 @@ const SearchInputText = ({
   };
 
   const handleGoingToBlur = () => {
-    setGoingToIsFocused(false);
+    // Add a small delay to allow for click events on dropdown items
+    setTimeout(() => {
+      setGoingToIsFocused(false);
+      setShowGoingToDropdown(false);
+    }, 200);
   };
 
-  const goingToDropdownRef = useRef(null);
-
   return (
-    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
+    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
       <div className="w-full relative">
         <div className="flex items-center p-3">
           <span
@@ -107,7 +118,7 @@ const SearchInputText = ({
           />
         </div>
 
-        {showFromDropdown && (
+        {showFromDropdown && dropDownData && dropDownData.length > 0 && (
           <div
             ref={fromDropdownRef}
             className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
@@ -116,9 +127,7 @@ const SearchInputText = ({
               <div
                 key={option.id}
                 className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() =>
-                  handleOptionSelect(option, citizenInputRef, true)
-                }
+                onClick={() => handleOptionSelect(option, citizenInputRef, true)}
               >
                 <div className="flex">
                   <p className="flex items-center text-[14px] gap-2">
@@ -155,7 +164,7 @@ const SearchInputText = ({
           />
         </div>
 
-        {showGoingToDropdown && (
+        {showGoingToDropdown && dropDownPlace && dropDownPlace.length > 0 && (
           <div
             ref={goingToDropdownRef}
             className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
@@ -164,9 +173,7 @@ const SearchInputText = ({
               <div
                 key={option.id}
                 className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() =>
-                  handleOptionSelect(option, goingToInputRef, false)
-                }
+                onClick={() => handleOptionSelect(option, goingToInputRef, false)}
               >
                 <div className="flex">
                   <p className="flex items-center text-[14px] gap-2">
