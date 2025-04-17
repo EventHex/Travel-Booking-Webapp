@@ -18,7 +18,7 @@ import {
   User,
   Placeholder,
 } from "../../assets";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronRight, MapPin } from "lucide-react";
 
 import Header from "../../components/header";
@@ -30,6 +30,13 @@ const HeroSection = () => {
   const [citizenOptions, setCitizenOptions] = useState([]);
   const [dropDownPlace, setDropDownPlace] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  // const location = useLocation();
+  const [searchParams, setSearchParams] = useState({
+    destination: "",
+    goingTo: "",
+    travelDate: "",
+    returnDate: ""
+  });
   const tabs = [
     { id: "Visas", icon: Visa },
     { id: "Activities", icon: Acitivty },
@@ -237,44 +244,44 @@ const HeroSection = () => {
       // Add any additional actions you want to perform when an option is selected
     };
 
-    const dropDownData = [
-      {
-        image: Placeholder,
-        subtitle: "united arab emirates",
-        title: "UAE",
-        id: 1,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Chhatrapati Shivaji Maharaj International Airport",
-        title: "Mumbai",
-        id: 2,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Cochin International Airport",
-        title: "Kochin",
-        id: 3,
-      },
-      {
-        image: Placeholder,
-        subtitle: "muzhappiland beach",
-        title: "Kannur",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Goa beach",
-        title: "Goa",
-        id: 5,
-      },
-      {
-        image: Placeholder,
-        subtitle: "hilte business park",
-        title: "kozhikode",
-        id: 6,
-      },
-    ];
+    // const dropDownData = [
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "united arab emirates",
+    //     title: "UAE",
+    //     id: 1,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "Chhatrapati Shivaji Maharaj International Airport",
+    //     title: "Mumbai",
+    //     id: 2,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "Cochin International Airport",
+    //     title: "Kochin",
+    //     id: 3,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "muzhappiland beach",
+    //     title: "Kannur",
+    //     id: 4,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "Goa beach",
+    //     title: "Goa",
+    //     id: 5,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "hilte business park",
+    //     title: "kozhikode",
+    //     id: 6,
+    //   },
+    // ];
     switch (activeTab) {
       case "Visas":
         return (
@@ -301,8 +308,7 @@ const HeroSection = () => {
                 <Link
                   to={{
                     pathname: "/apply",
-                    search:` ?${new URLSearchParams(searchData).toString()}`,
-                    state: searchData
+                    search: `?destination=${encodeURIComponent(searchData.destination)}&goingTo=${encodeURIComponent(searchData.goingTo)}&travelDate=${encodeURIComponent(searchData.travelDate)}&returnDate=${encodeURIComponent(searchData.returnDate)}`
                   }}
                 >
                   <button
