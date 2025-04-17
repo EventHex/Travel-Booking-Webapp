@@ -10,12 +10,13 @@ import {
   CalenderDown,
   MainBackground,
 } from "../../assets";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { SearchInputDate, SearchInputText } from "../../components/searchInput";
 import { useLocation } from "react-router-dom";
 
 const TravelVisaBooking = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
     destination: "",
@@ -26,17 +27,39 @@ const TravelVisaBooking = () => {
   const [visaOptions, setVisaOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [countries, setCountries] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const dropdownRef = useRef(null);
+  const inputRef = useRef(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
-  // Add dropdown options
-  // const dropDownPlace = [
-  //   { id: 1, title: "Dubai", icon: "🇦🇪" },
-  //   { id: 2, title: "Mumbai", icon: "🇮🇳" }
-  // ];
+  // Fetch countries on component mount
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:8078/api/v1/country');
+        const data = await response.json();
+        
+        if (data.success && data.response) {
+          const countryOptions = data.response.map(country => ({
+            icon: <MapPin size={14} className="text-[gray]" />,
+            title: country.countryName,
+            id: country._id
+          }));
+          setCountries(countryOptions);
+        }
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+        setError('Failed to load countries');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // const citizenOptions = [
-  //   { id: 1, title: "UAE", icon: "🇦🇪" },
-  //   { id: 2, title: "India", icon: "🇮🇳" }
-  // ];
+    fetchCountries();
+  }, []);
 
   useEffect(() => {
     // Get URL parameters and set them to state
@@ -51,51 +74,32 @@ const TravelVisaBooking = () => {
   useEffect(() => {
     const fetchVisaData = async () => {
       try {
+        setIsSearching(true);
         const response = await Instance.get("visa");
-        console.log(response.data.response, "API Response Data");
-
+        
         if (response.data.success && response.data.response) {
           const visaDataArray = response.data.response;
-
-          // Get search parameters
-          const destination =
-            searchParams.get("destination")?.toLowerCase() || "";
+          const destination = searchParams.get("destination")?.toLowerCase() || "";
           const goingTo = searchParams.get("goingTo")?.toLowerCase() || "";
           const travelDate = searchParams.get("travelDate") || "";
           const returnDate = searchParams.get("returnDate") || "";
 
           let filteredData = visaDataArray;
           if (destination || goingTo || travelDate || returnDate) {
-            console.log("Starting with visas:", visaDataArray.length);
-            console.log("Search criteria:", {
-              destination,
-              goingTo,
-              travelDate,
-              returnDate,
-            });
-
             filteredData = visaDataArray.filter((visa) => {
-              // Match country values with case-insensitive comparison
-              const fromCountryMatch =
-                !destination ||
-                visa.country?.value?.toLowerCase() ===
-                  destination.toLowerCase();
+              const fromCountryMatch = !destination || 
+                visa.country?.value?.toLowerCase() === destination.toLowerCase() ||
+                (destination.toLowerCase() === "dubai" && visa.country?.value?.toLowerCase() === "uae") ||
+                (destination.toLowerCase() === "uae" && visa.country?.value?.toLowerCase() === "dubai");
 
-              // Handle both "dubai" and "uae" as matches for UAE
-              const toCountryMatch =
-                !goingTo ||
-                visa.toCountry?.value?.toLowerCase() ===
-                  goingTo.toLowerCase() ||
-                (goingTo.toLowerCase() === "dubai" &&
-                  visa.toCountry?.value?.toLowerCase() === "uae") ||
-                (goingTo.toLowerCase() === "uae" &&
-                  visa.toCountry?.value?.toLowerCase() === "dubai");
+              const toCountryMatch = !goingTo || 
+                visa.toCountry?.value?.toLowerCase() === goingTo.toLowerCase() ||
+                (goingTo.toLowerCase() === "dubai" && visa.toCountry?.value?.toLowerCase() === "uae") ||
+                (goingTo.toLowerCase() === "uae" && visa.toCountry?.value?.toLowerCase() === "dubai");
 
-              // Date comparison with timezone handling
               let dateMatch = true;
               if (travelDate || returnDate) {
                 try {
-                  // Convert all dates to start of day in local timezone for comparison
                   const normalizeDate = (dateStr) => {
                     if (!dateStr) return null;
                     const date = new Date(dateStr);
@@ -109,13 +113,11 @@ const TravelVisaBooking = () => {
                   const visaEnd = normalizeDate(visa.toDate);
 
                   if (searchStart && visaStart && visaEnd) {
-                    dateMatch =
-                      searchStart >= visaStart && searchStart <= visaEnd;
+                    dateMatch = searchStart >= visaStart && searchStart <= visaEnd;
                   }
 
                   if (searchEnd && visaStart && visaEnd) {
-                    const endDateMatch =
-                      searchEnd >= visaStart && searchEnd <= visaEnd;
+                    const endDateMatch = searchEnd >= visaStart && searchEnd <= visaEnd;
                     dateMatch = dateMatch && endDateMatch;
                   }
                 } catch (error) {
@@ -124,110 +126,101 @@ const TravelVisaBooking = () => {
                 }
               }
 
-              const matches = fromCountryMatch && toCountryMatch && dateMatch;
-              console.log(`Visa ${visa._id} final match:`, {
-                fromCountryMatch,
-                toCountryMatch,
-                dateMatch,
-                totalMatch: matches,
-              });
-
-              return matches;
+              return fromCountryMatch && toCountryMatch && dateMatch;
             });
-
-            console.log("Filtered results count:", filteredData.length);
-            console.log("Filtered visas:", filteredData);
-
-            const visaData = filteredData.map((visa) => ({
-              title: visa.title,
-              status: visa.status === "Active" ? "approved" : "warning",
-              message: `Estimated visa arrival by ${new Date(
-                Date.now() + 7 * 24 * 60 * 60 * 1000
-              ).toLocaleDateString()}`,
-              details: {
-                entry: visa.entry,
-                validity: visa.validity,
-                duration: visa.duration,
-                processingTime: visa.processingTime,
-                absconding: "AED 5,000",
-              },
-              price: {
-                original: visa.publicPrice,
-                discounted: visa.publicOfferPrice,
-                savings: "Save up to 39%",
-              },
-              variant: visa.status === "Active" ? "green" : "blue",
-            }));
-
-            setVisaOptions(visaData);
           }
 
-          console.log("Filtered Results:", filteredData);
+          const visaData = filteredData.map((visa) => ({
+            title: visa.title,
+            status: visa.status === "Active" ? "approved" : "warning",
+            message: `Estimated visa arrival by ${new Date(
+              Date.now() + 7 * 24 * 60 * 60 * 1000
+            ).toLocaleDateString()}`,
+            details: {
+              entry: visa.entry,
+              validity: visa.validity,
+              duration: visa.duration,
+              processingTime: visa.processingTime,
+              absconding: "AED 5,000",
+            },
+            price: {
+              original: visa.publicPrice,
+              discounted: visa.publicOfferPrice,
+              savings: "Save up to 39%",
+            },
+            variant: visa.status === "Active" ? "green" : "blue",
+          }));
+
+          setVisaOptions(visaData);
         } else {
           setError("Failed to fetch visa data");
         }
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching visa data:", err);
         setError(err.message);
+      } finally {
         setLoading(false);
+        setIsSearching(false);
       }
     };
 
     fetchVisaData();
   }, [searchParams]);
 
-  const citizenInputRef = useRef(null);
-  const goingToInputRef = useRef(null);
-  const TravellingInputDateRef = useRef(null);
-  const TrvellingInputEndDateRef = useRef(null);
-
-  // Track focus state for all four inputs
-  const [citizenIsFocused, setCitizenIsFocused] = useState(false);
-  const [goingToIsFocused, setGoingToIsFocused] = useState(false);
-  const [TravellingFocuse, setTravellingFocuse] = useState(false);
-  const [TrvellingEndFocus, setTrvellingEndFocus] = useState(false);
-
-  // Track which input is focused
-  const handleCitizenIconClick = () => {
-    citizenInputRef.current.focus();
-  };
-
-  const handleGoingToIconClick = () => {
-    goingToInputRef.current.focus();
-  };
-
-  const handleTrevellingIconClick = () => {
-    TravellingInputDateRef.current.focus();
-  };
-
-  const handleTravellingEndIconClick = () => {
-    TrvellingInputEndDateRef.current.focus();
-  };
-
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [field]: value,
+      [field]: value
     }));
+    setShowDropdown(true);
   };
 
   const handleSearch = () => {
-    // Create search parameters URL
     const params = new URLSearchParams();
     if (formData.destination) params.set("destination", formData.destination);
     if (formData.goingTo) params.set("goingTo", formData.goingTo);
     if (formData.travelDate) params.set("travelDate", formData.travelDate);
     if (formData.returnDate) params.set("returnDate", formData.returnDate);
 
-    // Navigate to new URL with search parameters
-    window.location.search = params.toString();
+    navigate(`?${params.toString()}`);
   };
+
+  const handleInputFocus = () => {
+    setIsInputFocused(true);
+    setShowDropdown(true);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
+  };
+
+  const handleCountrySelect = (country) => {
+    setFormData(prev => ({
+      ...prev,
+      destination: country.title
+    }));
+    setShowDropdown(false);
+  };
+
+  // Handle click outside dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 
+          inputRef.current && !inputRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        Loading...
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
   }
@@ -259,32 +252,51 @@ const TravelVisaBooking = () => {
           {/* Search Form */}
           <div className="flex gap-5 flex-col justify-between md:flex-row p-5 w-full">
             <div className="flex gap-3">
-              <SearchInputText
-                value={{
-                  destination: formData.destination,
-                  goingTo: formData.goingTo,
-                }}
-          
-                onInputChange={handleInputChange}
-                data={formData}
-              />
-                </div>
-                <div>
-
-               
+              <div className="relative">
+                <SearchInputText
+                  ref={inputRef}
+                  value={formData.destination}
+                  onChange={(e) => handleInputChange('destination', e.target.value)}
+                  onFocus={() => setShowDropdown(true)}
+                  placeholder="Enter destination"
+                />
+                {showDropdown && countries.length > 0 && (
+                  <div 
+                    ref={dropdownRef}
+                    className="absolute z-10 mt-1 w-full bg-white rounded-md shadow-lg max-h-60 overflow-auto"
+                  >
+                    {countries
+                      .filter(country => 
+                        country.title.toLowerCase().includes(formData.destination.toLowerCase())
+                      )
+                      .map((country) => (
+                        <div
+                          key={country.id}
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                          onClick={() => handleCountrySelect(country)}
+                        >
+                          {country.icon}
+                          {country.title}
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div>
               <SearchInputDate
                 data={formData}
                 onDateChange={handleInputChange}
               />
-               </div>
-          
+            </div>
 
             <div className="flex items-center">
               <button
-                className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]"
+                className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px] disabled:opacity-50"
                 onClick={handleSearch}
+                disabled={isSearching}
               >
-                Search
+                {isSearching ? "Searching..." : "Search"}
               </button>
             </div>
           </div>
