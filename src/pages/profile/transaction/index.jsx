@@ -1,52 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, ChevronDown } from 'lucide-react';
 
 const AtlysWallet = () => {
   // Sample transaction data
-  const [transactions, setTransactions] = useState([
-    {
-      id: 1,
-      date: '3/28/2025',
-      time: '9:24:00 PM',
-      description: 'APL cashback credited for 3 runs scored',
-      application: '',
-      type: 'Credit',
-      amount: 150.00,
-      balance: 152.67
-    },
-    {
-      id: 2,
-      date: '3/28/2025',
-      time: '4:26:06 PM',
-      description: 'Visa payment',
-      application: 'Applications (1)',
-      type: 'Debit',
-      amount: -2569.00,
-      balance: 2.67
-    },
-    {
-      id: 3,
-      date: '3/28/2025',
-      time: '4:24:54 PM',
-      description: 'Credited',
-      application: '',
-      type: 'Credit',
-      amount: 200.00,
-      balance: 2571.67
-    },
-    {
-      id: 4,
-      date: '3/26/2025',
-      time: '3:19:27 PM',
-      description: 'Visa payment',
-      application: 'Applications (1)',
-      type: 'Debit',
-      amount: -2569.00,
-      balance: 2371.67
-    }
-  ]);
+  // const [transactions, setTransactions] = useState([
+  //   {
+  //     id: 1,
+  //     date: '3/28/2025',
+  //     time: '9:24:00 PM',
+  //     description: 'APL cashback credited for 3 runs scored',
+  //     application: '',
+  //     type: 'Credit',
+  //     amount: 150.00,
+  //     balance: 152.67
+  //   },
+  //   {
+  //     id: 2,
+  //     date: '3/28/2025',
+  //     time: '4:26:06 PM',
+  //     description: 'Visa payment',
+  //     application: 'Applications (1)',
+  //     type: 'Debit',
+  //     amount: -2569.00,
+  //     balance: 2.67
+  //   },
+  //   {
+  //     id: 3,
+  //     date: '3/28/2025',
+  //     time: '4:24:54 PM',
+  //     description: 'Credited',
+  //     application: '',
+  //     type: 'Credit',
+  //     amount: 200.00,
+  //     balance: 2571.67
+  //   },
+  //   {
+  //     id: 4,
+  //     date: '3/26/2025',
+  //     time: '3:19:27 PM',
+  //     description: 'Visa payment',
+  //     application: 'Applications (1)',
+  //     type: 'Debit',
+  //     amount: -2569.00,
+  //     balance: 2371.67
+  //   }
+  // ]);
 
   const currentBalance = 152.67;
+
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      // try {
+        const response = await fetch('http://localhost:8078/api/v1/transaction');
+        const data = await response.json();
+      // }
+      console.log(data?.response[0]?.balance);
+      setTransactions(data?.response);
+    }
+    fetchTransactions();
+  },[]);
 
   return (
     <div className="w-full max-w-5xl min-w-[300px]   bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -87,10 +101,10 @@ const AtlysWallet = () => {
               
               {/* Transaction Rows */}
               <tbody className="bg-white divide-y divide-gray-200">
-                {transactions.map((transaction, index) => (
+                {transactions?.map((transaction) => (
                   <tr 
                     key={transaction.id}
-                    className={index % 2 === 1 ? 'bg-gray-50' : 'bg-white'}
+                    className={transaction.id % 2 === 1 ? 'bg-gray-50' : 'bg-white'}
                   >
                     <td className="p-4">
                       <div className="text-[12px]">{transaction.date}</div>

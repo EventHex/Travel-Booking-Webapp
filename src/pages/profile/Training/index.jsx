@@ -1,52 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Placeholder } from "../../../assets";
 const VideoTutorials = () => {
-  const tutorials = [
-    {
-      id: 1,
-      title: "How to apply for a visa?",
-      thumbnail: "/api/placeholder/400/320",
-      logo: "atlys",
-      url: "business.atlys.com",
-    },
-    {
-      id: 2,
-      title: "How to load your wallet?",
-      thumbnail: "/api/placeholder/400/320",
-      logo: "atlys",
-      url: "business.atlys.com",
-    },
-    {
-      id: 3,
-      title: "How to load your wallet?",
-      thumbnail: "/api/placeholder/400/320",
-      logo: "atlys",
-      url: "business.atlys.com",
-    },
-    {
-      id: 4,
-      title: "How to load your wallet?",
-      thumbnail: "/api/placeholder/400/320",
-      logo: "atlys",
-      url: "business.atlys.com",
-    },
-    {
-      id: 5,
-      title: "How to load your wallet?",
-      thumbnail: "/api/placeholder/400/320",
-      logo: "atlys",
-      url: "business.atlys.com",
-    },
-    {
-      id: 6,
-      title: "How to load your wallet?",
-      thumbnail: "/api/placeholder/400/320",
-      logo: "atlys",
-      url: "business.atlys.com",
-    },
-   
+  // const tutorials = [
+  //   {
+  //     id: 1,
+  //     title: "How to apply for a visa?",
+  //     thumbnail: "/api/placeholder/400/320",
+  //     logo: "atlys",
+  //     url: "business.atlys.com",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "How to load your wallet?",
+  //     thumbnail: "/api/placeholder/400/320",
+  //     logo: "atlys",
+  //     url: "business.atlys.com",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "How to load your wallet?",
+  //     thumbnail: "/api/placeholder/400/320",
+  //     logo: "atlys",
+  //     url: "business.atlys.com",
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "How to load your wallet?",
+  //     thumbnail: "/api/placeholder/400/320",
+  //     logo: "atlys",
+  //     url: "business.atlys.com",
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "How to load your wallet?",
+  //     thumbnail: "/api/placeholder/400/320",
+  //     logo: "atlys",
+  //     url: "business.atlys.com",
+  //   },
+  //   {
+  //     id: 6,
+  //     title: "How to load your wallet?",
+  //     thumbnail: "/api/placeholder/400/320",
+  //     logo: "atlys",
+  //     url: "business.atlys.com",
+  //   },
+  // ];
 
-  ];
+  const [tutorials, setTutorials] = useState([]);
+
+  useEffect(() => {
+    const fetchTutorials = async () => {
+      const response = await fetch("http://localhost:8078/api/v1/training");
+      const data = await response.json();
+      setTutorials(data?.response);
+      console.log(data?.response);
+    };
+    fetchTutorials();
+  }, []);
 
   return (
     <div className="w-full  mx-auto rounded-xl border border-gray-200 ">
@@ -62,11 +72,11 @@ const VideoTutorials = () => {
             {tutorial.title}
           </h3>
           <div className="p-1 border border-gray-200 rounded-lg">
-            <img className="w-full" src={Placeholder} alt="" />
+            <img className="w-full" src={tutorial.thumbnail} alt="" />
 
             <div className="px-4 py-2 text-xs text-gray-600">
               Apply @{" "}
-              <span className="text-indigo-600">{tutorial.url}</span>
+              <span className="text-indigo-600">{tutorial.videoUrl}</span>
             </div>
           </div>
         </div>
