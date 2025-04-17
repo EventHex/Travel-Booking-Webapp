@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import Input from "../../../components/input";
 
-export const BackPassportForm = () => {
-  const [backFormData, setBackFormData] = useState({
-    fathersName: "",
-    mothersName: "",
-  });
+export const BackPassportForm = ({ formData, setFormData }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingError, setProcessingError] = useState(null);
   const [backImageUrl, setBackImageUrl] = useState(null);
@@ -14,7 +10,7 @@ export const BackPassportForm = () => {
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     console.log("File selected:", file);
-    
+
     if (!file) return;
 
     // Create a preview URL for the file before uploading
@@ -44,7 +40,7 @@ export const BackPassportForm = () => {
 
       if (result.success && result.data) {
         // Only update back passport specific fields
-        setBackFormData({
+        setFormData({
           fathersName: result.data.fathersName || "",
           mothersName: result.data.mothersName || "",
         });
@@ -63,7 +59,7 @@ export const BackPassportForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setBackFormData((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -104,7 +100,9 @@ export const BackPassportForm = () => {
               <div className="w-[100%]">
                 {previewUrl ? (
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">Passport Back Page Preview:</h3>
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">
+                      Passport Back Page Preview:
+                    </h3>
                     <img
                       src={previewUrl}
                       alt="Passport Preview"
@@ -119,7 +117,9 @@ export const BackPassportForm = () => {
                         Cancel
                       </button>
                       {isProcessing && (
-                        <div className="text-sm text-blue-600">Processing...</div>
+                        <div className="text-sm text-blue-600">
+                          Processing...
+                        </div>
                       )}
                     </div>
                   </div>
@@ -127,46 +127,51 @@ export const BackPassportForm = () => {
                   <div className="border-2 border-dashed  border-gray-300 rounded-lg p-6 text-center">
                     <div className="space-y-3">
                       <div className="mx-auto h-12 w-12 text-gray-400">
-                        <svg 
-                          xmlns="http://www.w3.org/2000/svg" 
-                          fill="none" 
-                          viewBox="0 0 24 24" 
-                          strokeWidth={1.5} 
-                          stroke="currentColor" 
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
                           className="w-12 h-12"
                         >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" 
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                           />
                         </svg>
                       </div>
                       <div className="text-sm text-gray-600">
-                        <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500">
+                        <label
+                          htmlFor="file-upload"
+                          className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500"
+                        >
                           <span>Upload Passport Back Page Image</span>
-                          <input 
-                            id="file-upload" 
-                            name="file-upload" 
-                            type="file" 
-                            className="sr-only" 
+                          <input
+                            id="file-upload"
+                            name="file-upload"
+                            type="file"
+                            className="sr-only"
                             onChange={handleFileUpload}
-                            accept="image/*"
+                            accept="image/*,application/pdf"
                             disabled={isProcessing}
                           />
                         </label>
                       </div>
                       <p className="text-xs text-gray-500">
-                        PNG, JPG, GIF up to 10MB
+                        PNG, JPG, PDF up to 10MB
                       </p>
                       {isProcessing && (
-                        <div className="text-sm text-blue-600">Processing...</div>
+                        <div className="text-sm text-blue-600">
+                          Processing...
+                        </div>
                       )}
                     </div>
                   </div>
                 )}
               </div>
-              
+
               {processingError && (
                 <p className="mt-2 text-sm text-red-600">{processingError}</p>
               )}
@@ -178,7 +183,7 @@ export const BackPassportForm = () => {
                 <div>
                   <Input
                     name="fathersName"
-                    value={backFormData.fathersName}
+                    value={formData.fathersName}
                     onChange={handleInputChange}
                     placeholder="Father's Name"
                     label="Father's Name"
@@ -189,7 +194,7 @@ export const BackPassportForm = () => {
                 <div>
                   <Input
                     name="mothersName"
-                    value={backFormData.mothersName}
+                    value={formData.mothersName}
                     onChange={handleInputChange}
                     placeholder="Mother's Name"
                     label="Mother's Name"
