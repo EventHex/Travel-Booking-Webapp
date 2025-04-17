@@ -24,10 +24,14 @@ const TravelVisaBooking = () => {
     travelDate: "",
     returnDate: "",
   });
+
+  console.log(searchParams.get("travelDate"));
   const [visaOptions, setVisaOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [countries, setCountries] = useState([]);
+  const [citizenOptions, setCitizenOptions] = useState([]);
+  const [dropDownPlace, setDropDownPlace] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const dropdownRef = useRef(null);
@@ -48,7 +52,9 @@ const TravelVisaBooking = () => {
             title: country.countryName,
             id: country._id
           }));
-          setCountries(countryOptions);
+          setCitizenOptions(countries);
+          setDropDownPlace(countries);
+          // setCountries(countryOptions);
         }
       } catch (error) {
         console.error('Error fetching countries:', error);
@@ -88,14 +94,14 @@ const TravelVisaBooking = () => {
           if (destination || goingTo || travelDate || returnDate) {
             filteredData = visaDataArray.filter((visa) => {
               const fromCountryMatch = !destination || 
-                visa.country?.value?.toLowerCase() === destination.toLowerCase() ||
-                (destination.toLowerCase() === "dubai" && visa.country?.value?.toLowerCase() === "uae") ||
-                (destination.toLowerCase() === "uae" && visa.country?.value?.toLowerCase() === "dubai");
+                visa.country?.value?.toLowerCase() === destination.toLowerCase() 
+                // (destination.toLowerCase() === "dubai" && visa.country?.value?.toLowerCase() === "uae") ||
+                // (destination.toLowerCase() === "uae" && visa.country?.value?.toLowerCase() === "dubai");
 
               const toCountryMatch = !goingTo || 
-                visa.toCountry?.value?.toLowerCase() === goingTo.toLowerCase() ||
-                (goingTo.toLowerCase() === "dubai" && visa.toCountry?.value?.toLowerCase() === "uae") ||
-                (goingTo.toLowerCase() === "uae" && visa.toCountry?.value?.toLowerCase() === "dubai");
+                visa.toCountry?.value?.toLowerCase() === goingTo.toLowerCase() 
+                // (goingTo.toLowerCase() === "dubai" && visa.toCountry?.value?.toLowerCase() === "uae") ||
+                // (goingTo.toLowerCase() === "uae" && visa.toCountry?.value?.toLowerCase() === "dubai");
 
               let dateMatch = true;
               if (travelDate || returnDate) {
@@ -254,18 +260,20 @@ const TravelVisaBooking = () => {
             <div className="flex gap-3">
               <div className="relative">
                 <SearchInputText
-                  ref={inputRef}
-                  value={formData.destination}
-                  onChange={(e) => handleInputChange('destination', e.target.value)}
-                  onFocus={() => setShowDropdown(true)}
-                  placeholder="Enter destination"
+                  dropDownPlace={dropDownPlace}
+                  dropDownData={citizenOptions}
+                  value={{
+                    destination: formData.destination,
+                    goingTo: formData.goingTo
+                  }}
+                  onInputChange={(field, value) => handleInputChange(field, value)}
                 />
                 {showDropdown && countries.length > 0 && (
                   <div 
                     ref={dropdownRef}
                     className="absolute z-10 mt-1 w-full bg-white rounded-md shadow-lg max-h-60 overflow-auto"
                   >
-                    {countries
+                    {/* {countries
                       .filter(country => 
                         country.title.toLowerCase().includes(formData.destination.toLowerCase())
                       )
@@ -278,7 +286,24 @@ const TravelVisaBooking = () => {
                           {country.icon}
                           {country.title}
                         </div>
-                      ))}
+                      ))} */}
+                       {dropDownPlace.map((option) => (
+              <div
+                key={option.id}
+                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                onClick={() =>
+                  handleOptionSelect(option, goingToInputRef, false)
+                }
+              >
+                <div className="flex">
+                  <p className="flex items-center text-[14px] gap-2">
+                    {option.icon}
+                    <span>{option.title}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+          
                   </div>
                 )}
               </div>
