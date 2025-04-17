@@ -3,6 +3,7 @@ import { Shield, X } from "lucide-react";
 import { True, TicIcon, CloseIconTicket } from "../../assets";
 import PassportPopup from "./popup";
 import axios from "axios";
+import { generateInvoicePDF } from "../../utils/pdfGenerator";
 
 const Ticket = ({
   approvedApplications = [],
@@ -202,6 +203,34 @@ const Ticket = ({
       </div>
     );
   }
+
+  const handleDownloadInvoice = async (application) => {
+    try {
+      const pdfBytes = await generateInvoicePDF(application);
+      
+      // Create a blob from the PDF bytes
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      
+      // Create a URL for the blob
+      const url = URL.createObjectURL(blob);
+      
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `invoice_${application.passportNumber}.pdf`;
+      
+      // Append to body, click, and remove
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Clean up the URL
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating invoice PDF:', error);
+      // You might want to show an error message to the user here
+    }
+  };
 
   return (
     <div className="w-full">
@@ -484,10 +513,16 @@ const Ticket = ({
                           >
                             View
                           </button>
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          <button 
+                            onClick={() => handleDownloadInvoice(application)}
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
                             Invoice
                           </button>
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          <button 
+                            // onClick={() => handleDownloadInsurance(application)}
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
                             Download Insurance
                           </button>
                         </div>
@@ -729,10 +764,16 @@ const Ticket = ({
                           >
                             View
                           </button>
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          <button 
+                            onClick={() => handleDownloadInvoice(application)}
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
                             Invoice
                           </button>
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          <button 
+                            onClick={() => handleDownloadInsurance(application)}
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          >
                             Download Insurance
                           </button>
                         </div>
