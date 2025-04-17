@@ -25,7 +25,8 @@ const TravelVisaBooking = () => {
     returnDate: "",
   });
 
-  console.log(searchParams.get("travelDate"));
+  const [searchResults, setSearchResults] = useState([]);
+  const [filteredVisaOptions, setFilteredVisaOptions] = useState([]);
   const [visaOptions, setVisaOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,6 +34,7 @@ const TravelVisaBooking = () => {
   const [citizenOptions, setCitizenOptions] = useState([]);
   const [dropDownPlace, setDropDownPlace] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [activeField, setActiveField] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
@@ -52,9 +54,9 @@ const TravelVisaBooking = () => {
             title: country.countryName,
             id: country._id
           }));
-          setCitizenOptions(countries);
-          setDropDownPlace(countries);
-          // setCountries(countryOptions);
+          setCountries(countryOptions);
+          setCitizenOptions(countryOptions);
+          setDropDownPlace(countryOptions);
         }
       } catch (error) {
         console.error('Error fetching countries:', error);
@@ -91,18 +93,21 @@ const TravelVisaBooking = () => {
           const returnDate = searchParams.get("returnDate") || "";
 
           let filteredData = visaDataArray;
+          
+          // Enhanced filtering logic
           if (destination || goingTo || travelDate || returnDate) {
             filteredData = visaDataArray.filter((visa) => {
+              // Destination matching with fuzzy search
               const fromCountryMatch = !destination || 
-                visa.country?.value?.toLowerCase() === destination.toLowerCase() 
-                // (destination.toLowerCase() === "dubai" && visa.country?.value?.toLowerCase() === "uae") ||
-                // (destination.toLowerCase() === "uae" && visa.country?.value?.toLowerCase() === "dubai");
+                visa.country?.value?.toLowerCase().includes(destination) ||
+                visa.country?.value?.toLowerCase().replace(/\s+/g, '') === destination.replace(/\s+/g, '');
 
+              // GoingTo matching with fuzzy search
               const toCountryMatch = !goingTo || 
-                visa.toCountry?.value?.toLowerCase() === goingTo.toLowerCase() 
-                // (goingTo.toLowerCase() === "dubai" && visa.toCountry?.value?.toLowerCase() === "uae") ||
-                // (goingTo.toLowerCase() === "uae" && visa.toCountry?.value?.toLowerCase() === "dubai");
+                visa.toCountry?.value?.toLowerCase().includes(goingTo) ||
+                visa.toCountry?.value?.toLowerCase().replace(/\s+/g, '') === goingTo.replace(/\s+/g, '');
 
+              // Enhanced date matching
               let dateMatch = true;
               if (travelDate || returnDate) {
                 try {
@@ -136,6 +141,8 @@ const TravelVisaBooking = () => {
             });
           }
 
+          setFilteredVisaOptions(filteredData);
+          
           const visaData = filteredData.map((visa) => ({
             title: visa.title,
             status: visa.status === "Active" ? "approved" : "warning",
@@ -178,7 +185,20 @@ const TravelVisaBooking = () => {
       ...prev,
       [field]: value
     }));
-    setShowDropdown(true);
+
+    if (field === 'destination' || field === 'goingTo') {
+      if (!showDropdown) return; // Only filter if dropdown is shown
+      
+      setActiveField(field);
+      if (value.trim() === '') {
+        setSearchResults(countries);
+      } else {
+        const filtered = countries.filter(country => 
+          country.title.toLowerCase().includes(value.toLowerCase())
+        );
+        setSearchResults(filtered);
+      }
+    }
   };
 
   const handleSearch = () => {
@@ -191,21 +211,44 @@ const TravelVisaBooking = () => {
     navigate(`?${params.toString()}`);
   };
 
-  const handleInputFocus = () => {
+  const handleInputFocus = (field) => {
     setIsInputFocused(true);
+    setActiveField(field);
     setShowDropdown(true);
+    
+    // Show filtered results if there's existing input, otherwise show all countries
+    if (formData[field]?.trim()) {
+      const filtered = countries.filter(country => 
+        country.title.toLowerCase().includes(formData[field].toLowerCase())
+      );
+      setSearchResults(filtered);
+    } else {
+      setSearchResults(countries);
+    }
   };
 
   const handleInputBlur = () => {
-    setIsInputFocused(false);
+    // Use setTimeout to allow click events on dropdown items to fire first
+    setTimeout(() => {
+      if (!dropdownRef.current?.contains(document.activeElement)) {
+        setIsInputFocused(false);
+        setShowDropdown(false);
+        setSearchResults([]);
+        setActiveField(null);
+      }
+    }, 150);
   };
 
-  const handleCountrySelect = (country) => {
+  const handleCountrySelect = (country, field) => {
     setFormData(prev => ({
       ...prev,
-      destination: country.title
+      [field]: country.title
     }));
+    // Immediately hide dropdown and clear states
     setShowDropdown(false);
+    setActiveField(null);
+    setSearchResults([]);
+    setIsInputFocused(false);
   };
 
   // Handle click outside dropdown
@@ -214,6 +257,9 @@ const TravelVisaBooking = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target) && 
           inputRef.current && !inputRef.current.contains(event.target)) {
         setShowDropdown(false);
+        setActiveField(null);
+        setSearchResults([]);
+        setIsInputFocused(false);
       }
     };
 
@@ -260,50 +306,33 @@ const TravelVisaBooking = () => {
             <div className="flex gap-3">
               <div className="relative">
                 <SearchInputText
-                  dropDownPlace={dropDownPlace}
-                  dropDownData={citizenOptions}
+                  dropDownPlace={countries}
+                  dropDownData={countries}
                   value={{
                     destination: formData.destination,
                     goingTo: formData.goingTo
                   }}
                   onInputChange={(field, value) => handleInputChange(field, value)}
+                  onFocus={(field) => handleInputFocus(field)}
+                  onBlur={handleInputBlur}
+                  inputRef={inputRef}
                 />
-                {showDropdown && countries.length > 0 && (
+                {showDropdown && searchResults.length > 0 && (
                   <div 
                     ref={dropdownRef}
                     className="absolute z-10 mt-1 w-full bg-white rounded-md shadow-lg max-h-60 overflow-auto"
                   >
-                    {/* {countries
-                      .filter(country => 
-                        country.title.toLowerCase().includes(formData.destination.toLowerCase())
-                      )
-                      .map((country) => (
-                        <div
-                          key={country.id}
-                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                          onClick={() => handleCountrySelect(country)}
-                        >
-                          {country.icon}
-                          {country.title}
-                        </div>
-                      ))} */}
-                       {dropDownPlace.map((option) => (
-              <div
-                key={option.id}
-                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() =>
-                  handleOptionSelect(option, goingToInputRef, false)
-                }
-              >
-                <div className="flex">
-                  <p className="flex items-center text-[14px] gap-2">
-                    {option.icon}
-                    <span>{option.title}</span>
-                  </p>
-                </div>
-              </div>
-            ))}
-          
+                    {searchResults.map((country) => (
+                      <div
+                        key={country.id}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                        onClick={() => handleCountrySelect(country, activeField)}
+                        onMouseDown={(e) => e.preventDefault()}
+                      >
+                        {country.icon}
+                        {country.title}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
