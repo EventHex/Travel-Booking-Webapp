@@ -339,7 +339,11 @@ const TravelVisaBooking = () => {
             </div>
 
             <div className="mb-4 md:mb-5">
-              <Input placeholder={"Tourist Visa"} label={"Group Name"} />
+              <Input 
+                placeholder={"Tourist Visa"} 
+                label={"Group Name"}
+                required={applicationType === "group"}
+              />
             </div>
           </div>
         </div>
@@ -502,7 +506,7 @@ const TravelVisaBooking = () => {
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
           <div className="flex gap-5 flex-col flex-wrap justify-between md:flex-row p-5 w-full">
-            <div className="flex md:flex-row flex-col gap-3">
+            {/* <div className="flex md:flex-row flex-col gap-3">
               <SearchInputText data={{ destination, goingTo }} />
               <SearchInputDate data={{ travelDate, returnDate }} />
             </div>
@@ -511,7 +515,7 @@ const TravelVisaBooking = () => {
               <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">
                 Search
               </button>
-            </div>
+            </div> */}
           </div>
           <UploadForm />
           <div className="flex mt-10">
