@@ -14,7 +14,7 @@ import {
 import Input from "../../../components/input";
 import { CustomSelect } from "../../../components/dropdown";
 
-export const FrontPassportForm = () => {
+export const FrontPassportForm = ({ formData, setFormData }) => {
   const Options = [
     { value: "M", label: "Male" },
     { value: "F", label: "Female" },
@@ -43,20 +43,6 @@ export const FrontPassportForm = () => {
     endX: 0,
     endY: 0,
     isDragging: false,
-  });
-
-  const [frontFormData, setFrontFormData] = useState({
-    passportNumber: "",
-    firstName: "",
-    lastName: "",
-    nationality: "",
-    sex: "",
-    dateOfBirth: "",
-    placeOfBirth: "",
-    placeOfIssue: "",
-    maritalStatus: "",
-    dateOfIssue: "",
-    dateOfExpiry: "",
   });
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -120,7 +106,7 @@ export const FrontPassportForm = () => {
           };
 
           console.log("Updating form data with:", updatedFormData);
-          setFrontFormData(updatedFormData);
+          setFormData(updatedFormData);
         }
       } catch (error) {
         console.error("Error processing passport:", error);
@@ -133,7 +119,7 @@ export const FrontPassportForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", frontFormData);
+    console.log("Form submitted:", formData);
   };
 
   const openEditModal = () => {
@@ -637,9 +623,9 @@ export const FrontPassportForm = () => {
                   name="passportNumber"
                   placeholder="Passport Number"
                   label="Passport Number"
-                  value={frontFormData.passportNumber}
+                  value={formData.passportNumber}
                   onChange={(e) =>
-                    setFrontFormData((prev) => ({
+                    setFormData((prev) => ({
                       ...prev,
                       passportNumber: e.target.value,
                     }))
@@ -655,9 +641,9 @@ export const FrontPassportForm = () => {
                     name="firstName"
                     placeholder="First Name"
                     label="First Name"
-                    value={frontFormData.firstName}
+                    value={formData.firstName}
                     onChange={(e) =>
-                      setFrontFormData((prev) => ({
+                      setFormData((prev) => ({
                         ...prev,
                         firstName: e.target.value,
                       }))
@@ -671,9 +657,9 @@ export const FrontPassportForm = () => {
                     name="lastName"
                     placeholder="Last Name"
                     label="Last Name"
-                    value={frontFormData.lastName}
+                    value={formData.lastName}
                     onChange={(e) =>
-                      setFrontFormData((prev) => ({
+                      setFormData((prev) => ({
                         ...prev,
                         lastName: e.target.value,
                       }))
@@ -690,9 +676,9 @@ export const FrontPassportForm = () => {
                     name="nationality"
                     placeholder="Nationality"
                     label="Nationality"
-                    value={frontFormData.nationality}
+                    value={formData.nationality}
                     onChange={(e) =>
-                      setFrontFormData((prev) => ({
+                      setFormData((prev) => ({
                         ...prev,
                         nationality: e.target.value,
                       }))
@@ -704,11 +690,11 @@ export const FrontPassportForm = () => {
                   <Input
                     type="text"
                     name="sex"
-                    placeholder="Gender"
-                    label="Gender"
-                    value={frontFormData.sex}
+                    placeholder="Sex"
+                    label="Sex"
+                    value={formData.sex}
                     onChange={(e) =>
-                      setFrontFormData((prev) => ({
+                      setFormData((prev) => ({
                         ...prev,
                         sex: e.target.value,
                       }))
@@ -723,9 +709,9 @@ export const FrontPassportForm = () => {
                   <input
                     type="date"
                     name="dateOfBirth"
-                    value={frontFormData.dateOfBirth}
+                    value={formData.dateOfBirth}
                     onChange={(e) =>
-                      setFrontFormData((prev) => ({
+                      setFormData((prev) => ({
                         ...prev,
                         dateOfBirth: e.target.value,
                       }))
@@ -742,9 +728,9 @@ export const FrontPassportForm = () => {
                   name="placeOfBirth"
                   placeholder="Place of Birth"
                   label="Place of Birth"
-                  value={frontFormData.placeOfBirth}
+                  value={formData.placeOfBirth}
                   onChange={(e) =>
-                    setFrontFormData((prev) => ({
+                    setFormData((prev) => ({
                       ...prev,
                       placeOfBirth: e.target.value,
                     }))
@@ -759,9 +745,9 @@ export const FrontPassportForm = () => {
                   name="placeOfIssue"
                   placeholder="Place of Issue"
                   label="Place of Issue"
-                  value={frontFormData.placeOfIssue}
+                  value={formData.placeOfIssue}
                   onChange={(e) =>
-                    setFrontFormData((prev) => ({
+                    setFormData((prev) => ({
                       ...prev,
                       placeOfIssue: e.target.value,
                     }))
@@ -777,10 +763,10 @@ export const FrontPassportForm = () => {
                     options={Metiral}
                     label="Marital Status"
                     value={Metiral.find(
-                      (opt) => opt.value === frontFormData.maritalStatus
+                      (opt) => opt.value === formData.maritalStatus
                     )}
                     onChange={(option) =>
-                      setFrontFormData((prev) => ({
+                      setFormData((prev) => ({
                         ...prev,
                         maritalStatus: option.value,
                       }))
@@ -796,9 +782,9 @@ export const FrontPassportForm = () => {
                   <input
                     type="date"
                     name="dateOfIssue"
-                    value={frontFormData.dateOfIssue}
+                    value={formData.dateOfIssue}
                     onChange={(e) =>
-                      setFrontFormData((prev) => ({
+                      setFormData((prev) => ({
                         ...prev,
                         dateOfIssue: e.target.value,
                       }))
@@ -815,9 +801,9 @@ export const FrontPassportForm = () => {
                   <input
                     type="date"
                     name="dateOfExpiry"
-                    value={frontFormData.dateOfExpiry}
+                    value={formData.dateOfExpiry}
                     onChange={(e) =>
-                      setFrontFormData((prev) => ({
+                      setFormData((prev) => ({
                         ...prev,
                         dateOfExpiry: e.target.value,
                       }))

@@ -1,54 +1,79 @@
 import React, { useState } from "react";
 import { Saveline, UserAdd } from "../../../assets";
 
-export const FlightHotelBooking = () => {
+export const FlightHotelBooking = ({
+  flightTicket,
+  setFlightTicket,
+  hotelBooking,
+  setHotelBooking,
+}) => {
   const [flightPreview, setFlightPreview] = useState(null);
   const [hotelPreview, setHotelPreview] = useState(null);
-
-  const [documents, setDocuments] = useState({
-    flightTicket: null,
-    hotelBooking: null,
-  });
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingError, setProcessingError] = useState(null);
 
   const handleSubmitTicketBooking = (e) => {
     e.preventDefault();
-    console.log("Submitted documents:", documents);
+    console.log("Submitted documents:", { flightTicket, hotelBooking });
   };
 
-  const handleFlightUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFlightPreview(reader.result);
-    };
-    reader.readAsDataURL(file);
-
-    setDocuments(prev => ({ ...prev, flightTicket: file }));
+  const handleFileChange = (type, file) => {
+    if (type === "flightTicket") {
+      setFlightTicket(file);
+    } else if (type === "hotelBooking") {
+      setHotelBooking(file);
+    }
   };
 
-  const handleHotelUpload = (e) => {
-    const file = e.target.files[0];
+  const handleFileUpload = async (type, event) => {
+    const file = event.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setHotelPreview(reader.result);
-    };
-    reader.readAsDataURL(file);
+    setIsProcessing(true);
+    setProcessingError(null);
 
-    setDocuments(prev => ({ ...prev, hotelBooking: file }));
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(
+        `http://localhost:8078/api/v1/visa-application/upload-${type}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to upload ${type}`);
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        if (type === "flight-ticket") {
+          setFlightTicket(result.data.fileUrl);
+        } else {
+          setHotelBooking(result.data.fileUrl);
+        }
+      } else {
+        setProcessingError(result.error || `Failed to upload ${type}`);
+      }
+    } catch (error) {
+      setProcessingError(`Failed to upload ${type}`);
+      console.error(`Error uploading ${type}:`, error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const cancelFlightPreview = () => {
     setFlightPreview(null);
-    setDocuments(prev => ({ ...prev, flightTicket: null }));
+    setFlightTicket(null);
   };
 
   const cancelHotelPreview = () => {
     setHotelPreview(null);
-    setDocuments(prev => ({ ...prev, hotelBooking: null }));
+    setHotelBooking(null);
   };
 
   return (
@@ -71,7 +96,9 @@ export const FlightHotelBooking = () => {
                 <div className="w-[100%]">
                   {flightPreview ? (
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">Flight Ticket Preview:</h3>
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                        Flight Ticket Preview:
+                      </h3>
                       <div className="flex justify-center">
                         <img
                           src={flightPreview}
@@ -91,30 +118,35 @@ export const FlightHotelBooking = () => {
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                       <div className="space-y-3">
                         <div className="mx-auto h-12 w-12 text-gray-400">
-                          <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            strokeWidth={1.5} 
-                            stroke="currentColor" 
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
                             className="w-12 h-12"
                           >
-                            <path 
-                              strokeLinecap="round" 
-                              strokeLinejoin="round" 
-                              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" 
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                             />
                           </svg>
                         </div>
                         <div className="text-sm text-gray-600">
-                          <label htmlFor="flight-upload" className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500">
+                          <label
+                            htmlFor="flight-upload"
+                            className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500"
+                          >
                             <span>Upload Flight Ticket</span>
-                            <input 
-                              id="flight-upload" 
-                              name="flight-upload" 
-                              type="file" 
-                              className="sr-only" 
-                              onChange={handleFlightUpload}
+                            <input
+                              id="flight-upload"
+                              name="flight-upload"
+                              type="file"
+                              className="sr-only"
+                              onChange={(e) =>
+                                handleFileUpload("flight-ticket", e)
+                              }
                               accept="image/*"
                             />
                           </label>
@@ -144,7 +176,9 @@ export const FlightHotelBooking = () => {
                 <div className="w-[100%]">
                   {hotelPreview ? (
                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                      <h3 className="text-sm font-medium text-gray-700 mb-2">Hotel Booking Preview:</h3>
+                      <h3 className="text-sm font-medium text-gray-700 mb-2">
+                        Hotel Booking Preview:
+                      </h3>
                       <div className="flex justify-center">
                         <img
                           src={hotelPreview}
@@ -191,7 +225,9 @@ export const FlightHotelBooking = () => {
                               type="file"
                               className="sr-only"
                               accept="image/*"
-                              onChange={handleHotelUpload}
+                              onChange={(e) =>
+                                handleFileUpload("hotel-booking", e)
+                              }
                             />
                           </label>
                         </div>
@@ -209,10 +245,16 @@ export const FlightHotelBooking = () => {
             <div className="w-full mt-10 px-4 md:px-0">
               <div className="w-full md:w-[50%]">
                 <div className="flex flex-col sm:flex-row py-4 md:py-5 border-t border-[#CDD0D5] gap-3 sm:gap-5">
-                  <button type="button" className="gap-2 bg-blue-600 hover:bg-blue-700 w-full justify-center py-2 flex text-[14px] font-[400] text-white rounded-md">
+                  <button
+                    type="button"
+                    className="gap-2 bg-blue-600 hover:bg-blue-700 w-full justify-center py-2 flex text-[14px] font-[400] text-white rounded-md"
+                  >
                     <img src={UserAdd} alt="" /> Add Another Traveller
                   </button>
-                  <button type="submit" className="gap-2 bg-blue-600 hover:bg-blue-700 flex w-full justify-center py-2 text-[14px] font-[400] text-white rounded-md">
+                  <button
+                    type="submit"
+                    className="gap-2 bg-blue-600 hover:bg-blue-700 flex w-full justify-center py-2 text-[14px] font-[400] text-white rounded-md"
+                  >
                     <img src={Saveline} alt="" /> Review & Save
                   </button>
                 </div>

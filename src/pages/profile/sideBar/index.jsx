@@ -29,7 +29,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const filterOption = [
     { id: "Overstay", label: "Overstay", icon: Acitivty },
     { id: "Training", label: "Training", icon: Inurance },
-    { id: "changepassword", label: "change password", icon: Inurance },
+    { id: "changepassword", label: "Change Password", icon: Inurance },
     { id: "Signout", label: "Sign Out", icon: Inurance },
   ];
 
