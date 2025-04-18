@@ -58,6 +58,11 @@ const VideoTutorials = () => {
     fetchTutorials();
   }, []);
 
+  const getYouTubeEmbedUrl = (url) => {
+    const videoId = url.split("v=")[1]?.split("&")[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  };
+
   return (
     <div className="w-full  mx-auto rounded-xl border border-gray-200 ">
       {/* Header */}
@@ -71,13 +76,22 @@ const VideoTutorials = () => {
           <h3 className="text-xl font-medium text-gray-900 mb-4">
             {tutorial.title}
           </h3>
-          <div className="p-1 border border-gray-200 rounded-lg">
+          <div className="border border-gray-200 rounded-lg">
             <img className="w-full" src={tutorial.thumbnail} alt="" />
-
-            <div className="px-4 py-2 text-xs text-gray-600">
+            <iframe
+          width="100%"
+          height="200"
+          className="mt-2 rounded"
+          src={getYouTubeEmbedUrl(tutorial.videoUrl)}
+          title={tutorial.title}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+            {/* <div className="px-4 py-2 text-xs text-gray-600">
               Apply @{" "}
               <span className="text-indigo-600">{tutorial.videoUrl}</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

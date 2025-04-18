@@ -75,10 +75,13 @@ const TravelVisaBooking = () => {
     dateOfExpiry: "",
   });
 
+
   const [backFormData, setBackFormData] = useState({
     fathersName: "",
     mothersName: "",
   });
+
+  
 
   const [travelerPhoto, setTravelerPhoto] = useState(null);
   const [flightTicket, setFlightTicket] = useState(null);
@@ -135,6 +138,7 @@ const TravelVisaBooking = () => {
     hotelBooking: null,
   });
 
+
   const handleFileChangeTicketBooking = (type, file) => {
     setDocuments((prev) => ({
       ...prev,
@@ -144,7 +148,7 @@ const TravelVisaBooking = () => {
 
   const handleSubmitTicketBooking = async (e) => {
     e.preventDefault();
-    try {
+    // try {
       const formData = new FormData();
       formData.append("travellerInformation", travelerId);
       formData.append("visaFor", "Individual");
@@ -163,55 +167,88 @@ const TravelVisaBooking = () => {
         formData.append("hotelBooking", documents.hotelBooking);
       }
 
-      const response = await fetch(
-        "http://localhost:8078/api/v1/visa-application",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      // const response = await fetch(
+      //   "http://localhost:8078/api/v1/visa-application",
+      //   {
+      //     method: "POST",
+      //     body: formData,
+      //   }
+      // );
 
-      if (!response.ok) {
-        throw new Error("Failed to submit documents");
-      }
+      // if (!response.ok) {
+      //   throw new Error("Failed to submit documents");
+      // }
 
-      const result = await response.json();
-      console.log("Documents submitted successfully:", result);
-    } catch (error) {
-      console.error("Error submitting documents:", error);
-      alert("Failed to submit documents. Please try again.");
-    }
+      // const result = await response.json();
+      // console.log("Documents submitted successfully:", result);
+    // } catch (error) {
+      // console.error("Error submitting documents:", error);
+      // alert("Failed to submit documents. Please try again.");
+    // }
+  };
+
+
+   // Function to reset all form fields
+   const resetFormFields = () => {
+    // Reset front passport form
+    setFrontFormData(initialFrontFormData);
+    
+    // Reset back passport form
+    setBackFormData(initialBackFormData);
+    
+    // Reset traveler photo and documents
+    setTravelerPhoto(null);
+    setFlightTicket(null);
+    setHotelBooking(null);
+    
+    // Reset file state
+    setFile(null);
+    
+    // Reset documents state
+    setDocuments({
+      flightTicket: null,
+      hotelBooking: null,
+    });
+    
+    // Reset application type to default
+    setApplicationType("individual");
+    
+    // Reset visa type to default
+    setVisaType("Tourist Visa");
   };
 
   const handleSubmit = async () => {
     try {
-      // First create the traveler document
-      const travelerResponse = await fetch(
-        "http://localhost:8078/api/v1/traveler",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...frontFormData,
-            ...backFormData,
-          }),
-        }
-      );
+    //   // First create the traveler document
+    //   const travelerResponse = await fetch(
+    //     "http://localhost:8078/api/v1/traveler",
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         ...frontFormData,
+    //         ...backFormData,
+    //       }),
+    //     }
+    //   );
 
-      if (!travelerResponse.ok) {
-        throw new Error("Failed to create traveler");
-      }
+    //   if (!travelerResponse.ok) {
+    //     throw new Error("Failed to create traveler");
+    //   }
 
-      const travelerData = await travelerResponse.json();
-      const travelerId = travelerData.data._id;
+      // const travelerData = await travelerResponse.json();
+      // const travelerId = travelerData.data._id;
 
       // Create FormData for visa application
       const formData = new FormData();
 
       // Add traveler information
-      formData.append("travellerInformation", travelerId);
+      // formData.append("travellerInformation", travelerId);
+
+      
+
 
       // Add visa details
       formData.append("visaFor", "Individual");
@@ -250,6 +287,7 @@ const TravelVisaBooking = () => {
         );
       }
 
+      
       const result = await response.json();
       console.log("Visa application submitted successfully:", result);
 
@@ -269,6 +307,14 @@ const TravelVisaBooking = () => {
       { value: 2, label: "job visa" },
       { value: 3, label: "visiting visa" },
     ];
+
+    // console.log(frontFormData);
+    // console.log(backFormData);
+
+    console.log(travelerPhoto);
+    console.log(flightTicket);
+    console.log(hotelBooking);
+
     return (
       <>
         <div className="w-full p-6 rounded-3xl shadow-sm">
