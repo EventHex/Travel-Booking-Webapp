@@ -32,6 +32,13 @@ const Signup = () => {
     setError("");
 
     try {
+      if (!otpSent) {
+        // First click - show OTP field
+        setOtpSent(true);
+        return;
+      }
+
+      // Second click - verify OTP
       const response = await fetch("http://localhost:8078/api/v1/auth/signup", {
         method: "POST",
         headers: {
@@ -40,22 +47,17 @@ const Signup = () => {
         body: JSON.stringify({
           ...formData,
           authenticationType: "email",
-          otp: otpSent ? otp : undefined,
+          otp: otp,
         }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        if (data.requireOTP) {
-          setOtpSent(true);
-        } else {
-          // Store tokens and redirect
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("refreshToken", data.refreshToken);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          navigate("/dashboard");
-        }
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        navigate("/dashboard");
       } else {
         setError(data.customMessage || data.message || "Signup failed");
       }
@@ -172,46 +174,25 @@ const Signup = () => {
 
                   <div className="space-y-1">
                     <label className="block text-[16px] font-medium text-gray-900">
-                      Password
+                      Phone Number
                     </label>
                     <div className="relative flex items-center">
                       <div className="absolute left-3 flex items-center pointer-events-none">
-                        <svg
-                          className="h-5 w-5 text-gray-400"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        </svg>
+                        <Building className="h-5 w-5 text-gray-400" />
                       </div>
                       <input
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        value={formData.password}
+                        type="text"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
                         onChange={handleChange}
-                        placeholder="Enter password"
+                        placeholder="Phone Number"
                         className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       />
-                      <button
-                        type="button"
-                        onClick={togglePasswordVisibility}
-                        className="absolute right-3 flex items-center"
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-5 w-5 text-gray-400" />
-                        ) : (
-                          <Eye className="h-5 w-5 text-gray-400" />
-                        )}
-                      </button>
                     </div>
                   </div>
+
+                  
                 </>
               ) : (
                 <div className="space-y-1">
