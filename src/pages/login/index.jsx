@@ -1,35 +1,100 @@
-import React, { useState } from "react";
-import { Mail, Eye, EyeOff } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Phone, Mail, ChevronDown } from "lucide-react";
 import { Logo, LoginBackgorund } from "../../assets";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState({
+    countryName: "India",
+    code: "+91",
+    key: "IN",
+  });
+  const [showCountryList, setShowCountryList] = useState(false);
+  const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        console.log("Fetching countries...");
+        const response = await fetch("http://localhost:8078/api/v1/country");
+        const data = await response.json();
+        console.log("API Response:", data);
 
-  const handleSubmit = async (e) => {
+        if (data.success && Array.isArray(data.data)) {
+          setCountries(data.data);
+          console.log("Countries set:", data.data);
+        } else {
+          console.error("Invalid data structure:", data);
+          setError("Invalid country data received");
+        }
+      } catch (err) {
+        console.error("Error fetching countries:", err);
+        setError("Failed to load countries");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCountries();
+  }, []);
+
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8078/api/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          authenticationType: "email"
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8078/api/v1/auth/send-otp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phoneNumber,
+            authenticationType: "phone",
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsOtpSent(true);
+      } else {
+        setError(data.message || "Failed to send OTP");
+      }
+    } catch (err) {
+      console.error("OTP error:", err);
+      setError("Failed to connect to server");
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await fetch(
+        "http://localhost:8078/api/v1/auth/verify-otp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phoneNumber,
+            otp,
+            authenticationType: "phone",
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -37,21 +102,22 @@ const Index = () => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("refreshToken", data.refreshToken);
         localStorage.setItem("user", JSON.stringify(data.user));
-        
+
         navigate("/dashboard");
       } else {
-        setError(data.message || "Login failed");
+        setError(data.message || "Invalid OTP");
       }
     } catch (err) {
-      console.error("Login error:", err);
+      console.error("Verification error:", err);
       setError("Failed to connect to server");
     }
   };
 
   const handleReset = () => {
-    setEmail("");
-    setPassword("");
+    setPhoneNumber("");
+    setOtp("");
     setError("");
+    setIsOtpSent(false);
   };
 
   return (
@@ -96,86 +162,106 @@ const Index = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
+            <form
+              onSubmit={isOtpSent ? handleVerifyOtp : handleSendOtp}
+              className="space-y-5 md:space-y-6"
+            >
               <div className="space-y-2">
                 <label
-                  htmlFor="email"
+                  htmlFor="phone"
                   className="block text-sm md:text-base font-medium text-gray-900"
                 >
-                  Email
+                  Phone Number
                 </label>
                 <div className="relative flex items-center">
                   <div className="absolute left-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
+                    <Phone className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setShowCountryList(!showCountryList)}
+                      className="absolute left-10 top-1/2 -translate-y-1/2 flex items-center gap-1 text-gray-700 text-sm"
+                    >
+                      {selectedCountry.code}
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
+                    {showCountryList && (
+                      <div className="absolute left-10 top-full mt-1 w-48 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+                        {loading ? (
+                          <div className="px-3 py-2 text-sm text-gray-500">
+                            Loading...
+                          </div>
+                        ) : countries.length === 0 ? (
+                          <div className="px-3 py-2 text-sm text-gray-500">
+                            No countries available
+                          </div>
+                        ) : (
+                          countries.map((country) => (
+                            <button
+                              key={country.key}
+                              type="button"
+                              onClick={() => {
+                                console.log("Selected country:", country);
+                                setSelectedCountry(country);
+                                setShowCountryList(false);
+                              }}
+                              className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+                            >
+                              <span className="font-medium">
+                                {country.code}
+                              </span>
+                              <span className="text-gray-600">
+                                {country.countryName}
+                              </span>
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    )}
                   </div>
                   <input
-                    type="email"
-                    id="email"
-                    placeholder="admin@cnnholidays.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-xl text-sm md:text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="tel"
+                    id="phone"
+                    placeholder="1234567890"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className="pl-24 w-full p-3 bg-white border border-gray-300 rounded-xl text-sm md:text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled={isOtpSent}
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="password"
-                  className="block text-sm md:text-base font-medium text-gray-900"
-                >
-                  Password
-                </label>
-                <div className="relative flex items-center">
-                  <div className="absolute left-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                  </div>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    placeholder="Placeholder text..."
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-xl text-sm md:text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    className="absolute right-3 flex items-center"
+              {isOtpSent && (
+                <div className="space-y-2">
+                  <label
+                    htmlFor="otp"
+                    className="block text-sm md:text-base font-medium text-gray-900"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-gray-400" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-gray-400" />
-                    )}
-                  </button>
+                    OTP
+                  </label>
+                  <div className="relative flex items-center">
+                    <div className="absolute left-3 flex items-center pointer-events-none">
+                      <Mail className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      type="text"
+                      id="otp"
+                      placeholder="Enter OTP"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-xl text-sm md:text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
                 </div>
-                <span
-                  onClick={() => navigate("/reset-password")}
-                  className="block text-xs md:text-sm text-blue-500 hover:underline mt-1 cursor-pointer"
-                >
-                  Reset My Password
-                </span>
-              </div>
+              )}
 
               <div className="flex w-[full] justify-center gap-1 md:gap-4 mt-14">
                 <button
                   type="submit"
                   className="py-3 w-[65%] px-4 text-[14px] font-[400] bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  Sign in
+                  {isOtpSent ? "Verify OTP" : "Send OTP"}
                 </button>
                 <button
                   type="button"
@@ -191,10 +277,10 @@ const Index = () => {
         <div className="h-1/5 flex justify-center items-center">
           <p className="text-gray-800 text-sm md:text-base">
             Don't have an Account?{" "}
-            <span 
-              onClick={() => navigate("/signup")} 
+            <span
+              onClick={() => navigate("/signup")}
               className="text-[#375DFB] cursor-pointer"
-            > 
+            >
               Sign up
             </span>
           </p>
