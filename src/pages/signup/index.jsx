@@ -1,23 +1,95 @@
-import React, { useState } from "react";
-import { Mail, Eye, EyeOff, Building, User } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Mail,
+  Eye,
+  EyeOff,
+  Building,
+  User,
+  Phone,
+  ChevronDown,
+  Search,
+} from "lucide-react";
 import { Logo, LoginBackgorund } from "../../assets";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     companyName: "",
     name: "",
+    phoneNumber: "",
+    userType: "customer",
   });
   const [error, setError] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState({
+    countryName: "India",
+    code: "+91",
+    key: "IN",
+  });
+  const [showCountryList, setShowCountryList] = useState(false);
+  const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef(null);
+  const dropdownRef = useRef(null);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8078/api/v1/country?limit=245"
+        );
+        const data = await response.json();
+
+        if (data.success && Array.isArray(data.response)) {
+          setCountries(data.response);
+        } else {
+          console.error("Invalid data structure:", data);
+          setError("Invalid country data received");
+        }
+      } catch (err) {
+        console.error("Error fetching countries:", err);
+        setError("Failed to load countries");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCountries();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowCountryList(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (showCountryList && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [showCountryList]);
+
+  const filteredCountries = countries.filter(
+    (country) =>
+      country.countryName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      country.code.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setShowCountryList(false);
   };
 
   const handleChange = (e) => {
@@ -33,33 +105,77 @@ const Signup = () => {
 
     try {
       if (!otpSent) {
-        // First click - show OTP field
-        setOtpSent(true);
+        // First click - send OTP
+        const response = await fetch(
+          "http://localhost:8078/api/v1/auth/send-otp",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              phoneNumber: formData.phoneNumber,
+              phoneCode: selectedCountry.code,
+              authenticationType: "phone",
+            }),
+          }
+        );
+
+        const data = await response.json();
+        if (data.success) {
+          setOtpSent(true);
+        } else {
+          setError(data.message || "Failed to send OTP");
+        }
         return;
       }
 
-      // Second click - verify OTP
-      const response = await fetch("http://localhost:8078/api/v1/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          authenticationType: "email",
-          otp: otp,
-        }),
-      });
+      // Second click - verify OTP and signup
+      const verifyResponse = await fetch(
+        "http://localhost:8078/api/v1/auth/verify-otp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            phoneNumber: formData.phoneNumber,
+            phoneCode: selectedCountry.code,
+            otp: otp,
+            authenticationType: "phone",
+          }),
+        }
+      );
 
-      const data = await response.json();
+      const verifyData = await verifyResponse.json();
+      if (!verifyData.success) {
+        setError(verifyData.message || "Invalid OTP");
+        return;
+      }
 
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("refreshToken", data.refreshToken);
-        localStorage.setItem("user", JSON.stringify(data.user));
+      // If OTP is verified, proceed with signup
+      const signupResponse = await fetch(
+        "http://localhost:8078/api/v1/auth/signup-with-otp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            phoneCode: selectedCountry.code,
+          }),
+        }
+      );
+
+      const signupData = await signupResponse.json();
+      if (signupData.success) {
+        localStorage.setItem("token", signupData.token);
+        localStorage.setItem("refreshToken", signupData.refreshToken);
+        localStorage.setItem("user", JSON.stringify(signupData.user));
         navigate("/dashboard");
       } else {
-        setError(data.customMessage || data.message || "Signup failed");
+        setError(signupData.message || "Signup failed");
       }
     } catch (err) {
       console.error("Signup error:", err);
@@ -114,6 +230,22 @@ const Signup = () => {
                 <>
                   <div className="space-y-1">
                     <label className="block text-[16px] font-medium text-gray-900">
+                      User Type
+                    </label>
+                    <select
+                      name="userType"
+                      value={formData.userType}
+                      onChange={handleChange}
+                      className="w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    >
+                      <option value="customer">Customer</option>
+                      <option value="agent">Agent</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-[16px] font-medium text-gray-900">
                       Full Name
                     </label>
                     <div className="relative flex items-center">
@@ -132,25 +264,27 @@ const Signup = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="block text-[16px] font-medium text-gray-900">
-                      Company Name
-                    </label>
-                    <div className="relative flex items-center">
-                      <div className="absolute left-3 flex items-center pointer-events-none">
-                        <Building className="h-5 w-5 text-gray-400" />
+                  {formData.userType === "agent" && (
+                    <div className="space-y-1">
+                      <label className="block text-[16px] font-medium text-gray-900">
+                        Company Name
+                      </label>
+                      <div className="relative flex items-center">
+                        <div className="absolute left-3 flex items-center pointer-events-none">
+                          <Building className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <input
+                          type="text"
+                          name="companyName"
+                          value={formData.companyName}
+                          onChange={handleChange}
+                          placeholder="Company Name"
+                          className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required
+                        />
                       </div>
-                      <input
-                        type="text"
-                        name="companyName"
-                        value={formData.companyName}
-                        onChange={handleChange}
-                        placeholder="Company Name"
-                        className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
                     </div>
-                  </div>
+                  )}
 
                   <div className="space-y-1">
                     <label className="block text-[16px] font-medium text-gray-900">
@@ -176,23 +310,79 @@ const Signup = () => {
                     <label className="block text-[16px] font-medium text-gray-900">
                       Phone Number
                     </label>
-                    <div className="relative flex items-center">
-                      <div className="absolute left-3 flex items-center pointer-events-none">
-                        <Building className="h-5 w-5 text-gray-400" />
+                    <div className="relative" ref={dropdownRef}>
+                      <div className="flex items-center w-full p-4 bg-white border border-gray-300 rounded-full">
+                        <div className="flex items-center min-w-[90px]">
+                          <Phone className="h-5 w-5 text-gray-400 mr-2" />
+                          <button
+                            type="button"
+                            onClick={() => setShowCountryList(!showCountryList)}
+                            className="flex items-center gap-1 text-gray-700 text-sm"
+                          >
+                            {selectedCountry?.code || "+91"}
+                            <ChevronDown className="h-4 w-4 text-gray-400" />
+                          </button>
+                        </div>
+                        <div className="w-px h-6 bg-gray-300 mx-3"></div>
+                        <input
+                          type="tel"
+                          name="phoneNumber"
+                          value={formData.phoneNumber}
+                          onChange={handleChange}
+                          placeholder="234567890"
+                          className="flex-1 text-sm md:text-base text-gray-700 focus:outline-none bg-transparent"
+                          required
+                        />
                       </div>
-                      <input
-                        type="text"
-                        name="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        placeholder="Phone Number"
-                        className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
+                      {showCountryList && (
+                        <div className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-300 rounded-xl shadow-lg z-50 max-h-[320px] overflow-hidden">
+                          <div className="p-2 border-b border-gray-200">
+                            <div className="relative">
+                              <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                              <input
+                                ref={searchInputRef}
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Search country"
+                                className="w-full pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                              />
+                            </div>
+                          </div>
+                          <div className="overflow-y-auto max-h-[250px]">
+                            {loading ? (
+                              <div className="px-4 py-2 text-sm text-gray-500">
+                                Loading...
+                              </div>
+                            ) : filteredCountries.length === 0 ? (
+                              <div className="px-4 py-2 text-sm text-gray-500">
+                                No countries found
+                              </div>
+                            ) : (
+                              filteredCountries.map((country) => (
+                                <button
+                                  key={country.key}
+                                  type="button"
+                                  onClick={() => {
+                                    handleCountrySelect(country);
+                                    setSearchQuery("");
+                                  }}
+                                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center justify-between"
+                                >
+                                  <span className="text-gray-600">
+                                    {country.countryName}
+                                  </span>
+                                  <span className="text-gray-900 font-medium">
+                                    {country.code}
+                                  </span>
+                                </button>
+                              ))
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-
-                  
                 </>
               ) : (
                 <div className="space-y-1">
@@ -203,7 +393,7 @@ const Signup = () => {
                     type="text"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    placeholder="Enter OTP sent to your email"
+                    placeholder="Enter OTP sent to your phone"
                     className="w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
@@ -215,7 +405,7 @@ const Signup = () => {
                   type="submit"
                   className="w-full p-3 bg-blue-500 text-white rounded-2xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  {otpSent ? "Verify OTP" : "Sign up"}
+                  {otpSent ? "Verify OTP & Sign Up" : "Send OTP"}
                 </button>
               </div>
             </form>
@@ -223,8 +413,8 @@ const Signup = () => {
             <div className="text-center mt-6">
               <p className="text-gray-800 text-sm md:text-base">
                 Already have an account?{" "}
-                <span 
-                  onClick={() => navigate("/login")} 
+                <span
+                  onClick={() => navigate("/login")}
                   className="text-[#375DFB] cursor-pointer"
                 >
                   Login
@@ -238,4 +428,4 @@ const Signup = () => {
   );
 };
 
-export default Signup; 
+export default Signup;
