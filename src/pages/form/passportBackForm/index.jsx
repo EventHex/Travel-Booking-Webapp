@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Input from "../../../components/input";
 
-export const BackPassportForm = ({ formData, setFormData }) => {
+export const BackPassportForm = ({ formData, setFormData, previewUrl, setPreviewUrl }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingError, setProcessingError] = useState(null);
   const [backImageUrl, setBackImageUrl] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  // const [previewUrl, setPreviewUrl] = useState(null);
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];

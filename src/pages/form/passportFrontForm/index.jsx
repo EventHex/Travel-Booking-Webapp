@@ -14,7 +14,7 @@ import {
 import Input from "../../../components/input";
 import { CustomSelect } from "../../../components/dropdown";
 
-export const FrontPassportForm = ({ formData, setFormData }) => {
+export const FrontPassportForm = ({ formData, setFormData, frontImage, setFrontImage }) => {
   const Options = [
     { value: "M", label: "Male" },
     { value: "F", label: "Female" },
@@ -24,7 +24,7 @@ export const FrontPassportForm = ({ formData, setFormData }) => {
     { value: "s", label: "Single" },
     { value: "m", label: "Married" },
   ];
-  const [frontImage, setFrontImage] = useState(null);
+  // const [frontImage, setFrontImage] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editedImage, setEditedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -761,6 +761,7 @@ export const FrontPassportForm = ({ formData, setFormData }) => {
                   <CustomSelect
                     className={"py-[8.5px]"}
                     options={Metiral}
+                    name="maritalStatus"
                     label="Marital Status"
                     value={Metiral.find(
                       (opt) => opt.value === formData.maritalStatus
