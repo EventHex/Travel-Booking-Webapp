@@ -54,7 +54,9 @@ const TravelVisaBooking = () => {
   const goingToInputRef = useRef(null);
 
   const [frontImage, setFrontImage] = useState(null);
-  const [backImageUrl, setBackImageUrl] = useState(null);
+  // const [backImageUrl, setBackImageUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
 
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
@@ -225,8 +227,8 @@ const TravelVisaBooking = () => {
  if (frontImage) {
   passportInfo.append("passportImageFront", frontImage);
 }
-if (backImageUrl) {
-  passportInfo.append("passportImageBack", backImageUrl);
+if (previewUrl) {
+  passportInfo.append("passportImageBack", previewUrl);
 }
 
       // First create the traveler document
@@ -611,8 +613,8 @@ if (backImageUrl) {
                 <BackPassportForm
                   formData={backFormData}
                   setFormData={setBackFormData}
-                  backImageUrl={backImageUrl}
-                  setBackImageUrl={setBackImageUrl}
+                  previewUrl={previewUrl}
+                  setPreviewUrl={setPreviewUrl}
                 />
                 <UploadTravelerPhoto
                   photo={travelerPhoto}
