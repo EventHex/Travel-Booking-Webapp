@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Saveline, UserAdd } from "../../../assets";
 
+
 export const FlightHotelBooking = ({
   flightTicket,
   setFlightTicket,
@@ -17,54 +18,79 @@ export const FlightHotelBooking = ({
     console.log("Submitted documents:", { flightTicket, hotelBooking });
   };
 
-  const handleFileChange = (type, file) => {
-    if (type === "flightTicket") {
-      setFlightTicket(file);
-    } else if (type === "hotelBooking") {
-      setHotelBooking(file);
-    }
-  };
+  // const handleFileChange = (type, file) => {
+  //   if (type === "flightTicket") {
+  //     setFlightTicket(file);
+  //   } else if (type === "hotelBooking") {
+  //     setHotelBooking(file);
+  //   }
+  // };
 
-  const handleFileUpload = async (type, event) => {
+  const handleFlightFileUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    setIsProcessing(true);
-    setProcessingError(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch(
-        `http://localhost:8078/api/v1/visa-application/upload-${type}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Failed to upload ${type}`);
-      }
-
-      const result = await response.json();
-      if (result.success) {
-        if (type === "flight-ticket") {
-          setFlightTicket(result.data.fileUrl);
-        } else {
-          setHotelBooking(result.data.fileUrl);
-        }
-      } else {
-        setProcessingError(result.error || `Failed to upload ${type}`);
-      }
-    } catch (error) {
-      setProcessingError(`Failed to upload ${type}`);
-      console.error(`Error uploading ${type}:`, error);
-    } finally {
-      setIsProcessing(false);
-    }
+    // Create a preview URL for the file before uploading
+    const filePreviewUrl = URL.createObjectURL(file);
+    setFlightPreview(filePreviewUrl);
+    setFlightTicket(file);
+    // setPhoto(file);
   };
+
+
+  const handleHoteltFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Create a preview URL for the file before uploading
+    const filePreviewUrl = URL.createObjectURL(file);
+    // setFlightPreview(filePreviewUrl);
+    // setFlightTicket(file);
+    setHotelPreview(filePreviewUrl);
+    setHotelBooking(file);
+    // setPhoto(file);
+  };
+
+  // const handleFileUpload = async (type, event) => {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   setIsProcessing(true);
+  //   setProcessingError(null);
+
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("file", file);
+
+  //     const response = await fetch(
+  //       `http://localhost:8078/api/v1/visa-application/upload-${type}`,
+  //       {
+  //         method: "POST",
+  //         body: formData,
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error(`Failed to upload ${type}`);
+  //     }
+
+  //     const result = await response.json();
+  //     if (result.success) {
+  //       if (type === "flight-ticket") {
+  //         setFlightTicket(result.data.fileUrl);
+  //       } else {
+  //         setHotelBooking(result.data.fileUrl);
+  //       }
+  //     } else {
+  //       setProcessingError(result.error || `Failed to upload ${type}`);
+  //     }
+  //   } catch (error) {
+  //     setProcessingError(`Failed to upload ${type}`);
+  //     console.error(`Error uploading ${type}:`, error);
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
 
   const cancelFlightPreview = () => {
     setFlightPreview(null);
@@ -75,6 +101,12 @@ export const FlightHotelBooking = ({
     setHotelPreview(null);
     setHotelBooking(null);
   };
+
+
+  // const cancelHotelPreview = () => {
+  //   setHotelPreview(null);
+  //   setHotelBooking(null);
+  // };
 
   return (
     <div className="px-4 py-6 md:py-8">
@@ -144,9 +176,10 @@ export const FlightHotelBooking = ({
                               name="flight-upload"
                               type="file"
                               className="sr-only"
-                              onChange={(e) =>
-                                handleFileUpload("flight-ticket", e)
-                              }
+                              // onChange={(e) =>
+                              //   handleFileUpload("flight-ticket", e)
+                              // }
+                              onChange={handleFlightFileUpload}
                               accept="image/*"
                             />
                           </label>
@@ -224,10 +257,11 @@ export const FlightHotelBooking = ({
                               name="hotel-upload"
                               type="file"
                               className="sr-only"
+                              onChange={handleHoteltFileUpload}
                               accept="image/*"
-                              onChange={(e) =>
-                                handleFileUpload("hotel-booking", e)
-                              }
+                              // onChange={(e) =>
+                              //   handleFileUpload("hotel-booking", e)
+                              // }
                             />
                           </label>
                         </div>
