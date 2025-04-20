@@ -13,19 +13,23 @@ const SearchInputText = ({
   initialDestination = "",
   initialGoingTo = ""
 }) => {
-  // Use value object properties or fall back to other sources
-  const destination = value.destination || initialDestination || "";
-  const goingTo = value.goingTo || initialGoingTo || "";
-
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
   const [goingToIsFocused, setGoingToIsFocused] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState(value.destination);
+  const [selectedGoingTo, setSelectedGoingTo] = useState(value.goingTo);
+  const [filteredFromOptions, setFilteredFromOptions] = useState(dropDownData);
+  const [filteredGoingToOptions, setFilteredGoingToOptions] = useState(dropDownPlace);
 
   const citizenInputRef = useRef(null);
   const fromDropdownRef = useRef(null);
   const goingToInputRef = useRef(null);
   const goingToDropdownRef = useRef(null);
+
+  // Use value object properties or fall back to other sources
+  const destination = value.destination || initialDestination || "";
+  const goingTo = value.goingTo || initialGoingTo || "";
 
   // Update input values when data changes
   useEffect(() => {
@@ -38,8 +42,15 @@ const SearchInputText = ({
     }
   }, [destination, goingTo]);
 
+  // Filter options based on input value
+  const filterOptions = (inputValue, options) => {
+    if (!inputValue) return options;
+    return options.filter(option => 
+      option.title.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
+
   const handleFromInputBlur = () => {
-    // Add a small delay to allow for click events on dropdown items
     setTimeout(() => {
       setCitizenIsFocused(false);
       setShowFromDropdown(false);
@@ -62,12 +73,13 @@ const SearchInputText = ({
     if (inputRef.current) {
       inputRef.current.value = option.title;
       
-      // Update parent component state through the callback
       if (isFromInput) {
         onInputChange("destination", option.title);
+        setSelectedDestination(option.title);
         setShowFromDropdown(false);
       } else {
         onInputChange("goingTo", option.title);
+        setSelectedGoingTo(option.title);
         setShowGoingToDropdown(false);
       }
     }
@@ -86,11 +98,24 @@ const SearchInputText = ({
   };
 
   const handleGoingToBlur = () => {
-    // Add a small delay to allow for click events on dropdown items
     setTimeout(() => {
       setGoingToIsFocused(false);
       setShowGoingToDropdown(false);
     }, 200);
+  };
+
+  const handleDestinationChange = (e) => {
+    const value = e.target.value;
+    setSelectedDestination(value);
+    setFilteredFromOptions(filterOptions(value, dropDownData));
+    onInputChange("destination", value);
+  };
+
+  const handleGoingToChange = (e) => {
+    const value = e.target.value;
+    setSelectedGoingTo(value);
+    setFilteredGoingToOptions(filterOptions(value, dropDownPlace));
+    onInputChange("goingTo", value);
   };
 
   return (
@@ -109,21 +134,21 @@ const SearchInputText = ({
             style={{ border: "none" }}
             ref={citizenInputRef}
             type="text"
-            value={destination}
+            value={selectedDestination}
             placeholder="Search destinations, attractions..."
             className="w-full bg-transparent outline-none"
             onFocus={handleFromInputFocus}
             onBlur={handleFromInputBlur}
-            onChange={(e) => onInputChange("destination", e.target.value)}
+            onChange={handleDestinationChange}
           />
         </div>
 
-        {showFromDropdown && dropDownData && dropDownData.length > 0 && (
+        {showFromDropdown && filteredFromOptions && filteredFromOptions.length > 0 && (
           <div
             ref={fromDropdownRef}
             className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
           >
-            {dropDownData.map((option) => (
+            {filteredFromOptions.map((option) => (
               <div
                 key={option.id}
                 className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
@@ -155,21 +180,21 @@ const SearchInputText = ({
             style={{ border: "none" }}
             ref={goingToInputRef}
             type="text"
-            value={goingTo}
+            value={selectedGoingTo}
             placeholder="Going to"
             className="w-full bg-transparent outline-none"
             onFocus={handleGoingToFocus}
             onBlur={handleGoingToBlur}
-            onChange={(e) => onInputChange("goingTo", e.target.value)}
+            onChange={handleGoingToChange}
           />
         </div>
 
-        {showGoingToDropdown && dropDownPlace && dropDownPlace.length > 0 && (
+        {showGoingToDropdown && filteredGoingToOptions && filteredGoingToOptions.length > 0 && (
           <div
             ref={goingToDropdownRef}
             className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
           >
-            {dropDownPlace.map((option) => (
+            {filteredGoingToOptions.map((option) => (
               <div
                 key={option.id}
                 className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"

@@ -49,7 +49,8 @@ const HeroSection = () => {
     const fetchCountries = async () => {
       try {
         setIsLoading(true);
-        const response = await instance.get("/country");
+        const response = await instance.get("/country?limit=0");
+        console.log(response, "response country");
         const data = await response.data;
 
         if (data.success && data.response) {
@@ -219,10 +220,14 @@ const HeroSection = () => {
     });
 
     const handleInputChange = (field, value) => {
+      console.log("hii");
+      console.log(value, "value");
       setSearchData((prevState) => ({
         ...prevState,
         [field]: value,
       }));
+      
+      console.log(searchData, "searchData");
     };
 
     // Add this function to handle search button click
@@ -238,8 +243,11 @@ const HeroSection = () => {
         return;
       }
       // Log the search data to console
-      console.log("Search Data:", searchData);
+      // console.log("Search Data:", searchData);
     };
+
+    console.log(searchData.destination, "destination");
+
 
     const User = "user-icon-placeholder";
     const handleSearchOptionSelect = (option) => {
@@ -247,6 +255,7 @@ const HeroSection = () => {
       setShowSearchDropdown(false);
       // Add any additional actions you want to perform when an option is selected
     };
+
 
     // const dropDownData = [
     //   {
@@ -298,6 +307,7 @@ const HeroSection = () => {
                 value={{
                   destination: searchData.destination,
                   goingTo: searchData.goingTo,
+                  
                 }}
                 isLoading={isLoading}
               />
