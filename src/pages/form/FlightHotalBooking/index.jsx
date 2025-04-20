@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Saveline, UserAdd } from "../../../assets";
 
-
 export const FlightHotelBooking = ({
   flightTicket,
   setFlightTicket,
@@ -36,7 +35,6 @@ export const FlightHotelBooking = ({
     setFlightTicket(file);
     // setPhoto(file);
   };
-
 
   const handleHoteltFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -74,7 +72,7 @@ export const FlightHotelBooking = ({
   //       throw new Error(`Failed to upload ${type}`);
   //     }
 
-  //     const result = await response.json();
+  //     const result = await response;
   //     if (result.success) {
   //       if (type === "flight-ticket") {
   //         setFlightTicket(result.data.fileUrl);
@@ -101,7 +99,6 @@ export const FlightHotelBooking = ({
     setHotelPreview(null);
     setHotelBooking(null);
   };
-
 
   // const cancelHotelPreview = () => {
   //   setHotelPreview(null);

@@ -23,7 +23,7 @@ import { ChevronRight, MapPin } from "lucide-react";
 
 import Header from "../../components/header";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
-
+import instance from "../../instance";
 
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("Visas");
@@ -35,7 +35,7 @@ const HeroSection = () => {
     destination: "",
     goingTo: "",
     travelDate: "",
-    returnDate: ""
+    returnDate: "",
   });
   const tabs = [
     { id: "Visas", icon: Visa },
@@ -49,21 +49,21 @@ const HeroSection = () => {
     const fetchCountries = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:8078/api/v1/country');
-        const data = await response.json();
-        
+        const response = await instance.get("/country");
+        const data = await response.data;
+
         if (data.success && data.response) {
-          const countries = data.response.map(country => ({
+          const countries = data.response.map((country) => ({
             icon: <MapPin size={14} className="text-[gray]" />,
             title: country.countryName,
-            id: country._id
+            id: country._id,
           }));
-          
+
           setCitizenOptions(countries);
           setDropDownPlace(countries);
         }
       } catch (error) {
-        console.error('Error fetching countries:', error);
+        console.error("Error fetching countries:", error);
       } finally {
         setIsLoading(false);
       }
@@ -84,7 +84,7 @@ const HeroSection = () => {
     const [goingToIsFocused, setGoingToIsFocused] = useState(false);
     const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
     const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
-    
+
     const handleCitizenIconClick = () => {
       citizenInputRef.current.focus();
     };
@@ -228,7 +228,11 @@ const HeroSection = () => {
     // Add this function to handle search button click
     const handleSearchClick = (e) => {
       // Validate required fields
-      if (!searchData.destination || !searchData.goingTo || !searchData.travelDate) {
+      if (
+        !searchData.destination ||
+        !searchData.goingTo ||
+        !searchData.travelDate
+      ) {
         e.preventDefault();
         // You can add a toast or alert here if needed
         return;
@@ -293,32 +297,44 @@ const HeroSection = () => {
                 onInputChange={handleInputChange}
                 value={{
                   destination: searchData.destination,
-                  goingTo: searchData.goingTo
+                  goingTo: searchData.goingTo,
                 }}
                 isLoading={isLoading}
               />
-              <SearchInputDate 
+              <SearchInputDate
                 onDateChange={handleInputChange}
                 value={{
                   travelDate: searchData.travelDate,
-                  returnDate: searchData.returnDate
+                  returnDate: searchData.returnDate,
                 }}
               />
               <div className="flex justify-end">
                 <Link
                   to={{
                     pathname: "/apply",
-                    search: `?destination=${encodeURIComponent(searchData.destination)}&goingTo=${encodeURIComponent(searchData.goingTo)}&travelDate=${encodeURIComponent(searchData.travelDate)}&returnDate=${encodeURIComponent(searchData.returnDate)}`
+                    search: `?destination=${encodeURIComponent(
+                      searchData.destination
+                    )}&goingTo=${encodeURIComponent(
+                      searchData.goingTo
+                    )}&travelDate=${encodeURIComponent(
+                      searchData.travelDate
+                    )}&returnDate=${encodeURIComponent(searchData.returnDate)}`,
                   }}
                 >
                   <button
                     className={`text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px] ${
-                      (!searchData.destination || !searchData.goingTo || !searchData.travelDate) 
-                        ? 'opacity-50 cursor-not-allowed' 
-                        : 'hover:bg-[#0000cc]'
+                      !searchData.destination ||
+                      !searchData.goingTo ||
+                      !searchData.travelDate
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-[#0000cc]"
                     }`}
                     onClick={handleSearchClick}
-                    disabled={!searchData.destination || !searchData.goingTo || !searchData.travelDate}
+                    disabled={
+                      !searchData.destination ||
+                      !searchData.goingTo ||
+                      !searchData.travelDate
+                    }
                   >
                     Search
                   </button>
@@ -377,53 +393,52 @@ const HeroSection = () => {
           <>
             <div className="flex gap-3  flex-col ">
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
-            <div className="w-full relative">
-        <div className="flex items-center p-3">
-          <span
-            className={`mr-2 cursor-pointer ${
-              goingToIsFocused ? "opacity-100" : "opacity-20"
-            }`}
-            onClick={handleGoingToIconClick}
-          >
-            <img src={Flight} alt="Flight icon" />
-          </span>
-          <input
-            style={{ border: "none" }}
-            ref={goingToInputRef}
-            type="text"
-            value={''}
-            placeholder="Going to"
-            className="w-full bg-transparent outline-none"
-            onFocus={handleGoingToFocus}
-            onBlur={handleGoingToBlur}
-          
-          />
-        </div>
+                <div className="w-full relative">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        goingToIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleGoingToIconClick}
+                    >
+                      <img src={Flight} alt="Flight icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={goingToInputRef}
+                      type="text"
+                      value={""}
+                      placeholder="Going to"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={handleGoingToFocus}
+                      onBlur={handleGoingToBlur}
+                    />
+                  </div>
 
-        {showGoingToDropdown && (
-          <div
-            ref={goingToDropdownRef}
-            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
-          >
-            {dropDownPlace.map((option) => (
-              <div
-                key={option.id}
-                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() =>
-                  handleOptionSelect(option, goingToInputRef, false)
-                }
-              >
-                <div className="flex">
-                  <p className="flex items-center text-[14px] gap-2">
-                    {option.icon}
-                    <span>{option.title}</span>
-                  </p>
+                  {showGoingToDropdown && (
+                    <div
+                      ref={goingToDropdownRef}
+                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
+                      {dropDownPlace.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                          onClick={() =>
+                            handleOptionSelect(option, goingToInputRef, false)
+                          }
+                        >
+                          <div className="flex">
+                            <p className="flex items-center text-[14px] gap-2">
+                              {option.icon}
+                              <span>{option.title}</span>
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
               </div>
 
               {/* <SearchInputText

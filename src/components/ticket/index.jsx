@@ -4,6 +4,7 @@ import { True, TicIcon, CloseIconTicket } from "../../assets";
 import PassportPopup from "./popup";
 import axios from "axios";
 import { generateInvoicePDF } from "../../utils/pdfGenerator";
+import instance from "../../instance";
 
 const Ticket = ({
   approvedApplications = [],
@@ -18,13 +19,13 @@ const Ticket = ({
   const [selectedPassport, setSelectedPassport] = useState(null);
 
   // Update the base URL to use DigitalOcean Spaces CDN
-  const CDN_BASE_URL = 'https://event-manager.syd1.cdn.digitaloceanspaces.com';
+  const CDN_BASE_URL = "https://event-manager.syd1.cdn.digitaloceanspaces.com";
 
   // Function to format image URL
   const formatImageUrl = (imagePath) => {
-    if (!imagePath) return '';
+    if (!imagePath) return "";
     // If the path already starts with http/https, return as is
-    if (imagePath.startsWith('http')) return imagePath;
+    if (imagePath.startsWith("http")) return imagePath;
     // Otherwise, combine with CDN base URL
     return `${CDN_BASE_URL}/${imagePath}`;
   };
@@ -44,18 +45,23 @@ const Ticket = ({
 
     const fetchTravellerInformation = async () => {
       if (isLoading) return; // Prevent duplicate calls while loading
-      
+
       setIsLoading(true);
       try {
-        const response = await axios.get('http://localhost:8078/api/v1/traveller-information', {
-          signal: controller.signal
+        const response = await instance.get("/traveller-information", {
+          signal: controller.signal,
         });
-        
-        if (isMounted && response.data && response.data.success && Array.isArray(response.data.response)) {
+
+        if (
+          isMounted &&
+          response.data &&
+          response.data.success &&
+          Array.isArray(response.data.response)
+        ) {
           setTravellerInformationList(response.data.response);
         }
       } catch (error) {
-        if (error.name === 'AbortError') {
+        if (error.name === "AbortError") {
           // Handle abort error silently
           return;
         }
@@ -81,7 +87,7 @@ const Ticket = ({
     }
 
     // Try to find matching traveller information based on available data
-    const matchingInfo = travellerInformationList.find(info => {
+    const matchingInfo = travellerInformationList.find((info) => {
       // Match based on name if available (case insensitive)
       if (application.name && info.firstName) {
         const appName = application.name.toLowerCase();
@@ -90,15 +96,20 @@ const Ticket = ({
           return true;
         }
         // Also try matching full name
-        const fullName = `${info.firstName} ${info.lastName || ''}`.trim().toLowerCase();
+        const fullName = `${info.firstName} ${info.lastName || ""}`
+          .trim()
+          .toLowerCase();
         if (appName === fullName) {
           return true;
         }
       }
-      
+
       // Match based on passport number if available
-      if (application.passportNumber && application.passportNumber !== 'N/A' && 
-          info.passportNumber === application.passportNumber) {
+      if (
+        application.passportNumber &&
+        application.passportNumber !== "N/A" &&
+        info.passportNumber === application.passportNumber
+      ) {
         return true;
       }
 
@@ -145,55 +156,67 @@ const Ticket = ({
   const openPassportPopup = (application) => {
     try {
       const travellerInfo = findMatchingTravellerInfo(application);
-      
+
       // Create passport data combining application and traveller information
       const passportData = {
         // Basic Information
-        name: `${travellerInfo.firstName || ''} ${travellerInfo.lastName || ''}` || application.name || '',
-        passportNumber: travellerInfo.passportNumber || application.passportNumber || 'N/A',
-        gender: travellerInfo.sex || '',
-        dateOfBirth: travellerInfo.dateOfBirth ? 
-          new Date(travellerInfo.dateOfBirth).toLocaleDateString() : '',
-        placeOfBirth: travellerInfo.placeOfBirth || '',
-        maritalStatus: travellerInfo.maritalStatus || '',
-        dateOfIssue: travellerInfo.dateOfIssue ? 
-          new Date(travellerInfo.dateOfIssue).toLocaleDateString() : '',
-        dateOfExpiry: travellerInfo.dateOfExpiry ? 
-          new Date(travellerInfo.dateOfExpiry).toLocaleDateString() : '',
-        nationality: travellerInfo.nationality || application.country || '',
-        occupation: travellerInfo.occupation || '',
+        name:
+          `${travellerInfo.firstName || ""} ${travellerInfo.lastName || ""}` ||
+          application.name ||
+          "",
+        passportNumber:
+          travellerInfo.passportNumber || application.passportNumber || "N/A",
+        gender: travellerInfo.sex || "",
+        dateOfBirth: travellerInfo.dateOfBirth
+          ? new Date(travellerInfo.dateOfBirth).toLocaleDateString()
+          : "",
+        placeOfBirth: travellerInfo.placeOfBirth || "",
+        maritalStatus: travellerInfo.maritalStatus || "",
+        dateOfIssue: travellerInfo.dateOfIssue
+          ? new Date(travellerInfo.dateOfIssue).toLocaleDateString()
+          : "",
+        dateOfExpiry: travellerInfo.dateOfExpiry
+          ? new Date(travellerInfo.dateOfExpiry).toLocaleDateString()
+          : "",
+        nationality: travellerInfo.nationality || application.country || "",
+        occupation: travellerInfo.occupation || "",
 
         // Additional Information
-        fatherName: travellerInfo.fathersName || '',
-        motherName: travellerInfo.mothersName || '',
+        fatherName: travellerInfo.fathersName || "",
+        motherName: travellerInfo.mothersName || "",
 
         // Images with CDN URLs
-        travellerPhoto: formatImageUrl(travellerInfo.travellerPhoto) || '',
-        passportImageFront: formatImageUrl(travellerInfo.passportImageFront) || '',
-        passportImageBack: formatImageUrl(travellerInfo.passportImageBack) || '',
-        panPhoto: formatImageUrl(travellerInfo.panPhoto) || '',
+        travellerPhoto: formatImageUrl(travellerInfo.travellerPhoto) || "",
+        passportImageFront:
+          formatImageUrl(travellerInfo.passportImageFront) || "",
+        passportImageBack:
+          formatImageUrl(travellerInfo.passportImageBack) || "",
+        panPhoto: formatImageUrl(travellerInfo.panPhoto) || "",
 
         // Visa and Travel Information
-        panNumber: travellerInfo.indianPanCard || '',
-        status: application.status || '',
-        visaType: application.visa || '',
-        visaCountry: application.country || '',
+        panNumber: travellerInfo.indianPanCard || "",
+        status: application.status || "",
+        visaType: application.visa || "",
+        visaCountry: application.country || "",
         travelDates: {
-          from: application.travelDates ? application.travelDates.split('—')[0].trim() : '',
-          to: application.travelDates ? application.travelDates.split('—')[1].trim() : ''
+          from: application.travelDates
+            ? application.travelDates.split("—")[0].trim()
+            : "",
+          to: application.travelDates
+            ? application.travelDates.split("—")[1].trim()
+            : "",
         },
-        
+
         // Include the traveller information ID if available
         travellerId: travellerInfo._id || null,
 
         // Include place of issue if available
-        placeOfIssue: travellerInfo.placeOfIssue || ''
+        placeOfIssue: travellerInfo.placeOfIssue || "",
       };
 
       setSelectedPassport(passportData);
       setIsPopupOpen(true);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   if (applicationData.length === 0) {
@@ -207,27 +230,27 @@ const Ticket = ({
   const handleDownloadInvoice = async (application) => {
     try {
       const pdfBytes = await generateInvoicePDF(application);
-      
+
       // Create a blob from the PDF bytes
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+
       // Create a URL for the blob
       const url = URL.createObjectURL(blob);
-      
+
       // Create a temporary link element
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = `invoice_${application.passportNumber}.pdf`;
-      
+
       // Append to body, click, and remove
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       // Clean up the URL
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error generating invoice PDF:', error);
+      console.error("Error generating invoice PDF:", error);
       // You might want to show an error message to the user here
     }
   };
@@ -251,13 +274,17 @@ const Ticket = ({
                     <div className="  flex gap-5   origin-center -rotate-90 whitespace-nowrap text-white text-[12px]">
                       <p className="flex   gap-1">
                         {" "}
-                        <img className="rotate-90" src={application.image} alt="" />
+                        <img
+                          className="rotate-90"
+                          src={application.image}
+                          alt=""
+                        />
                         <span className="flex">visa</span>
                       </p>
                       {getStatusText(application.status)}
                     </div>
                   </div>
-                  
+
                   <div className="flex flex-col w-full p-3 sm:p-5">
                     {/* Desktop layout (lg and above) */}
                     <div className="hidden lg:flex lg:flex-row lg:justify-between lg:gap-4 lg:w-full">
@@ -350,8 +377,12 @@ const Ticket = ({
                       {/* Status Card Section */}
                       <div className="flex-shrink-0 w-72">
                         <h2 className="w-full rounded-lg text-gray-500 underline text-sm font-semibold mb-3 py-1">
-                          {Object.values(application.details).filter(Boolean).length}/
-                          {Object.keys(application.details).length} Parameters checked
+                          {
+                            Object.values(application.details).filter(Boolean)
+                              .length
+                          }
+                          /{Object.keys(application.details).length} Parameters
+                          checked
                         </h2>
                         <div
                           className={`${
@@ -371,7 +402,8 @@ const Ticket = ({
                                 className={`h-10 w-10 sm:h-12 sm:w-12 ${
                                   application.status === "Pending Payment"
                                     ? "bg-green-200"
-                                    : application.status === "Submitted" || application.status === "submitting"
+                                    : application.status === "Submitted" ||
+                                      application.status === "submitting"
                                     ? "bg-blue-100"
                                     : application.status === "Approved"
                                     ? "bg-blue-200"
@@ -390,7 +422,8 @@ const Ticket = ({
                                     className={`${
                                       application.status === "Pending Payment"
                                         ? "text-green-500"
-                                        : application.status === "Submitted" || application.status === "submitting"
+                                        : application.status === "Submitted" ||
+                                          application.status === "submitting"
                                         ? "text-orange-500"
                                         : application.status === "Approved"
                                         ? "text-yellow-500"
@@ -403,11 +436,15 @@ const Ticket = ({
                                     {application.status === "Rejected" && (
                                       <X className="h-6 w-6" />
                                     )}
-                                    {application.status === "Pending Payment" && (
+                                    {application.status ===
+                                      "Pending Payment" && (
                                       <Shield className="h-6 w-6" />
                                     )}
-                                    {(application.status === "Submitted" || application.status === "submitting") && (
-                                      <span className="text-lg font-bold">!</span>
+                                    {(application.status === "Submitted" ||
+                                      application.status === "submitting") && (
+                                      <span className="text-lg font-bold">
+                                        !
+                                      </span>
                                     )}
                                   </div>
                                 )}
@@ -465,7 +502,13 @@ const Ticket = ({
                                   Estimated on:
                                 </span>
                                 <span className="text-[14px] font-[400]">
-                                  {new Date(application.expectedVisaApprovalDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                  {new Date(
+                                    application.expectedVisaApprovalDate
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
                                 </span>
                               </p>
                               <p className="flex justify-between">
@@ -473,7 +516,13 @@ const Ticket = ({
                                   Delivery on:
                                 </span>
                                 <span className="text-[14px] font-[400]">
-                                  {new Date(application.deliveredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                  {new Date(
+                                    application.deliveredDate
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
                                 </span>
                               </p>
                             </div>
@@ -489,7 +538,13 @@ const Ticket = ({
                                   Estimated on:
                                 </span>
                                 <span className="text-gray-700 text-[14px] font-[400]">
-                                  {new Date(application.expectedVisaApprovalDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                  {new Date(
+                                    application.expectedVisaApprovalDate
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
                                 </span>
                               </p>
                               <p className="flex justify-between">
@@ -497,7 +552,13 @@ const Ticket = ({
                                   Delivery on:
                                 </span>
                                 <span className="text-[14px] font-[400]">
-                                  {new Date(application.deliveredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                  {new Date(
+                                    application.deliveredDate
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
                                 </span>
                               </p>
                             </div>
@@ -506,20 +567,21 @@ const Ticket = ({
 
                         {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
-                          <button className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
+                          <button
+                            className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
                             onClick={() => {
                               openPassportPopup(application);
                             }}
                           >
                             View
                           </button>
-                          <button 
+                          <button
                             onClick={() => handleDownloadInvoice(application)}
                             className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
                           >
                             Invoice
                           </button>
-                          <button 
+                          <button
                             // onClick={() => handleDownloadInsurance(application)}
                             className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
                           >
@@ -601,7 +663,7 @@ const Ticket = ({
                                   }`}
                                 >
                                   {value ? (
-                               <img src={TicIcon} alt="" />
+                                    <img src={TicIcon} alt="" />
                                   ) : (
                                     <X
                                       className={`h-3 w-3 sm:h-4 sm:w-4 ${
@@ -641,7 +703,8 @@ const Ticket = ({
                                 className={`h-10 w-10 sm:h-12 sm:w-12 ${
                                   application.status === "Pending Payment"
                                     ? "bg-green-200"
-                                    : application.status === "Submitted" || application.status === "submitting"
+                                    : application.status === "Submitted" ||
+                                      application.status === "submitting"
                                     ? "bg-blue-100"
                                     : application.status === "Approved"
                                     ? "bg-blue-100"
@@ -660,7 +723,8 @@ const Ticket = ({
                                     className={`${
                                       application.status === "Pending Payment"
                                         ? "text-green-500"
-                                        : application.status === "Submitted" || application.status === "submitting"
+                                        : application.status === "Submitted" ||
+                                          application.status === "submitting"
                                         ? "text-orange-500"
                                         : application.status === "Approved"
                                         ? "text-yellow-500"
@@ -673,11 +737,15 @@ const Ticket = ({
                                     {application.status === "Rejected" && (
                                       <X className="h-6 w-6" />
                                     )}
-                                    {application.status === "Pending Payment" && (
+                                    {application.status ===
+                                      "Pending Payment" && (
                                       <Shield className="h-6 w-6" />
                                     )}
-                                    {(application.status === "submitted" || application.status === "submitting") && (
-                                      <span className="text-lg font-bold">!</span>
+                                    {(application.status === "submitted" ||
+                                      application.status === "submitting") && (
+                                      <span className="text-lg font-bold">
+                                        !
+                                      </span>
                                     )}
                                   </div>
                                 )}
@@ -728,11 +796,27 @@ const Ticket = ({
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
                               <p className="flex justify-between">
                                 <span>Estimated on:</span>
-                                <span>{new Date(application.expectedVisaApprovalDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                <span>
+                                  {new Date(
+                                    application.expectedVisaApprovalDate
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
+                                </span>
                               </p>
                               <p className="flex justify-between">
                                 <span>Delivery on:</span>
-                                <span>{new Date(application.deliveredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                <span>
+                                  {new Date(
+                                    application.deliveredDate
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
+                                </span>
                               </p>
                             </div>
                           )}
@@ -740,22 +824,37 @@ const Ticket = ({
                             <div className="mt-3 sm:mt-4 space-y-1 text-xs sm:text-sm text-gray-600">
                               <p className="flex justify-between">
                                 <span>Estimated on:</span>
-                                <span>{new Date(application.expectedVisaApprovalDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                <span>
+                                  {new Date(
+                                    application.expectedVisaApprovalDate
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
+                                </span>
                               </p>
                               <p className="flex justify-between">
                                 <span>Delivery on:</span>
-                                <span>{new Date(application.deliveredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                <span>
+                                  {new Date(
+                                    application.deliveredDate
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
+                                </span>
                               </p>
                             </div>
                           )}
-
 
                           {/* No dates shown for refunded applications */}
                         </div>
 
                         {/* Buttons */}
                         <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
-                          <button 
+                          <button
                             onClick={() => {
                               console.log("Mobile view button clicked");
                               openPassportPopup(application);
@@ -764,13 +863,13 @@ const Ticket = ({
                           >
                             View
                           </button>
-                          <button 
+                          <button
                             onClick={() => handleDownloadInvoice(application)}
                             className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
                           >
                             Invoice
                           </button>
-                          <button 
+                          <button
                             onClick={() => handleDownloadInsurance(application)}
                             className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
                           >

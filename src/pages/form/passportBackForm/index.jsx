@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import Input from "../../../components/input";
+import instance from "../../../instance";
 
-export const BackPassportForm = ({ formData, setFormData, previewUrl, setPreviewUrl }) => {
+export const BackPassportForm = ({
+  formData,
+  setFormData,
+  previewUrl,
+  setPreviewUrl,
+}) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingError, setProcessingError] = useState(null);
   const [backImageUrl, setBackImageUrl] = useState(null);
@@ -24,19 +30,17 @@ export const BackPassportForm = ({ formData, setFormData, previewUrl, setPreview
       const formData = new FormData();
       formData.append("passportImage", file);
 
-      const response = await fetch(
-        "http://localhost:8078/api/v1/passport/process-back",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await instance.post("/passport/process-back", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to process passport");
       }
 
-      const result = await response.json();
+      const result = await response;
 
       if (result.success && result.data) {
         // Only update back passport specific fields
