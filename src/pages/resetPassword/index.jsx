@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Mail } from "lucide-react";
 import { Logo, LoginBackgorund } from "../../assets";
 import { useNavigate } from "react-router-dom";
+import instance from "../../instance";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -20,15 +21,11 @@ const ResetPassword = () => {
     try {
       if (!isOtpSent) {
         // First step: Send OTP
-        const response = await fetch("http://localhost:8078/api/v1/auth/forgot-password", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
+        const response = await instance.post("/auth/forgot-password", {
+          email,
         });
 
-        const data = await response.json();
+        const data = await response.data;
 
         if (data.success) {
           setIsOtpSent(true);
@@ -38,19 +35,13 @@ const ResetPassword = () => {
         }
       } else {
         // Second step: Verify OTP and update password
-        const response = await fetch("http://localhost:8078/api/v1/auth/reset-password", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            otp,
-            newPassword,
-          }),
+        const response = await instance.post("/auth/reset-password", {
+          email,
+          otp,
+          newPassword,
         });
 
-        const data = await response.json();
+        const data = await response.data;
 
         if (data.success) {
           setSuccess("Password reset successful!");
@@ -189,4 +180,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword; 
+export default ResetPassword;

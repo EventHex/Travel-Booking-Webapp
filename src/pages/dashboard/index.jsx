@@ -14,9 +14,10 @@ import {
   CloseIcon,
 } from "../../assets";
 import Ticket from "../../components/ticket";
-import {SuccessIcon,PendingIcon,RejectIcon} from '../../assets'
+import { SuccessIcon, PendingIcon, RejectIcon } from "../../assets";
 import axios from "axios";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
+import instance from "../../instance";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -38,7 +39,7 @@ const Index = () => {
     goingTo: "",
     travelDate: "",
     returnDate: "",
-    createdDate: ""
+    createdDate: "",
   });
 
   const [selectedFilter, setSelectedFilter] = useState([]);
@@ -46,35 +47,39 @@ const Index = () => {
   // Add dropdown options
   const dropDownPlace = [
     { id: 1, title: "Dubai", icon: "🇦🇪" },
-    { id: 2, title: "Abu Dhabi", icon: "🇦🇪" }
+    { id: 2, title: "Abu Dhabi", icon: "🇦🇪" },
   ];
 
   const citizenOptions = [
     { id: 1, title: "UAE", icon: "🇦🇪" },
-    { id: 2, title: "India", icon: "🇮🇳" }
+    { id: 2, title: "India", icon: "🇮🇳" },
   ];
 
   useEffect(() => {
     const fetchVisaApplications = async () => {
       try {
-        const response = await Axiosinstance.get('/visa-application');
+        const response = await instance.get("/visa-application");
         setVisaApplications(response.data);
-        
+
         // Set search data from first visa application
         if (response.data && response.data[0]) {
           const visa = response.data[0];
           const formattedData = {
             destination: visa.visaCountry || "",
             goingTo: visa.travellerInformation || "",
-            travelDate: visa.travelDateFrom ? new Date(visa.travelDateFrom).toISOString().split('T')[0] : "",
-            returnDate: visa.travelDateTo ? new Date(visa.travelDateTo).toISOString().split('T')[0] : ""
+            travelDate: visa.travelDateFrom
+              ? new Date(visa.travelDateFrom).toISOString().split("T")[0]
+              : "",
+            returnDate: visa.travelDateTo
+              ? new Date(visa.travelDateTo).toISOString().split("T")[0]
+              : "",
           };
-          console.log('Setting form data:', formattedData); // Debug log
+          console.log("Setting form data:", formattedData); // Debug log
           setSearchData(formattedData);
         }
         setLoading(false);
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         setLoading(false);
       }
     };
@@ -82,16 +87,16 @@ const Index = () => {
   }, []);
 
   const handleInputChange = (field, value) => {
-    setSearchData(prev => ({
+    setSearchData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const handleFilterSelect = (filter) => {
-    setSelectedFilter(prev => {
+    setSelectedFilter((prev) => {
       if (prev.includes(filter)) {
-        return prev.filter(f => f !== filter);
+        return prev.filter((f) => f !== filter);
       } else {
         return [...prev, filter];
       }
@@ -153,35 +158,39 @@ const Index = () => {
     { id: "refunded", label: "Refunded", icon: Refuse, count: null },
   ];
 
-  useEffect(()=>{
+  useEffect(() => {
     const getVisaApplication = async () => {
       try {
-        const response = await axios.get("http://localhost:8078/api/v1/visa-application");
+        const response = await axios.get(
+          "http://localhost:8078/api/v1/visa-application"
+        );
         const applications = response.data.response;
-        
+
         // Transform the API data into the required format
-        const transformedApplications = applications.map(app => {
+        const transformedApplications = applications.map((app) => {
           const status = app.status;
-          
+
           // Define the order of application details statuses
           const statusOrder = [
             "Errors Fixed",
             "Application Complete",
             "Application Paid",
             "Submitted to Sponsor",
-            "Visa Approved"
+            "Visa Approved",
           ];
-          
+
           // Get the current status index
-          const currentStatusIndex = statusOrder.indexOf(app.applicationDetails);
-          
+          const currentStatusIndex = statusOrder.indexOf(
+            app.applicationDetails
+          );
+
           // Create details object based on status progression
           const details = {
             errorFixed: currentStatusIndex >= 0,
             applicationComplete: currentStatusIndex >= 1,
             applicationPaid: currentStatusIndex >= 2,
             submittedToSponsor: currentStatusIndex >= 3,
-            visaApproved: currentStatusIndex >= 4
+            visaApproved: currentStatusIndex >= 4,
           };
 
           const statusMessage = {
@@ -191,29 +200,43 @@ const Index = () => {
             iconBg: getStatusIconBg(status),
             iconColor: getStatusIconColor(status),
             cardBg: getStatusCardBg(status),
-            borderColor: getStatusBorderColor(status)
+            borderColor: getStatusBorderColor(status),
           };
 
           return {
             name: app.travellerInformation?.value || "Unknown",
-            submittedOn: new Date(app.dateOfApply).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
-            submittedAt: new Date(app.dateOfApply).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+            submittedOn: new Date(app.dateOfApply).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }),
+            submittedAt: new Date(app.dateOfApply).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
             passportNumber: app.travellerInformation?.passport || "N/A",
             country: app.visaCountry,
             visa: app.visaType,
-            travelDates: `${new Date(app.travelDateFrom).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })} — ${new Date(app.travelDateTo).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}`,
+            travelDates: `${new Date(app.travelDateFrom).toLocaleDateString(
+              "en-US",
+              { year: "numeric", month: "short", day: "numeric" }
+            )} — ${new Date(app.travelDateTo).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}`,
             status: status,
             image: getStatusImage(status),
             details: details,
             statusMessage: statusMessage,
             expectedVisaApprovalDate: app.expectedVisaApprovalDate,
-            deliveredDate: app.deliveredDate
+            deliveredDate: app.deliveredDate,
           };
         });
 
         // Helper functions for status-related data
         function getStatusDescription(status) {
-          switch(status) {
+          switch (status) {
             case "Approved":
               return "Your visa has been approved and is ready for collection.";
             case "Rejected":
@@ -230,7 +253,7 @@ const Index = () => {
         }
 
         function getStatusIcon(status) {
-          switch(status) {
+          switch (status) {
             case "Approved":
               return SuccessIcon;
             case "Rejected":
@@ -245,7 +268,7 @@ const Index = () => {
         }
 
         function getStatusIconBg(status) {
-          switch(status) {
+          switch (status) {
             case "Approved":
               return "bg-blue-50";
             case "Rejected":
@@ -262,7 +285,7 @@ const Index = () => {
         }
 
         function getStatusIconColor(status) {
-          switch(status) {
+          switch (status) {
             case "Approved":
               return "text-blue-500";
             case "Rejected":
@@ -279,7 +302,7 @@ const Index = () => {
         }
 
         function getStatusCardBg(status) {
-          switch(status) {
+          switch (status) {
             case "Approved":
               return "bg-blue-50";
             case "Rejected":
@@ -296,7 +319,7 @@ const Index = () => {
         }
 
         function getStatusBorderColor(status) {
-          switch(status) {
+          switch (status) {
             case "Approved":
               return "border-blue-100";
             case "Rejected":
@@ -313,7 +336,7 @@ const Index = () => {
         }
 
         function getStatusImage(status) {
-          switch(status) {
+          switch (status) {
             case "Approved":
               return SeccessTrue;
             case "Rejected":
@@ -328,11 +351,21 @@ const Index = () => {
 
         // Group applications by status
         const groupedApplications = {
-          approved: transformedApplications.filter(app => app.status === "Approved"),
-          rejected: transformedApplications.filter(app => app.status === "Rejected"),
-          submitted: transformedApplications.filter(app => app.status === "Submitted"),
-          pending: transformedApplications.filter(app => app.status === "Pending Payment"),
-          refunded: transformedApplications.filter(app => app.status === "Refunded")
+          approved: transformedApplications.filter(
+            (app) => app.status === "Approved"
+          ),
+          rejected: transformedApplications.filter(
+            (app) => app.status === "Rejected"
+          ),
+          submitted: transformedApplications.filter(
+            (app) => app.status === "Submitted"
+          ),
+          pending: transformedApplications.filter(
+            (app) => app.status === "Pending Payment"
+          ),
+          refunded: transformedApplications.filter(
+            (app) => app.status === "Refunded"
+          ),
         };
 
         // Update the state with all applications for each status
@@ -341,7 +374,6 @@ const Index = () => {
         setSubmittedApplications(groupedApplications.submitted);
         setPendingApplications(groupedApplications.pending);
         setRefundedApplications(groupedApplications.refunded);
-
       } catch (error) {
         console.error("Error fetching visa applications:", error);
       }
@@ -350,20 +382,22 @@ const Index = () => {
   }, []);
 
   const filterApplicationsByDate = (applications) => {
-    return applications.filter(app => {
+    return applications.filter((app) => {
       let matchesCreatedDate = true;
       let matchesDepartureDate = true;
 
       if (selectedFilter.includes("created") && searchData.createdDate) {
         const createdDate = new Date(app.submittedOn);
         const selectedCreatedDate = new Date(searchData.createdDate);
-        matchesCreatedDate = createdDate.toDateString() === selectedCreatedDate.toDateString();
+        matchesCreatedDate =
+          createdDate.toDateString() === selectedCreatedDate.toDateString();
       }
 
       if (selectedFilter.includes("departure") && searchData.travelDate) {
         const departureDate = new Date(app.travelDates.split(" — ")[0]);
         const selectedDepartureDate = new Date(searchData.travelDate);
-        matchesDepartureDate = departureDate.toDateString() === selectedDepartureDate.toDateString();
+        matchesDepartureDate =
+          departureDate.toDateString() === selectedDepartureDate.toDateString();
       }
 
       return matchesCreatedDate && matchesDepartureDate;
@@ -380,44 +414,24 @@ const Index = () => {
     switch (activeTab) {
       case "all":
         return (
-          <Ticket 
+          <Ticket
             approvedApplications={filteredApproved}
             rejectedApplications={filteredRejected}
             submittedApplications={filteredSubmitted}
             pendingApplications={filteredPending}
             refundedApplications={filteredRefunded}
-          />    
+          />
         );
       case "approved":
-        return (
-          <Ticket 
-            approvedApplications={filteredApproved}
-          />         
-        );
+        return <Ticket approvedApplications={filteredApproved} />;
       case "rejected":
-        return (
-          <Ticket 
-            rejectedApplications={filteredRejected}
-          /> 
-        );
+        return <Ticket rejectedApplications={filteredRejected} />;
       case "submitted":
-        return (
-          <Ticket 
-            submittedApplications={filteredSubmitted}
-          /> 
-        );
+        return <Ticket submittedApplications={filteredSubmitted} />;
       case "pending":
-        return (
-          <Ticket 
-            pendingApplications={filteredPending}
-          /> 
-        );
+        return <Ticket pendingApplications={filteredPending} />;
       case "refunded":
-        return (
-          <Ticket 
-            refundedApplications={filteredRefunded}
-          /> 
-        );
+        return <Ticket refundedApplications={filteredRefunded} />;
       default:
         return <p className="text-center">No Visa</p>;
     }
@@ -427,7 +441,7 @@ const Index = () => {
     <>
       <div
         style={{
-           backgroundImage: `url(${MainBackground})`,
+          backgroundImage: `url(${MainBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -442,14 +456,14 @@ const Index = () => {
                   isNarrowScreen ? "w-[50px]" : "w-[20%]"
                 } min-w-[50px]   mb-6 md:mb-0 transition-all duration-300`}
               >
-                <SideBar 
-                  isNarrow={isNarrowScreen} 
+                <SideBar
+                  isNarrow={isNarrowScreen}
                   onFilterSelect={(filter) => handleFilterSelect(filter)}
                 />
               </div>
-              
+
               {/* Content container - remaining width (80% on larger screens) */}
-              <div 
+              <div
                 className={`${
                   isNarrowScreen ? "w-[calc(100%-60px)]" : "w-[80%]"
                 } px-2 transition-all duration-300`}
@@ -478,7 +492,9 @@ const Index = () => {
                               className="w-4 h-4 sm:w-5 sm:h-5"
                             />
                           </span>
-                          <span className={isSmallScreen ? "hidden sm:inline" : ""}>
+                          <span
+                            className={isSmallScreen ? "hidden sm:inline" : ""}
+                          >
                             {tab.label}
                           </span>
                           {tab.count !== null && (
@@ -490,21 +506,23 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
-                  
+
                   {activeTab === "all" && (
                     <div className="flex gap-2">
                       {selectedFilter.includes("created") && (
                         <div className="w-44 flex justify-between items-center px-4 border-1 border-gray-300 rounded-4xl mt-4">
                           <div className="w-28">
                             <p className="text-[12px] text-gray-500">Created</p>
-                            <input 
-                              type="date" 
+                            <input
+                              type="date"
                               className="w-full text-[14px] text-gray-500 font-bold outline-none"
                               value={searchData.createdDate}
-                              onChange={(e) => handleInputChange('createdDate', e.target.value)}
+                              onChange={(e) =>
+                                handleInputChange("createdDate", e.target.value)
+                              }
                             />
                           </div>
-                          <div 
+                          <div
                             className="cursor-pointer"
                             onClick={() => handleFilterSelect("created")}
                           >
@@ -516,15 +534,19 @@ const Index = () => {
                       {selectedFilter.includes("departure") && (
                         <div className="w-44 flex justify-between items-center px-4 border-1 border-gray-300 rounded-4xl mt-4">
                           <div className="w-28">
-                            <p className="text-[12px] text-gray-500">Departure</p>
-                            <input 
-                              type="date" 
+                            <p className="text-[12px] text-gray-500">
+                              Departure
+                            </p>
+                            <input
+                              type="date"
                               className="w-full text-[14px] text-gray-500 font-bold outline-none"
                               value={searchData.travelDate}
-                              onChange={(e) => handleInputChange('travelDate', e.target.value)}
+                              onChange={(e) =>
+                                handleInputChange("travelDate", e.target.value)
+                              }
                             />
                           </div>
-                          <div 
+                          <div
                             className="cursor-pointer"
                             onClick={() => handleFilterSelect("departure")}
                           >

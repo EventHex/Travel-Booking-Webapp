@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Mail, Eye, EyeOff, Building, User } from "lucide-react";
 import { Logo, LoginBackgorund } from "../../assets";
 import { useNavigate } from "react-router-dom";
+import instance from "../../instance";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -39,19 +40,13 @@ const Signup = () => {
       }
 
       // Second click - verify OTP
-      const response = await fetch("http://localhost:8078/api/v1/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          authenticationType: "email",
-          otp: otp,
-        }),
+      const response = await instance.post("/auth/signup", {
+        ...formData,
+        authenticationType: "email",
+        otp: otp,
       });
 
-      const data = await response.json();
+      const data = await response.data;
 
       if (data.success) {
         localStorage.setItem("token", data.token);
@@ -191,8 +186,6 @@ const Signup = () => {
                       />
                     </div>
                   </div>
-
-                  
                 </>
               ) : (
                 <div className="space-y-1">
@@ -223,8 +216,8 @@ const Signup = () => {
             <div className="text-center mt-6">
               <p className="text-gray-800 text-sm md:text-base">
                 Already have an account?{" "}
-                <span 
-                  onClick={() => navigate("/login")} 
+                <span
+                  onClick={() => navigate("/login")}
                   className="text-[#375DFB] cursor-pointer"
                 >
                   Login
@@ -238,4 +231,4 @@ const Signup = () => {
   );
 };
 
-export default Signup; 
+export default Signup;
