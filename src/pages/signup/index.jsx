@@ -41,10 +41,8 @@ const Signup = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8078/api/v1/country?limit=245"
-        );
-        const data = await response.json();
+        const response = await instance.get("/country?limit=245");
+        const data = response.data;
 
         if (data.success && Array.isArray(data.response)) {
           setCountries(data.response);
@@ -107,22 +105,13 @@ const Signup = () => {
     try {
       if (!otpSent) {
         // First click - send OTP
-        const response = await fetch(
-          "http://localhost:8078/api/v1/auth/send-otp",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              phoneNumber: formData.phoneNumber,
-              phoneCode: selectedCountry.code,
-              authenticationType: "phone",
-            }),
-          }
-        );
+        const response = await instance.post("/auth/send-otp", {
+          phoneNumber: formData.phoneNumber,
+          phoneCode: selectedCountry.code,
+          authenticationType: "phone",
+        });
 
-        const data = await response.json();
+        const data = response.data;
         if (data.success) {
           setOtpSent(true);
         } else {
@@ -132,44 +121,26 @@ const Signup = () => {
       }
 
       // Second click - verify OTP and signup
-      const verifyResponse = await fetch(
-        "http://localhost:8078/api/v1/auth/verify-otp",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            phoneNumber: formData.phoneNumber,
-            phoneCode: selectedCountry.code,
-            otp: otp,
-            authenticationType: "phone",
-          }),
-        }
-      );
+      const verifyResponse = await instance.post("/auth/verify-otp", {
+        phoneNumber: formData.phoneNumber,
+        phoneCode: selectedCountry.code,
+        otp: otp,
+        authenticationType: "phone",
+      });
 
-      const verifyData = await verifyResponse.json();
+      const verifyData = verifyResponse.data;
       if (!verifyData.success) {
         setError(verifyData.message || "Invalid OTP");
         return;
       }
 
       // If OTP is verified, proceed with signup
-      const signupResponse = await fetch(
-        "http://localhost:8078/api/v1/auth/signup-with-otp",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            phoneCode: selectedCountry.code,
-          }),
-        }
-      );
+      const signupResponse = await instance.post("/auth/signup-with-otp", {
+        ...formData,
+        phoneCode: selectedCountry.code,
+      });
 
-      const signupData = await signupResponse.json();
+      const signupData = signupResponse.data;
       if (signupData.success) {
         localStorage.setItem("token", signupData.token);
         localStorage.setItem("refreshToken", signupData.refreshToken);

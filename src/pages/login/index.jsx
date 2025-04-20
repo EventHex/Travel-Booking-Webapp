@@ -25,10 +25,9 @@ const Index = () => {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8078/api/v1/country?limit=245"
-        );
-        const data = await response.json();
+        console.log("Fetching countries...");
+        const response = await instance.get("/country?limit=245");
+        const data = response.data;
 
         if (data.success && Array.isArray(data.response)) {
           setCountries(data.response);
