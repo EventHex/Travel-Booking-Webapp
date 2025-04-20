@@ -8,7 +8,7 @@ import Password from "./password";
 import Loadwallet from "./LaodWallet";
 import { PhoneCall, AlertTriangle, Upload, Save } from "lucide-react";
 import { MainBackground } from "../../assets";
-import axios from "axios";
+import instance from "../../instance";
 
 const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -37,7 +37,7 @@ const Index = () => {
     aadharNumber: "",
     address: "",
     officePhoto: "",
-    transactions: []
+    transactions: [],
   });
 
   // Fetch agency data
@@ -45,13 +45,17 @@ const Index = () => {
     const fetchAgencyData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:8078/api/v1/agency', {
+        const response = await instance.get("/agency", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         });
 
-        if (response.data.success && response.data.response && response.data.response.length > 0) {
+        if (
+          response.data.success &&
+          response.data.response &&
+          response.data.response.length > 0
+        ) {
           // Get the first agency from the response array
           const agency = response.data.response[0];
           setAgencyData({
@@ -71,14 +75,16 @@ const Index = () => {
             nameAsPerAadhar: agency.nameAsPerAadhar || "",
             aadharNumber: agency.aadharNumber || "",
             address: agency.address || "",
-            transactions: agency.transactions || []
+            transactions: agency.transactions || [],
           });
         } else {
           setError("No agency data found");
         }
       } catch (error) {
-        console.error('Error fetching agency data:', error);
-        setError(error.response?.data?.message || 'Failed to fetch agency data');
+        console.error("Error fetching agency data:", error);
+        setError(
+          error.response?.data?.message || "Failed to fetch agency data"
+        );
       } finally {
         setLoading(false);
       }
@@ -134,22 +140,22 @@ const Index = () => {
       setLoading(true);
       setError(null);
 
-      const response = await axios.post('http://localhost:8078/api/v1/agency', agencyData, {
+      const response = await instance.post("/agency", agencyData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
       });
 
       if (response.data.success) {
         // Show success message
-        console.log('Agency data saved successfully');
+        console.log("Agency data saved successfully");
       } else {
         setError(response.data.message);
       }
     } catch (error) {
-      console.error('Error saving agency data:', error);
-      setError(error.response?.data?.message || 'Failed to save agency data');
+      console.error("Error saving agency data:", error);
+      setError(error.response?.data?.message || "Failed to save agency data");
     } finally {
       setLoading(false);
     }
@@ -158,9 +164,9 @@ const Index = () => {
   // Update form field
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setAgencyData(prev => ({
+    setAgencyData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -480,7 +486,7 @@ const Index = () => {
                       className="px-6 py-3 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center disabled:opacity-50"
                     >
                       <Save className="w-5 h-5 mr-2" />
-                      {loading ? 'Saving...' : 'Save'}
+                      {loading ? "Saving..." : "Save"}
                     </button>
                   </div>
                 </div>
@@ -658,14 +664,13 @@ const Index = () => {
 
   return (
     <div
-    style={{
-      backgroundImage:` url(${MainBackground})`,
-      backgroundSize: "100%", 
-      backgroundPosition: "center",
-      backgroundRepeat: "repeat", 
-      width: "100%",
-
-    }}
+      style={{
+        backgroundImage: ` url(${MainBackground})`,
+        backgroundSize: "100%",
+        backgroundPosition: "center",
+        backgroundRepeat: "repeat",
+        width: "100%",
+      }}
     >
       <Header />
 
@@ -700,7 +705,9 @@ const Index = () => {
                 <h1 className="text-xl font-medium text-gray-900">
                   {agencyData.title}
                 </h1>
-                <p className="text-gray-600">{agencyData.agent?.value || "No agent assigned"}</p>
+                <p className="text-gray-600">
+                  {agencyData.agent?.value || "No agent assigned"}
+                </p>
               </div>
             </div>
 

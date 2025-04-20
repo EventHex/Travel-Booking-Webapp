@@ -13,8 +13,14 @@ import {
 } from "lucide-react";
 import Input from "../../../components/input";
 import { CustomSelect } from "../../../components/dropdown";
+import instance from "../../../instance";
 
-export const FrontPassportForm = ({ formData, setFormData }) => {
+export const FrontPassportForm = ({
+  formData,
+  setFormData,
+  frontImage,
+  setFrontImage,
+}) => {
   const Options = [
     { value: "M", label: "Male" },
     { value: "F", label: "Female" },
@@ -24,7 +30,7 @@ export const FrontPassportForm = ({ formData, setFormData }) => {
     { value: "s", label: "Single" },
     { value: "m", label: "Married" },
   ];
-  const [frontImage, setFrontImage] = useState(null);
+  // const [frontImage, setFrontImage] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editedImage, setEditedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -59,19 +65,17 @@ export const FrontPassportForm = ({ formData, setFormData }) => {
       formData.append("passportImage", file);
 
       try {
-        const response = await fetch(
-          "http://localhost:8078/api/v1/passport/process",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+        const response = await instance.post("/passport/process", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Failed to process passport");
         }
 
-        const data = await response.json();
+        const data = await response;
         console.log("Response data:", data);
 
         if (data.success && data.data) {
@@ -761,6 +765,7 @@ export const FrontPassportForm = ({ formData, setFormData }) => {
                   <CustomSelect
                     className={"py-[8.5px]"}
                     options={Metiral}
+                    name="maritalStatus"
                     label="Marital Status"
                     value={Metiral.find(
                       (opt) => opt.value === formData.maritalStatus

@@ -31,6 +31,7 @@ import Input from "../../components/input";
 import { CustomSelect } from "../../components/dropdown";
 import { CustomDatePicker, FullCalendar } from "../../components/calender";
 import SideBar from "./sideBar";
+import instance from "../../instance";
 
 const TravelVisaBooking = () => {
   const [searchParams] = useSearchParams();
@@ -52,6 +53,10 @@ const TravelVisaBooking = () => {
 
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
+
+  const [frontImage, setFrontImage] = useState(null);
+  // const [backImageUrl, setBackImageUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
@@ -144,68 +149,98 @@ const TravelVisaBooking = () => {
 
   const handleSubmitTicketBooking = async (e) => {
     e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("travellerInformation", travelerId);
-      formData.append("visaFor", "Individual");
-      formData.append("visaType", visaType);
-      formData.append("visaCountry", destination);
-      formData.append("travelDateFrom", travelDate);
-      formData.append("travelDateTo", returnDate);
-      formData.append("dateOfApply", new Date().toISOString());
-      formData.append("status", "Submitted");
-      formData.append("applicationDetails", "Application Complete");
+    // try {
+    const formData = new FormData();
+    formData.append("travellerInformation", travelerId);
+    formData.append("visaFor", "Individual");
+    formData.append("visaType", visaType);
+    formData.append("visaCountry", destination);
+    formData.append("travelDateFrom", travelDate);
+    formData.append("travelDateTo", returnDate);
+    formData.append("dateOfApply", new Date().toISOString());
+    formData.append("status", "Submitted");
+    formData.append("applicationDetails", "Application Complete");
 
-      if (documents.flightTicket) {
-        formData.append("roundTripFlightTicket", documents.flightTicket);
-      }
-      if (documents.hotelBooking) {
-        formData.append("hotelBooking", documents.hotelBooking);
-      }
-
-      const response = await fetch(
-        "http://localhost:8078/api/v1/visa-application",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to submit documents");
-      }
-
-      const result = await response.json();
-      console.log("Documents submitted successfully:", result);
-    } catch (error) {
-      console.error("Error submitting documents:", error);
-      alert("Failed to submit documents. Please try again.");
+    if (documents.flightTicket) {
+      formData.append("roundTripFlightTicket", documents.flightTicket);
     }
+    if (documents.hotelBooking) {
+      formData.append("hotelBooking", documents.hotelBooking);
+    }
+
+    // const response = await fetch(
+    //   "http://localhost:8078/api/v1/visa-application",
+    //   {
+    //     method: "POST",
+    //     body: formData,
+    //   }
+    // );
+
+    // if (!response.ok) {
+    //   throw new Error("Failed to submit documents");
+    // }
+
+    // const result = await response;
+    // console.log("Documents submitted successfully:", result);
+    // } catch (error) {
+    // console.error("Error submitting documents:", error);
+    // alert("Failed to submit documents. Please try again.");
+    // }
   };
 
   const handleSubmit = async () => {
+    console.log(frontFormData, "frontFormData");
+    console.log(backFormData, "backFormData");
+
+    const travelerDatas = {
+      ...frontFormData,
+      ...backFormData,
+    };
+
+    console.log(travelerDatas, "travelerData");
+
     try {
+      const passportInfo = new FormData();
+
+      passportInfo.append("passportNumber", frontFormData.passportNumber);
+      passportInfo.append("firstName", frontFormData.firstName);
+      passportInfo.append("lastName", frontFormData.lastName);
+      passportInfo.append("nationality", frontFormData.nationality);
+      passportInfo.append("sex", frontFormData.sex);
+      passportInfo.append("dateOfBirth", frontFormData.dateOfBirth);
+      passportInfo.append("placeOfBirth", frontFormData.placeOfBirth);
+      passportInfo.append("placeOfIssue", frontFormData.placeOfIssue);
+      passportInfo.append("dateOfIssue", frontFormData.dateOfIssue);
+      passportInfo.append("dateOfExpiry", frontFormData.dateOfExpiry);
+      passportInfo.append("maritalStatus", frontFormData.maritalStatus);
+      passportInfo.append("fathersName", backFormData.fathersName);
+      passportInfo.append("mothersName", backFormData.mothersName);
+      // passportInfo.append("indianPanCard", frontFormData.indianPanCard);
+
+      // Add all files
+      if (frontImage) {
+        passportInfo.append("passportImageFront", frontImage);
+      }
+      if (previewUrl) {
+        passportInfo.append("passportImageBack", previewUrl);
+      }
+
       // First create the traveler document
-      const travelerResponse = await fetch(
-        "http://localhost:8078/api/v1/traveler",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...frontFormData,
-            ...backFormData,
-          }),
-        }
+      const travelerResponse = await instance.post(
+        "/traveller-information",
+        passportInfo
       );
 
       if (!travelerResponse.ok) {
         throw new Error("Failed to create traveler");
       }
 
-      const travelerData = await travelerResponse.json();
+      const travelerData = await travelerresponse;
       const travelerId = travelerData.data._id;
+
+      // Get the full traveler information
+      const fullTravelerInfo = await getTravelerInfo(travelerId);
+      console.log("Full traveler information:", fullTravelerInfo);
 
       // Create FormData for visa application
       const formData = new FormData();
@@ -235,22 +270,16 @@ const TravelVisaBooking = () => {
       }
 
       // Submit to visa application API
-      const response = await fetch(
-        "http://localhost:8078/api/v1/visa-application",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await instance.post("/visa-application", formData);
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response;
         throw new Error(
           errorData.message || "Failed to submit visa application"
         );
       }
 
-      const result = await response.json();
+      const result = await response;
       console.log("Visa application submitted successfully:", result);
 
       // Show success message or redirect
@@ -263,12 +292,37 @@ const TravelVisaBooking = () => {
     }
   };
 
+  // Add this new function
+  const getTravelerInfo = async (id) => {
+    try {
+      const response = await instance.get(`/traveller-information?id=${id}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch traveler information");
+      }
+
+      const data = await response;
+      return data.response; // Assuming the API returns the data in response field
+    } catch (error) {
+      console.error("Error fetching traveler information:", error);
+      throw error;
+    }
+  };
+
   const UploadForm = () => {
     const Visa = [
       { value: 1, label: "goldern visa" },
       { value: 2, label: "job visa" },
       { value: 3, label: "visiting visa" },
     ];
+
+    // console.log(frontFormData);
+    // console.log(backFormData);
+
+    console.log(travelerPhoto);
+    console.log(flightTicket);
+    console.log(hotelBooking);
+
     return (
       <>
         <div className="w-full p-6 rounded-3xl shadow-sm">
@@ -339,7 +393,11 @@ const TravelVisaBooking = () => {
             </div>
 
             <div className="mb-4 md:mb-5">
-              <Input placeholder={"Tourist Visa"} label={"Group Name"} />
+              <Input
+                placeholder={"Tourist Visa"}
+                label={"Group Name"}
+                required={applicationType === "group"}
+              />
             </div>
           </div>
         </div>
@@ -502,7 +560,7 @@ const TravelVisaBooking = () => {
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
           <div className="flex gap-5 flex-col flex-wrap justify-between md:flex-row p-5 w-full">
-            <div className="flex md:flex-row flex-col gap-3">
+            {/* <div className="flex md:flex-row flex-col gap-3">
               <SearchInputText data={{ destination, goingTo }} />
               <SearchInputDate data={{ travelDate, returnDate }} />
             </div>
@@ -511,7 +569,7 @@ const TravelVisaBooking = () => {
               <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">
                 Search
               </button>
-            </div>
+            </div> */}
           </div>
           <UploadForm />
           <div className="flex mt-10">
@@ -527,12 +585,16 @@ const TravelVisaBooking = () => {
             <div className="w-full md:w-[70%] border-l border-[#bbbdc2] flex flex-col justify-center">
               <div className="md:p-5">
                 <FrontPassportForm
+                  frontImage={frontImage}
+                  setFrontImage={setFrontImage}
                   formData={frontFormData}
                   setFormData={setFrontFormData}
                 />
                 <BackPassportForm
                   formData={backFormData}
                   setFormData={setBackFormData}
+                  previewUrl={previewUrl}
+                  setPreviewUrl={setPreviewUrl}
                 />
                 <UploadTravelerPhoto
                   photo={travelerPhoto}

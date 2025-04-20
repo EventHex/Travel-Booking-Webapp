@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Logo, LoginBackgorund } from "../../assets";
 import { useNavigate } from "react-router-dom";
+import instance from "../../instance";
 
 const Signup = () => {
   const navigate = useNavigate();
