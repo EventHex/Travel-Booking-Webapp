@@ -215,14 +215,12 @@ const SearchInputText = ({
   );
 };
 
-const SearchInputDate = ({ 
+const SearchInputDate = ({
   data,
   onDateChange,
   initialTravelDate = "",
-  initialReturnDate = ""
+  initialReturnDate = "",
 }) => {
-
-  
   const travelDateValue = initialTravelDate || (data && data.travelDate) || "";
   const returnDateValue = initialReturnDate || (data && data.returnDate) || "";
 
@@ -230,42 +228,49 @@ const SearchInputDate = ({
   const travelDateInputRef = useRef(null);
   const returnDateInputRef = useRef(null);
   const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
-    useEffect(() => {
+  
+  useEffect(() => {
     if (travelDateInputRef.current) {
       travelDateInputRef.current.value = travelDateValue;
     }
-    
+
     if (returnDateInputRef.current) {
       returnDateInputRef.current.value = returnDateValue;
     }
   }, [travelDateValue, returnDateValue]);
-  
+
   const handleTravelDateIconClick = () => {
-    travelDateInputRef.current.focus();
+    if (travelDateInputRef.current) {
+      travelDateInputRef.current.showPicker(); // This will show the date picker
+      travelDateInputRef.current.focus();
+    }
   };
-  
+
   const handleReturnDateIconClick = () => {
-    returnDateInputRef.current.focus();
+    if (returnDateInputRef.current) {
+      returnDateInputRef.current.showPicker(); // This will show the date picker
+      returnDateInputRef.current.focus();
+    }
   };
-  
+
   return (
     <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
       <div className="w-full">
         <div className="flex items-center p-3">
           <span
             className={`mr-2 cursor-pointer ${
-              travelDateIsFocused ? "opacity-100" : "opacity-20"
+              travelDateIsFocused ? "opacity-100" : "opacity-70"
             }`}
             onClick={handleTravelDateIconClick}
           >
             <img src={CalenderUp} alt="Calendar icon" />
           </span>
           <input
-            style={{ border: "none" }}
             ref={travelDateInputRef}
             type="date"
             placeholder="Travel Date"
-            className="w-full bg-transparent outline-none"
+            className="w-full bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:hidden"
+            style={{ border: "none" }}
             onFocus={() => setTravelDateIsFocused(true)}
             onBlur={() => setTravelDateIsFocused(false)}
             onChange={(e) => onDateChange("travelDate", e.target.value)}
@@ -276,18 +281,18 @@ const SearchInputDate = ({
         <div className="flex items-center p-3">
           <span
             className={`mr-2 cursor-pointer ${
-              returnDateIsFocused ? "opacity-100" : "opacity-20"
+              returnDateIsFocused ? "opacity-100" : "opacity-70"
             }`}
             onClick={handleReturnDateIconClick}
           >
             <img src={CalenderDown} alt="Calendar icon" />
           </span>
           <input
-            style={{ border: "none" }}
             ref={returnDateInputRef}
             type="date"
             placeholder="Return Date"
-            className="w-full bg-transparent outline-none"
+            className="w-full bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:hidden"
+            style={{ border: "none" }}
             onFocus={() => setReturnDateIsFocused(true)}
             onBlur={() => setReturnDateIsFocused(false)}
             onChange={(e) => onDateChange("returnDate", e.target.value)}

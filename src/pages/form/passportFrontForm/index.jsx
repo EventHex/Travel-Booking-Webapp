@@ -16,6 +16,7 @@ import { CustomSelect } from "../../../components/dropdown";
 import instance from "../../../instance";
 
 export const FrontPassportForm = ({
+  travelerNumber,
   formData,
   setFormData,
   frontImage,
@@ -53,6 +54,28 @@ export const FrontPassportForm = ({
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingError, setProcessingError] = useState(null);
+
+  // Get the traveler count from localStorage or default to 1
+  const [travelerCount, setTravelerCount] = useState(() => {
+    const count = localStorage.getItem('travelerCount') || 1;
+    return parseInt(count);
+  });
+
+  // Update traveler count when travelerNumber changes
+  useEffect(() => {
+    if (travelerNumber > travelerCount) {
+      const newCount = travelerNumber;
+      setTravelerCount(newCount);
+      localStorage.setItem('travelerCount', newCount);
+    }
+  }, [travelerNumber]);
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -505,20 +528,11 @@ export const FrontPassportForm = ({
   };
 
   return (
-    <div className="w-full mx-auto px-4 md:px-8 pb-4">
-      <div className="w-[80%]">
+    <div className="w-full max-w-5xl mx-auto bg-white rounded-lg shadow-sm p-6 mb-8">
+      <div className="mb-6">
         <h1 className="text-xl md:text-2xl font-semibold text-blue-600 border-b border-gray-200 pb-4">
-          Traveler 1
+          Traveler {travelerNumber}
         </h1>
-        <h2 className="text-lg md:text-xl font-medium text-gray-900 py-4">
-          Upload Traveler's Front Passport Page
-        </h2>
-        <p className="text-xs md:text-sm text-gray-600">
-          Vietnam requires a scan of the traveler's passport. Upload a clear
-          passport image and your details will be filled automatically. All
-          fields with (*) are mandatory. Please review the information before
-          submitting to ensure there are no mistakes.
-        </p>
       </div>
       <div className="">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -628,12 +642,7 @@ export const FrontPassportForm = ({
                   placeholder="Passport Number"
                   label="Passport Number"
                   value={formData.passportNumber}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      passportNumber: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => handleInputChange('passportNumber', e.target.value)}
                   disabled={isProcessing}
                 />
               </div>
@@ -646,12 +655,7 @@ export const FrontPassportForm = ({
                     placeholder="First Name"
                     label="First Name"
                     value={formData.firstName}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        firstName: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => handleInputChange('firstName', e.target.value)}
                     disabled={isProcessing}
                   />
                 </div>
@@ -662,12 +666,7 @@ export const FrontPassportForm = ({
                     placeholder="Last Name"
                     label="Last Name"
                     value={formData.lastName}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        lastName: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => handleInputChange('lastName', e.target.value)}
                     disabled={isProcessing}
                   />
                 </div>
@@ -681,12 +680,7 @@ export const FrontPassportForm = ({
                     placeholder="Nationality"
                     label="Nationality"
                     value={formData.nationality}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        nationality: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => handleInputChange('nationality', e.target.value)}
                     disabled={isProcessing}
                   />
                 </div>
@@ -697,12 +691,7 @@ export const FrontPassportForm = ({
                     placeholder="Sex"
                     label="Sex"
                     value={formData.sex}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        sex: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => handleInputChange('sex', e.target.value)}
                     disabled={isProcessing}
                   />
                 </div>
@@ -714,12 +703,7 @@ export const FrontPassportForm = ({
                     type="date"
                     name="dateOfBirth"
                     value={formData.dateOfBirth}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        dateOfBirth: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
                     className="w-full text-[12px] px-3 text-gray-400 bg-transparent py-[11px] border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                     disabled={isProcessing}
                   />
@@ -733,12 +717,7 @@ export const FrontPassportForm = ({
                   placeholder="Place of Birth"
                   label="Place of Birth"
                   value={formData.placeOfBirth}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      placeOfBirth: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => handleInputChange('placeOfBirth', e.target.value)}
                   disabled={isProcessing}
                 />
               </div>
@@ -750,12 +729,7 @@ export const FrontPassportForm = ({
                   placeholder="Place of Issue"
                   label="Place of Issue"
                   value={formData.placeOfIssue}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      placeOfIssue: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => handleInputChange('placeOfIssue', e.target.value)}
                   disabled={isProcessing}
                 />
               </div>
@@ -770,12 +744,7 @@ export const FrontPassportForm = ({
                     value={Metiral.find(
                       (opt) => opt.value === formData.maritalStatus
                     )}
-                    onChange={(option) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        maritalStatus: option.value,
-                      }))
-                    }
+                    onChange={(option) => handleInputChange('maritalStatus', option.value)}
                     isDisabled={isProcessing}
                   />
                 </div>
@@ -788,12 +757,7 @@ export const FrontPassportForm = ({
                     type="date"
                     name="dateOfIssue"
                     value={formData.dateOfIssue}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        dateOfIssue: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => handleInputChange('dateOfIssue', e.target.value)}
                     className="w-full text-[12px] px-3 text-gray-400 bg-transparent py-[11px] border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                     disabled={isProcessing}
                   />
@@ -807,12 +771,7 @@ export const FrontPassportForm = ({
                     type="date"
                     name="dateOfExpiry"
                     value={formData.dateOfExpiry}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        dateOfExpiry: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => handleInputChange('dateOfExpiry', e.target.value)}
                     className="w-full px-3 py-[11px] text-gray-400 bg-transparent border text-[12px] border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                     disabled={isProcessing}
                   />
