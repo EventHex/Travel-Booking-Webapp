@@ -14,6 +14,8 @@ export const UploadTravelerPhoto = ({ photo, setPhoto }) => {
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
+    setPhoto(file);
+    
     if (!file) return;
 
     // Create a preview URL for the file before uploading
