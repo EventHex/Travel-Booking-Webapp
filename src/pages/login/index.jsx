@@ -152,7 +152,7 @@ const Index = () => {
             )}
 
             <form
-              onSubmit={isOtpSent ? handleVerifyOTP : handleSendOTP}
+              onSubmit={isOtpSent ? handleVerifyOTP : handleSendOtp}
               className="space-y-5 md:space-y-6"
             >
               <div className="space-y-2">
