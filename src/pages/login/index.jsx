@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Phone, Mail, ChevronDown, Search } from "lucide-react";
 import { Logo, LoginBackgorund } from "../../assets";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import instance from "../../instance";
+import { useAuth } from "../../context/AuthContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -81,24 +84,44 @@ const Index = () => {
     setError("");
 
     try {
-      const response = await instance.post("/auth/send-otp", {
+      const response = await instance.post("/account/send-otp", {
         phoneNumber,
+        authenticationType: "phone",
       });
-      // ... rest of the code
+      
+      if (response.data && response.data.success) {
+        setIsOtpSent(true);
+      } else {
+        setError(response.data.message || "Failed to send OTP. Please try again.");
+      }
     } catch (error) {
-      // ... error handling
+      console.error("Error sending OTP:", error);
+      setError(error.response?.data?.message || "Failed to send OTP. Please try again.");
     }
   };
 
-  const handleVerifyOTP = async () => {
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    
     try {
-      const response = await instance.post("/auth/verify-otp", {
+      const response = await instance.post("/account/login", {
         phoneNumber,
         otp,
+        authenticationType: "phone",
       });
-      // ... rest of the code
+      
+      if (response.data && response.data.success) {
+        login(response.data);
+        
+        // Redirect to the page they tried to access, or dashboard
+        const from = location.state?.from?.pathname || "/dashboard";
+        navigate(from, { replace: true });
+      } else {
+        setError(response.data.message || "Invalid OTP. Please try again.");
+      }
     } catch (error) {
-      // ... error handling
+      console.error("Error verifying OTP:", error);
+      setError(error.response?.data?.message || "Invalid OTP. Please try again.");
     }
   };
 
@@ -187,7 +210,7 @@ const Index = () => {
                     />
                   </div>
                   {showCountryList && (
-                    <div className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-300 rounded-xl shadow-lg z-50 max-h-[320px] overflow-hidden">
+                    <div ref={dropdownRef} className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-300 rounded-xl shadow-lg z-50 max-h-[320px] overflow-hidden">
                       <div className="p-2 border-b border-gray-200">
                         <div className="relative">
                           <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />

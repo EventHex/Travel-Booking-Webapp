@@ -21,7 +21,7 @@ const Signup = () => {
     companyName: "",
     name: "",
     phoneNumber: "",
-    userType: "customer",
+    userType: "",
   });
   const [error, setError] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -36,7 +36,19 @@ const Signup = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef(null);
-  const dropdownRef = useRef(null);
+  const [dropdownRef, setDropdownRef] = useState(null);
+  const [userTypes, setUserTypes] = useState([]);
+
+  useEffect(() => {
+    const fetchUserTypes = async () => {
+      const response = await instance.get("/user-type/select");
+      const data = response.data;
+      console.log(data, "data");
+      setUserTypes(data);
+    
+    };
+    fetchUserTypes();
+  },[] );
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -63,7 +75,7 @@ const Signup = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (dropdownRef && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowCountryList(false);
       }
     };
@@ -92,9 +104,13 @@ const Signup = () => {
   };
 
   const handleChange = (e) => {
+    console.log(e.target.value, "e.target.value");
+    console.log(e.target.name, "e.target.name");
+    console.log(e.target.id, "e.target.id");
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+      // userType: userTypes.find(type => type.value === e.target.value)?.id,
     });
   };
 
@@ -105,12 +121,20 @@ const Signup = () => {
     try {
       if (!otpSent) {
         // First click - send OTP
-        const response = await instance.post("/auth/send-otp", {
+        const postData = {
           phoneNumber: formData.phoneNumber,
           phoneCode: selectedCountry.code,
           authenticationType: "phone",
-        });
+          // otpType: "signup",
+          userType: formData.userType,
+          name: formData.name,
+          companyName: formData.companyName,
+          email: formData.email,
+        }
+        console.log(postData, "postData");
+        const response = await instance.post("account/send-otp", postData);
 
+        // console.log(response, "response");
         const data = response.data;
         if (data.success) {
           setOtpSent(true);
@@ -121,34 +145,41 @@ const Signup = () => {
       }
 
       // Second click - verify OTP and signup
-      const verifyResponse = await instance.post("/auth/verify-otp", {
+      const verifyResponse = await instance.post("account/register", {
         phoneNumber: formData.phoneNumber,
         phoneCode: selectedCountry.code,
+        userType: formData.userType,
+        name: formData.name,
+        companyName: formData.companyName,
+        email: formData.email,
         otp: otp,
         authenticationType: "phone",
       });
+      console.log(verifyResponse,"verifyResponse");
 
       const verifyData = verifyResponse.data;
       if (!verifyData.success) {
         setError(verifyData.message || "Invalid OTP");
         return;
-      }
-
-      // If OTP is verified, proceed with signup
-      const signupResponse = await instance.post("/auth/signup-with-otp", {
-        ...formData,
-        phoneCode: selectedCountry.code,
-      });
-
-      const signupData = signupResponse.data;
-      if (signupData.success) {
-        localStorage.setItem("token", signupData.token);
-        localStorage.setItem("refreshToken", signupData.refreshToken);
-        localStorage.setItem("user", JSON.stringify(signupData.user));
-        navigate("/dashboard");
       } else {
-        setError(signupData.message || "Signup failed");
+        navigate("/login");
       }
+
+      // // If OTP is verified, proceed with signup
+      // const signupResponse = await instance.post("/auth/signup-with-otp", {
+      //   ...formData,
+      //   phoneCode: selectedCountry.code,
+      // });
+
+      // const signupData = signupResponse.data;
+      // if (signupData.success) {
+      //   localStorage.setItem("token", signupData.token);
+      //   localStorage.setItem("refreshToken", signupData.refreshToken);
+      //   localStorage.setItem("user", JSON.stringify(signupData.user));
+      //   navigate("/dashboard");
+      // } else {
+      //   setError(signupData.message || "Signup failed");
+      // }
     } catch (err) {
       console.error("Signup error:", err);
       setError("Failed to connect to server");
@@ -211,8 +242,13 @@ const Signup = () => {
                       className="w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     >
-                      <option value="customer">Customer</option>
-                      <option value="agent">Agent</option>
+                      <option value="">Select User Type</option>
+                      {userTypes.map((type) => (
+                        <option id={type.id} key={type.id} value={type.id}>
+                          {type.value}
+
+                        </option>
+                      ))}
                     </select>
                   </div>
 
