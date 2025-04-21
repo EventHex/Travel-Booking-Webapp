@@ -1,38 +1,102 @@
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./pages/login";
-import HomePage from "./pages/home"; 
-import DashboardPage from './pages/dashboard'
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
+import Dashboard from "./pages/dashboard";
+import Home from "./pages/home";
 import SearchResultPage from './pages/searchResult'
 import FormPage from './pages/form'
 import Productpge from './pages/products'
 import DetailsPage from './pages/details'
 import ProflePage from "./pages/profile"
-import Signup from './pages/signup'
 import ResetPassword from './pages/resetPassword'
 import Print from './pages/print/print'
 // import NotFound from "./pages/NotFound";
 import "./App.css";
 
-function App() {
+const App = () => {
   return (
-    
     <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/searchResult" element={<SearchResultPage />} />
-          <Route path="/form" element={<FormPage />} />
-        <Route path="/products" element={<Productpge />} /> 
-        <Route path="/details" element={<DetailsPage />} />
-        <Route path="/profle" element={<ProflePage />} />
-        <Route path="/download" element={<Print />} />
-        {/* <Route path="*" element={<NotFound />} /> */}
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          
+          {/* Protected routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/searchResult"
+            element={
+              <ProtectedRoute>
+                <SearchResultPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/form"
+            element={
+              <ProtectedRoute>
+                <FormPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/details"
+            element={
+              <ProtectedRoute>
+                <DetailsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <ProtectedRoute>
+                <Productpge />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profle"
+            element={
+              <ProtectedRoute>
+                <ProflePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/download"
+            element={
+              <ProtectedRoute>
+                <Print />
+              </ProtectedRoute>
+            }
+          />
+          {/* <Route path="*" element={<NotFound />} /> */}
+        </Routes>
+      </AuthProvider>
     </Router>
   );
-}
+};
 
 export default App;

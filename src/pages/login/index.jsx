@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Phone, Mail, ChevronDown, Search } from "lucide-react";
 import { Logo, LoginBackgorund } from "../../assets";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import instance from "../../instance";
+import { useAuth } from "../../context/AuthContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -81,24 +84,44 @@ const Index = () => {
     setError("");
 
     try {
-      const response = await instance.post("/auth/send-otp", {
+      const response = await instance.post("/account/send-otp", {
         phoneNumber,
+        authenticationType: "phone",
       });
-      // ... rest of the code
+      
+      if (response.data && response.data.success) {
+        setIsOtpSent(true);
+      } else {
+        setError(response.data.message || "Failed to send OTP. Please try again.");
+      }
     } catch (error) {
-      // ... error handling
+      console.error("Error sending OTP:", error);
+      setError(error.response?.data?.message || "Failed to send OTP. Please try again.");
     }
   };
 
-  const handleVerifyOTP = async () => {
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    
     try {
-      const response = await instance.post("/auth/verify-otp", {
+      const response = await instance.post("/account/login", {
         phoneNumber,
         otp,
+        authenticationType: "phone",
       });
-      // ... rest of the code
+      
+      if (response.data && response.data.success) {
+        login(response.data);
+        
+        // Redirect to the page they tried to access, or dashboard
+        const from = location.state?.from?.pathname || "/dashboard";
+        navigate(from, { replace: true });
+      } else {
+        setError(response.data.message || "Invalid OTP. Please try again.");
+      }
     } catch (error) {
-      // ... error handling
+      console.error("Error verifying OTP:", error);
+      setError(error.response?.data?.message || "Invalid OTP. Please try again.");
     }
   };
 
@@ -108,9 +131,8 @@ const Index = () => {
     setError("");
     setIsOtpSent(false);
   };
-
   return (
-    <div className="w-full flex flex-col md:flex-row">
+    <div className="w-full p-4  md:p-0 justify-center items-center pt-[50%] md:pt-0   flex flex-col md:flex-row">
       <div
         style={{
           backgroundImage: `url(${LoginBackgorund})`,
@@ -119,7 +141,7 @@ const Index = () => {
         }}
         className="w-full md:w-[60%] h-[30vh] md:h-[100vh] hidden md:flex items-center py-10 bg-[#375Dfd] flex-col"
       >
-        <div className="w-full md:w-[80%]">
+        <div className="w-full  md:w-[80%]">
           <div>
             <img src={Logo} alt="Logo" className="w-32 md:w-40 lg:w-48" />
           </div>
@@ -136,34 +158,33 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="h-[70vh] md:h-screen w-full md:w-[40%] flex flex-col">
-        <div className="h-4/5 flex justify-center items-center">
+      <div className="w-full md:w-[40%] flex shadow-sm md:shadow-none   flex-col gap-10 ">
+        <div className="flex justify-center items-center ">
           <div className="flex flex-col w-[90%] sm:w-[80%] md:w-[85%] lg:w-[70%] px-4 md:px-0">
             <div>
-              <h1 className="text-[28px] md:text-[32px] font-[600] text-blue-500 mb-4 md:mb-8">
+              <h1 className="text-[18px]  text-center md:text-[32px] font-[600] text-blue-500 mb-4 md:mb-8">
                 Login to CNN
               </h1>
             </div>
 
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+              <div className=" border border-red-400 text-red-700 px-4 py-3 rounded  ">
                 {error}
               </div>
             )}
-
             <form
-              onSubmit={isOtpSent ? handleVerifyOTP : handleSendOTP}
-              className="space-y-5 md:space-y-6"
+              onSubmit={isOtpSent ? handleVerifyOTP : handleSendOtp}
+              className="flex flex-col gap-5"
             >
-              <div className="space-y-2">
+              <div className="">
                 <label
                   htmlFor="phone"
-                  className="block text-sm md:text-base font-medium text-gray-900"
+                  className="block  mb-2 text-sm md:text-base font-medium text-gray-900"
                 >
                   Phone Number
                 </label>
                 <div className="relative">
-                  <div className="flex items-center w-full p-4 bg-white border border-gray-300 rounded-full">
+                  <div className="flex items-center w-full md:py-4 py-2 px-3  bg-white border border-gray-300 rounded-full">
                     <div className="flex items-center min-w-[90px]">
                       <Phone className="h-5 w-5 text-gray-400 mr-2" />
                       <button
@@ -175,7 +196,7 @@ const Index = () => {
                         <ChevronDown className="h-4 w-4 text-gray-400" />
                       </button>
                     </div>
-                    <div className="w-px h-6 bg-gray-300 mx-3"></div>
+                    <div className="w-px  h-6 bg-gray-300 mx-3"></div>
                     <input
                       type="tel"
                       id="phone"
@@ -187,7 +208,7 @@ const Index = () => {
                     />
                   </div>
                   {showCountryList && (
-                    <div className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-300 rounded-xl shadow-lg z-50 max-h-[320px] overflow-hidden">
+                    <div ref={dropdownRef} className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-300 rounded-xl shadow-lg z-50 max-h-[320px] overflow-hidden">
                       <div className="p-2 border-b border-gray-200">
                         <div className="relative">
                           <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -260,17 +281,17 @@ const Index = () => {
                 </div>
               )}
 
-              <div className="flex w-[full] justify-center gap-1 md:gap-4 mt-14">
+              <div className="flex w-[full] justify-center gap-12 md:gap-4 ">
                 <button
                   type="submit"
-                  className="py-3 w-[65%] px-4 text-[14px] font-[400] bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="   md:py-3 w-[65%]   md:px-4 text-[14px] font-[400] bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   {isOtpSent ? "Verify OTP" : "Send OTP"}
                 </button>
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="border-[#375DFB] w-[30%] flex-none py-3 px-4 md:px-6 bg-white border text-[14px] font-[400] hover:bg-gray-50 text-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2"
+                  className="border-[#375DFB] w-[30%] flex-none py-2 md:px-6 bg-white border text-[14px] font-[400] hover:bg-gray-50 text-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2"
                 >
                   Reset
                 </button>
@@ -278,7 +299,7 @@ const Index = () => {
             </form>
           </div>
         </div>
-        <div className="h-1/5 flex justify-center items-center">
+        <div className=" flex justify-center mb-10 items-center">
           <p className="text-gray-800 text-sm md:text-base">
             Don't have an Account?{" "}
             <span

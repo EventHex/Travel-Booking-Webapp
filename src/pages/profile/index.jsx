@@ -432,7 +432,7 @@ const Index = () => {
                   {/* Name and Aadhar Number Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Name Field */}
-                    <div className="space-y-2">
+                    <div className="">
                       <label
                         htmlFor="aadhar-name"
                         className="block text-base text-gray-700"
