@@ -9,6 +9,8 @@ import Loadwallet from "./LaodWallet";
 import { PhoneCall, AlertTriangle, Upload, Save } from "lucide-react";
 import { MainBackground } from "../../assets";
 import instance from "../../instance";
+import Input from "../../components/input";
+import { CustomSelect } from "../../components/dropdown";
 
 const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -218,102 +220,28 @@ const Index = () => {
 
                 {/* Content Container */}
                 <div className="relative z-10 p-8">
-                  <h1 className="text-3xl font-bold text-gray-900 mb-8">
+                  <h1 className="text-xl font-bold text-gray-900 mb-8">
                     Agency Information
                   </h1>
 
-                  <div className="w-full border-t border-gray-200 mb-8"></div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Country */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        Country
-                      </label>
-                      <div className="relative">
-                        <select
-                          className="w-full p-3 border border-gray-300 rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          value={agencyData.country}
-                          onChange={handleInputChange}
-                        >
-                          <option value="India">India</option>
-                          <option value="USA">USA</option>
-                          <option value="UK">UK</option>
-                        </select>
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                          <svg
-                            className="h-5 w-5 text-gray-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                      </div>
+                  <div className="flex  flex-col  w-full  ">
+                    <div className="flex   gap-4 w-full">
+                    <div className="w-[50%]">
+                      {" "}
+                      <Input label="Agency Title" />
                     </div>
-
-                    {/* Account Type */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        Account Type
-                      </label>
-                      <select
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={agencyData.accountType}
-                        onChange={handleInputChange}
-                      >
-                        <option value="B2C">B2C</option>
-                        <option value="B2B">B2B</option>
-                      </select>
+                    <div className="w-[50%]">
+                      {" "}
+                      <Input label="Agency Title" />
                     </div>
-
-                    {/* Contact Number */}
-                    <div className="space-y-2 md:col-span-1">
-                      <label className="block text-sm text-gray-500">
-                        Contact Number
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="+919072951259"
-                        name="contactNumber"
-                        value={agencyData.contactNumber}
-                        onChange={handleInputChange}
-                      />
                     </div>
-
-                    <div className="md:col-span-1"></div>
-
-                    {/* GST Number */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        GST Number
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        name="gst"
-                        value={agencyData.gst}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    {/* PAN Card */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        PAN Card
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        name="pan"
-                        value={agencyData.pan}
-                        onChange={handleInputChange}
+                    <div>
+                      <CustomSelect
+                        labelClass={"12px"}
+                        className={""}
+                        placeholder={"Tourist Visa"}
+                        label={"Visa Type"}
+                        // options={Visa}
                       />
                     </div>
                   </div>
@@ -357,7 +285,7 @@ const Index = () => {
                     </h2>
 
                     {/* Upload Box */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg ">
                       <div className="flex flex-col items-center justify-center text-center">
                         <p className="text-gray-500">
                           Drag and drop files to upload
@@ -688,7 +616,7 @@ const Index = () => {
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
           <div className="w-full  relative  flex-col flex">
-            <div className="flex items-center    pl-10 py-2 space-x-4">
+            {/* <div className="flex items-center    py-2 space-x-4">
               <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
                 <svg
                   className="w-8 h-8 text-gray-500"
@@ -698,7 +626,7 @@ const Index = () => {
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
               </div>
-              <div className="flex flex-col">
+              <div className="flex  flex-col">
                 <h1 className="text-xl font-medium text-gray-900">
                   {agencyData.title}
                 </h1>
@@ -706,9 +634,9 @@ const Index = () => {
                   {agencyData.agent?.value || "No agent assigned"}
                 </p>
               </div>
-            </div>
+            </div> */}
 
-            <div className="flex  justify-between overflow-x-hidden mt-10">
+            <div className="flex    justify-between overflow-x-hidden mt-10">
               <div className="w-auto  mt-3 mb-10 md:w-[16%]">
                 <div
                   className={`${
@@ -724,7 +652,7 @@ const Index = () => {
                   />
                 </div>
               </div>
-              <div className="w-[85%]     sm:w-[90%] md:w-[80%]  p-2  flex flex-col ">
+              <div className="w-[85%]    sm:w-[90%] md:w-[80%]  p-2  flex flex-col ">
                 <div className="">
                   {/* Render content based on selected option */}
                   {renderContent()}

@@ -16,7 +16,7 @@ import { CustomSelect } from "../../../components/dropdown";
 import instance from "../../../instance";
 
 export const FrontPassportForm = ({
-  travelerNumber,
+  IsAnotherTraveller,
   formData,
   setFormData,
   frontImage,
@@ -54,21 +54,6 @@ export const FrontPassportForm = ({
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingError, setProcessingError] = useState(null);
-
-  // Get the traveler count from localStorage or default to 1
-  const [travelerCount, setTravelerCount] = useState(() => {
-    const count = localStorage.getItem('travelerCount') || 1;
-    return parseInt(count);
-  });
-
-  // Update traveler count when travelerNumber changes
-  useEffect(() => {
-    if (travelerNumber > travelerCount) {
-      const newCount = travelerNumber;
-      setTravelerCount(newCount);
-      localStorage.setItem('travelerCount', newCount);
-    }
-  }, [travelerNumber]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -528,11 +513,20 @@ export const FrontPassportForm = ({
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto bg-white rounded-lg shadow-sm p-6 mb-8">
-      <div className="mb-6">
+    <div className="w-full mx-auto px-4 md:px-8 pb-4">
+      <div className="w-[80%]">
         <h1 className="text-xl md:text-2xl font-semibold text-blue-600 border-b border-gray-200 pb-4">
-          Traveler {travelerNumber}
+          Traveler 1
         </h1>
+        <h2 className="text-lg md:text-xl font-medium text-gray-900 py-4">
+          Upload Traveler's Front Passport Page
+        </h2>
+        <p className="text-xs md:text-sm text-gray-600">
+          Vietnam requires a scan of the traveler's passport. Upload a clear
+          passport image and your details will be filled automatically. All
+          fields with (*) are mandatory. Please review the information before
+          submitting to ensure there are no mistakes.
+        </p>
       </div>
       <div className="">
         <form onSubmit={handleSubmit} className="space-y-6">
