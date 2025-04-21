@@ -158,10 +158,10 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="w-full md:w-[40%] flex shadow-sm md:shadow-none   flex-col gap-10 ">
+      <div className="w-full md:w-[40%] flex rounded-md md:rounded-none shadow-sm md:shadow-none   flex-col gap-10 ">
         <div className="flex justify-center items-center ">
           <div className="flex flex-col w-[90%] sm:w-[80%] md:w-[85%] lg:w-[70%] px-4 md:px-0">
-            <div>
+            <div className="p-5">
               <h1 className="text-[18px]  text-center md:text-[32px] font-[600] text-blue-500 mb-4 md:mb-8">
                 Login to CNN
               </h1>
