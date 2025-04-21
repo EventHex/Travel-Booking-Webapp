@@ -276,8 +276,8 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full max-w-4xl mx-auto p-6">
-                <div className="space-y-6">
+              <div className="w-full p-8">
+                <div className="space-y-6 ">
                   {/* Cancelled Cheque Section */}
                   <div>
                     <h2 className="text-lg font-medium text-gray-900 mb-4">
@@ -285,7 +285,7 @@ const Index = () => {
                     </h2>
 
                     {/* Upload Box */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg ">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg  p-8">
                       <div className="flex flex-col items-center justify-center text-center">
                         <p className="text-gray-500">
                           Drag and drop files to upload
