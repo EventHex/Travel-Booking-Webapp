@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/login";
 import HomePage from "./pages/home"; 
 import DashboardPage from './pages/dashboard'
-import ApplyPage from './pages/apply'
+import SearchResultPage from './pages/searchResult'
 import FormPage from './pages/form'
 import Productpge from './pages/products'
 import DetailsPage from './pages/details'
@@ -23,7 +23,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/apply" element={<ApplyPage />} />
+        <Route path="/searchResult" element={<SearchResultPage />} />
           <Route path="/form" element={<FormPage />} />
         <Route path="/products" element={<Productpge />} /> 
         <Route path="/details" element={<DetailsPage />} />
