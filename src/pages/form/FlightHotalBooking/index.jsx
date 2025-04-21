@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Saveline, UserAdd } from "../../../assets";
+import { FrontPassportForm } from "../passportFrontForm";
+import { BackPassportForm } from "../passportBackForm";
+import { UploadTravelerPhoto } from "../travelBooking";
 
 export const FlightHotelBooking = ({
   flightTicket,
@@ -9,21 +12,48 @@ export const FlightHotelBooking = ({
 }) => {
   const [flightPreview, setFlightPreview] = useState(null);
   const [hotelPreview, setHotelPreview] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [processingError, setProcessingError] = useState(null);
+
+  const [IsAnotherTraveller, setIsAnotherTraveller] = useState(false);
+
+  const [travelerPhoto, setTravelerPhoto] = useState(null);
+
+  const [travelers, setTravelers] = useState([
+    { 
+      id: 1,
+      frontFormData: {
+        passportNumber: "",
+        firstName: "",
+        lastName: "",
+        nationality: "",
+        sex: "",
+        dateOfBirth: "",
+        placeOfBirth: "",
+        placeOfIssue: "",
+        maritalStatus: "",
+        dateOfIssue: "",
+        dateOfExpiry: "",
+      },
+      backFormData: {
+        passportNumber: "",
+        firstName: "",
+        lastName: "",
+        nationality: "",
+        sex: "",
+        dateOfBirth: "",
+        placeOfBirth: "",
+        placeOfIssue: "",
+        maritalStatus: "",
+        dateOfIssue: "",
+        dateOfExpiry: "",
+      },
+      photo: null
+    }
+  ]);
 
   const handleSubmitTicketBooking = (e) => {
     e.preventDefault();
     console.log("Submitted documents:", { flightTicket, hotelBooking });
   };
-
-  // const handleFileChange = (type, file) => {
-  //   if (type === "flightTicket") {
-  //     setFlightTicket(file);
-  //   } else if (type === "hotelBooking") {
-  //     setHotelBooking(file);
-  //   }
-  // };
 
   const handleFlightFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -49,47 +79,6 @@ export const FlightHotelBooking = ({
     // setPhoto(file);
   };
 
-  // const handleFileUpload = async (type, event) => {
-  //   const file = event.target.files[0];
-  //   if (!file) return;
-
-  //   setIsProcessing(true);
-  //   setProcessingError(null);
-
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("file", file);
-
-  //     const response = await fetch(
-  //       `http://localhost:8078/api/v1/visa-application/upload-${type}`,
-  //       {
-  //         method: "POST",
-  //         body: formData,
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error(`Failed to upload ${type}`);
-  //     }
-
-  //     const result = await response;
-  //     if (result.success) {
-  //       if (type === "flight-ticket") {
-  //         setFlightTicket(result.data.fileUrl);
-  //       } else {
-  //         setHotelBooking(result.data.fileUrl);
-  //       }
-  //     } else {
-  //       setProcessingError(result.error || `Failed to upload ${type}`);
-  //     }
-  //   } catch (error) {
-  //     setProcessingError(`Failed to upload ${type}`);
-  //     console.error(`Error uploading ${type}:`, error);
-  //   } finally {
-  //     setIsProcessing(false);
-  //   }
-  // };
-
   const cancelFlightPreview = () => {
     setFlightPreview(null);
     setFlightTicket(null);
@@ -100,14 +89,46 @@ export const FlightHotelBooking = ({
     setHotelBooking(null);
   };
 
-  // const cancelHotelPreview = () => {
-  //   setHotelPreview(null);
-  //   setHotelBooking(null);
-  // };
+  const addAnotherTraveller = () => {
+    setIsAnotherTraveller(true);
+    setTravelers(prev => [
+      ...prev,
+      {
+        id: prev.length + 1,
+        frontFormData: {
+          passportNumber: "",
+          firstName: "",
+          lastName: "",
+          nationality: "",
+          sex: "",
+          dateOfBirth: "",
+          placeOfBirth: "",
+          placeOfIssue: "",
+          maritalStatus: "",
+          dateOfIssue: "",
+          dateOfExpiry: "",
+        },
+        backFormData: {
+          passportNumber: "",
+          firstName: "",
+          lastName: "",
+          nationality: "",
+          sex: "",
+          dateOfBirth: "",
+          placeOfBirth: "",
+          placeOfIssue: "",
+          maritalStatus: "",
+          dateOfIssue: "",
+          dateOfExpiry: "",
+        },
+        photo: null
+      }
+    ]);
+  };
 
   return (
-    <div className="px-4 py-6 md:py-8">
-      <div className="max-w-6xl mx-auto overflow-hidden">
+    <div className="px-4  py-6 md:py-8">
+      <div className="max-w-6xl    mx-auto overflow-hidden">
         <form onSubmit={handleSubmitTicketBooking}>
           <div className="w-full">
             {/* Flight Ticket Section */}
@@ -173,9 +194,6 @@ export const FlightHotelBooking = ({
                               name="flight-upload"
                               type="file"
                               className="sr-only"
-                              // onChange={(e) =>
-                              //   handleFileUpload("flight-ticket", e)
-                              // }
                               onChange={handleFlightFileUpload}
                               accept="image/*"
                             />
@@ -277,6 +295,7 @@ export const FlightHotelBooking = ({
               <div className="w-full md:w-[50%]">
                 <div className="flex flex-col sm:flex-row py-4 md:py-5 border-t border-[#CDD0D5] gap-3 sm:gap-5">
                   <button
+                    onClick={addAnotherTraveller}
                     type="button"
                     className="gap-2 bg-blue-600 hover:bg-blue-700 w-full justify-center py-2 flex text-[14px] font-[400] text-white rounded-md"
                   >
@@ -293,6 +312,43 @@ export const FlightHotelBooking = ({
             </div>
           </div>
         </form>
+      </div>
+      <div>
+        {travelers.map((traveler) => (
+          <div key={traveler.id}>
+            <FrontPassportForm
+              travelerNumber={traveler.id}
+              formData={traveler.frontFormData}
+              setFormData={(newData) => {
+                setTravelers(prev => prev.map(t => 
+                  t.id === traveler.id 
+                    ? { ...t, frontFormData: newData }
+                    : t
+                ));
+              }}
+            />
+            <BackPassportForm
+              formData={traveler.backFormData}
+              setFormData={(newData) => {
+                setTravelers(prev => prev.map(t => 
+                  t.id === traveler.id 
+                    ? { ...t, backFormData: newData }
+                    : t
+                ));
+              }}
+            />
+            <UploadTravelerPhoto
+              photo={traveler.photo}
+              setPhoto={(newPhoto) => {
+                setTravelers(prev => prev.map(t => 
+                  t.id === traveler.id 
+                    ? { ...t, photo: newPhoto }
+                    : t
+                ));
+              }}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

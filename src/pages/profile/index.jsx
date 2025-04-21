@@ -56,7 +56,6 @@ const Index = () => {
           response.data.response &&
           response.data.response.length > 0
         ) {
-          // Get the first agency from the response array
           const agency = response.data.response[0];
           setAgencyData({
             title: agency.title || "",
@@ -89,10 +88,8 @@ const Index = () => {
         setLoading(false);
       }
     };
-
     fetchAgencyData();
   }, []);
-
   useEffect(() => {
     const handleResize = () => {
       setIsSmallScreen(window.innerWidth < 1024);
