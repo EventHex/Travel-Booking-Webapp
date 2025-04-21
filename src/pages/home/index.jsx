@@ -321,7 +321,7 @@ const HeroSection = () => {
               <div className="flex justify-end">
                 <Link
                   to={{
-                    pathname: "/apply",
+                    pathname: "/searchResult",
                     search: `?destination=${encodeURIComponent(
                       searchData.destination
                     )}&goingTo=${encodeURIComponent(
