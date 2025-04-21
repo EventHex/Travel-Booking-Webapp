@@ -17,38 +17,7 @@ export const FlightHotelBooking = ({
 
   const [travelerPhoto, setTravelerPhoto] = useState(null);
 
-  const [travelers, setTravelers] = useState([
-    { 
-      id: 1,
-      frontFormData: {
-        passportNumber: "",
-        firstName: "",
-        lastName: "",
-        nationality: "",
-        sex: "",
-        dateOfBirth: "",
-        placeOfBirth: "",
-        placeOfIssue: "",
-        maritalStatus: "",
-        dateOfIssue: "",
-        dateOfExpiry: "",
-      },
-      backFormData: {
-        passportNumber: "",
-        firstName: "",
-        lastName: "",
-        nationality: "",
-        sex: "",
-        dateOfBirth: "",
-        placeOfBirth: "",
-        placeOfIssue: "",
-        maritalStatus: "",
-        dateOfIssue: "",
-        dateOfExpiry: "",
-      },
-      photo: null
-    }
-  ]);
+  const [travelers, setTravelers] = useState([]);
 
   const handleSubmitTicketBooking = (e) => {
     e.preventDefault();
@@ -299,7 +268,8 @@ export const FlightHotelBooking = ({
                     type="button"
                     className="gap-2 bg-blue-600 hover:bg-blue-700 w-full justify-center py-2 flex text-[14px] font-[400] text-white rounded-md"
                   >
-                    <img src={UserAdd} alt="" /> Add Another Traveller
+                    <img src={UserAdd} alt="" /> 
+                    {travelers.length === 0 ? 'Add Traveller' : 'Add Another Traveller'}
                   </button>
                   <button
                     type="submit"
