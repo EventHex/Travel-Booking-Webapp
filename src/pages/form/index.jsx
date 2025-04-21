@@ -231,21 +231,23 @@ const TravelVisaBooking = () => {
         passportInfo
       );
 
-      if (!travelerResponse.ok) {
+      if (travelerResponse.status !== 200) {
         throw new Error("Failed to create traveler");
       }
 
-      const travelerData = await travelerresponse;
-      const travelerId = travelerData.data._id;
+      const travelerData = travelerResponse;
+      console.log(travelerResponse, "travelerData");
+      const travelerId = travelerResponse.data.data._id;
 
       // Get the full traveler information
-      const fullTravelerInfo = await getTravelerInfo(travelerId);
-      console.log("Full traveler information:", fullTravelerInfo);
+      // const fullTravelerInfo = await getTravelerInfo(travelerId);
+      // console.log("Full traveler information:", fullTravelerInfo);
 
       // Create FormData for visa application
       const formData = new FormData();
 
       // Add traveler information
+      console.log(travelerId, "travelerId");
       formData.append("travellerInformation", travelerId);
 
       // Add visa details
@@ -272,7 +274,7 @@ const TravelVisaBooking = () => {
       // Submit to visa application API
       const response = await instance.post("/visa-application", formData);
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         const errorData = await response;
         throw new Error(
           errorData.message || "Failed to submit visa application"
