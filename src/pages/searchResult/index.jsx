@@ -39,36 +39,38 @@ const TravelVisaBooking = () => {
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   // Fetch countries on component mount
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        setLoading(true);
-        const response = await instance.get("/country");
-        console.log({ response });
-        const data = await response;
+// Fetch country data from API
+useEffect(() => {
+  const fetchCountries = async () => {
+    try {
+      setIsLoading(true);
+      const response = await instance.get("/country?limit=0");
+      console.log(response, "response country");
+      const data = await response.data;
 
-        if (data.success && data.response) {
-          const countryOptions = data.response.map((country) => ({
-            icon: <MapPin size={14} className="text-[gray]" />,
-            title: country.countryName,
-            id: country._id,
-          }));
-          setCountries(countryOptions);
-          setCitizenOptions(countryOptions);
-          setDropDownPlace(countryOptions);
-        }
-      } catch (error) {
-        console.error("Error fetching countries:", error);
-        setError("Failed to load countries");
-      } finally {
-        setLoading(false);
+      if (data.success && data.response) {
+        const countries = data.response.map((country) => ({
+          icon: <MapPin size={14} className="text-[gray]" />,
+          title: country.countryName,
+          id: country._id,
+        }));
+
+        setCitizenOptions(countries);
+        setDropDownPlace(countries);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchCountries();
-  }, []);
+  fetchCountries();
+}, []);
 
   useEffect(() => {
     // Get URL parameters and set them to state
@@ -275,6 +277,17 @@ const TravelVisaBooking = () => {
       }
     };
 
+    const handleInputChange = (field, value) => {
+      console.log("hii");
+      console.log(value, "value");
+      setSearchData((prevState) => ({
+        ...prevState,
+        [field]: value,
+      }));
+      
+      console.log(searchData, "searchData");
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -319,15 +332,16 @@ const TravelVisaBooking = () => {
             <div className="flex gap-3">
               <div className="relative">
                 <SearchInputText
-                  dropDownPlace={countries}
-                  dropDownData={countries}
+                  dropDownPlace={dropDownPlace}
+                  dropDownData={citizenOptions}
                   value={{
                     destination: formData.destination,
                     goingTo: formData.goingTo,
                   }}
-                  onInputChange={(field, value) =>
-                    handleInputChange(field, value)
-                  }
+                  onInputChange={handleInputChange}
+                  // onInputChange={(field, value) =>
+                  //   handleInputChange(field, value)
+                  // }
                   onFocus={(field) => handleInputFocus(field)}
                   onBlur={handleInputBlur}
                   inputRef={inputRef}
