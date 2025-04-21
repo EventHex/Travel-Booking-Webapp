@@ -95,7 +95,7 @@ const Index = () => {
           </div>
           <div className="w-[70%]  justify-end p-2 md:justify-start flex">
             <ul className="flex items-center gap-4 justify-center">
-              <Link to="/searchResult">
+              <Link to="/">
                 <li className="hover:text-[#375DFB]">Apply</li>
               </Link>
               <Link to="/dashboard">
