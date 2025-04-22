@@ -153,7 +153,7 @@ const Index = ({ isNarrow, onClose, onFilterSelect }) => {
 
         <div className="rounded-xl bg-gradient-to-b">
           <div className="space-y-1">
-            <div className="p-3 flex gap-3 text-gray-500">
+            <div className="p-3 flex gap-3  text-gray-500">
               <img src={Filter} alt="" /> <span>Popular filters</span>
             </div>
           </div>
@@ -308,7 +308,7 @@ const Index = ({ isNarrow, onClose, onFilterSelect }) => {
 
   // Normal/expanded sidebar with text and icons
   return (
-    <div className="w-full  flex flex-col gap-10   rounded-xl overflow-hidden">
+    <div className="w-full  flex flex-col gap-10  rounded-xl overflow-hidden">
       <div className=" relative">
         <input
           className="rounded-[14px] border border-[#E2E4E9] py-3 pl-16 w-full focus:border-blue-500 focus:ring-blue-500 focus:ring-1 focus:outline-none hover:shadow-md transition-all duration-300 ease-in-out"
@@ -324,9 +324,9 @@ const Index = ({ isNarrow, onClose, onFilterSelect }) => {
         </div>
       </div>
 
-      <div className="rounded-xl bg-gradient-to-b">
+      <div className="rounded-xl flex flex-col gap-3 bg-gradient-to-b">
         <div className="space-y-1">
-          <div className="p-3 flex gap-3 text-gray-500">
+          <div className="p-3 flex  gap-3 text-gray-500">
             <img src={Filter} alt="" /> <span>Popular filters</span>
           </div>
         </div>
@@ -365,9 +365,9 @@ const Index = ({ isNarrow, onClose, onFilterSelect }) => {
           </div>
         ))}
       </div>
-      <div className="rounded-xl mb-10 bg-gradient-to-b">
+      <div className="rounded-xl mb-10   flex flex-col gap-2">
         <div className="space-y-1">
-          <div className="p-3 flex gap-3 text-gray-500">
+          <div className="p-3 flex gap-3  text-gray-500">
             <img src={Filter} alt="" /> <span>Booking</span>
           </div>
         </div>

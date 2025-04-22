@@ -30,8 +30,8 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const filterOption = [
     { id: "Overstay", label: "Overstay", icon: Acitivty },
     { id: "Training", label: "Training", icon: Inurance },
-    { id: "changepassword", label: "Change Password", icon: Inurance },
-    { id: "Signout", label: "Sign Out", icon: Inurance },
+    { id: "changepassword", label: "Change Password", icon: Visa },
+    { id: "Signout", label: "Sign Out", icon: Flight },
   ];
 
   // Handle option selection and pass the ID to parent component

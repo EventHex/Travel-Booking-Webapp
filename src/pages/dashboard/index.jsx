@@ -448,6 +448,8 @@ const Index = () => {
           backgroundImage: `url(${MainBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundRepeat: "repeat",
+          width: "100%",
         }}
       >
         <Header />

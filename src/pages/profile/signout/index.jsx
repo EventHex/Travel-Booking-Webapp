@@ -1,70 +1,23 @@
-import React, { useState } from "react";
-import { X } from "lucide-react";
+import React, { useState } from 'react';
 
-// Parent component to demonstrate modal functionality
-const signout = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  const handleSignOut = () => {
-    // Clear user session data
-    localStorage.removeItem("token");
-    // Redirect to login page or home page
-    window.location.href = "/login";
-  };
-
-  return (
-    <div className="p-4">
-      <button
-        onClick={openModal}
-        className="px-4 py-2 bg-indigo-500 text-white rounded-lg"
-      >
-        Sign Out
-      </button>
-
-      {isModalOpen && (
-        <SignOutConfirmationDialog 
-          onClose={closeModal} 
-          onSignOut={handleSignOut} 
-        />
-      )}
-    </div>
-  );
-};
-
+// SignOutConfirmationDialog component
 const SignOutConfirmationDialog = ({ onClose, onSignOut }) => {
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md relative">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Sign Out</h2>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Confirm Sign Out</h2>
+        <p className="text-gray-700 mb-6">Are you sure you want to sign out of your account?</p>
+        
+        <div className="flex justify-end gap-3">
           <button
-            className="rounded-full p-2 bg-gray-100 hover:bg-gray-200"
-            aria-label="Close dialog"
             onClick={onClose}
-          >
-            <X size={24} className="text-gray-500" />
-          </button>
-        </div>
-
-        <div className="mb-8">
-          <p className="text-lg text-gray-700">Are you sure you want to sign out?</p>
-        </div>
-
-        <div className="flex justify-end space-x-3">
-          <button
-            type="button"
-            className="px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-base font-medium"
-            onClick={onClose}
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
           >
             Cancel
           </button>
           <button
-            type="button"
-            className="px-6 py-3 rounded-xl bg-red-600 text-white hover:bg-red-700 text-base font-medium"
             onClick={onSignOut}
+            className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
           >
             Sign Out
           </button>
@@ -74,4 +27,34 @@ const SignOutConfirmationDialog = ({ onClose, onSignOut }) => {
   );
 };
 
-export default signout;
+// DirectSignoutModal component
+const DirectSignoutModal = () => {
+  const [isModalOpen, setIsModalOpen] = useState(true); // Start with modal open
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+    // You might want to redirect or change the selectedOption here
+    // For example: setSelectedOption("dashboard");
+  };
+  
+  const handleSignOut = () => {
+    // Add your sign out logic here
+    console.log("User signed out");
+    // Redirect to login page or perform other sign out actions
+    window.location.href = '/login'; // Example redirect
+    closeModal();
+  };
+
+  return (
+    <>
+      {isModalOpen && (
+        <SignOutConfirmationDialog 
+          onClose={closeModal} 
+          onSignOut={handleSignOut} 
+        />
+      )}
+    </>
+  );
+};
+
+export default DirectSignoutModal;

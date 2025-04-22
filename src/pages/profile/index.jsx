@@ -577,6 +577,7 @@ const Index = () => {
         // Handle sign out logic here
         return (
           <Signout />
+
         );
       default:
         return (
@@ -617,25 +618,7 @@ const Index = () => {
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
           <div className="w-full  relative  flex-col flex">
-            {/* <div className="flex items-center    py-2 space-x-4">
-              <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-8 h-8 text-gray-500"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                </svg>
-              </div>
-              <div className="flex  flex-col">
-                <h1 className="text-xl font-medium text-gray-900">
-                  {agencyData.title}
-                </h1>
-                <p className="text-gray-600">
-                  {agencyData.agent?.value || "No agent assigned"}
-                </p>
-              </div>
-            </div> */}
+          
 
             <div className="flex    justify-between overflow-x-hidden mt-10">
               <div className="w-auto  mt-3 mb-10 md:w-[16%]">
