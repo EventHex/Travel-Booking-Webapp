@@ -5,7 +5,7 @@ const SignOutConfirmationDialog = ({ onClose, onSignOut }) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Confirm Sign Out</h2>
+        <h2 className="text-xl  text-center font-medium text-gray-900 mb-4">Confirm Sign Out</h2>
         <p className="text-gray-700 mb-6">Are you sure you want to sign out of your account?</p>
         
         <div className="flex justify-end gap-3">

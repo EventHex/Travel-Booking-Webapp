@@ -167,11 +167,7 @@ const Index = () => {
               </h1>
             </div>
 
-            {error && (
-              <div className=" border border-red-400 text-red-700 px-4 py-3 rounded  ">
-                {error}
-              </div>
-            )}
+          
             <form
               onSubmit={isOtpSent ? handleVerifyOTP : handleSendOtp}
               className="flex flex-col gap-5"
@@ -280,6 +276,11 @@ const Index = () => {
                   </div>
                 </div>
               )}
+                {error && (
+              <div className="   text-red-500 text-center w-full animate-bounce  text-[12px] md:text-xl  rounded  ">
+                {error}
+              </div>
+            )}
 
               <div className="flex w-[full] justify-center gap-12 md:gap-4 ">
                 <button
