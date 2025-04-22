@@ -89,6 +89,7 @@ const TravelVisaBooking = () => {
   const [travelerPhoto, setTravelerPhoto] = useState(null);
   const [flightTicket, setFlightTicket] = useState(null);
   const [hotelBooking, setHotelBooking] = useState(null);
+  
 
   const handleCitizenIconClick = () => {
     citizenInputRef.current.focus();

@@ -19,6 +19,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const [isClosing, setIsClosing] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Review"); // Default selected option
   const sidebarRef = useRef(null);
+  const [showSignoutModal, setShowSignoutModal] = useState(false);
 
   const filterOptions = [
     { id: "profile", label: "Profile", icon: Visa },
@@ -83,6 +84,21 @@ const Index = ({ isNarrow, onOptionSelect }) => {
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('touchstart', handleClickOutside);
     
+
+
+    const handleSignout = () => {
+      // Sign out logic would go here
+      console.log("User signed out");
+      setShowSignoutModal(false);
+    };
+
+
+    const handleCancel = () => {
+      setShowSignoutModal(false);
+      setSelectedOption("");
+    };
+  
+
     // Clean up
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -152,7 +168,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
       >
         <div className="rounded-xl bg-gradient-to-b">
           {/* Filter options - Internal ID, Group Name, Traveller 1 */}
-          {filterOptions.map((option) => (
+          {/* {filterOptions.map((option) => (
             <div
               key={option.id}
               onClick={() => handleOptionSelect(option.id)}
@@ -169,7 +185,53 @@ const Index = ({ isNarrow, onOptionSelect }) => {
               </div>
               {renderRadioButton(option.id)}
             </div>
-          ))}
+          ))} */}
+
+{filterOptions.map((option) => (
+          <div
+            key={option.id}
+            onClick={() => handleOptionSelect(option.id)}
+            className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
+              selectedOption === option.id
+                ? "bg-white shadow-sm"
+                : "hover:bg-white/50"
+            }`}
+          >
+            <div className="flex items-center space-x-3">
+              <option.icon size={18} className="text-gray-600" />
+              <span className="text-gray-600 font-medium text-sm">
+                {option.label}
+              </span>
+            </div>
+            {renderRadioButton(option.id)}
+          </div>
+        ))}
+
+            
+      {/* Signout Confirmation Modal */}
+      {showSignoutModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+          <div className="w-80 rounded-lg bg-white p-6 shadow-lg">
+            <h3 className="mb-4 text-lg font-medium text-gray-800">Confirm Sign Out</h3>
+            <p className="mb-6 text-gray-600">Are you sure you want to sign out?</p>
+            
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={handleCancel}
+                className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSignout}
+                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
         </div>
         
         <div className="rounded-xl bg-gradient-to-b">
@@ -206,7 +268,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
     return (
       <div 
         onClick={(e) => sidebarOpen(e)}
-        className="w-full rounded-xl overflow-hidden cursor-pointer"
+        className="w-full rounded-xl    overflow-hidden cursor-pointer"
       >
         <div className="rounded-xl bg-gradient-to-b">
           <div className="space-y-1">

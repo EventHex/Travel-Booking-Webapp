@@ -5,6 +5,8 @@ import Transaction from "./transaction";
 import Overstay from "./Overstay";
 import Training from "./Training";
 import Password from "./password";
+import Signout from "./signout";
+
 import Loadwallet from "./LaodWallet";
 import { PhoneCall, AlertTriangle, Upload, Save } from "lucide-react";
 import { MainBackground } from "../../assets";
@@ -19,6 +21,7 @@ const Index = () => {
   const [selectedOption, setSelectedOption] = useState("profile");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [signOut, setSignOut] = useState(false);
 
   // Agency state
   const [agencyData, setAgencyData] = useState({
@@ -573,9 +576,7 @@ const Index = () => {
       case "Signout":
         // Handle sign out logic here
         return (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Signing Out...</h2>
-          </div>
+          <Signout />
         );
       default:
         return (
@@ -643,7 +644,7 @@ const Index = () => {
                     isNarrowScreen
                       ? "sticky  top-5 w-[50px]"
                       : "sticky top-5 w-full"
-                  } min-w-[50px] mb-16  pb-10 md:mb-0 transition-all duration-300`}
+                  } min-w-[50px] mb-34  pb-10 md:mb-0 transition-all duration-300`}
                 >
                   {/* Pass the callback function to Sidebar */}
                   <Sidebar
