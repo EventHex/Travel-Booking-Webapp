@@ -4,7 +4,7 @@ import Sidebar from "./sideBar";
 import Transaction from "./transaction";
 import Overstay from "./Overstay";
 import Training from "./Training";
-import Password from "./password";
+import   PasswordChangeDialog  from "./password";
 import Signout from "./signout";
 
 import Loadwallet from "./LaodWallet";
@@ -558,7 +558,7 @@ const Index = () => {
       case "Training":
         return <Training />;
       case "changepassword":
-        return <Password />;
+        return <PasswordChangeDialog />;
       case "passport":
         return (
           <div>

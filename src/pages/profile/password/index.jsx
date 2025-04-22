@@ -1,35 +1,24 @@
 import React, { useState } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 import instance from "../../../instance";
+import { useNavigate } from "react-router-dom";
 
-// Parent component to demonstrate modal functionality
 const password = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
 
-  const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
-    // Go back to the previous page (profile)
-    window.history.back();
   };
 
   return (
     <div className="p-4">
-      {!isModalOpen && (
-        <button
-          onClick={openModal}
-          className="px-4 py-2 bg-indigo-500 text-white rounded-lg"
-        >
-          Open Password Dialog
-        </button>
-      )}
-
       {isModalOpen && <PasswordChangeDialog onClose={closeModal} />}
     </div>
   );
 };
 
-const PasswordChangeDialog = ({ onClose }) => {
+export const PasswordChangeDialog = ({ onClose }) => {
+  const navigate = useNavigate();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -85,10 +74,11 @@ const PasswordChangeDialog = ({ onClose }) => {
         }
       );
 
-      if (!response.ok) {
+      // Check response status - axios doesn't throw on non-2xx status
+      if (response.status >= 400 || !response.data.success) {
         throw new Error(
-          response.data.error ||
-            response.data.message ||
+          response.data?.error ||
+            response.data?.message ||
             "Failed to update password"
         );
       }
@@ -112,6 +102,14 @@ const PasswordChangeDialog = ({ onClose }) => {
     setShowNewPassword(!showNewPassword);
   };
 
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const handleClose = () => {
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md relative">
@@ -120,7 +118,7 @@ const PasswordChangeDialog = ({ onClose }) => {
           <button
             className="rounded-full p-2 bg-gray-100 hover:bg-gray-200"
             aria-label="Close dialog"
-            onClick={onClose}
+            onClick={handleClose}
           >
             <X size={24} className="text-gray-500" />
           </button>
@@ -227,7 +225,7 @@ const PasswordChangeDialog = ({ onClose }) => {
                     ? "bg-indigo-100 text-indigo-600"
                     : "bg-gray-100 hover:bg-gray-200"
                 }`}
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={toggleConfirmPasswordVisibility}
               >
                 {showConfirmPassword ? (
                   <>
@@ -244,12 +242,13 @@ const PasswordChangeDialog = ({ onClose }) => {
             </div>
           </div>
 
+          {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+
           <div className="flex justify-end space-x-3 mt-8">
-            {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
             <button
               type="button"
               className="px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-base font-medium"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={isLoading}
             >
               Cancel
