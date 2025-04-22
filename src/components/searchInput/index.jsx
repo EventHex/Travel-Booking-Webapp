@@ -76,11 +76,11 @@ const SearchInputText = ({
       
       if (isFromInput) {
         onInputChange("destination", option.id);
-        setSelectedDestination(option.id);
+        setSelectedDestination(option.title);
         setShowFromDropdown(false);
       } else {
         onInputChange("goingTo", option.id);
-        setSelectedGoingTo(option.id);
+        setSelectedGoingTo(option.title);
         setShowGoingToDropdown(false);
       }
     }

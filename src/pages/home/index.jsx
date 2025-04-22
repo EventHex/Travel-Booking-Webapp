@@ -242,8 +242,6 @@ const HeroSection = () => {
         // You can add a toast or alert here if needed
         return;
       }
-      // Log the search data to console
-      // console.log("Search Data:", searchData);
     };
 
     console.log(searchData.destination, "destination");

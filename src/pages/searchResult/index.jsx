@@ -56,7 +56,7 @@ useEffect(() => {
         const countries = data.response.map((country) => ({
           icon: <MapPin size={14} className="text-[gray]" />,
           title: country.countryName,
-          id: country._id,
+          id: country.key,
         }));
 
         setCitizenOptions(countries);
@@ -278,9 +278,7 @@ useEffect(() => {
                     goingTo: formData.goingTo,
                   }}
                   onInputChange={handleInputChange}
-                  // onInputChange={(field, value) =>
-                  //   handleInputChange(field, value)
-                  // }
+                
                   onFocus={(field) => handleInputFocus(field)}
                   onBlur={handleInputBlur}
                   inputRef={inputRef}
