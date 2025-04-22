@@ -21,7 +21,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const sidebarRef = useRef(null);
 
   const filterOptions = [
-    { id: "profile", label: "profile", icon: Visa },
+    { id: "profile", label: "Profile", icon: Visa },
     { id: "Transactions", label: "Transactions", icon: Date },
     { id: "LoadWallet", label: "Load Wallet", icon: Location },
   ];
@@ -29,7 +29,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const filterOption = [
     { id: "Overstay", label: "Overstay", icon: Acitivty },
     { id: "Training", label: "Training", icon: Inurance },
-    { id: "changepassword", label: "change password", icon: Inurance },
+    { id: "changepassword", label: "Change Password", icon: Inurance },
     { id: "Signout", label: "Sign Out", icon: Inurance },
   ];
 

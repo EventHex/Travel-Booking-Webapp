@@ -8,26 +8,90 @@ import Password from "./password";
 import Loadwallet from "./LaodWallet";
 import { PhoneCall, AlertTriangle, Upload, Save } from "lucide-react";
 import { MainBackground } from "../../assets";
+import instance from "../../instance";
+import Input from "../../components/input";
+import { CustomSelect } from "../../components/dropdown";
 
 const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedOption, setSelectedOption] = useState("profile"); // Default option
-  const [country, setCountry] = useState("India");
-  const [addressLine1, setAddressLine1] = useState(
-    "LII-5350, CNN HOLIDAYS, KANNUR, Kannur, Kannur, Kerala, 670001"
-  );
-  const [addressLine2, setAddressLine2] = useState("");
-  const [city, setCity] = useState("Kannur");
-  const [state, setState] = useState("KL");
-  const [zipCode, setZipCode] = useState("670001");
-  const [name, setName] = useState("Siraju Keloth");
-  const [aadharNumber, setAadharNumber] = useState("911438326566");
-  const [address, setAddress] = useState(
-    "Keloth House, Cherumavilayi, Mavilayi PO, Mundalur, Kannur, Kannur, Kerala, India, Mundalur"
-  );
+  const [selectedOption, setSelectedOption] = useState("profile");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // Agency state
+  const [agencyData, setAgencyData] = useState({
+    title: "",
+    country: "",
+    accountType: "",
+    contactNumber: "",
+    gst: "",
+    pan: "",
+    gstCertificate: "",
+    cancelledCheque: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    nameAsPerAadhar: "",
+    aadharNumber: "",
+    address: "",
+    officePhoto: "",
+    transactions: [],
+  });
+
+  // Fetch agency data
+  useEffect(() => {
+    const fetchAgencyData = async () => {
+      try {
+        setLoading(true);
+        const response = await instance.get("/agency", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (
+          response.data.success &&
+          response.data.response &&
+          response.data.response.length > 0
+        ) {
+          const agency = response.data.response[0];
+          setAgencyData({
+            title: agency.title || "",
+            country: agency.country || "",
+            accountType: agency.accountType || "",
+            contactNumber: agency.contactNumber || "",
+            gst: agency.gst || "",
+            pan: agency.pan || "",
+            gstCertificate: agency.gstCertificate || "",
+            cancelledCheque: agency.cancelledCheque || "",
+            addressLine1: agency.addressLine1 || "",
+            addressLine2: agency.addressLine2 || "",
+            city: agency.city || "",
+            state: agency.state || "",
+            zipcode: agency.zipcode || "",
+            nameAsPerAadhar: agency.nameAsPerAadhar || "",
+            aadharNumber: agency.aadharNumber || "",
+            address: agency.address || "",
+            transactions: agency.transactions || [],
+          });
+        } else {
+          setError("No agency data found");
+        }
+      } catch (error) {
+        console.error("Error fetching agency data:", error);
+        setError(
+          error.response?.data?.message || "Failed to fetch agency data"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAgencyData();
+  }, []);
   useEffect(() => {
     const handleResize = () => {
       setIsSmallScreen(window.innerWidth < 1024);
@@ -67,6 +131,42 @@ const Index = () => {
 
   const handleDragOver = (e) => {
     e.preventDefault();
+  };
+
+  // Handle save
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await instance.post("/agency", agencyData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.data.success) {
+        // Show success message
+        console.log("Agency data saved successfully");
+      } else {
+        setError(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error saving agency data:", error);
+      setError(error.response?.data?.message || "Failed to save agency data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update form field
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAgencyData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   // Render different content based on selected option
@@ -120,95 +220,28 @@ const Index = () => {
 
                 {/* Content Container */}
                 <div className="relative z-10 p-8">
-                  <h1 className="text-3xl font-bold text-gray-900 mb-8">
+                  <h1 className="text-xl font-bold text-gray-900 mb-8">
                     Agency Information
                   </h1>
 
-                  <div className="w-full border-t border-gray-200 mb-8"></div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Country */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        Country
-                      </label>
-                      <div className="relative">
-                        <select
-                          className="w-full p-3 border border-gray-300 rounded-full appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          value={country}
-                          onChange={(e) => setCountry(e.target.value)}
-                        >
-                          <option value="India">India</option>
-                          <option value="USA">USA</option>
-                          <option value="UK">UK</option>
-                        </select>
-                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                          <svg
-                            className="h-5 w-5 text-gray-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                      </div>
+                  <div className="flex  flex-col  w-full  ">
+                    <div className="flex   gap-4 w-full">
+                    <div className="w-[50%]">
+                      {" "}
+                      <Input label="Agency Title" />
                     </div>
-
-                    {/* Account Type */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        Account Type
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="b2b"
-                        defaultValue="b2b"
-                      />
+                    <div className="w-[50%]">
+                      {" "}
+                      <Input label="Agency Title" />
                     </div>
-
-                    {/* Contact Number */}
-                    <div className="space-y-2 md:col-span-1">
-                      <label className="block text-sm text-gray-500">
-                        Contact Number
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="+919072951259"
-                        defaultValue="+919072951259"
-                      />
                     </div>
-
-                    <div className="md:col-span-1"></div>
-
-                    {/* GST Number */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        GST Number
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="32AATFC0952A1ZV"
-                        defaultValue="32AATFC0952A1ZV"
-                      />
-                    </div>
-
-                    {/* PAN Card */}
-                    <div className="space-y-2">
-                      <label className="block text-sm text-gray-500">
-                        PAN Card
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder=""
+                    <div>
+                      <CustomSelect
+                        labelClass={"12px"}
+                        className={""}
+                        placeholder={"Tourist Visa"}
+                        label={"Visa Type"}
+                        // options={Visa}
                       />
                     </div>
                   </div>
@@ -243,8 +276,8 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full max-w-4xl mx-auto p-6">
-                <div className="space-y-6">
+              <div className="w-full p-8">
+                <div className="space-y-6 ">
                   {/* Cancelled Cheque Section */}
                   <div>
                     <h2 className="text-lg font-medium text-gray-900 mb-4">
@@ -252,7 +285,7 @@ const Index = () => {
                     </h2>
 
                     {/* Upload Box */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg  p-8">
                       <div className="flex flex-col items-center justify-center text-center">
                         <p className="text-gray-500">
                           Drag and drop files to upload
@@ -288,8 +321,9 @@ const Index = () => {
                         type="text"
                         id="address-line-1"
                         className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={addressLine1}
-                        onChange={(e) => setAddressLine1(e.target.value)}
+                        name="addressLine1"
+                        value={agencyData.addressLine1}
+                        onChange={handleInputChange}
                       />
                     </div>
 
@@ -305,8 +339,9 @@ const Index = () => {
                         type="text"
                         id="address-line-2"
                         className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={addressLine2}
-                        onChange={(e) => setAddressLine2(e.target.value)}
+                        name="addressLine2"
+                        value={agencyData.addressLine2}
+                        onChange={handleInputChange}
                       />
                     </div>
 
@@ -324,8 +359,9 @@ const Index = () => {
                           type="text"
                           id="city"
                           className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          value={city}
-                          onChange={(e) => setCity(e.target.value)}
+                          name="city"
+                          value={agencyData.city}
+                          onChange={handleInputChange}
                         />
                       </div>
 
@@ -341,8 +377,9 @@ const Index = () => {
                           type="text"
                           id="state"
                           className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          value={state}
-                          onChange={(e) => setState(e.target.value)}
+                          name="state"
+                          value={agencyData.state}
+                          onChange={handleInputChange}
                         />
                       </div>
 
@@ -358,8 +395,9 @@ const Index = () => {
                           type="text"
                           id="zip-code"
                           className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          value={zipCode}
-                          onChange={(e) => setZipCode(e.target.value)}
+                          name="zipcode"
+                          value={agencyData.zipcode}
+                          onChange={handleInputChange}
                         />
                       </div>
                     </div>
@@ -367,9 +405,13 @@ const Index = () => {
 
                   {/* Save Button */}
                   <div className="flex justify-end mt-6">
-                    <button className="px-6 py-3 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center">
+                    <button
+                      onClick={handleSave}
+                      disabled={loading}
+                      className="px-6 py-3 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center disabled:opacity-50"
+                    >
                       <Save className="w-5 h-5 mr-2" />
-                      Save
+                      {loading ? "Saving..." : "Save"}
                     </button>
                   </div>
                 </div>
@@ -390,7 +432,7 @@ const Index = () => {
                   {/* Name and Aadhar Number Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Name Field */}
-                    <div className="space-y-2">
+                    <div className="">
                       <label
                         htmlFor="aadhar-name"
                         className="block text-base text-gray-700"
@@ -401,8 +443,9 @@ const Index = () => {
                         type="text"
                         id="aadhar-name"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        name="nameAsPerAadhar"
+                        value={agencyData.nameAsPerAadhar}
+                        onChange={handleInputChange}
                       />
                     </div>
 
@@ -418,8 +461,9 @@ const Index = () => {
                         type="text"
                         id="aadhar-number"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={aadharNumber}
-                        onChange={(e) => setAadharNumber(e.target.value)}
+                        name="aadharNumber"
+                        value={agencyData.aadharNumber}
+                        onChange={handleInputChange}
                       />
                     </div>
                   </div>
@@ -436,8 +480,9 @@ const Index = () => {
                       type="text"
                       id="address"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                      name="address"
+                      value={agencyData.address}
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>
@@ -544,21 +589,34 @@ const Index = () => {
 
   return (
     <div
-    style={{
-      backgroundImage:` url(${MainBackground})`,
-      backgroundSize: "100%", 
-      backgroundPosition: "center",
-      backgroundRepeat: "repeat", 
-      width: "100%",
-
-    }}
+      style={{
+        backgroundImage: ` url(${MainBackground})`,
+        backgroundSize: "100%",
+        backgroundPosition: "center",
+        backgroundRepeat: "repeat",
+        width: "100%",
+      }}
     >
       <Header />
+
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg">
+            <p className="text-lg">Loading...</p>
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <p>{error}</p>
+        </div>
+      )}
 
       <div className="flex justify-center">
         <div className="max-w-[1300px] w-full">
           <div className="w-full  relative  flex-col flex">
-            <div className="flex items-center    pl-10 py-2 space-x-4">
+            {/* <div className="flex items-center    py-2 space-x-4">
               <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
                 <svg
                   className="w-8 h-8 text-gray-500"
@@ -568,15 +626,17 @@ const Index = () => {
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
               </div>
-              <div className="flex flex-col">
+              <div className="flex  flex-col">
                 <h1 className="text-xl font-medium text-gray-900">
-                  CNN HOLIDAYS LLP
+                  {agencyData.title}
                 </h1>
-                <p className="text-gray-600">admin@cnnholidays.com</p>
+                <p className="text-gray-600">
+                  {agencyData.agent?.value || "No agent assigned"}
+                </p>
               </div>
-            </div>
+            </div> */}
 
-            <div className="flex  justify-between overflow-x-hidden mt-10">
+            <div className="flex    justify-between overflow-x-hidden mt-10">
               <div className="w-auto  mt-3 mb-10 md:w-[16%]">
                 <div
                   className={`${
@@ -592,7 +652,7 @@ const Index = () => {
                   />
                 </div>
               </div>
-              <div className="w-[85%]     sm:w-[90%] md:w-[80%]  p-2  flex flex-col ">
+              <div className="w-[85%]    sm:w-[90%] md:w-[80%]  p-2  flex flex-col ">
                 <div className="">
                   {/* Render content based on selected option */}
                   {renderContent()}

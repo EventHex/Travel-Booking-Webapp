@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Header from "../../components/header";
 import SideBar from "../../components/sideBar";
+import Axiosinstance from "../../instance/index";
 import {
   MainBackground,
   Allicon,
@@ -13,7 +14,10 @@ import {
   CloseIcon,
 } from "../../assets";
 import Ticket from "../../components/ticket";
-import {SuccessIcon,PendingIcon,RejectIcon} from '../../assets'
+import { SuccessIcon, PendingIcon, RejectIcon } from "../../assets";
+import axios from "axios";
+import { SearchInputText, SearchInputDate } from "../../components/searchInput";
+import instance from "../../instance";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -21,6 +25,83 @@ const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const tabsRef = useRef(null);
+  const [approvedApplications, setApprovedApplications] = useState([]);
+  const [rejectedApplications, setRejectedApplications] = useState([]);
+  const [submittedApplications, setSubmittedApplications] = useState([]);
+  const [pendingApplications, setPendingApplications] = useState([]);
+  const [refundedApplications, setRefundedApplications] = useState([]);
+
+  const [visaApplications, setVisaApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchData, setSearchData] = useState({
+    destination: "",
+    goingTo: "",
+    travelDate: "",
+    returnDate: "",
+    createdDate: "",
+  });
+
+  const [selectedFilter, setSelectedFilter] = useState([]);
+
+  // Add dropdown options
+  const dropDownPlace = [
+    { id: 1, title: "Dubai", icon: "🇦🇪" },
+    { id: 2, title: "Abu Dhabi", icon: "🇦🇪" },
+  ];
+
+  const citizenOptions = [
+    { id: 1, title: "UAE", icon: "🇦🇪" },
+    { id: 2, title: "India", icon: "🇮🇳" },
+  ];
+
+  useEffect(() => {
+    const fetchVisaApplications = async () => {
+      try {
+        const response = await instance.get("/visa-application");
+        setVisaApplications(response.data);
+
+        // Set search data from first visa application
+        if (response.data && response.data[0]) {
+          const visa = response.data[0];
+          const formattedData = {
+            destination: visa.visaCountry || "",
+            goingTo: visa.travellerInformation || "",
+            travelDate: visa.travelDateFrom
+              ? new Date(visa.travelDateFrom).toISOString().split("T")[0]
+              : "",
+            returnDate: visa.travelDateTo
+              ? new Date(visa.travelDateTo).toISOString().split("T")[0]
+              : "",
+          };
+          console.log("Setting form data:", formattedData); // Debug log
+          setSearchData(formattedData);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Error:", error);
+        setLoading(false);
+      }
+    };
+    fetchVisaApplications();
+  }, []);
+
+  const handleInputChange = (field, value) => {
+    setSearchData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleFilterSelect = (filter) => {
+    setSelectedFilter((prev) => {
+      if (prev.includes(filter)) {
+        return prev.filter((f) => f !== filter);
+      } else {
+        return [...prev, filter];
+      }
+    });
+  };
 
   // Function to scroll to active tab
   const scrollToActiveTab = () => {
@@ -76,203 +157,283 @@ const Index = () => {
     { id: "pending", label: "Pending Payment", icon: Pending, count: null },
     { id: "refunded", label: "Refunded", icon: Refuse, count: null },
   ];
-  // ***************************tickets******************************
-  const approvedApplication = {
-      name: "SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL",
-      icon:SuccessIcon,
-      submittedOn: "Feb 19, 2025",
-      submittedAt: "11:14 AM",
-      passportNumber: "V7672497",
-      country: "United Arab Emirates",
-      visa: "UAE 30 Days Covid Insurance",
-      travelDates: "Mar 4, 2025 — Mar 20, 2025",
-      status: "approved",
-      image:SeccessTrue,
-      details: {
-        errorFixed: true,
-        applicationComplete: true,
-        applicationPaid: true,
-        submittedToSpencer: true,
-        visaApproved: true,
-      },
-      statusMessage: {
-        title: "Visa Approved",
-        icon: SuccessIcon,
-        iconBg: "bg-blue-50",
-        iconColor: "text-blue-500",
-        cardBg: "bg-gradient-to-br from-blue-50/80 to-blue-50/40",
-        borderColor: "border-blue-100",
-      },
-    };
-  
-    const rejectedApplication = {
-      name: 'SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL',
-      submittedOn: 'Feb 19, 2025',
-      submittedAt: '11:14 AM',
-      passportNumber: 'V7672497',
-      country: 'United Arab Emirates',
-      visa: 'UAE 30 Days Covid Insurance',
-      travelDates: 'Mar 4, 2025 — Mar 20, 2025',
-      status: 'rejected',
-      image:CloseIcon,
-      details: {
-        errorFixed: true,
-        applicationComplete: true,
-        applicationPaid: true,
-        submittedToSpencer: true,
-        visaApproved: false,
-      },
-      statusMessage: {
-        title: 'Visa Rejected',
-        icon: RejectIcon,
-        iconBg: 'bg-red-100',
-        iconColor: 'text-red-500',
-        cardBg: 'bg-red-50',
-        borderColor: 'border-red-100',
+
+  useEffect(() => {
+    const getVisaApplication = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8078/api/v1/visa-application"
+        );
+        const applications = response.data.response;
+
+        // Transform the API data into the required format
+        const transformedApplications = applications.map((app) => {
+          const status = app.status;
+
+          // Define the order of application details statuses
+          const statusOrder = [
+            "Errors Fixed",
+            "Application Complete",
+            "Application Paid",
+            "Submitted to Sponsor",
+            "Visa Approved",
+          ];
+
+          // Get the current status index
+          const currentStatusIndex = statusOrder.indexOf(
+            app.applicationDetails
+          );
+
+          // Create details object based on status progression
+          const details = {
+            errorFixed: currentStatusIndex >= 0,
+            applicationComplete: currentStatusIndex >= 1,
+            applicationPaid: currentStatusIndex >= 2,
+            submittedToSponsor: currentStatusIndex >= 3,
+            visaApproved: currentStatusIndex >= 4,
+          };
+
+          const statusMessage = {
+            title: `Visa ${status}`,
+            description: getStatusDescription(status),
+            icon: getStatusIcon(status),
+            iconBg: getStatusIconBg(status),
+            iconColor: getStatusIconColor(status),
+            cardBg: getStatusCardBg(status),
+            borderColor: getStatusBorderColor(status),
+          };
+
+          return {
+            name: app.travellerInformation?.value || "Unknown",
+            submittedOn: new Date(app.dateOfApply).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }),
+            submittedAt: new Date(app.dateOfApply).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            passportNumber: app.travellerInformation?.passport || "N/A",
+            country: app.visaCountry,
+            visa: app.visaType,
+            travelDates: `${new Date(app.travelDateFrom).toLocaleDateString(
+              "en-US",
+              { year: "numeric", month: "short", day: "numeric" }
+            )} — ${new Date(app.travelDateTo).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}`,
+            status: status,
+            image: getStatusImage(status),
+            details: details,
+            statusMessage: statusMessage,
+            expectedVisaApprovalDate: app.expectedVisaApprovalDate,
+            deliveredDate: app.deliveredDate,
+          };
+        });
+
+        // Helper functions for status-related data
+        function getStatusDescription(status) {
+          switch (status) {
+            case "Approved":
+              return "Your visa has been approved and is ready for collection.";
+            case "Rejected":
+              return "Unfortunately, your visa application has been rejected.";
+            case "Pending Payment":
+              return "We are reviewing your application. This usually takes 2-3 business days.";
+            case "Submitted":
+              return "Your application has been submitted successfully.";
+            case "Refunded":
+              return "Your application fee has been refunded.";
+            default:
+              return "";
+          }
+        }
+
+        function getStatusIcon(status) {
+          switch (status) {
+            case "Approved":
+              return SuccessIcon;
+            case "Rejected":
+              return RejectIcon;
+            case "Pending Payment":
+            case "Submitted":
+            case "Refunded":
+              return PendingIcon;
+            default:
+              return PendingIcon;
+          }
+        }
+
+        function getStatusIconBg(status) {
+          switch (status) {
+            case "Approved":
+              return "bg-blue-50";
+            case "Rejected":
+              return "bg-red-100";
+            case "Pending Payment":
+              return "bg-green-100";
+            case "Submitted":
+              return "bg-blue-100";
+            case "Refunded":
+              return "bg-orange-100";
+            default:
+              return "bg-gray-100";
+          }
+        }
+
+        function getStatusIconColor(status) {
+          switch (status) {
+            case "Approved":
+              return "text-blue-500";
+            case "Rejected":
+              return "text-red-500";
+            case "Pending Payment":
+              return "text-green-500";
+            case "Submitted":
+              return "text-blue-500";
+            case "Refunded":
+              return "text-orange-500";
+            default:
+              return "text-gray-500";
+          }
+        }
+
+        function getStatusCardBg(status) {
+          switch (status) {
+            case "Approved":
+              return "bg-blue-50";
+            case "Rejected":
+              return "bg-red-50";
+            case "Pending Payment":
+              return "bg-green-50";
+            case "Submitted":
+              return "bg-blue-50";
+            case "Refunded":
+              return "bg-orange-50";
+            default:
+              return "bg-gray-50";
+          }
+        }
+
+        function getStatusBorderColor(status) {
+          switch (status) {
+            case "Approved":
+              return "border-blue-100";
+            case "Rejected":
+              return "border-red-100";
+            case "Pending Payment":
+              return "border-green-100";
+            case "Submitted":
+              return "border-blue-100";
+            case "Refunded":
+              return "border-orange-100";
+            default:
+              return "border-gray-100";
+          }
+        }
+
+        function getStatusImage(status) {
+          switch (status) {
+            case "Approved":
+              return SeccessTrue;
+            case "Rejected":
+            case "Refunded":
+            case "Submitted":
+            case "Pending Payment":
+              return CloseIcon;
+            default:
+              return CloseIcon;
+          }
+        }
+
+        // Group applications by status
+        const groupedApplications = {
+          approved: transformedApplications.filter(
+            (app) => app.status === "Approved"
+          ),
+          rejected: transformedApplications.filter(
+            (app) => app.status === "Rejected"
+          ),
+          submitted: transformedApplications.filter(
+            (app) => app.status === "Submitted"
+          ),
+          pending: transformedApplications.filter(
+            (app) => app.status === "Pending Payment"
+          ),
+          refunded: transformedApplications.filter(
+            (app) => app.status === "Refunded"
+          ),
+        };
+
+        // Update the state with all applications for each status
+        setApprovedApplications(groupedApplications.approved);
+        setRejectedApplications(groupedApplications.rejected);
+        setSubmittedApplications(groupedApplications.submitted);
+        setPendingApplications(groupedApplications.pending);
+        setRefundedApplications(groupedApplications.refunded);
+      } catch (error) {
+        console.error("Error fetching visa applications:", error);
       }
     };
-  
+    getVisaApplication();
+  }, []);
 
-    const submittedApplication = {
-      name: "SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL",
-      icon:SuccessIcon,
-      submittedOn: "Feb 19, 2025",
-      submittedAt: "11:14 AM",
-      passportNumber: "V7672497",
-      country: "United Arab Emirates",
-      visa: "UAE 30 Days Covid Insurance",
-      travelDates: "Mar 4, 2025 — Mar 20, 2025",
-      status: "submitted",
-      image:SeccessTrue,
-      details: {
-        errorFixed: true,
-        applicationComplete: true,
-        applicationPaid: true,
-        submittedToSpencer: true,
-        visaApproved: true,
-      },
-      statusMessage: {
-        title: "Visa submitted",
-        icon: SuccessIcon,
-        iconBg: "bg-blue-200",
-        iconColor: "text-blue-500",
-        cardBg: "bg-gradient-to-br from-blue-50/80 to-blue-50/40",
-        borderColor: "border-blue-100",
-      },
-    }
+  const filterApplicationsByDate = (applications) => {
+    return applications.filter((app) => {
+      let matchesCreatedDate = true;
+      let matchesDepartureDate = true;
 
-    const refuntApplication = {
-      name: 'SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL',
-      icon:'',
-      submittedOn: 'Feb 19, 2025',
-      submittedAt: '11:14 AM',
-      passportNumber: 'V7672497',
-      country: 'United Arab Emirates',
-      visa: 'UAE 30 Days Covid Insurance',
-      travelDates: 'Mar 4, 2025 — Mar 20, 2025',
-      status: 'refunded',
-      image:CloseIcon,
-      details: {
-        errorFixed: true,
-        applicationComplete: true,
-        applicationPaid: true,
-        submittedToSpencer: true,
-        visaApproved: false,
-      },
-      statusMessage: {
-        title: 'Application Refunded',
-        description: 'Since your visa was not delivered within the promised time frame, Atlys has issued you with a full refund for this application. 7530 INR will be credited to your wallet.',
-        reason: 'Unable to process',
-        icon: '',
-        iconBg: 'bg-orange-100',
-        iconColor: 'text-orange-500',
-        cardBg: 'bg-orange-50',
-        borderColor: 'border-orange-100',
+      if (selectedFilter.includes("created") && searchData.createdDate) {
+        const createdDate = new Date(app.submittedOn);
+        const selectedCreatedDate = new Date(searchData.createdDate);
+        matchesCreatedDate =
+          createdDate.toDateString() === selectedCreatedDate.toDateString();
       }
-    };
 
-    const pendingApplication = {
-      name: 'SHARIEFA VALIYAKATH CHERIYAMALIYAKKAL',
-      icon:'',
-      submittedOn: 'Feb 19, 2025',
-      submittedAt: '11:14 AM',
-      passportNumber: 'V7672497',
-      country: 'United Arab Emirates',
-      visa: 'UAE 30 Days Covid Insurance',
-      travelDates: 'Mar 4, 2025 — Mar 20, 2025',
-      status: 'pending',
-      image:CloseIcon,
-
-      details: {
-        errorFixed: true,
-        applicationComplete: true,
-        applicationPaid: true,
-        submittedToSpencer: true,
-        visaApproved: false,
-      },
-      statusMessage: {
-        title: 'Application pending',
-        description: '',
-        reason: 'Unable to process',
-        icon: PendingIcon,
-        iconBg: 'bg-orange-100',
-        iconColor: 'text-orange-500',
-        cardBg: 'bg-orange-50',
-        borderColor: 'border-orange-100',
+      if (selectedFilter.includes("departure") && searchData.travelDate) {
+        const departureDate = new Date(app.travelDates.split(" — ")[0]);
+        const selectedDepartureDate = new Date(searchData.travelDate);
+        matchesDepartureDate =
+          departureDate.toDateString() === selectedDepartureDate.toDateString();
       }
-    };
+
+      return matchesCreatedDate && matchesDepartureDate;
+    });
+  };
+
   const renderTabContent = () => {
+    const filteredApproved = filterApplicationsByDate(approvedApplications);
+    const filteredRejected = filterApplicationsByDate(rejectedApplications);
+    const filteredSubmitted = filterApplicationsByDate(submittedApplications);
+    const filteredPending = filterApplicationsByDate(pendingApplications);
+    const filteredRefunded = filterApplicationsByDate(refundedApplications);
+
     switch (activeTab) {
       case "all":
-        return <>
-
-<Ticket 
-  approvedApplication={approvedApplication} 
-  rejectedApplication={rejectedApplication}
-  submittedApplication={submittedApplication}
-  pendingApplication = {pendingApplication}
-  refuntApplication={refuntApplication} 
-
-/>    
-    </>
-;
+        return (
+          <Ticket
+            approvedApplications={filteredApproved}
+            rejectedApplications={filteredRejected}
+            submittedApplications={filteredSubmitted}
+            pendingApplications={filteredPending}
+            refundedApplications={filteredRefunded}
+          />
+        );
       case "approved":
-        return (
-<Ticket 
-  approvedApplication={approvedApplication} 
-
-/>         );
+        return <Ticket approvedApplications={filteredApproved} />;
       case "rejected":
-        return (
-          <Ticket 
-          rejectedApplication={rejectedApplication}
-        
-        /> 
-        );
+        return <Ticket rejectedApplications={filteredRejected} />;
       case "submitted":
-        return (
-          <Ticket 
-         submittedApplication={submittedApplication}
-        /> 
-        );
+        return <Ticket submittedApplications={filteredSubmitted} />;
       case "pending":
-        return (
-          <Ticket 
-          pendingApplication={pendingApplication}  
-        /> 
-        );
+        return <Ticket pendingApplications={filteredPending} />;
       case "refunded":
-        return (
-          <Ticket 
-          refuntApplication={refuntApplication}  
-        /> 
-        );
+        return <Ticket refundedApplications={filteredRefunded} />;
       default:
-        return <>
-        <p className=" text-center">
-          no Visa
-        </p>
-        </>;
+        return <p className="text-center">No Visa</p>;
     }
   };
 
@@ -280,7 +441,7 @@ const Index = () => {
     <>
       <div
         style={{
-           backgroundImage: `url(${MainBackground})`,
+          backgroundImage: `url(${MainBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -295,11 +456,14 @@ const Index = () => {
                   isNarrowScreen ? "w-[50px]" : "w-[20%]"
                 } min-w-[50px]   mb-6 md:mb-0 transition-all duration-300`}
               >
-                <SideBar isNarrow={isNarrowScreen} />
+                <SideBar
+                  isNarrow={isNarrowScreen}
+                  onFilterSelect={(filter) => handleFilterSelect(filter)}
+                />
               </div>
-              
+
               {/* Content container - remaining width (80% on larger screens) */}
-              <div 
+              <div
                 className={`${
                   isNarrowScreen ? "w-[calc(100%-60px)]" : "w-[80%]"
                 } px-2 transition-all duration-300`}
@@ -328,7 +492,9 @@ const Index = () => {
                               className="w-4 h-4 sm:w-5 sm:h-5"
                             />
                           </span>
-                          <span className={isSmallScreen ? "hidden sm:inline" : ""}>
+                          <span
+                            className={isSmallScreen ? "hidden sm:inline" : ""}
+                          >
                             {tab.label}
                           </span>
                           {tab.count !== null && (
@@ -340,6 +506,57 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
+
+                  {activeTab === "all" && (
+                    <div className="flex gap-2">
+                      {selectedFilter.includes("created") && (
+                        <div className="w-44 flex justify-between items-center px-4 border-1 border-gray-300 rounded-4xl mt-4">
+                          <div className="w-28">
+                            <p className="text-[12px] text-gray-500">Created</p>
+                            <input
+                              type="date"
+                              className="w-full text-[14px] text-gray-500 font-bold outline-none"
+                              value={searchData.createdDate}
+                              onChange={(e) =>
+                                handleInputChange("createdDate", e.target.value)
+                              }
+                            />
+                          </div>
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => handleFilterSelect("created")}
+                          >
+                            x
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedFilter.includes("departure") && (
+                        <div className="w-44 flex justify-between items-center px-4 border-1 border-gray-300 rounded-4xl mt-4">
+                          <div className="w-28">
+                            <p className="text-[12px] text-gray-500">
+                              Departure
+                            </p>
+                            <input
+                              type="date"
+                              className="w-full text-[14px] text-gray-500 font-bold outline-none"
+                              value={searchData.travelDate}
+                              onChange={(e) =>
+                                handleInputChange("travelDate", e.target.value)
+                              }
+                            />
+                          </div>
+                          <div
+                            className="cursor-pointer"
+                            onClick={() => handleFilterSelect("departure")}
+                          >
+                            x
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <div className="rounded-lg p-2 sm:p-4 mt-2">
                     {renderTabContent()}
                   </div>

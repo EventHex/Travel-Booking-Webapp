@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import Header from "../../components/header";
-import {FrontPassportForm} from "./passportFrontForm";
-import {BackPassportForm} from "./passportBackForm";
-import {SearchInputText,SearchInputDate} from "../../components/searchInput";
+import { FrontPassportForm } from "./passportFrontForm";
+import { BackPassportForm } from "./passportBackForm";
+import { SearchInputText, SearchInputDate } from "../../components/searchInput";
 import File from "../../components/file";
-import { useSearchParams } from 'react-router-dom';
-import {SingleSelect} from "../../components/dropdown"
-
+import { useSearchParams } from "react-router-dom";
+import { SingleSelect } from "../../components/dropdown";
+import { FlightHotelBooking } from "./FlightHotalBooking";
+import { UploadTravelerPhoto } from "./travelBooking";
 import {
   Flight,
   Home,
   CalenderUp,
   CalenderDown,
   MainBackground,
- UserAdd,
- Saveline
+  UserAdd,
+  Saveline,
 } from "../../assets";
 import {
   Upload,
@@ -24,18 +25,20 @@ import {
   Edit2,
   Crop,
   RotateCw,
-  FlipHorizontal2
+  FlipHorizontal2,
 } from "lucide-react";
 import Input from "../../components/input";
-import {CustomSelect} from "../../components/dropdown";
+import { CustomSelect } from "../../components/dropdown";
 import { CustomDatePicker, FullCalendar } from "../../components/calender";
 import SideBar from "./sideBar";
+import instance from "../../instance";
+
 const TravelVisaBooking = () => {
   const [searchParams] = useSearchParams();
-  const goingTo = searchParams.get('goingTo') || '';
-  const destination = searchParams.get('destination') || '';
-  const travelDate = searchParams.get('travelDate') || '';
-  const returnDate = searchParams.get('returnDate') || '';
+  const goingTo = searchParams.get("goingTo") || "";
+  const destination = searchParams.get("destination") || "";
+  const travelDate = searchParams.get("travelDate") || "";
+  const returnDate = searchParams.get("returnDate") || "";
 
   const searchData = {
     goingTo,
@@ -43,16 +46,17 @@ const TravelVisaBooking = () => {
     travelDate,
     returnDate,
   };
-  
+
   useEffect(() => {
-    console.log('Received search data:', searchData);
-  }, [goingTo, destination, travelDate,returnDate]);
-
-
+    console.log("Received search data:", searchData);
+  }, [goingTo, destination, travelDate, returnDate]);
 
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
 
+  const [frontImage, setFrontImage] = useState(null);
+  // const [backImageUrl, setBackImageUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
@@ -61,8 +65,8 @@ const TravelVisaBooking = () => {
   const [TravellingDateEndFocused, setTravellingDateEndFocused] =
     useState(false);
 
-  // Form data state
-  const [formData, setFormData] = useState({
+  // Add state for all form data
+  const [frontFormData, setFrontFormData] = useState({
     passportNumber: "",
     firstName: "",
     lastName: "",
@@ -74,9 +78,16 @@ const TravelVisaBooking = () => {
     maritalStatus: "",
     dateOfIssue: "",
     dateOfExpiry: "",
+  });
+
+  const [backFormData, setBackFormData] = useState({
     fathersName: "",
     mothersName: "",
   });
+
+  const [travelerPhoto, setTravelerPhoto] = useState(null);
+  const [flightTicket, setFlightTicket] = useState(null);
+  const [hotelBooking, setHotelBooking] = useState(null);
 
   const handleCitizenIconClick = () => {
     citizenInputRef.current.focus();
@@ -114,10 +125,6 @@ const TravelVisaBooking = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
-
-
- 
   // ***************passport photo*****************
   const [file, setFile] = useState(null);
 
@@ -126,6 +133,7 @@ const TravelVisaBooking = () => {
       setFile(e.target.files[0]);
     }
   };
+
   // *********************ticketBooking******************************
   const [documents, setDocuments] = useState({
     flightTicket: null,
@@ -139,16 +147,184 @@ const TravelVisaBooking = () => {
     }));
   };
 
-  const handleSubmitTicketBooking = (e) => {
+  const handleSubmitTicketBooking = async (e) => {
     e.preventDefault();
-    console.log("Submitted documents:", documents);
+    // try {
+    const formData = new FormData();
+    formData.append("travellerInformation", travelerId);
+    formData.append("visaFor", "Individual");
+    formData.append("visaType", visaType);
+    formData.append("visaCountry", destination);
+    formData.append("travelDateFrom", travelDate);
+    formData.append("travelDateTo", returnDate);
+    formData.append("dateOfApply", new Date().toISOString());
+    formData.append("status", "Submitted");
+    formData.append("applicationDetails", "Application Complete");
+
+    if (documents.flightTicket) {
+      formData.append("roundTripFlightTicket", documents.flightTicket);
+    }
+    if (documents.hotelBooking) {
+      formData.append("hotelBooking", documents.hotelBooking);
+    }
+
+    // const response = await fetch(
+    //   "http://localhost:8078/api/v1/visa-application",
+    //   {
+    //     method: "POST",
+    //     body: formData,
+    //   }
+    // );
+
+    // if (!response.ok) {
+    //   throw new Error("Failed to submit documents");
+    // }
+
+    // const result = await response;
+    // console.log("Documents submitted successfully:", result);
+    // } catch (error) {
+    // console.error("Error submitting documents:", error);
+    // alert("Failed to submit documents. Please try again.");
+    // }
   };
+
+  const handleSubmit = async () => {
+    console.log(frontFormData, "frontFormData");
+    console.log(backFormData, "backFormData");
+
+    const travelerDatas = {
+      ...frontFormData,
+      ...backFormData,
+    };
+
+    console.log(travelerDatas, "travelerData");
+
+    try {
+      const passportInfo = new FormData();
+
+      passportInfo.append("passportNumber", frontFormData.passportNumber);
+      passportInfo.append("firstName", frontFormData.firstName);
+      passportInfo.append("lastName", frontFormData.lastName);
+      passportInfo.append("nationality", frontFormData.nationality);
+      passportInfo.append("sex", frontFormData.sex);
+      passportInfo.append("dateOfBirth", frontFormData.dateOfBirth);
+      passportInfo.append("placeOfBirth", frontFormData.placeOfBirth);
+      passportInfo.append("placeOfIssue", frontFormData.placeOfIssue);
+      passportInfo.append("dateOfIssue", frontFormData.dateOfIssue);
+      passportInfo.append("dateOfExpiry", frontFormData.dateOfExpiry);
+      passportInfo.append("maritalStatus", frontFormData.maritalStatus);
+      passportInfo.append("fathersName", backFormData.fathersName);
+      passportInfo.append("mothersName", backFormData.mothersName);
+      // passportInfo.append("indianPanCard", frontFormData.indianPanCard);
+
+      // Add all files
+      if (frontImage) {
+        passportInfo.append("passportImageFront", frontImage);
+      }
+      if (previewUrl) {
+        passportInfo.append("passportImageBack", previewUrl);
+      }
+
+      // First create the traveler document
+      const travelerResponse = await instance.post(
+        "/traveller-information",
+        passportInfo
+      );
+
+      if (travelerResponse.status !== 200) {
+        throw new Error("Failed to create traveler");
+      }
+
+      const travelerData = travelerResponse;
+      console.log(travelerResponse, "travelerData");
+      const travelerId = travelerResponse.data.data._id;
+
+      // Get the full traveler information
+      // const fullTravelerInfo = await getTravelerInfo(travelerId);
+      // console.log("Full traveler information:", fullTravelerInfo);
+
+      // Create FormData for visa application
+      const formData = new FormData();
+
+      // Add traveler information
+      console.log(travelerId, "travelerId");
+      formData.append("travellerInformation", travelerId);
+
+      // Add visa details
+      formData.append("visaFor", "Individual");
+      formData.append("visaType", visaType);
+      formData.append("visaCountry", destination);
+      formData.append("travelDateFrom", travelDate);
+      formData.append("travelDateTo", returnDate);
+      formData.append("dateOfApply", new Date().toISOString());
+      formData.append("status", "Submitted");
+      formData.append("applicationDetails", "Application Complete");
+
+      // Add all files
+      if (travelerPhoto) {
+        formData.append("travelerPhoto", travelerPhoto);
+      }
+      if (flightTicket) {
+        formData.append("roundTripFlightTicket", flightTicket);
+      }
+      if (hotelBooking) {
+        formData.append("hotelBooking", hotelBooking);
+      }
+
+      // Submit to visa application API
+      const response = await instance.post("/visa-application", formData);
+
+      if (response.status !== 200) {
+        const errorData = await response;
+        throw new Error(
+          errorData.message || "Failed to submit visa application"
+        );
+      }
+
+      const result = await response;
+      console.log("Visa application submitted successfully:", result);
+
+      // Show success message or redirect
+      alert("Visa application submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting visa application:", error);
+      alert(
+        error.message || "Failed to submit visa application. Please try again."
+      );
+    }
+  };
+
+  // Add this new function
+  const getTravelerInfo = async (id) => {
+    try {
+      const response = await instance.get(`/traveller-information?id=${id}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch traveler information");
+      }
+
+      const data = await response;
+      return data.response; // Assuming the API returns the data in response field
+    } catch (error) {
+      console.error("Error fetching traveler information:", error);
+      throw error;
+    }
+  };
+
   const UploadForm = () => {
     const Visa = [
       { value: 1, label: "goldern visa" },
       { value: 2, label: "job visa" },
       { value: 3, label: "visiting visa" },
     ];
+
+    // console.log(frontFormData);
+    // console.log(backFormData);
+
+    console.log(travelerPhoto);
+    console.log(flightTicket);
+    console.log(hotelBooking);
+
     return (
       <>
         <div className="w-full p-6 rounded-3xl shadow-sm">
@@ -186,8 +362,8 @@ const TravelVisaBooking = () => {
           <div className="grid grid-cols-1 items-center md:grid-cols-3 gap-4">
             <div className="relative">
               <div className="relative mb-4 md:mb-5">
-                <CustomSelect 
-                labelClass={'12px'}
+                <CustomSelect
+                  labelClass={"12px"}
                   className={"py-[11px]"}
                   placeholder={"Tourist Visa"}
                   label={"Visa Type"}
@@ -214,20 +390,16 @@ const TravelVisaBooking = () => {
                 )}
               </div>
             </div>
-              <div className="mb-4 md:mb-5">
-                <Input
-                  placeholder={"Internal Id"}
-                  label={"Internal Id"}
-                />
+            <div className="mb-4 md:mb-5">
+              <Input placeholder={"Internal Id"} label={"Internal Id"} />
             </div>
 
-         
-              <div className="mb-4 md:mb-5">
-                <Input
-                  placeholder={"Tourist Visa"}
-                  label={"Group Name"}
-                  
-                />
+            <div className="mb-4 md:mb-5">
+              <Input
+                placeholder={"Tourist Visa"}
+                label={"Group Name"}
+                required={applicationType === "group"}
+              />
             </div>
           </div>
         </div>
@@ -236,201 +408,6 @@ const TravelVisaBooking = () => {
   };
 
   // Front passport page component
-
- 
-
-  const UploadTravelerPhoto = () => {
-    const Occupations = [
-      { value: 1, label: "developer" },
-      { value: 2, label: "enginear" },
-      { value: 3, label: "docter" },
-    ];
-    return (
-      <div className="">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-         
-
-          {/* Main upload section */}
-          <div className="w-full flex flex-col md:flex-row gap-6 mb-4">
-            <div className="  w-full md:w-[50%]">
-            <h1 className="text-[24px] sm:text-xl font-[600] py-4">
-            Upload Traveler Photo
-          </h1>
-              {/* Left side - Text content */}
-              <div className=" md:flex-1">
-                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                  Vietnam requires a scan of the traveler's passport. Upload a
-                  clear passport image and your details will be filled
-                  automatically. AI has built-in OCR which is 99.9% accurate.
-                  However, it is mandatory to review the information before
-                  submitting to ensure there are no mistakes. See detailed
-                  guidelines for the perfect passport here. Your visa can get
-                  rejected if these guidelines are not followed.
-                </p>
-              </div>
-            </div>
-                <div className=" md:w-[50%]  w-full py-2">
-                  <File head={"Travel Photo"} />
-                </div>
-          </div>
-
-          {/* Additional Questions Section */}
-          <div className="">
-            <h2 className="text-[30px] text-[#375DFB] font-[600] border-b py-4 border-[#868C98] w-full md:w-[80%]">
-              Answer Additional Required Questions
-            </h2>
-
-            <div className=" w-full md:w-[60%]">
-              <h3 className="text-[24px] text-[#0A0D14]  font-[600] py-3">
-                What is the traveler's occupation (optional)?
-              </h3>
-              <p className="text-[14px] text-gray-600">
-                This is an optional occupation field. Most people use the
-                default - Service. Occupation does not influence the decision of
-                the visa.
-              </p>
-              <div className="py-4">
-              <SingleSelect 
-                labelClass={'12px'}
-                  className={"py-[11px]"}
-                  placeholder={"Select Occupation"}
-                  label=""
-                />
-                
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const TicketBooking = () => {
-    return (
-      <div className="px-4 py-6 md:py-8">
-        <div className="max-w-6xl mx-auto overflow-hidden">
-          <form onSubmit={handleSubmitTicketBooking} className="">
-            <div className="w-full">
-              {/* Flight Ticket Section */}
-              <div className="w-full flex flex-col md:flex-row gap-4 md:gap-5 border-b pb-6 md:pb-8 md:border-b-0  border-gray-200">
-                <div className="w-full md:w-[50%]">
-                  <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
-                    Round Trip Flight Ticket
-                  </h2>
-                  <p className="text-xs md:text-sm text-gray-600 mb-4 md:mb-8">
-                    Ensure all round trip tickets (both onward and return).
-                    Highlight the passenger's name clearly.
-                  </p>
-                </div>
-                <div className="relative w-full md:w-[50%]">
-                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
-                    <input
-                      type="file"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      onChange={(e) =>
-                        handleFileChangeTicketBooking(
-                          "flightTicket",
-                          e.target.files?.[0] || null
-                        )
-                      }
-                      accept=".jpg,.jpeg,.png,.pdf"
-                    />
-                    <div className="text-center">
-                      <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
-                      <p className="mt-2 md:mt-4 text-xs md:text-sm text-gray-600">
-                        {documents.flightTicket
-                          ? documents.flightTicket.name
-                          : "Choose a file or drag & drop it here."}
-                      </p>
-                      <p className="mt-1 md:mt-2 text-xs text-gray-500">
-                        JPEG, PNG, PDF, and MP4 formats, up to 50 MB
-                      </p>
-                      {!documents.flightTicket && (
-                        <button
-                          type="button"
-                          className="mt-2 md:mt-4 px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
-                        >
-                          Browse File
-                        </button>
-                      )}
-                    </div>
-                  </div> */}
-                  <div className="w-[100%]">
-                  <File head={"Round Trip Flight Ticket"} />
-                </div>
-                </div>
-              </div>
-
-              {/* Hotel Booking Section */}
-              <div className="w-full flex flex-col md:flex-row gap-4 md:gap-5  ">
-                <div className="w-full md:w-[50%]">
-                  <h2 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
-                    Hotel Booking
-                  </h2>
-                  <p className="text-xs md:text-sm text-gray-600 mb-4 md:mb-8">
-                    Hotel booking should be for the same day as the passenger's
-                    arrival in Dubai. Highlight the passenger's name clearly.
-                  </p>
-                </div>
-                <div className="w-full md:w-[50%] relative">
-                  {/* <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-8 hover:border-blue-500 transition-colors">
-                    <input
-                      type="file"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      onChange={(e) =>
-                        handleFileChangeTicketBooking(
-                          "hotelBooking",
-                          e.target.files?.[0] || null
-                        )
-                      }
-                      accept=".jpg,.jpeg,.png,.pdf"
-                    />
-                    <div className="text-center">
-                      <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
-                      <p className="mt-2 md:mt-4 text-xs md:text-sm text-gray-600">
-                        {documents.hotelBooking
-                          ? documents.hotelBooking.name
-                          : "Choose a file or drag & drop it here."}
-                      </p>
-                      <p className="mt-1 md:mt-2 text-xs text-gray-500">
-                        JPEG, PNG, PDF, and MP4 formats, up to 50 MB
-                      </p>
-                      {!documents.hotelBooking && (
-                        <button
-                          type="button"
-                          className="mt-2 md:mt-4 px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50"
-                        >
-                          Browse File
-                        </button>
-                      )}
-                    </div>
-                  </div> */}
-                  <div className="w-[100%]">
-                  <File  className={''} head={"Hotel Booking"} />
-                </div>
-                </div>
-              </div>
-
-              {/* Buttons Section */}
-              <div className="w-full mt-10 px-4 md:px-0">
-                <div className="w-full md:w-[50%]">
-                  <div className="flex flex-col sm:flex-row py-4 md:py-5 border-t border-[#CDD0D5] gap-3 sm:gap-5">
-                    <button className=" gap-2 bg-blue-600 hover:bg-blue-700  w-full justify-center py-2  flex text-[14px] font-[400] text-white rounded-md ">
-                      <img src={UserAdd} alt="" /> Add Another Traveller
-                    </button>
-                    <button className=" gap-2 bg-blue-600 hover:bg-blue-700 flex w-full justify-center py-2 text-[14px] font-[400] text-white rounded-md ">
-                     <img src={Saveline} alt="" />  Review & Save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
 
   const VisaInformation = () => {
     return (
@@ -577,114 +554,77 @@ const TravelVisaBooking = () => {
       <div
         style={{
           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "100%", 
-          backgroundPosition: "center",
-          width: "100%",
-
-            }}
+          backgroundSize: "100%", // Don't scale the image
+            backgroundPosition: "center", // Start from top left
+            backgroundRepeat: "repeat", // Repeat in both directions
+            width: "100%",
+        }}
       >
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
-          <div className="flex gap-5 flex-col flex-wrap  justify-between md:flex-row p-5 w-full">
-            <div className="flex   md:flex-row flex-col gap-3">
+          <div className="flex gap-5 flex-col flex-wrap justify-between md:flex-row p-5 w-full">
+            {/* <div className="flex md:flex-row flex-col gap-3">
+              <SearchInputText data={{ destination, goingTo }} />
+              <SearchInputDate data={{ travelDate, returnDate }} />
+            </div>
 
-         <SearchInputText    data={{ destination, goingTo  }}  />
-         <SearchInputDate   data={{  travelDate, returnDate }} />
-            </ div>
-           
             <div className="flex items-center">
               <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">
                 Search
               </button>
-            </div>
+            </div> */}
           </div>
           <UploadForm />
-          <div className="flex  mt-10 ">
-            <div className="  w-auto  pr-3 mt-3 md:w-[20%]">
+          <div className="flex mt-10">
+            <div className="w-auto pr-3 mt-3 md:w-[20%]">
               <div
                 className={`${
                   isNarrowScreen ? "w-[50px]" : "w-full"
-                } min-w-[50px]   mb-6 md:mb-0 transition-all duration-300`}
+                } min-w-[50px] mb-6 md:mb-0 transition-all duration-300`}
               >
                 <SideBar isNarrow={isNarrowScreen} />
               </div>
             </div>
             <div className="w-full md:w-[70%] border-l border-[#bbbdc2] flex flex-col justify-center">
-            <div className=" md:p-5">
-              <FrontPassportForm />
-              <BackPassportForm />
-              <UploadTravelerPhoto />
-              <TicketBooking />
-              <VisaInformation />
+              <div className="md:p-5">
+                <FrontPassportForm
+                  frontImage={frontImage}
+                  setFrontImage={setFrontImage}
+                  formData={frontFormData}
+                  setFormData={setFrontFormData}
+                />
+                <BackPassportForm
+                  formData={backFormData}
+                  setFormData={setBackFormData}
+                  previewUrl={previewUrl}
+                  setPreviewUrl={setPreviewUrl}
+                />
+                <UploadTravelerPhoto
+                  photo={travelerPhoto}
+                  setPhoto={setTravelerPhoto}
+                />
+                <FlightHotelBooking
+                  flightTicket={flightTicket}
+                  setFlightTicket={setFlightTicket}
+                  hotelBooking={hotelBooking}
+                  setHotelBooking={setHotelBooking}
+                />
+                <VisaInformation />
+
+                {/* Add submit button */}
+                <div className="flex justify-end mt-6">
+                  <button
+                    onClick={handleSubmit}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  >
+                    Submit Application
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Edit Image</h3>
-              <button
-                onClick={() => {
-                  setIsModalOpen(false);
-                  setActiveOption(null);
-                }}
-                className="text-gray-400 hover:text-gray-500"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="mb-6">
-              <img
-                src={selectedImage}
-                alt="Edit preview"
-                className="max-h-[400px] mx-auto object-contain"
-              />
-            </div>
-
-            <div className="flex justify-center gap-4">
-              <button 
-                onClick={() => setActiveOption(activeOption === 'crop' ? null : 'crop')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
-                  activeOption === 'crop' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                <Crop className="h-5 w-5" />
-                Crop
-              </button>
-              <button 
-                onClick={() => setActiveOption(activeOption === 'rotate' ? null : 'rotate')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
-                  activeOption === 'rotate' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                <RotateCw className="h-5 w-5" />
-                Rotate
-              </button>
-              <button 
-                onClick={() => setActiveOption(activeOption === 'flip' ? null : 'flip')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
-                  activeOption === 'flip' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                <FlipHorizontal2 className="h-5 w-5" />
-                Flip
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };

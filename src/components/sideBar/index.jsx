@@ -14,10 +14,10 @@ import {
   SearchGray,
 } from "../../assets";
 
-const Index = ({ isNarrow, onClose }) => {
+const Index = ({ isNarrow, onClose, onFilterSelect }) => {
   const [isClicksideBar, setClicksideBar] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("departure");
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const sidebarRef = useRef(null);
 
   const filterOptions = [
@@ -36,6 +36,20 @@ const Index = ({ isNarrow, onClose }) => {
     { id: "Insurance", label: "Insurance", icon: Inurance },
     { id: "flight", label: "flight", icon: Flight },
   ];
+
+  const handleOptionToggle = (optionId) => {
+    setSelectedOptions(prev => {
+      if (prev.includes(optionId)) {
+        return prev.filter(id => id !== optionId);
+      } else {
+        return [...prev, optionId];
+      }
+    });
+    // Call the parent's onFilterSelect with the selected option
+    if (onFilterSelect) {
+      onFilterSelect(optionId);
+    }
+  };
 
   const sidebarOpen = (e) => {
     // Stop propagation to prevent immediate closing
@@ -146,9 +160,9 @@ const Index = ({ isNarrow, onClose }) => {
           {filterOptions.map((option) => (
             <div
               key={option.id}
-              onClick={() => setSelectedOption(option.id)}
+              onClick={() => handleOptionToggle(option.id)}
               className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
-                selectedOption === option.id
+                selectedOptions.includes(option.id)
                   ? "bg-white shadow-sm"
                   : "hover:bg-white/50"
               }`}
@@ -163,14 +177,16 @@ const Index = ({ isNarrow, onClose }) => {
               </div>
 
               <div
-                className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                  selectedOption === option.id
+                className={`flex h-5 w-5 items-center justify-center rounded border ${
+                  selectedOptions.includes(option.id)
                     ? "border-blue-500 bg-blue-500"
                     : "border-gray-300"
                 }`}
               >
-                {selectedOption === option.id && (
-                  <div className="h-2 w-2 rounded-full bg-white"></div>
+                {selectedOptions.includes(option.id) && (
+                  <svg className="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
                 )}
               </div>
             </div>
@@ -185,9 +201,9 @@ const Index = ({ isNarrow, onClose }) => {
           {filterOption.map((option) => (
             <div
               key={option.id}
-              onClick={() => setSelectedOption(option.id)}
+              onClick={() => handleOptionToggle(option.id)}
               className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
-                selectedOption === option.id
+                selectedOptions.includes(option.id)
                   ? "bg-white shadow-sm"
                   : "hover:bg-white/50"
               }`}
@@ -202,19 +218,26 @@ const Index = ({ isNarrow, onClose }) => {
               </div>
 
               <div
-                className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                  selectedOption === option.id
+                className={`flex h-5 w-5 items-center justify-center rounded border ${
+                  selectedOptions.includes(option.id)
                     ? "border-blue-500 bg-blue-500"
                     : "border-gray-300"
                 }`}
               >
-                {selectedOption === option.id && (
-                  <div className="h-2 w-2 rounded-full bg-white"></div>
+                {selectedOptions.includes(option.id) && (
+                  <svg className="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
                 )}
               </div>
             </div>
           ))}
         </div>
+
+
+        
+
+        
       </div>
     );
   }
@@ -240,9 +263,9 @@ const Index = ({ isNarrow, onClose }) => {
           {filterOptions.map((option) => (
             <div
               key={option.id}
-              onClick={() => setSelectedOption(option.id)}
+              onClick={() => handleOptionToggle(option.id)}
               className={`flex cursor-pointer items-center justify-center rounded-lg p-3 transition-colors ${
-                selectedOption === option.id
+                selectedOptions.includes(option.id)
                   ? "bg-white shadow-sm"
                   : "hover:bg-white/50"
               }`}
@@ -264,9 +287,9 @@ const Index = ({ isNarrow, onClose }) => {
           {filterOption.map((option) => (
             <div
               key={option.id}
-              onClick={() => setSelectedOption(option.id)}
+              onClick={() => handleOptionToggle(option.id)}
               className={`flex cursor-pointer items-center justify-center rounded-lg p-3 transition-colors ${
-                selectedOption === option.id
+                selectedOptions.includes(option.id)
                   ? "bg-white shadow-sm"
                   : "hover:bg-white/50"
               }`}
@@ -310,9 +333,9 @@ const Index = ({ isNarrow, onClose }) => {
         {filterOptions.map((option) => (
           <div
             key={option.id}
-            onClick={() => setSelectedOption(option.id)}
+            onClick={() => handleOptionToggle(option.id)}
             className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
-              selectedOption === option.id
+              selectedOptions.includes(option.id)
                 ? "bg-white shadow-sm"
                 : "hover:bg-white/50"
             }`}
@@ -327,14 +350,16 @@ const Index = ({ isNarrow, onClose }) => {
             </div>
 
             <div
-              className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                selectedOption === option.id
+              className={`flex h-5 w-5 items-center justify-center rounded border ${
+                selectedOptions.includes(option.id)
                   ? "border-blue-500 bg-blue-500"
                   : "border-gray-300"
               }`}
             >
-              {selectedOption === option.id && (
-                <div className="h-2 w-2 rounded-full bg-white"></div>
+              {selectedOptions.includes(option.id) && (
+                <svg className="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
               )}
             </div>
           </div>
@@ -349,9 +374,9 @@ const Index = ({ isNarrow, onClose }) => {
         {filterOption.map((option) => (
           <div
             key={option.id}
-            onClick={() => setSelectedOption(option.id)}
+            onClick={() => handleOptionToggle(option.id)}
             className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
-              selectedOption === option.id
+              selectedOptions.includes(option.id)
                 ? "bg-white shadow-sm"
                 : "hover:bg-white/50"
             }`}
@@ -366,14 +391,16 @@ const Index = ({ isNarrow, onClose }) => {
             </div>
 
             <div
-              className={`flex h-5 w-5 items-center justify-center rounded-full border ${
-                selectedOption === option.id
+              className={`flex h-5 w-5 items-center justify-center rounded border ${
+                selectedOptions.includes(option.id)
                   ? "border-blue-500 bg-blue-500"
                   : "border-gray-300"
               }`}
             >
-              {selectedOption === option.id && (
-                <div className="h-2 w-2 rounded-full bg-white"></div>
+              {selectedOptions.includes(option.id) && (
+                <svg className="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
               )}
             </div>
           </div>

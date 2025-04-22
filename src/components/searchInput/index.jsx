@@ -1,41 +1,60 @@
 import React, { useState, useRef, useEffect } from "react";
 import { CalenderDown, CalenderUp, Flight, Home } from "../../assets";
 
-const SearchInputText = ({ 
+const SearchInputText = ({  
+  value = {
+    destination: '',
+    goingTo: ''
+  },
   data,
-  dropDownData, 
-  dropDownPlace, 
+  dropDownData = [], 
+  dropDownPlace = [], 
   onInputChange,
   initialDestination = "",
   initialGoingTo = ""
 }) => {
-
-  const destination = initialDestination || (data && data.destination) || "";
-  const goingTo = initialGoingTo || (data && data.goingTo) || "";
-
-  
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showGoingToDropdown, setShowGoingToDropdown] = useState(false);
   const [goingToIsFocused, setGoingToIsFocused] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState(value.destination);
+  const [selectedGoingTo, setSelectedGoingTo] = useState(value.goingTo);
+  const [filteredFromOptions, setFilteredFromOptions] = useState(dropDownData);
+  const [filteredGoingToOptions, setFilteredGoingToOptions] = useState(dropDownPlace);
 
   const citizenInputRef = useRef(null);
   const fromDropdownRef = useRef(null);
   const goingToInputRef = useRef(null);
+  const goingToDropdownRef = useRef(null);
 
-  // Set initial values when component mounts
+  // Use value object properties or fall back to other sources
+  const destination = value.destination || initialDestination || "";
+  const goingTo = value.goingTo || initialGoingTo || "";
+
+  // Update input values when data changes
   useEffect(() => {
-    if (citizenInputRef.current && initialDestination) {
-      citizenInputRef.current.value = initialDestination;
+    if (citizenInputRef.current) {
+      citizenInputRef.current.value = destination;
     }
     
-    if (goingToInputRef.current && initialGoingTo) {
-      goingToInputRef.current.value = initialGoingTo;
+    if (goingToInputRef.current) {
+      goingToInputRef.current.value = goingTo;
     }
-  }, [initialDestination, initialGoingTo]);
+  }, [destination, goingTo]);
+
+  // Filter options based on input value
+  const filterOptions = (inputValue, options) => {
+    if (!inputValue) return options;
+    return options.filter(option => 
+      option.title.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
 
   const handleFromInputBlur = () => {
-    setCitizenIsFocused(false);
+    setTimeout(() => {
+      setCitizenIsFocused(false);
+      setShowFromDropdown(false);
+    }, 200);
   };
 
   const handleFromInputFocus = () => {
@@ -45,26 +64,31 @@ const SearchInputText = ({
   };
 
   const handleCitizenIconClick = () => {
-    citizenInputRef.current.focus();
+    if (citizenInputRef.current) {
+      citizenInputRef.current.focus();
+    }
   };
   
   const handleOptionSelect = (option, inputRef, isFromInput) => {
     if (inputRef.current) {
       inputRef.current.value = option.title;
       
-      // Update parent component state through the callback
       if (isFromInput) {
         onInputChange("destination", option.title);
+        setSelectedDestination(option.title);
         setShowFromDropdown(false);
       } else {
         onInputChange("goingTo", option.title);
+        setSelectedGoingTo(option.title);
         setShowGoingToDropdown(false);
       }
     }
   };
 
   const handleGoingToIconClick = () => {
-    goingToInputRef.current.focus();
+    if (goingToInputRef.current) {
+      goingToInputRef.current.focus();
+    }
   };
 
   const handleGoingToFocus = () => {
@@ -74,13 +98,28 @@ const SearchInputText = ({
   };
 
   const handleGoingToBlur = () => {
-    setGoingToIsFocused(false);
+    setTimeout(() => {
+      setGoingToIsFocused(false);
+      setShowGoingToDropdown(false);
+    }, 200);
   };
 
-  const goingToDropdownRef = useRef(null);
+  const handleDestinationChange = (e) => {
+    const value = e.target.value;
+    setSelectedDestination(value);
+    setFilteredFromOptions(filterOptions(value, dropDownData));
+    onInputChange("destination", value);
+  };
+
+  const handleGoingToChange = (e) => {
+    const value = e.target.value;
+    setSelectedGoingTo(value);
+    setFilteredGoingToOptions(filterOptions(value, dropDownPlace));
+    onInputChange("goingTo", value);
+  };
 
   return (
-    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
+    <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
       <div className="w-full relative">
         <div className="flex items-center p-3">
           <span
@@ -95,28 +134,25 @@ const SearchInputText = ({
             style={{ border: "none" }}
             ref={citizenInputRef}
             type="text"
-            value={destination}
+            value={selectedDestination}
             placeholder="Search destinations, attractions..."
             className="w-full bg-transparent outline-none"
             onFocus={handleFromInputFocus}
             onBlur={handleFromInputBlur}
-            onChange={(e) => onInputChange("destination", e.target.value)}
-            defaultValue={initialDestination}
+            onChange={handleDestinationChange}
           />
         </div>
 
-        {showFromDropdown && (
+        {showFromDropdown && filteredFromOptions && filteredFromOptions.length > 0 && (
           <div
             ref={fromDropdownRef}
             className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
           >
-            {dropDownData.map((option) => (
+            {filteredFromOptions.map((option) => (
               <div
                 key={option.id}
                 className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() =>
-                  handleOptionSelect(option, citizenInputRef, true)
-                }
+                onClick={() => handleOptionSelect(option, citizenInputRef, true)}
               >
                 <div className="flex">
                   <p className="flex items-center text-[14px] gap-2">
@@ -144,28 +180,25 @@ const SearchInputText = ({
             style={{ border: "none" }}
             ref={goingToInputRef}
             type="text"
-            value={goingTo}
+            value={selectedGoingTo}
             placeholder="Going to"
             className="w-full bg-transparent outline-none"
             onFocus={handleGoingToFocus}
             onBlur={handleGoingToBlur}
-            onChange={(e) => onInputChange("goingTo", e.target.value)}
-            defaultValue={initialGoingTo}
+            onChange={handleGoingToChange}
           />
         </div>
 
-        {showGoingToDropdown && (
+        {showGoingToDropdown && filteredGoingToOptions && filteredGoingToOptions.length > 0 && (
           <div
             ref={goingToDropdownRef}
             className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
           >
-            {dropDownPlace.map((option) => (
+            {filteredGoingToOptions.map((option) => (
               <div
                 key={option.id}
                 className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() =>
-                  handleOptionSelect(option, goingToInputRef, false)
-                }
+                onClick={() => handleOptionSelect(option, goingToInputRef, false)}
               >
                 <div className="flex">
                   <p className="flex items-center text-[14px] gap-2">
@@ -182,14 +215,12 @@ const SearchInputText = ({
   );
 };
 
-const SearchInputDate = ({ 
+const SearchInputDate = ({
   data,
   onDateChange,
   initialTravelDate = "",
-  initialReturnDate = ""
+  initialReturnDate = "",
 }) => {
-
-  
   const travelDateValue = initialTravelDate || (data && data.travelDate) || "";
   const returnDateValue = initialReturnDate || (data && data.returnDate) || "";
 
@@ -197,42 +228,49 @@ const SearchInputDate = ({
   const travelDateInputRef = useRef(null);
   const returnDateInputRef = useRef(null);
   const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
-    useEffect(() => {
+  
+  useEffect(() => {
     if (travelDateInputRef.current) {
       travelDateInputRef.current.value = travelDateValue;
     }
-    
+
     if (returnDateInputRef.current) {
       returnDateInputRef.current.value = returnDateValue;
     }
   }, [travelDateValue, returnDateValue]);
-  
+
   const handleTravelDateIconClick = () => {
-    travelDateInputRef.current.focus();
+    if (travelDateInputRef.current) {
+      travelDateInputRef.current.showPicker(); // This will show the date picker
+      travelDateInputRef.current.focus();
+    }
   };
-  
+
   const handleReturnDateIconClick = () => {
-    returnDateInputRef.current.focus();
+    if (returnDateInputRef.current) {
+      returnDateInputRef.current.showPicker(); // This will show the date picker
+      returnDateInputRef.current.focus();
+    }
   };
-  
+
   return (
     <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
       <div className="w-full">
         <div className="flex items-center p-3">
           <span
             className={`mr-2 cursor-pointer ${
-              travelDateIsFocused ? "opacity-100" : "opacity-20"
+              travelDateIsFocused ? "opacity-100" : "opacity-70"
             }`}
             onClick={handleTravelDateIconClick}
           >
             <img src={CalenderUp} alt="Calendar icon" />
           </span>
           <input
-            style={{ border: "none" }}
             ref={travelDateInputRef}
             type="date"
             placeholder="Travel Date"
-            className="w-full bg-transparent outline-none"
+            className="w-full bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:hidden"
+            style={{ border: "none" }}
             onFocus={() => setTravelDateIsFocused(true)}
             onBlur={() => setTravelDateIsFocused(false)}
             onChange={(e) => onDateChange("travelDate", e.target.value)}
@@ -243,18 +281,18 @@ const SearchInputDate = ({
         <div className="flex items-center p-3">
           <span
             className={`mr-2 cursor-pointer ${
-              returnDateIsFocused ? "opacity-100" : "opacity-20"
+              returnDateIsFocused ? "opacity-100" : "opacity-70"
             }`}
             onClick={handleReturnDateIconClick}
           >
             <img src={CalenderDown} alt="Calendar icon" />
           </span>
           <input
-            style={{ border: "none" }}
             ref={returnDateInputRef}
             type="date"
             placeholder="Return Date"
-            className="w-full bg-transparent outline-none"
+            className="w-full bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:hidden"
+            style={{ border: "none" }}
             onFocus={() => setReturnDateIsFocused(true)}
             onBlur={() => setReturnDateIsFocused(false)}
             onChange={(e) => onDateChange("returnDate", e.target.value)}

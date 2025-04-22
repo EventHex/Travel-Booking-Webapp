@@ -88,14 +88,14 @@ const Index = () => {
       >
         {/* First child div - takes full width on mobile, 50% on md and above */}
         <div className="w-full md:w-[50%] flex gap-5">
-          <div className="w-[30%] flex justify-center items-center px-2">
+          <div className="w-[30%] flex justify-start items-center px-2">
             <Link to="/">
               <img   className="w-[100px]" src={LogoBlue} alt="" />
             </Link>
           </div>
           <div className="w-[70%]  justify-end p-2 md:justify-start flex">
             <ul className="flex items-center gap-4 justify-center">
-              <Link to="/apply">
+              <Link to="/">
                 <li className="hover:text-[#375DFB]">Apply</li>
               </Link>
               <Link to="/dashboard">

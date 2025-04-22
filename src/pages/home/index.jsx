@@ -18,21 +18,60 @@ import {
   User,
   Placeholder,
 } from "../../assets";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronRight, MapPin } from "lucide-react";
 
 import Header from "../../components/header";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
-
+import instance from "../../instance";
 
 const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("Visas");
+  const [citizenOptions, setCitizenOptions] = useState([]);
+  const [dropDownPlace, setDropDownPlace] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  // const location = useLocation();
+  const [searchParams, setSearchParams] = useState({
+    destination: "",
+    goingTo: "",
+    travelDate: "",
+    returnDate: "",
+  });
   const tabs = [
     { id: "Visas", icon: Visa },
     { id: "Activities", icon: Acitivty },
     { id: "Insurance", icon: Inurance },
     { id: "Flights", icon: Flight },
   ];
+
+  // Fetch country data from API
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        setIsLoading(true);
+        const response = await instance.get("/country?limit=0");
+        console.log(response, "response country");
+        const data = await response.data;
+
+        if (data.success && data.response) {
+          const countries = data.response.map((country) => ({
+            icon: <MapPin size={14} className="text-[gray]" />,
+            title: country.countryName,
+            id: country._id,
+          }));
+
+          setCitizenOptions(countries);
+          setDropDownPlace(countries);
+        }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCountries();
+  }, []);
 
   // Function to render different content based on active tab
   const renderTabContent = () => {
@@ -47,41 +86,6 @@ const HeroSection = () => {
     const [travelDateIsFocused, setTravelDateIsFocused] = useState(false);
     const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
 
-    const citizenOptions = [
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "dubai",
-        id: 1,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "mumbai",
-        id: 2,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kochin",
-        id: 3,
-      },
-    ];
-
-    const dropDownPlace = [
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "dubai",
-        id: 1,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "mumbai",
-        id: 2,
-      },
-      {
-        icon: <MapPin size={14} className="text-[gray]" />,
-        title: "kochin",
-        id: 3,
-      },
-    ];
     const handleCitizenIconClick = () => {
       citizenInputRef.current.focus();
     };
@@ -216,17 +220,34 @@ const HeroSection = () => {
     });
 
     const handleInputChange = (field, value) => {
+      console.log("hii");
+      console.log(value, "value");
       setSearchData((prevState) => ({
         ...prevState,
         [field]: value,
       }));
+      
+      console.log(searchData, "searchData");
     };
 
     // Add this function to handle search button click
-    const handleSearchClick = () => {
+    const handleSearchClick = (e) => {
+      // Validate required fields
+      if (
+        !searchData.destination ||
+        !searchData.goingTo ||
+        !searchData.travelDate
+      ) {
+        e.preventDefault();
+        // You can add a toast or alert here if needed
+        return;
+      }
       // Log the search data to console
-      console.log("Search Data:", searchData);
+      // console.log("Search Data:", searchData);
     };
+
+    console.log(searchData.destination, "destination");
+
 
     const User = "user-icon-placeholder";
     const handleSearchOptionSelect = (option) => {
@@ -235,62 +256,45 @@ const HeroSection = () => {
       // Add any additional actions you want to perform when an option is selected
     };
 
-    const dropDownData = [
-      {
-        image: Placeholder,
-        subtitle: "united arab emirates",
-        title: "dubai",
-        id: 1,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Chhatrapati Shivaji Maharaj International Airport",
-        title: "mumbai",
-        id: 2,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Cochin International Airport",
-        title: "kochin",
-        id: 3,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-      {
-        image: Placeholder,
-        subtitle: "Dubai International Airport",
-        title: "dubai",
-        id: 4,
-      },
-    ];
+
+    // const dropDownData = [
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "united arab emirates",
+    //     title: "UAE",
+    //     id: 1,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "Chhatrapati Shivaji Maharaj International Airport",
+    //     title: "Mumbai",
+    //     id: 2,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "Cochin International Airport",
+    //     title: "Kochin",
+    //     id: 3,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "muzhappiland beach",
+    //     title: "Kannur",
+    //     id: 4,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "Goa beach",
+    //     title: "Goa",
+    //     id: 5,
+    //   },
+    //   {
+    //     image: Placeholder,
+    //     subtitle: "hilte business park",
+    //     title: "kozhikode",
+    //     id: 6,
+    //   },
+    // ];
     switch (activeTab) {
       case "Visas":
         return (
@@ -300,19 +304,47 @@ const HeroSection = () => {
                 dropDownPlace={dropDownPlace}
                 dropDownData={citizenOptions}
                 onInputChange={handleInputChange}
+                value={{
+                  destination: searchData.destination,
+                  goingTo: searchData.goingTo,
+                  
+                }}
+                isLoading={isLoading}
               />
-              <SearchInputDate onDateChange={handleInputChange} />
+              <SearchInputDate
+                onDateChange={handleInputChange}
+                value={{
+                  travelDate: searchData.travelDate,
+                  returnDate: searchData.returnDate,
+                }}
+              />
               <div className="flex justify-end">
                 <Link
                   to={{
-                    pathname: "/apply",
-                    search: `?${new URLSearchParams(searchData).toString()}`,
-                    state: searchData,
+                    pathname: "/searchResult",
+                    search: `?destination=${encodeURIComponent(
+                      searchData.destination
+                    )}&goingTo=${encodeURIComponent(
+                      searchData.goingTo
+                    )}&travelDate=${encodeURIComponent(
+                      searchData.travelDate
+                    )}&returnDate=${encodeURIComponent(searchData.returnDate)}`,
                   }}
                 >
                   <button
-                    className="text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px]"
+                    className={`text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px] ${
+                      !searchData.destination ||
+                      !searchData.goingTo ||
+                      !searchData.travelDate
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-[#0000cc]"
+                    }`}
                     onClick={handleSearchClick}
+                    disabled={
+                      !searchData.destination ||
+                      !searchData.goingTo ||
+                      !searchData.travelDate
+                    }
                   >
                     Search
                   </button>
@@ -371,53 +403,52 @@ const HeroSection = () => {
           <>
             <div className="flex gap-3  flex-col ">
               <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row ">
-            <div className="w-full relative">
-        <div className="flex items-center p-3">
-          <span
-            className={`mr-2 cursor-pointer ${
-              goingToIsFocused ? "opacity-100" : "opacity-20"
-            }`}
-            onClick={handleGoingToIconClick}
-          >
-            <img src={Flight} alt="Flight icon" />
-          </span>
-          <input
-            style={{ border: "none" }}
-            ref={goingToInputRef}
-            type="text"
-            value={''}
-            placeholder="Going to"
-            className="w-full bg-transparent outline-none"
-            onFocus={handleGoingToFocus}
-            onBlur={handleGoingToBlur}
-          
-          />
-        </div>
+                <div className="w-full relative">
+                  <div className="flex items-center p-3">
+                    <span
+                      className={`mr-2 cursor-pointer ${
+                        goingToIsFocused ? "opacity-100" : "opacity-20"
+                      }`}
+                      onClick={handleGoingToIconClick}
+                    >
+                      <img src={Flight} alt="Flight icon" />
+                    </span>
+                    <input
+                      style={{ border: "none" }}
+                      ref={goingToInputRef}
+                      type="text"
+                      value={""}
+                      placeholder="Going to"
+                      className="w-full bg-transparent outline-none"
+                      onFocus={handleGoingToFocus}
+                      onBlur={handleGoingToBlur}
+                    />
+                  </div>
 
-        {showGoingToDropdown && (
-          <div
-            ref={goingToDropdownRef}
-            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
-          >
-            {dropDownPlace.map((option) => (
-              <div
-                key={option.id}
-                className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                onClick={() =>
-                  handleOptionSelect(option, goingToInputRef, false)
-                }
-              >
-                <div className="flex">
-                  <p className="flex items-center text-[14px] gap-2">
-                    {option.icon}
-                    <span>{option.title}</span>
-                  </p>
+                  {showGoingToDropdown && (
+                    <div
+                      ref={goingToDropdownRef}
+                      className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                    >
+                      {dropDownPlace.map((option) => (
+                        <div
+                          key={option.id}
+                          className="flex items-start px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                          onClick={() =>
+                            handleOptionSelect(option, goingToInputRef, false)
+                          }
+                        >
+                          <div className="flex">
+                            <p className="flex items-center text-[14px] gap-2">
+                              {option.icon}
+                              <span>{option.title}</span>
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
               </div>
 
               {/* <SearchInputText
@@ -528,7 +559,7 @@ const HeroSection = () => {
             </div>
           </div>
         </div>
-        {/* *****************footer***************************** */}
+        {/* ****************footer**************************** */}
         <div className="w-full flex justify-center rounded-t-[30px] py-6 sm:py-8 md:py-10 items-center bg-gradient-to-r from-[#1C1C82] to-[#24186C]">
           <div className="max-w-[1300px] flex flex-col md:flex-row px-4 sm:px-5 w-full justify-center items-center">
             <div className="w-full md:w-[50%] mb-4 md:mb-0 flex justify-center md:justify-start">
