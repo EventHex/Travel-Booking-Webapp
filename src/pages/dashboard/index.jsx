@@ -161,9 +161,13 @@ const Index = () => {
   useEffect(() => {
     const getVisaApplication = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8078/api/v1/visa-application"
-        );
+        const response = await instance.get("/visa-application");
+        console.log(response, "response");
+
+        // const tempResponse = await axios.get(
+        //   "http://localhost:8078/api/v1/visa-application"
+        // );
+        // console.log(tempResponse, "tempResponse");
         const applications = response.data.response;
 
         // Transform the API data into the required format

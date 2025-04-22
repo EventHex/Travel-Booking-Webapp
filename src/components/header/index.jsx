@@ -14,6 +14,7 @@ import {
   Headphones,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Index = () => {
   const [showHelp, setShowHelp] = useState(false);
@@ -34,6 +35,26 @@ const Index = () => {
     e.stopPropagation();
     setShowModal(!showModal);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+          setUser(user);
+          // Fetch wallet data
+          const walletResponse = await axios.get("wallet");
+          if (walletResponse.data && walletResponse.data.success) {
+            // You can store wallet data in state or context as needed
+            console.log("Wallet data:", walletResponse.data);
+          }
+        }
+      } catch (error) {
+        console.log(error, "error");
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
