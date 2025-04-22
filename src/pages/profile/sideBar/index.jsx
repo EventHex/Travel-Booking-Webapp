@@ -21,7 +21,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   const sidebarRef = useRef(null);
 
   const filterOptions = [
-    { id: "profile", label: "profile", icon: Visa },
+    { id: "profile", label: "Profile", icon: Visa },
     { id: "Transactions", label: "Transactions", icon: Date },
     { id: "LoadWallet", label: "Load Wallet", icon: Location },
   ];
