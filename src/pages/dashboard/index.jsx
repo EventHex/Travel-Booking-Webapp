@@ -446,9 +446,9 @@ const Index = () => {
       <div
         style={{
           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "repeat",
+          backgroundSize: "100%", // Don't scale the image
+          backgroundPosition: "center", // Start from top left
+          backgroundRepeat: "repeat", // Repeat in both directions
           width: "100%",
         }}
       >
