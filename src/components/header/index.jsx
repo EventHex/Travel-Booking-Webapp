@@ -15,15 +15,18 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import instance from "../../instance";
 
 const Index = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [walletBalance, setWalletBalance] = useState(0);
   
   const helpRef = useRef(null);
   const modalRef = useRef(null);
   const helpToggleRef = useRef(null);
   const modalToggleRef = useRef(null);
+  const [user, setUser] = useState(null);
 
   // Function to handle modal toggle with stop propagation
   const toggleHelp = (e) => {
@@ -35,21 +38,23 @@ const Index = () => {
     e.stopPropagation();
     setShowModal(!showModal);
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
+        console.log(user, "user");
         if (user) {
           setUser(user);
-          // Fetch wallet data
-          const walletResponse = await axios.get("wallet");
-          if (walletResponse.data && walletResponse.data.success) {
-            // You can store wallet data in state or context as needed
-            console.log("Wallet data:", walletResponse.data);
+          const walletResponse = await instance.get(`/wallet/user?user=${user._id}`);
+          console.log(walletResponse, "walletResponse");
+          
+          if (walletResponse.data && walletResponse.data.success && walletResponse.data.response) {
+            setWalletBalance(walletResponse.data.response.currentBalance || 0);
           }
         }
       } catch (error) {
-        console.log(error, "error");
+        console.log("Error fetching wallet data:", error);
       }
     };
 
@@ -132,7 +137,7 @@ const Index = () => {
             <div>
               <button className="text-[14px] font-[500] bg-[#EBF1FF] rounded-[10px] flex gap-4 py-2 px-3">
                 <img src={CreditCard} alt="credit" />
-                30,839
+                {walletBalance.toLocaleString()}
               </button>
             </div>
             <div className="flex px-4 gap-[14px]">

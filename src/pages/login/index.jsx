@@ -286,7 +286,7 @@ const Index = () => {
                   type="submit"
                   className="   md:py-3 w-[65%]   md:px-4 text-[14px] font-[400] bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  {isOtpSent ? "Verify OTP" : "Send OTP"}
+                  {isOtpSent ? "Verify Your One-Time Password" : "Get WhatsApp Verification Code"}
                 </button>
                 <button
                   type="button"

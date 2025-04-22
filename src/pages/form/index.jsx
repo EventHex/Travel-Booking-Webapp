@@ -202,8 +202,10 @@ const TravelVisaBooking = () => {
     console.log(travelerDatas, "travelerData");
 
     try {
+      // Create FormData for traveler information
       const passportInfo = new FormData();
 
+      // Append all text fields
       passportInfo.append("passportNumber", frontFormData.passportNumber);
       passportInfo.append("firstName", frontFormData.firstName);
       passportInfo.append("lastName", frontFormData.lastName);
@@ -217,9 +219,8 @@ const TravelVisaBooking = () => {
       passportInfo.append("maritalStatus", frontFormData.maritalStatus);
       passportInfo.append("fathersName", backFormData.fathersName);
       passportInfo.append("mothersName", backFormData.mothersName);
-      // passportInfo.append("indianPanCard", frontFormData.indianPanCard);
 
-      // Add all files
+      // Append files if they exist
       if (frontImage) {
         passportInfo.append("passportImageFront", frontImage);
       }
@@ -230,26 +231,24 @@ const TravelVisaBooking = () => {
       // First create the traveler document
       const travelerResponse = await instance.post(
         "/traveller-information",
-        passportInfo
+        passportInfo,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
       );
 
       if (travelerResponse.status !== 200) {
         throw new Error("Failed to create traveler");
       }
 
-      const travelerData = travelerResponse;
-      console.log(travelerResponse, "travelerData");
       const travelerId = travelerResponse.data.data._id;
-
-      // Get the full traveler information
-      // const fullTravelerInfo = await getTravelerInfo(travelerId);
-      // console.log("Full traveler information:", fullTravelerInfo);
 
       // Create FormData for visa application
       const formData = new FormData();
 
       // Add traveler information
-      console.log(travelerId, "travelerId");
       formData.append("travellerInformation", travelerId);
 
       // Add visa details
@@ -274,13 +273,14 @@ const TravelVisaBooking = () => {
       }
 
       // Submit to visa application API
-      const response = await instance.post("/visa-application", formData);
+      const response = await instance.post("/visa-application", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
 
       if (response.status !== 200) {
-        const errorData = await response;
-        throw new Error(
-          errorData.message || "Failed to submit visa application"
-        );
+        throw new Error("Failed to submit visa application");
       }
 
       const result = await response;
@@ -290,9 +290,7 @@ const TravelVisaBooking = () => {
       alert("Visa application submitted successfully!");
     } catch (error) {
       console.error("Error submitting visa application:", error);
-      alert(
-        error.message || "Failed to submit visa application. Please try again."
-      );
+      alert("Failed to submit visa application. Please try again.");
     }
   };
 
