@@ -401,13 +401,13 @@ const TravelVisaBooking = () => {
               <Input placeholder={"Internal Id"} label={"Internal Id"} />
             </div>
 
-            <div className="mb-4 md:mb-5">
+          {isGroup &&  <div className="mb-4 md:mb-5">
               <Input
                 placeholder={"Tourist Visa"}
                 label={"Group Name"}
                 required={applicationType === "group"}
               />
-            </div>
+            </div>}
           </div>
         </div>
       </>
