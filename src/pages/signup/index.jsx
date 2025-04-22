@@ -130,6 +130,7 @@ const Signup = () => {
           name: formData.name,
           companyName: formData.companyName,
           email: formData.email,
+          registerType: "signup",
         }
         console.log(postData, "postData");
         const response = await instance.post("account/send-otp", postData);
