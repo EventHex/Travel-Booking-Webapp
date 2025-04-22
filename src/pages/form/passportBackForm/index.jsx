@@ -36,11 +36,11 @@ export const BackPassportForm = ({
         },
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Failed to process passport");
       }
 
-      const result = await response;
+      const result = response.data;
 
       if (result.success && result.data) {
         // Only update back passport specific fields
