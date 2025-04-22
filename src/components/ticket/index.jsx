@@ -566,7 +566,8 @@ const Ticket = ({
                         </div>
 
                         {/* Buttons */}
-                        <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
+                        <div className="mt-3  sm:mt-4 space-y-2 sm:space-y-3 grid grid-cols-1">
+                          <div className="flex gap-2">
                           <button
                             className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
                             onClick={() => {
@@ -581,6 +582,7 @@ const Ticket = ({
                           >
                             Invoice
                           </button>
+                          </div>
                           <button
                             // onClick={() => handleDownloadInsurance(application)}
                             className="w-full px-4 sm:px-6 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50"
