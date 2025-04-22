@@ -86,92 +86,31 @@ useEffect(() => {
     const fetchVisaData = async () => {
       try {
         setIsSearching(true);
-        const response = await instance.get("visa");
+        const response = await instance.get(`/get-visa?origin_country=${searchParams.get("destination")}&destination_country=${searchParams.get("goingTo")}&travel_date=${searchParams.get("returnDate")}`);
 
+        console.log(response, "response");
         if (response.data.success && response.data.response) {
-          const visaDataArray = response.data.response;
-          const destination =
-            searchParams.get("destination")?.toLowerCase() || "";
-          const goingTo = searchParams.get("goingTo")?.toLowerCase() || "";
-          const travelDate = searchParams.get("travelDate") || "";
-          const returnDate = searchParams.get("returnDate") || "";
-
-          let filteredData = visaDataArray;
-
-          // Enhanced filtering logic
-          if (destination || goingTo || travelDate || returnDate) {
-            filteredData = visaDataArray.filter((visa) => {
-              // Destination matching with fuzzy search
-              const fromCountryMatch =
-                !destination ||
-                visa.country?.value?.toLowerCase().includes(destination) ||
-                visa.country?.value?.toLowerCase().replace(/\s+/g, "") ===
-                  destination.replace(/\s+/g, "");
-
-              // GoingTo matching with fuzzy search
-              const toCountryMatch =
-                !goingTo ||
-                visa.toCountry?.value?.toLowerCase().includes(goingTo) ||
-                visa.toCountry?.value?.toLowerCase().replace(/\s+/g, "") ===
-                  goingTo.replace(/\s+/g, "");
-
-              // Enhanced date matching
-              let dateMatch = true;
-              if (travelDate || returnDate) {
-                try {
-                  const normalizeDate = (dateStr) => {
-                    if (!dateStr) return null;
-                    const date = new Date(dateStr);
-                    date.setHours(0, 0, 0, 0);
-                    return date;
-                  };
-
-                  const searchStart = normalizeDate(travelDate);
-                  const searchEnd = normalizeDate(returnDate);
-                  const visaStart = normalizeDate(visa.fromDate);
-                  const visaEnd = normalizeDate(visa.toDate);
-
-                  if (searchStart && visaStart && visaEnd) {
-                    dateMatch =
-                      searchStart >= visaStart && searchStart <= visaEnd;
-                  }
-
-                  if (searchEnd && visaStart && visaEnd) {
-                    const endDateMatch =
-                      searchEnd >= visaStart && searchEnd <= visaEnd;
-                    dateMatch = dateMatch && endDateMatch;
-                  }
-                } catch (error) {
-                  console.error("Date comparison error:", error);
-                  dateMatch = true;
-                }
-              }
-
-              return fromCountryMatch && toCountryMatch && dateMatch;
-            });
-          }
-
-          setFilteredVisaOptions(filteredData);
-
-          const visaData = filteredData.map((visa) => ({
-            title: visa.title,
-            status: visa.status === "Active" ? "approved" : "warning",
-            message: `Estimated visa arrival by ${new Date(
-              Date.now() + 7 * 24 * 60 * 60 * 1000
-            ).toLocaleDateString()}`,
+          const visaDataArray = response.data.response.visa_types;
+          
+          const visaData = visaDataArray.map((visa) => ({
+            title: visa.process_name,
+            status: "approved",
+            message: `Estimated visa arrival by ${new Date(visa.eta_timestamp * 1000).toLocaleDateString()}`,
             details: {
-              entry: visa.entry,
-              validity: visa.validity,
-              duration: visa.duration,
-              processingTime: visa.processingTime,
+              entry: visa.process_details.is_multiple_entry ? "Multiple Entry" : "Single Entry",
+              validity: `${visa.process_details.entry_validity.amount} ${visa.process_details.entry_validity.units}`,
+              duration: `${visa.process_details.entry_length_stay.amount} ${visa.process_details.entry_length_stay.units}`,
+              processingTime: `${visa.processing_time.duration} ${visa.processing_time.unit}`,
               absconding: "AED 5,000",
             },
             price: {
-              original: visa.publicPrice,
-              discounted: visa.publicOfferPrice,
+              original: `${visa.visa_fee.amount} ${visa.visa_fee.currency}`,
+              discounted: `${visa.visa_fee.amount + visa.service_fee.amount} ${visa.visa_fee.currency}`,
               savings: "Save up to 39%",
             },
-            variant: visa.status === "Active" ? "green" : "blue",
+            variant: "green",
+            required_documents: visa.required_documents || [],
+            required_components: visa.required_components || []
           }));
 
           setVisaOptions(visaData);
@@ -387,7 +326,7 @@ useEffect(() => {
           </div>
 
           {/* Visa Options Section */}
-          <main className="max-w-7xl mx-auto py-4 sm:py-6   sm:px-6 lg:px-8">
+          <main className="max-w-7xl mx-auto py-4 sm:py-6 sm:px-6 lg:px-8">
             <div className="space-y-4 md:space-y-6">
               {visaOptions.length === 0 ? (
                 <div className="text-center py-8">
@@ -406,9 +345,7 @@ useEffect(() => {
                   >
                     <div
                       className={`px-4 sm:px-6 py-3 sm:py-4 text-white font-medium ${
-                        option.status === "warning"
-                          ? "bg-gradient-to-r from-orange-500 to-orange-400"
-                          : option.variant === "green"
+                        option.variant === "green"
                           ? "bg-gradient-to-r from-green-500 to-green-400"
                           : "bg-gradient-to-r from-blue-600 to-blue-500"
                       }`}
@@ -417,24 +354,10 @@ useEffect(() => {
                     </div>
                     <div className="p-4 sm:p-6">
                       <div className="flex items-start space-x-3 mb-4 sm:mb-6">
-                        {option.status === "warning" ? (
-                          <div className="h-6 w-6 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
-                            <Info className="h-4 w-4 text-orange-500" />
-                          </div>
-                        ) : (
-                          <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                            <Shield className="h-4 w-4 text-blue-500" />
-                          </div>
-                        )}
-                        <p
-                          className={`text-sm ${
-                            option.status === "warning"
-                              ? "text-orange-600"
-                              : option.variant === "green"
-                              ? "text-green-600"
-                              : "text-blue-600"
-                          }`}
-                        >
+                        <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                          <Shield className="h-4 w-4 text-blue-500" />
+                        </div>
+                        <p className="text-sm text-blue-600">
                           {option.message}
                         </p>
                       </div>
@@ -446,22 +369,24 @@ useEffect(() => {
                               {key.replace(/([A-Z])/g, " $1").trim()}
                             </div>
                             <div className="mt-1">
-                              {key === "documents" ? (
-                                <a
-                                  href="#"
-                                  className="text-xs sm:text-sm text-blue-600 hover:text-blue-700 hover:underline"
-                                >
-                                  View Here
-                                </a>
-                              ) : (
-                                <span className="text-xs sm:text-sm text-gray-600">
-                                  {value}
-                                </span>
-                              )}
+                              <span className="text-xs sm:text-sm text-gray-600">
+                                {value}
+                              </span>
                             </div>
                           </div>
                         ))}
                       </div>
+
+                      {option.required_documents.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="text-sm font-medium text-gray-900 mb-2">Required Documents:</h4>
+                          <ul className="list-disc list-inside text-sm text-gray-600">
+                            {option.required_documents.map((doc, idx) => (
+                              <li key={idx}>{doc.label}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
 
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">

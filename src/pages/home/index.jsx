@@ -57,7 +57,7 @@ const HeroSection = () => {
           const countries = data.response.map((country) => ({
             icon: <MapPin size={14} className="text-[gray]" />,
             title: country.countryName,
-            id: country._id,
+            id: country.key,
           }));
 
           setCitizenOptions(countries);

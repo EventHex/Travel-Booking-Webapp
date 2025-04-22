@@ -70,16 +70,17 @@ const SearchInputText = ({
   };
   
   const handleOptionSelect = (option, inputRef, isFromInput) => {
+    console.log(option, "option");
     if (inputRef.current) {
       inputRef.current.value = option.title;
       
       if (isFromInput) {
-        onInputChange("destination", option.title);
-        setSelectedDestination(option.title);
+        onInputChange("destination", option.id);
+        setSelectedDestination(option.id);
         setShowFromDropdown(false);
       } else {
-        onInputChange("goingTo", option.title);
-        setSelectedGoingTo(option.title);
+        onInputChange("goingTo", option.id);
+        setSelectedGoingTo(option.id);
         setShowGoingToDropdown(false);
       }
     }
