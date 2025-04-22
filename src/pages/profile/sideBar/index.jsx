@@ -156,7 +156,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
             <div
               key={option.id}
               onClick={() => handleOptionSelect(option.id)}
-              className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
+              className={`flex   cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
                 selectedOption === option.id
                   ? "bg-white shadow-sm"
                   : "hover:bg-white/50"
@@ -237,13 +237,13 @@ const Index = ({ isNarrow, onOptionSelect }) => {
   // Normal/expanded sidebar with text and icons
   return (
     <div className="w-full flex flex-col gap-4 rounded-xl overflow-hidden">
-      <div className="rounded-xl bg-gradient-to-b">
+      <div className="rounded-xl flex flex-col gap-3 bg-gradient-to-b">
         {/* Filter options - Internal ID, Group Name, Traveller 1 */}
         {filterOptions.map((option) => (
           <div
             key={option.id}
             onClick={() => handleOptionSelect(option.id)}
-            className={`flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
+            className={`flex    cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
               selectedOption === option.id
                 ? "bg-white shadow-sm"
                 : "hover:bg-white/50"
@@ -259,7 +259,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
         ))}
       </div>
       
-      <div className="rounded-xl bg-gradient-to-b">
+      <div className="rounded-xl  flex flex-col gap-3 bg-gradient-to-b">
         {/* Blue links section */}
         {renderBlueLink("passport", "passport")}
         {renderBlueLink("Traveller Photo", "traveller-photo")}
