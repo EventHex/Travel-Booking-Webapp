@@ -32,6 +32,7 @@ export const FrontPassportForm = ({
     { value: "m", label: "Married" },
   ];
   // const [frontImage, setFrontImage] = useState(null);
+  const [isFrontpassportData, setIsFrontpassportData] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editedImage, setEditedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
