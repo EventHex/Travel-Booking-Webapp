@@ -244,10 +244,11 @@ const Signup = () => {
                     >
                       <option value="">Select User Type</option>
                       {userTypes.map((type) => (
-                        <option id={type.id} key={type.id} value={type.id}>
-                          {type.value}
-
-                        </option>
+                        type.value !== "Admin" && (
+                          <option id={type.id} key={type.id} value={type.id}>
+                            {type.value}
+                          </option>
+                        )
                       ))}
                     </select>
                   </div>
