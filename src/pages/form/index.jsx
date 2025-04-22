@@ -64,7 +64,8 @@ const TravelVisaBooking = () => {
   const [TravellingDateFocused, setTravellingDateFocused] = useState(false);
   const [TravellingDateEndFocused, setTravellingDateEndFocused] =
     useState(false);
-
+  // ************  hiding grp btn ************
+  const [isGroup, setIsGroup] = useState(false);
   // Add state for all form data
   const [frontFormData, setFrontFormData] = useState({
     passportNumber: "",
@@ -343,7 +344,10 @@ const TravelVisaBooking = () => {
                     ? "bg-blue-600 text-white"
                     : "text-gray-700"
                 }`}
-                onClick={() => setApplicationType("individual")}
+                onClick={() =>{ setApplicationType("individual")
+                  setIsGroup(false);
+
+                }}
               >
                 Individual
               </button>
@@ -353,7 +357,10 @@ const TravelVisaBooking = () => {
                     ? "bg-blue-600 text-white"
                     : "text-gray-700"
                 }`}
-                onClick={() => setApplicationType("group")}
+                onClick={() => {
+                  setApplicationType("group");
+                  setIsGroup(true);
+                }}
               >
                 Group
               </button>
@@ -395,13 +402,13 @@ const TravelVisaBooking = () => {
               <Input placeholder={"Internal Id"} label={"Internal Id"} />
             </div>
 
-            <div className="mb-4 md:mb-5">
+          {isGroup &&  <div className="mb-4 md:mb-5">
               <Input
                 placeholder={"Tourist Visa"}
                 label={"Group Name"}
                 required={applicationType === "group"}
               />
-            </div>
+            </div>}
           </div>
         </div>
       </>
@@ -556,24 +563,14 @@ const TravelVisaBooking = () => {
         style={{
           backgroundImage: `url(${MainBackground})`,
           backgroundSize: "100%", // Don't scale the image
-            backgroundPosition: "center", // Start from top left
-            backgroundRepeat: "repeat", // Repeat in both directions
-            width: "100%",
+          backgroundPosition: "center", // Start from top left
+          backgroundRepeat: "repeat", // Repeat in both directions
+          width: "100%",
         }}
       >
         <Header />
         <div className="max-w-[1300px] w-full mx-auto rounded-lg">
           <div className="flex gap-5 flex-col flex-wrap justify-between md:flex-row p-5 w-full">
-            {/* <div className="flex md:flex-row flex-col gap-3">
-              <SearchInputText data={{ destination, goingTo }} />
-              <SearchInputDate data={{ travelDate, returnDate }} />
-            </div>
-
-            <div className="flex items-center">
-              <button className="text-white py-2 px-5 rounded-xl bg-[#375DFB] border text-[16px]">
-                Search
-              </button>
-            </div> */}
           </div>
           <UploadForm />
           <div className="flex mt-10">
@@ -604,15 +601,14 @@ const TravelVisaBooking = () => {
                   photo={travelerPhoto}
                   setPhoto={setTravelerPhoto}
                 />
-                <FlightHotelBooking
-                  flightTicket={flightTicket}
-                  setFlightTicket={setFlightTicket}
-                  hotelBooking={hotelBooking}
-                  setHotelBooking={setHotelBooking}
-                />
+                  <FlightHotelBooking
+                    isGroup={isGroup}
+                    flightTicket={flightTicket}
+                    setFlightTicket={setFlightTicket}
+                    hotelBooking={hotelBooking}
+                    setHotelBooking={setHotelBooking}
+                  /> 
                 <VisaInformation />
-
-                {/* Add submit button */}
                 <div className="flex justify-end mt-6">
                   <button
                     onClick={handleSubmit}

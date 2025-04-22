@@ -9,6 +9,7 @@ export const FlightHotelBooking = ({
   setFlightTicket,
   hotelBooking,
   setHotelBooking,
+  isGroup,
 }) => {
   const [flightPreview, setFlightPreview] = useState(null);
   const [hotelPreview, setHotelPreview] = useState(null);
@@ -263,20 +264,23 @@ export const FlightHotelBooking = ({
             <div className="w-full mt-10 px-4 md:px-0">
               <div className="w-full md:w-[50%]">
                 <div className="flex flex-col sm:flex-row py-4 md:py-5 border-t border-[#CDD0D5] gap-3 sm:gap-5">
-                  <button
-                    onClick={addAnotherTraveller}
-                    type="button"
-                    className="gap-2 bg-blue-600 hover:bg-blue-700 w-full justify-center py-2 flex text-[14px] font-[400] text-white rounded-md"
-                  >
-                    <img src={UserAdd} alt="" /> 
-                    {travelers.length === 0 ? 'Add Traveller' : 'Add Another Traveller'}
-                  </button>
-                  <button
+                {isGroup && 
+  <button
+    onClick={addAnotherTraveller}
+    type="button"
+    className="gap-2 bg-blue-600 hover:bg-blue-700 w-full justify-center py-2 flex text-[14px] font-[400] text-white rounded-md"
+  >
+    <img src={UserAdd} alt="" />
+    {travelers.length === 0 ? 'Add Traveller' : 'Add Another Traveller'}
+  </button>
+}
+
+                  {/* <button
                     type="submit"
                     className="gap-2 bg-blue-600 hover:bg-blue-700 flex w-full justify-center py-2 text-[14px] font-[400] text-white rounded-md"
                   >
                     <img src={Saveline} alt="" /> Review & Save
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
