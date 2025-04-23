@@ -88,31 +88,35 @@ const Index = () => {
         phoneNumber,
         authenticationType: "phone",
       });
-      
+
       if (response.data && response.data.success) {
         setIsOtpSent(true);
       } else {
-        setError(response.data.message || "Failed to send OTP. Please try again.");
+        setError(
+          response.data.message || "Failed to send OTP. Please try again."
+        );
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
-      setError(error.response?.data?.message || "Failed to send OTP. Please try again.");
+      setError(
+        error.response?.data?.message || "Failed to send OTP. Please try again."
+      );
     }
   };
 
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await instance.post("/account/login", {
         phoneNumber,
         otp,
         authenticationType: "phone",
       });
-      
+
       if (response.data && response.data.success) {
         login(response.data);
-        
+
         // Redirect to the page they tried to access, or dashboard
         const from = location.state?.from?.pathname || "/dashboard";
         navigate(from, { replace: true });
@@ -121,7 +125,9 @@ const Index = () => {
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
-      setError(error.response?.data?.message || "Invalid OTP. Please try again.");
+      setError(
+        error.response?.data?.message || "Invalid OTP. Please try again."
+      );
     }
   };
 
@@ -167,7 +173,6 @@ const Index = () => {
               </h1>
             </div>
 
-          
             <form
               onSubmit={isOtpSent ? handleVerifyOTP : handleSendOtp}
               className="flex flex-col gap-5"
@@ -180,7 +185,7 @@ const Index = () => {
                   Phone Number
                 </label>
                 <div className="relative">
-                  <div className="flex items-center w-full md:py-4 py-2 px-3  bg-white border border-gray-300 rounded-full">
+                  <div className="flex items-center w-full md:py-4 py-2 px-3  bg-white border border-gray-300 rounded-[14px]">
                     <div className="flex items-center min-w-[90px]">
                       <Phone className="h-5 w-5 text-gray-400 mr-2" />
                       <button
@@ -199,12 +204,15 @@ const Index = () => {
                       placeholder="234567890"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="flex-1 text-sm md:text-base text-gray-700 focus:outline-none bg-transparent"
+                      className="flex-1 text-sm md:text-base text-gray-700 focus:outline-none focus:bg-transparent bg-transparent"
                       disabled={isOtpSent}
                     />
                   </div>
                   {showCountryList && (
-                    <div ref={dropdownRef} className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-300 rounded-xl shadow-lg z-50 max-h-[320px] overflow-hidden">
+                    <div
+                      ref={dropdownRef}
+                      className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-300 rounded-xl shadow-lg z-50 max-h-[320px] overflow-hidden"
+                    >
                       <div className="p-2 border-b border-gray-200">
                         <div className="relative">
                           <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -276,18 +284,20 @@ const Index = () => {
                   </div>
                 </div>
               )}
-                {error && (
-              <div className="   text-red-500 text-center w-full animate-bounce  text-[12px] md:text-xl  rounded  ">
-                {error}
-              </div>
-            )}
+              {error && (
+                <div className="   text-red-500 text-center w-full animate-bounce  text-[12px] md:text-xl  rounded  ">
+                  {error}
+                </div>
+              )}
 
               <div className="flex w-[full] justify-center gap-12 md:gap-4 ">
                 <button
                   type="submit"
                   className="   md:py-3 w-[65%]   md:px-4 text-[14px] font-[400] bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  {isOtpSent ? "Verify Your One-Time Password" : "Get WhatsApp Verification Code"}
+                  {isOtpSent
+                    ? "Verify Your One-Time Password"
+                    : "Get WhatsApp Verification Code"}
                 </button>
                 <button
                   type="button"
