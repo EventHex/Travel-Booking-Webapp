@@ -410,7 +410,14 @@ useEffect(() => {
                           </span>
                         </div>
                         <Link
-                          to={`/form?purpose=${option.purpose}&process_name=${encodeURIComponent(option.title)}`}
+                          to={`/form`}
+                          state={{ 
+                            purpose: option.purpose,
+                            price: parseFloat(option.price.discounted.split(' ')[0]),
+                            currency: option.price.discounted.split(' ')[1],
+                            title: option.title,
+                            details: option.details
+                          }}
                           className="flex justify-end sm:justify-start"
                         >
                           <button className="px-4 sm:px-6 py-2 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-700 hover:text-white transition-colors whitespace-nowrap">
