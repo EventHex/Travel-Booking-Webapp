@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CreditCard, Building2, Wifi, ArrowDownToLine, Building, Copy, Check } from 'lucide-react';
+import Input from "../../../components/Input";
 
 const LoadWallet = () => {
   const [selectedTab, setSelectedTab] = useState('bank');
@@ -182,129 +183,72 @@ const [formData, setFormData] = useState({
             <div className="max-w-4xl mx-auto p-4">
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block mb-1 text-sm font-medium">
-              Beneficiary Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="beneficiaryName"
-              value={formData.beneficiaryName}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder=""
-            />
-            {errors.beneficiaryName && (
-              <p className="text-red-500 text-xs mt-1">{errors.beneficiaryName}</p>
-            )}
-          </div>
+          <Input
+            label="Beneficiary Name"
+            name="beneficiaryName"
+            value={formData.beneficiaryName}
+            onChange={handleChange}
+            error={errors.beneficiaryName}
+            required
+          />
           
-          <div>
-            <label className="block mb-1 text-sm font-medium">
-              Bank Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="bankName"
-              value={formData.bankName}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder=""
-            />
-            {errors.bankName && (
-              <p className="text-red-500 text-xs mt-1">{errors.bankName}</p>
-            )}
-          </div>
+          <Input
+            label="Bank Name"
+            name="bankName"
+            value={formData.bankName}
+            onChange={handleChange}
+            error={errors.bankName}
+            required
+          />
           
-          <div>
-            <label className="block mb-1 text-sm font-medium">
-              Account Number <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="accountNumber"
-              value={formData.accountNumber}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder=""
-            />
-            {errors.accountNumber && (
-              <p className="text-red-500 text-xs mt-1">{errors.accountNumber}</p>
-            )}
-          </div>
+          <Input
+            label="Account Number"
+            name="accountNumber"
+            value={formData.accountNumber}
+            onChange={handleChange}
+            error={errors.accountNumber}
+            required
+          />
           
-          <div>
-            <label className="block mb-1 text-sm font-medium">
-              Confirm Account Number <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="confirmAccountNumber"
-              value={formData.confirmAccountNumber}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder=""
-            />
-            {errors.confirmAccountNumber && (
-              <p className="text-red-500 text-xs mt-1">{errors.confirmAccountNumber}</p>
-            )}
-          </div>
+          <Input
+            label="Confirm Account Number"
+            name="confirmAccountNumber"
+            value={formData.confirmAccountNumber}
+            onChange={handleChange}
+            error={errors.confirmAccountNumber}
+            required
+          />
           
-          <div>
-            <label className="block mb-1 text-sm font-medium">
-              IFSC Code <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="ifscCode"
-              value={formData.ifscCode}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder=""
-            />
-            {errors.ifscCode && (
-              <p className="text-red-500 text-xs mt-1">{errors.ifscCode}</p>
-            )}
-          </div>
+          <Input
+            label="IFSC Code"
+            name="ifscCode"
+            value={formData.ifscCode}
+            onChange={handleChange}
+            error={errors.ifscCode}
+            required
+          />
           
-          <div>
-            <label className="block mb-1 text-sm font-medium">
-              Amount <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-                ₹
-              </div>
-              <input
-                type="text"
-                name="amount"
-                value={formData.amount}
-                onChange={handleChange}
-                className="w-full pl-7 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter Amount"
-              />
-            </div>
-            {errors.amount && (
-              <p className="text-red-500 text-xs mt-1">{errors.amount}</p>
-            )}
-          </div>
+          <Input
+            label="Amount"
+            name="amount"
+            value={formData.amount}
+            onChange={handleChange}
+            error={errors.amount}
+            required
+            leftIcon="₹"
+            placeholder="Enter Amount"
+          />
         </div>
         
         <div className="mb-6">
-          <label className="block mb-1 text-sm font-medium">
-            Reason for Refund <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
+          <Input
+            label="Reason for Refund"
             name="reason"
             value={formData.reason}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder=""
+            error={errors.reason}
+            required
           />
-          {errors.reason && (
-            <p className="text-red-500 text-xs mt-1">{errors.reason}</p>
-          )}
         </div>
         
         <div className="flex justify-end">
@@ -387,15 +331,14 @@ const CreditCardTab = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 items-center mt-8">
-        <div className="relative w-full">
-          <input
-            type="text"
+        <div className="w-full">
+          <Input
             value={amount}
             onChange={handleAmountChange}
             placeholder="Amount"
-            className="w-full py-3 px-4 pl-8 border border-gray-300 rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            leftIcon="₹"
+            className="w-full py-3 px-4 pl-8  text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
         </div>
         
         <button
@@ -433,41 +376,50 @@ const BankTransferTab = ({ accounts, handleCopy, copiedText }) => {
             </div>
 
             <div className="space-y-3">
-              <div className="relative">
-                <div className="border border-gray-200 rounded-md py-3 px-4 bg-gray-50 flex justify-between items-center">
-                  <span className="text-gray-700">{account.accountNumber}</span>
+              <Input
+                label="Account Number"
+                value={account.accountNumber}
+                readOnly
+                rightIcon={
                   <button 
                     onClick={() => handleCopy(account.accountNumber, `account-${index}`)}
                     className="text-gray-500 hover:text-blue-600"
                   >
                     {copiedText === `account-${index}` ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </button>
-                </div>
-              </div>
+                }
+                className="bg-gray-50"
+              />
               
-              <div className="relative">
-                <div className="border border-gray-200 rounded-md py-3 px-4 bg-gray-50 flex justify-between items-center">
-                  <span className="text-gray-700">{account.ifscCode}</span>
+              <Input
+                label="IFSC Code"
+                value={account.ifscCode}
+                readOnly
+                rightIcon={
                   <button 
                     onClick={() => handleCopy(account.ifscCode, `ifsc-${index}`)}
                     className="text-gray-500 hover:text-blue-600"
                   >
                     {copiedText === `ifsc-${index}` ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </button>
-                </div>
-              </div>
+                }
+                className="bg-gray-50"
+              />
               
-              <div className="relative">
-                <div className="border border-gray-200 rounded-md py-3 px-4 bg-gray-50 flex justify-between items-center">
-                  <span className="text-gray-700">{account.beneficiary}</span>
+              <Input
+                label="Beneficiary"
+                value={account.beneficiary}
+                readOnly
+                rightIcon={
                   <button 
                     onClick={() => handleCopy(account.beneficiary, `beneficiary-${index}`)}
                     className="text-gray-500 hover:text-blue-600"
                   >
                     {copiedText === `beneficiary-${index}` ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </button>
-                </div>
-              </div>
+                }
+                className="bg-gray-50"
+              />
             </div>
           </div>
         ))}
