@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -13,10 +13,41 @@ import DetailsPage from './pages/details'
 import ProflePage from "./pages/profile"
 import ResetPassword from './pages/resetPassword'
 import Print from './pages/print/print'
+import Loader from "./components/loader";
 // import NotFound from "./pages/NotFound";
 import "./App.css";
+import { MainBackground } from "./assets";
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate initial loading (e.g., auth check, data fetching)
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500); // Adjust timing as needed
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+    <>
+    <div 
+    style={{
+      backgroundImage: `url(${MainBackground})`,
+      backgroundSize: "100%",
+      backgroundPosition: "center",
+      backgroundRepeat: "repeat",
+      width: "100%",
+    }}
+    className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
+    <Loader />
+    </div>
+    </>
+    );
+  }
+
   return (
     <Router>
       <AuthProvider>
@@ -83,7 +114,6 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/download"
             element={
