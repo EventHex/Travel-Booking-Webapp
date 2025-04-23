@@ -29,8 +29,15 @@ export const BackPassportForm = ({
     try {
       const formData = new FormData();
       formData.append("passportImage", file);
+      formData.append("side", "back");
 
-      const response = await instance.post("/passport/process-back", formData, {
+      // Add this line to include the passport ID:
+      const passportId = localStorage.getItem("currentPassportId");
+      if (passportId) {
+        formData.append("passportId", passportId);
+      }
+
+      const response = await instance.post("/passport/process", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -48,7 +55,6 @@ export const BackPassportForm = ({
           fathersName: result.data.fathersName || "",
           mothersName: result.data.mothersName || "",
         });
-        setBackImageUrl(result.data.backImageUrl || null);
       } else {
         setProcessingError(result.error || "Failed to process passport");
         console.error("Error processing passport:", result.error);
