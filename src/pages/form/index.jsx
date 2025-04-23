@@ -39,12 +39,16 @@ const TravelVisaBooking = () => {
   const destination = searchParams.get("destination") || "";
   const travelDate = searchParams.get("travelDate") || "";
   const returnDate = searchParams.get("returnDate") || "";
+  const purpose = searchParams.get("purpose") || "";
+  const processName = searchParams.get("process_name") || "";
 
   const searchData = {
     goingTo,
     destination,
     travelDate,
     returnDate,
+    purpose,
+    processName
   };
 
   useEffect(() => {
@@ -106,11 +110,7 @@ const TravelVisaBooking = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const visaOptions = [
-    "Tourist Visa",
-    "Business Visa",
-    "Student Visa",
-    "Work Visa",
-    "Transit Visa",
+   purpose
   ];
 
   useEffect(() => {
@@ -254,6 +254,8 @@ const TravelVisaBooking = () => {
       // Add visa details
       formData.append("visaFor", "Individual");
       formData.append("visaType", visaType);
+      formData.append("purpose", purpose);
+      formData.append("process_name", processName);
       formData.append("visaCountry", destination);
       formData.append("travelDateFrom", travelDate);
       formData.append("travelDateTo", returnDate);
@@ -313,9 +315,7 @@ const TravelVisaBooking = () => {
 
   const UploadForm = () => {
     const Visa = [
-      { value: 1, label: "goldern visa" },
-      { value: 2, label: "job visa" },
-      { value: 3, label: "visiting visa" },
+      { value : purpose, label : purpose},
     ];
 
     // console.log(frontFormData);
@@ -371,7 +371,7 @@ const TravelVisaBooking = () => {
                 <CustomSelect
                   labelClass={"12px"}
                   className={"py-[11px]"}
-                  placeholder={"Tourist Visa"}
+                  placeholder={"Select Visa"}
                   label={"Visa Type"}
                   options={Visa}
                 />
