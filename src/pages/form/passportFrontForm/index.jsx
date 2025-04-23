@@ -87,6 +87,7 @@ export const FrontPassportForm = ({
       // Create FormData for API request
       const formData = new FormData();
       formData.append("passportImage", file);
+      formData.append("side", "front");
 
       try {
         const response = await instance.post("/passport/process", formData, {
@@ -100,6 +101,10 @@ export const FrontPassportForm = ({
         }
 
         const data = response.data;
+        // After successful processing:
+        if (data.passportId) {
+          localStorage.setItem("currentPassportId", data.passportId);
+        }
         console.log(data, "data");
         console.log("Response data:", data);
 
@@ -121,17 +126,12 @@ export const FrontPassportForm = ({
             firstName: data.data.firstName || "",
             lastName: data.data.lastName || "",
             nationality: data.data.nationality || "",
-            sex:
-              data.data.sex === "MALE"
-                ? "M"
-                : data.data.sex === "FEMALE"
-                ? "F"
-                : "",
-            dateOfBirth: formatDate(data.data.dateOfBirth),
+            sex: data.data.sex === "M" ? "M" : data.data.sex === "F" ? "F" : "",
+            dateOfBirth: formatDate(data.data.dob),
             placeOfBirth: data.data.placeOfBirth || "",
             placeOfIssue: data.data.placeOfIssue || "",
             dateOfIssue: formatDate(data.data.dateOfIssue),
-            dateOfExpiry: formatDate(data.data.dateOfExpiry),
+            dateOfExpiry: formatDate(data.data.expiryDate),
           };
 
           console.log("Updating form data with:", updatedFormData);
