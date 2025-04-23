@@ -13,7 +13,7 @@ import { MainBackground } from "../../assets";
 import instance from "../../instance";
 import Input from "../../components/input";
 import { CustomSelect } from "../../components/dropdown";
-
+import Loader from "../../components/loader";
 const Index = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
@@ -780,11 +780,9 @@ const Index = () => {
       <Header />
 
       {loading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-lg">
-            <p className="text-lg">Loading...</p>
-          </div>
-        </div>
+        <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
+       <Loader />
+      </div>
       )}
 
       {error && (
