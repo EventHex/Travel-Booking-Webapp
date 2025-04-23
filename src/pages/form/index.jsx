@@ -4,7 +4,7 @@ import { FrontPassportForm } from "./passportFrontForm";
 import { BackPassportForm } from "./passportBackForm";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
 import File from "../../components/file";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import { SingleSelect } from "../../components/dropdown";
 import { FlightHotelBooking } from "./FlightHotalBooking";
 import { UploadTravelerPhoto } from "./travelBooking";
@@ -35,6 +35,9 @@ import instance from "../../instance";
 
 const TravelVisaBooking = () => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const { purpose, price, title, details } = location.state || {};
+  
   const goingTo = searchParams.get("goingTo") || "";
   const destination = searchParams.get("destination") || "";
   const travelDate = searchParams.get("travelDate") || "";
@@ -45,11 +48,13 @@ const TravelVisaBooking = () => {
     destination,
     travelDate,
     returnDate,
+    purpose,
+    price
   };
 
   useEffect(() => {
     console.log("Received search data:", searchData);
-  }, [goingTo, destination, travelDate, returnDate]);
+  }, [goingTo, destination, travelDate, returnDate, purpose, price]);
 
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
@@ -106,11 +111,7 @@ const TravelVisaBooking = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const visaOptions = [
-    "Tourist Visa",
-    "Business Visa",
-    "Student Visa",
-    "Work Visa",
-    "Transit Visa",
+   purpose
   ];
 
   useEffect(() => {
@@ -254,6 +255,8 @@ const TravelVisaBooking = () => {
       // Add visa details
       formData.append("visaFor", "Individual");
       formData.append("visaType", visaType);
+      formData.append("purpose", purpose);
+      formData.append("price", price);
       formData.append("visaCountry", destination);
       formData.append("travelDateFrom", travelDate);
       formData.append("travelDateTo", returnDate);
@@ -261,6 +264,7 @@ const TravelVisaBooking = () => {
       formData.append("status", "Submitted");
       formData.append("applicationDetails", "Application Complete");
 
+      console.log(formData, "formData");
       // Add all files
       if (travelerPhoto) {
         formData.append("travelerPhoto", travelerPhoto);
@@ -313,9 +317,7 @@ const TravelVisaBooking = () => {
 
   const UploadForm = () => {
     const Visa = [
-      { value: 1, label: "goldern visa" },
-      { value: 2, label: "job visa" },
-      { value: 3, label: "visiting visa" },
+      { value : purpose, label : purpose},
     ];
 
     // console.log(frontFormData);
@@ -371,7 +373,7 @@ const TravelVisaBooking = () => {
                 <CustomSelect
                   labelClass={"12px"}
                   className={"py-[11px]"}
-                  placeholder={"Tourist Visa"}
+                  placeholder={"Select Visa"}
                   label={"Visa Type"}
                   options={Visa}
                 />
@@ -427,12 +429,12 @@ const TravelVisaBooking = () => {
                   Visa Information
                 </h2>
                 <div className="space-y-2">
-                  <p className="text-gray-600">Vietnam - Vietnam E-Visa</p>
-                  <p className="text-gray-600">Vietnam - Vietnam E-Visa</p>
+                  <p className="text-gray-600">{title || "Visa Information"}</p>
+                  <p className="text-gray-600">{purpose || "Visa Purpose"}</p>
                   <div className="mt-4">
-                    <p className="text-gray-600">Travelers: 2</p>
+                    <p className="text-gray-600">Travelers: 1</p>
                     <p className="text-gray-600">
-                      Travel Dates: Feb 27, 2025 - Feb 27, 2025
+                      Travel Dates: {travelDate} - {returnDate}
                     </p>
                   </div>
                 </div>
@@ -514,15 +516,15 @@ const TravelVisaBooking = () => {
               <div className="space-y-4">
                 <div className="flex justify-between border-b pb-2 border-[#868C98] items-center">
                   <span className="text-gray-600">Traveller 1</span>
-                  <span className="text-gray-800">₹13,519</span>
+                  <span className="text-gray-800">{price || "₹0"}</span>
                 </div>
                 <div className="flex justify-between items-center border-b pb-2 border-[#868C98] font-medium">
                   <span className="text-gray-800">Total</span>
-                  <span className="text-gray-800">₹13,519</span>
+                  <span className="text-gray-800">{price || "₹0"}</span>
                 </div>
                 <div className="flex justify-betweenitems-center text-sm">
                   <span className="text-gray-600">Current Wallet Balance</span>
-                  <span className="text-gray-800">₹13,519</span>
+                  <span className="text-gray-800">{price || "₹0"}</span>
                 </div>
               </div>
               <div className="  flex justify-end">
