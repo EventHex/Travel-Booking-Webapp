@@ -94,6 +94,7 @@ useEffect(() => {
           
           const visaData = visaDataArray.map((visa) => ({
             title: visa.process_name,
+            purpose: visa.purpose,
             status: "approved",
             message: `Estimated visa arrival by ${new Date(visa.eta_timestamp * 1000).toLocaleDateString()}`,
             details: {
@@ -409,7 +410,7 @@ useEffect(() => {
                           </span>
                         </div>
                         <Link
-                          to="/form"
+                          to={`/form?purpose=${option.purpose}&process_name=${encodeURIComponent(option.title)}`}
                           className="flex justify-end sm:justify-start"
                         >
                           <button className="px-4 sm:px-6 py-2 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-700 hover:text-white transition-colors whitespace-nowrap">
