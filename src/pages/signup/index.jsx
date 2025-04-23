@@ -240,7 +240,7 @@ const Signup = () => {
                       name="userType"
                       value={formData.userType}
                       onChange={handleChange}
-                      className="w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-3 bg-white border border-gray-300 rounded-[14px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     >
                       <option value="">Select User Type</option>
@@ -268,7 +268,7 @@ const Signup = () => {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="John Doe"
-                        className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-[14px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       />
                     </div>
@@ -289,7 +289,7 @@ const Signup = () => {
                           value={formData.companyName}
                           onChange={handleChange}
                           placeholder="Company Name"
-                          className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-[14px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                           required
                         />
                       </div>
@@ -310,7 +310,7 @@ const Signup = () => {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="john@example.com"
-                        className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="pl-10 w-full p-3 bg-white border border-gray-300 rounded-[14px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       />
                     </div>
@@ -321,7 +321,7 @@ const Signup = () => {
                       Phone Number
                     </label>
                     <div className="relative" ref={dropdownRef}>
-                      <div className="flex items-center w-full p-4 bg-white border border-gray-300 rounded-full">
+                      <div className="flex items-center w-full p-4 bg-white border border-gray-300 rounded-[14px]">
                         <div className="flex items-center min-w-[90px]">
                           <Phone className="h-5 w-5 text-gray-400 mr-2" />
                           <button
@@ -345,7 +345,7 @@ const Signup = () => {
                         />
                       </div>
                       {showCountryList && (
-                        <div className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-300 rounded-xl shadow-lg z-50 max-h-[320px] overflow-hidden">
+                        <div className="absolute left-0 top-full mt-1 w-64 bg-white border border-gray-300 rounded-[14px]shadow-lg z-50 max-h-[320px] overflow-hidden">
                           <div className="p-2 border-b border-gray-200">
                             <div className="relative">
                               <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -355,7 +355,7 @@ const Signup = () => {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search country"
-                                className="w-full pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
+                                className="w-full pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-[14px] focus:outline-none focus:border-blue-500"
                               />
                             </div>
                           </div>
@@ -404,7 +404,7 @@ const Signup = () => {
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
                     placeholder="Enter OTP sent to your phone"
-                    className="w-full p-3 bg-white border border-gray-300 rounded-2xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 bg-white border border-gray-300 rounded-[14px] text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
@@ -413,7 +413,7 @@ const Signup = () => {
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full p-3 bg-blue-500 text-white rounded-2xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="w-full p-3 bg-blue-500 text-white rounded-[14px] hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   {otpSent ? "Verify OTP & Sign Up" : "Get OTP on WhatsApp"}
                 </button>

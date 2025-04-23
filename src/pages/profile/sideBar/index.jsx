@@ -323,7 +323,7 @@ const Index = ({ isNarrow, onOptionSelect }) => {
       
       <div className="rounded-xl  flex flex-col gap-3 bg-gradient-to-b">
         {/* Blue links section */}
-        {renderBlueLink("passport", "passport")}
+        {renderBlueLink("Passport", "passport")}
         {renderBlueLink("Traveller Photo", "traveller-photo")}
         
         {/* Review and Submit options */}

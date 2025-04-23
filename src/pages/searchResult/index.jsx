@@ -278,9 +278,7 @@ useEffect(() => {
                     goingTo: formData.goingTo,
                   }}
                   onInputChange={handleInputChange}
-                  // onInputChange={(field, value) =>
-                  //   handleInputChange(field, value)
-                  // }
+                
                   onFocus={(field) => handleInputFocus(field)}
                   onBlur={handleInputBlur}
                   inputRef={inputRef}

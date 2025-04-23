@@ -4,9 +4,9 @@ import Sidebar from "./sideBar";
 import Transaction from "./transaction";
 import Overstay from "./Overstay";
 import Training from "./Training";
-import Password from "./password";
+import   PasswordChangeDialog  from "./password";
 import Signout from "./signout";
-
+import FileComponent from "../../components/file";
 import Loadwallet from "./LaodWallet";
 import { PhoneCall, AlertTriangle, Upload, Save } from "lucide-react";
 import { MainBackground } from "../../assets";
@@ -177,377 +177,555 @@ const Index = () => {
     switch (selectedOption) {
       case "profile":
         return (
+          // <div className=" w-full">
+          //   <div className="flex   flex-col   md:flex-row gap-4 w-full max-w-6xl   mb-10">
+          //     <div className="bg-gray-100 rounded-xl p-6 flex-1 shadow-sm">
+          //       <div className="flex items-center gap-2 mb-3">
+          //         <AlertTriangle className="text-red-500" size={24} />
+          //         <h2 className="font-[600] text-md text-gray-800">
+          //           Atlys Emergency 24x7 Hotline:
+          //         </h2>
+          //         <a
+          //           href="tel:+91 22 48934242"
+          //           className="text-blue-600 font-medium"
+          //         >
+          //           +91 22 48934242
+          //         </a>
+          //       </div>
+          //       <p className="text-black/90   leading-6 ml-1">
+          //         Please only call if it's a real emergency or escalation. For
+          //         everything else, please create a support ticket.
+          //       </p>
+          //     </div>
+
+          //     <div className="bg-gray-100 rounded-xl  p-6 flex-1 shadow-sm">
+          //       <div className="flex items-center    gap-2 mb-4">
+          //         <PhoneCall className="text-gray-700" size={20} />
+          //         <h2 className="font-medium text-md text-gray-800">
+          //           Have questions about the product?
+          //         </h2>
+          //       </div>
+          //       <div className="flex ">
+          //         <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 rounded-xl  text-[16px] font-[400] transition duration-200">
+          //           Join product demo call
+          //         </button>
+          //       </div>
+          //     </div>
+          //   </div>
+          //   {/* ************form ********** */}
+
+          //   <div className="w-full  mx-auto bg-white rounded-xl overflow-hidden shadow-sm">
+          //     <div className="relative">
+          //       {/* Background Gradient */}
+          //       <div className="absolute top-0 right-0 w-1/2 h-full  rounded-bl-full z-0"></div>
+
+          //       {/* Content Container */}
+          //       <div className="relative z-10 p-8">
+          //         <h1 className="text-xl font-bold text-gray-900 mb-8">
+          //           Agency Information
+          //         </h1>
+
+          //         <div className="flex  flex-col  w-full  ">
+          //           <div className="flex   gap-4 w-full">
+          //           <div className="w-[50%]">
+          //             {" "}
+          //             <Input label="Account Type" />
+          //           </div>
+          //           <div className="w-[50%]">
+          //             {" "}
+          //             <Input label="Contact Number" />
+          //           </div>
+          //           </div>
+          //           <div>
+          //             <CustomSelect
+          //               labelClass={"12px"}
+          //               className={""}
+          //               placeholder={"Tourist Visa"}
+          //               label={"Country"}
+          //               // options={Visa}
+          //             />
+          //           </div>
+          //         </div>
+
+          //         {/* GST Certificate */}
+          //         <div className="mt-8 space-y-2">
+          //           <label className="block text-sm font-medium text-gray-900">
+          //             GST Certificate
+          //           </label>
+          //           <p className="text-sm text-gray-600">
+          //             GST Input Credit will not be available if GST certificate
+          //             is not uploaded
+          //           </p>
+
+          //           <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-8">
+          //             <div className="flex flex-col items-center justify-center text-center">
+          //               <p className="text-gray-500 text-lg">
+          //                 Drag and drop files to upload
+          //               </p>
+          //               <p className="text-gray-400 mt-2">or</p>
+          //               <button className="mt-4 px-6 py-2 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+          //                 Select file
+          //               </button>
+          //               <p className="text-gray-400 text-sm mt-4">
+          //                 Supports PDF.
+          //               </p>
+          //               <p className="text-gray-400 text-sm">
+          //                 Max file size 5MB
+          //               </p>
+          //             </div>
+          //           </div>
+          //         </div>
+          //       </div>
+          //     </div>
+          //     <div className="w-full p-8">
+          //       <div className="space-y-6 ">
+          //         {/* Cancelled Cheque Section */}
+          //         <div>
+          //           <h2 className="text-lg font-medium text-gray-900 mb-4">
+          //             Cancelled Cheque
+          //           </h2>
+
+          //           {/* Upload Box */}
+          //           <div className="border-2 border-dashed border-gray-300 rounded-lg  p-8">
+          //             <div className="flex flex-col items-center justify-center text-center">
+          //               <p className="text-gray-500">
+          //                 Drag and drop files to upload
+          //               </p>
+          //               <p className="text-gray-400 mt-2">or</p>
+          //               <button className="mt-4 px-6 py-2 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+          //                 Select file
+          //               </button>
+          //               <p className="text-gray-400 text-sm mt-4">
+          //                 Supports JPEG, JPG, PDF, PNG.
+          //               </p>
+          //               <p className="text-gray-400 text-sm">
+          //                 Max file size 5MB
+          //               </p>
+          //             </div>
+          //           </div>
+          //         </div>
+
+          //         {/* Divider */}
+          //         <div className="w-full border-t border-gray-200"></div>
+
+          //         {/* Address Form */}
+          //         <div className="space-y-6">
+          //           {/* Address Line 1 */}
+          //           <div>
+          //             <label
+          //               htmlFor="address-line-1"
+          //               className="block text-sm font-medium text-gray-700 mb-1"
+          //             >
+          //               Address Line 1
+          //             </label>
+          //             <input
+          //               type="text"
+          //               id="address-line-1"
+          //               className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          //               name="addressLine1"
+          //               value={agencyData.addressLine1}
+          //               onChange={handleInputChange}
+          //             />
+          //           </div>
+
+          //           {/* Address Line 2 */}
+          //           <div>
+          //             <label
+          //               htmlFor="address-line-2"
+          //               className="block text-sm font-medium text-gray-700 mb-1"
+          //             >
+          //               Address Line 2
+          //             </label>
+          //             <input
+          //               type="text"
+          //               id="address-line-2"
+          //               className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          //               name="addressLine2"
+          //               value={agencyData.addressLine2}
+          //               onChange={handleInputChange}
+          //             />
+          //           </div>
+
+          //           {/* City, State, Zip Grid */}
+          //           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          //             {/* City */}
+          //             <div>
+          //               <label
+          //                 htmlFor="city"
+          //                 className="block text-sm font-medium text-gray-700 mb-1"
+          //               >
+          //                 City
+          //               </label>
+          //               <input
+          //                 type="text"
+          //                 id="city"
+          //                 className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          //                 name="city"
+          //                 value={agencyData.city}
+          //                 onChange={handleInputChange}
+          //               />
+          //             </div>
+
+          //             {/* State */}
+          //             <div>
+          //               <label
+          //                 htmlFor="state"
+          //                 className="block text-sm font-medium text-gray-700 mb-1"
+          //               >
+          //                 State
+          //               </label>
+          //               <input
+          //                 type="text"
+          //                 id="state"
+          //                 className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          //                 name="state"
+          //                 value={agencyData.state}
+          //                 onChange={handleInputChange}
+          //               />
+          //             </div>
+
+          //             {/* Zip Code */}
+          //             <div>
+          //               <label
+          //                 htmlFor="zip-code"
+          //                 className="block text-sm font-medium text-gray-700 mb-1"
+          //               >
+          //                 Zip Code
+          //               </label>
+          //               <input
+          //                 type="text"
+          //                 id="zip-code"
+          //                 className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          //                 name="zipcode"
+          //                 value={agencyData.zipcode}
+          //                 onChange={handleInputChange}
+          //               />
+          //             </div>
+          //           </div>
+          //         </div>
+
+          //         {/* Save Button */}
+          //         <div className="flex justify-end mt-6">
+          //           <button
+          //             onClick={handleSave}
+          //             disabled={loading}
+          //             className="px-6 py-3 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center disabled:opacity-50"
+          //           >
+          //             <Save className="w-5 h-5 mr-2" />
+          //             {loading ? "Saving..." : "Save"}
+          //           </button>
+          //         </div>
+          //       </div>
+          //     </div>
+          //   </div>
+          //   <div className="w-full  mx-auto pt-5">
+          //     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+          //       {/* Heading */}
+          //       <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          //         Aadhar details
+          //       </h1>
+
+          //       {/* Divider */}
+          //       <div className="w-full border-t border-gray-200 mb-8"></div>
+
+          //       {/* Form Fields */}
+          //       <div className="space-y-8">
+          //         {/* Name and Aadhar Number Row */}
+          //         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          //           {/* Name Field */}
+          //           <div className="">
+          //             <label
+          //               htmlFor="aadhar-name"
+          //               className="block text-base text-gray-700"
+          //             >
+          //               Name as per Aadhar
+          //             </label>
+          //             <input
+          //               type="text"
+          //               id="aadhar-name"
+          //               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          //               name="nameAsPerAadhar"
+          //               value={agencyData.nameAsPerAadhar}
+          //               onChange={handleInputChange}
+          //             />
+          //           </div>
+
+          //           {/* Aadhar Number Field */}
+          //           <div className="">
+          //             <label
+          //               htmlFor="aadhar-number"
+          //               className="block text-base text-gray-700"
+          //             >
+          //               Aadhar number
+          //             </label>
+          //             <input
+          //               type="text"
+          //               id="aadhar-number"
+          //               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          //               name="aadharNumber"
+          //               value={agencyData.aadharNumber}
+          //               onChange={handleInputChange}
+          //             />
+          //           </div>
+          //         </div>
+
+          //         {/* Address Field */}
+          //         <div className="space-y-2">
+          //           <label
+          //             htmlFor="address"
+          //             className="block text-base text-gray-700"
+          //           >
+          //             Address
+          //           </label>
+          //           <input
+          //             type="text"
+          //             id="address"
+          //             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          //             name="address"
+          //             value={agencyData.address}
+          //             onChange={handleInputChange}
+          //           />
+          //         </div>
+          //       </div>
+          //     </div>
+          //   </div>
+          //   <div className="w-full  mx-auto mt-10">
+          //     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+          //       {/* Heading */}
+          //       <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          //         Office Photo
+          //       </h1>
+
+          //       {/* Divider */}
+          //       <div className="w-full border-t border-gray-200 mb-8"></div>
+
+          //       {/* Upload Section */}
+          //       <div className="space-y-2">
+          //         <label className="block text-base text-gray-700 mb-2">
+          //           Office photo
+          //         </label>
+
+          //         {/* Drag and Drop Area */}
+          //         <div
+          //           className="border-2 border-dashed border-gray-300 rounded-lg p-8"
+          //           onDrop={handleDrop}
+          //           onDragOver={handleDragOver}
+          //         >
+          //           <div className="flex flex-col items-center justify-center text-center">
+          //             <p className="text-gray-500">
+          //               Drag and drop files to upload
+          //             </p>
+          //             <p className="text-gray-400 mt-2">or</p>
+
+          //             {/* File Input Button */}
+          //             <label className="mt-4 px-6 py-2 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer">
+          //               <span>Select file</span>
+          //               <input
+          //                 type="file"
+          //                 className="hidden"
+          //                 onChange={handleFileChange}
+          //                 accept=".jpeg,.jpg,.pdf,.png"
+          //               />
+          //             </label>
+
+          //             {/* File Type Info */}
+          //             <p className="text-gray-400 text-sm mt-4">
+          //               Supports JPEG, JPG, PDF, PNG.
+          //             </p>
+          //             <p className="text-gray-400 text-sm">Max file size 5MB</p>
+
+          //             {/* Show selected file if any */}
+          //             {file && (
+          //               <div className="mt-4 text-sm text-indigo-600">
+          //                 Selected file: {file.name}
+          //               </div>
+          //             )}
+          //           </div>
+          //         </div>
+          //       </div>
+          //     </div>
+          //   </div>
+          // </div>
+
+
+
           <div className=" w-full">
-            <div className="flex   flex-col   md:flex-row gap-4 w-full max-w-6xl   mb-10">
-              {/* Emergency Hotline Card */}
-              <div className="bg-gray-100 rounded-xl p-6 flex-1 shadow-sm">
-                <div className="flex items-center gap-2 mb-3">
-                  <AlertTriangle className="text-red-500" size={24} />
-                  <h2 className="font-[600] text-md text-gray-800">
-                    Atlys Emergency 24x7 Hotline:
-                  </h2>
-                  <a
-                    href="tel:+91 22 48934242"
-                    className="text-blue-600 font-medium"
-                  >
-                    +91 22 48934242
-                  </a>
-                </div>
-                <p className="text-black/90   leading-6 ml-1">
-                  Please only call if it's a real emergency or escalation. For
-                  everything else, please create a support ticket.
-                </p>
+          <div className="flex   flex-col   md:flex-row gap-4 w-full max-w-6xl   mb-10">
+            {/* Emergency Hotline Card */}
+            <div className="bg-gray-100 rounded-xl p-6 flex-1 shadow-sm">
+              <div className="flex items-center gap-2 mb-3">
+                <AlertTriangle className="text-red-500" size={24} />
+                <h2 className="font-[600] text-md text-gray-800">
+                  Atlys Emergency 24x7 Hotline:
+                </h2>
+                <a
+                  href="tel:+91 22 48934242"
+                  className="text-blue-600 font-medium"
+                >
+                  +91 22 48934242
+                </a>
               </div>
-
-              {/* Product Questions Card */}
-              <div className="bg-gray-100 rounded-xl  p-6 flex-1 shadow-sm">
-                <div className="flex items-center    gap-2 mb-4">
-                  <PhoneCall className="text-gray-700" size={20} />
-                  <h2 className="font-medium text-md text-gray-800">
-                    Have questions about the product?
-                  </h2>
-                </div>
-                <div className="flex ">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 rounded-xl  text-[16px] font-[400] transition duration-200">
-                    Join product demo call
-                  </button>
-                </div>
-              </div>
+              <p className="text-black/90   leading-6 ml-1">
+                Please only call if it's a real emergency or escalation. For
+                everything else, please create a support ticket.
+              </p>
             </div>
-            {/* ************form ********** */}
 
-            <div className="w-full  mx-auto bg-white rounded-xl overflow-hidden shadow-sm">
-              <div className="relative">
-                {/* Background Gradient */}
-                <div className="absolute top-0 right-0 w-1/2 h-full  rounded-bl-full z-0"></div>
-
-                {/* Content Container */}
-                <div className="relative z-10 p-8">
-                  <h1 className="text-xl font-bold text-gray-900 mb-8">
-                    Agency Information
-                  </h1>
-
-                  <div className="flex  flex-col  w-full  ">
-                    <div className="flex   gap-4 w-full">
-                    <div className="w-[50%]">
-                      {" "}
-                      <Input label="Agency Title" />
-                    </div>
-                    <div className="w-[50%]">
-                      {" "}
-                      <Input label="Agency Title" />
-                    </div>
-                    </div>
-                    <div>
-                      <CustomSelect
-                        labelClass={"12px"}
-                        className={""}
-                        placeholder={"Tourist Visa"}
-                        label={"Visa Type"}
-                        // options={Visa}
-                      />
-                    </div>
-                  </div>
-
-                  {/* GST Certificate */}
-                  <div className="mt-8 space-y-2">
-                    <label className="block text-sm font-medium text-gray-900">
-                      GST Certificate
-                    </label>
-                    <p className="text-sm text-gray-600">
-                      GST Input Credit will not be available if GST certificate
-                      is not uploaded
-                    </p>
-
-                    <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-8">
-                      <div className="flex flex-col items-center justify-center text-center">
-                        <p className="text-gray-500 text-lg">
-                          Drag and drop files to upload
-                        </p>
-                        <p className="text-gray-400 mt-2">or</p>
-                        <button className="mt-4 px-6 py-2 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                          Select file
-                        </button>
-                        <p className="text-gray-400 text-sm mt-4">
-                          Supports PDF.
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                          Max file size 5MB
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            {/* Product Questions Card */}
+            <div className="  rounded-xl  p-6 flex-1 shadow-sm">
+              <div className="flex items-center    gap-2 mb-4">
+                <PhoneCall className="text-gray-700" size={20} />
+                <h2 className="font-medium text-md text-gray-800">
+                  Have questions about the product?
+                </h2>
               </div>
-              <div className="w-full p-8">
-                <div className="space-y-6 ">
-                  {/* Cancelled Cheque Section */}
-                  <div>
-                    <h2 className="text-lg font-medium text-gray-900 mb-4">
-                      Cancelled Cheque
-                    </h2>
-
-                    {/* Upload Box */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg  p-8">
-                      <div className="flex flex-col items-center justify-center text-center">
-                        <p className="text-gray-500">
-                          Drag and drop files to upload
-                        </p>
-                        <p className="text-gray-400 mt-2">or</p>
-                        <button className="mt-4 px-6 py-2 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                          Select file
-                        </button>
-                        <p className="text-gray-400 text-sm mt-4">
-                          Supports JPEG, JPG, PDF, PNG.
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                          Max file size 5MB
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Divider */}
-                  <div className="w-full border-t border-gray-200"></div>
-
-                  {/* Address Form */}
-                  <div className="space-y-6">
-                    {/* Address Line 1 */}
-                    <div>
-                      <label
-                        htmlFor="address-line-1"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Address Line 1
-                      </label>
-                      <input
-                        type="text"
-                        id="address-line-1"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        name="addressLine1"
-                        value={agencyData.addressLine1}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    {/* Address Line 2 */}
-                    <div>
-                      <label
-                        htmlFor="address-line-2"
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Address Line 2
-                      </label>
-                      <input
-                        type="text"
-                        id="address-line-2"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        name="addressLine2"
-                        value={agencyData.addressLine2}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    {/* City, State, Zip Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {/* City */}
-                      <div>
-                        <label
-                          htmlFor="city"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          City
-                        </label>
-                        <input
-                          type="text"
-                          id="city"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          name="city"
-                          value={agencyData.city}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-
-                      {/* State */}
-                      <div>
-                        <label
-                          htmlFor="state"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          State
-                        </label>
-                        <input
-                          type="text"
-                          id="state"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          name="state"
-                          value={agencyData.state}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-
-                      {/* Zip Code */}
-                      <div>
-                        <label
-                          htmlFor="zip-code"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Zip Code
-                        </label>
-                        <input
-                          type="text"
-                          id="zip-code"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                          name="zipcode"
-                          value={agencyData.zipcode}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Save Button */}
-                  <div className="flex justify-end mt-6">
-                    <button
-                      onClick={handleSave}
-                      disabled={loading}
-                      className="px-6 py-3 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center disabled:opacity-50"
-                    >
-                      <Save className="w-5 h-5 mr-2" />
-                      {loading ? "Saving..." : "Save"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-full  mx-auto pt-5">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                {/* Heading */}
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">
-                  Aadhar details
-                </h1>
-
-                {/* Divider */}
-                <div className="w-full border-t border-gray-200 mb-8"></div>
-
-                {/* Form Fields */}
-                <div className="space-y-8">
-                  {/* Name and Aadhar Number Row */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Name Field */}
-                    <div className="">
-                      <label
-                        htmlFor="aadhar-name"
-                        className="block text-base text-gray-700"
-                      >
-                        Name as per Aadhar
-                      </label>
-                      <input
-                        type="text"
-                        id="aadhar-name"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        name="nameAsPerAadhar"
-                        value={agencyData.nameAsPerAadhar}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-
-                    {/* Aadhar Number Field */}
-                    <div className="">
-                      <label
-                        htmlFor="aadhar-number"
-                        className="block text-base text-gray-700"
-                      >
-                        Aadhar number
-                      </label>
-                      <input
-                        type="text"
-                        id="aadhar-number"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        name="aadharNumber"
-                        value={agencyData.aadharNumber}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Address Field */}
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="address"
-                      className="block text-base text-gray-700"
-                    >
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      name="address"
-                      value={agencyData.address}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-full  mx-auto mt-10">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                {/* Heading */}
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">
-                  Office Photo
-                </h1>
-
-                {/* Divider */}
-                <div className="w-full border-t border-gray-200 mb-8"></div>
-
-                {/* Upload Section */}
-                <div className="space-y-2">
-                  <label className="block text-base text-gray-700 mb-2">
-                    Office photo
-                  </label>
-
-                  {/* Drag and Drop Area */}
-                  <div
-                    className="border-2 border-dashed border-gray-300 rounded-lg p-8"
-                    onDrop={handleDrop}
-                    onDragOver={handleDragOver}
-                  >
-                    <div className="flex flex-col items-center justify-center text-center">
-                      <p className="text-gray-500">
-                        Drag and drop files to upload
-                      </p>
-                      <p className="text-gray-400 mt-2">or</p>
-
-                      {/* File Input Button */}
-                      <label className="mt-4 px-6 py-2 bg-indigo-500 text-white font-medium rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer">
-                        <span>Select file</span>
-                        <input
-                          type="file"
-                          className="hidden"
-                          onChange={handleFileChange}
-                          accept=".jpeg,.jpg,.pdf,.png"
-                        />
-                      </label>
-
-                      {/* File Type Info */}
-                      <p className="text-gray-400 text-sm mt-4">
-                        Supports JPEG, JPG, PDF, PNG.
-                      </p>
-                      <p className="text-gray-400 text-sm">Max file size 5MB</p>
-
-                      {/* Show selected file if any */}
-                      {file && (
-                        <div className="mt-4 text-sm text-indigo-600">
-                          Selected file: {file.name}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+              <div className="flex ">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 rounded-xl  text-[16px] font-[400] transition duration-200">
+                  Join product demo call
+                </button>
               </div>
             </div>
           </div>
+          {/* ************form ********** */}
+<div className="w-full flex flex-col gap-5" >
+          <div className="w-full  mx-auto rounded-xl overflow-hidden shadow-sm">
+            <div className="  ">
+              <div className=" p-4">
+                <h1 className="text-xl font-bold text-gray-900 mb-8">
+                  Agency Information
+                </h1>
+
+                <div className="w-full border-t border-gray-200 mb-8"></div>
+
+                <div className="flex flex-col  gap-4">
+                  <div className="flex flex-col md:flex-row items-center w-full gap-4">
+                    <div className="  md:w-[50%] w-full py-1">
+                    <Input
+                          label="Agency Name"
+                          placeholder={"Enter Agency Name"}
+                        />
+                    </div>
+                    <div className="  md:w-[50%] w-full py-1">
+                      <Input
+                        className=""
+                        label="Agency Name"
+                        placeholder={"Enter Agency Name"}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex w-full gap-4">
+                    <div className="w-[100%]">
+                      <div className="  md:w-[50%] w-full py-1">
+                      <CustomSelect
+                        // options={countryOptions}
+                        name="country"
+                        // value={country}
+                        // onChange={(e) => setCountry(e.target.value)}
+                        label="Country"
+                        placeholder={"Select Country"}
+                      />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full  flex  md:flex-row flex-col gap-4 ">
+                    <div className="  md:w-[50%] w-full py-1">
+                      <Input label="GST Number" placeholder={"GST Number"} />
+                    </div>
+                    <div className="  md:w-[50%] w-full py-1">
+                      <Input label="PAN Number" placeholder={"PAN Number"} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* GST Certificate */}
+                <div className="w-full flex flex-col  border-b  border-gray-300 pb-10 gap-4 ">
+                  <div>
+                    <FileComponent head={"GST Certificate"} />
+                  </div>
+                  <div>
+                    <FileComponent head={"Cancelled Cheque"} />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="w-full p-4">
+              <div>
+                <Input
+                  label="Address Line 1"
+                  placeholder={"Address Line 1"}
+                />
+              </div>
+              <div>
+                <Input
+                  label="Address Line 2"
+                  placeholder={"Address Line 2"}
+                />
+              </div>
+
+              <div className="flex gap-4 w-full ">
+                <div className="w-[33.3%] ">
+                  <Input label="City" placeholder={"City"} />
+                </div>
+                <div className="w-[33.3%] ">
+                  <Input label="State" placeholder={"State"} />
+                </div>
+                <div className="w-[33.3%] ">
+                  <Input label="Zip Code" placeholder={"Zip Code"} />
+                </div>
+              </div>
+              <div className="w-full flex justify-end p-4">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 rounded-full  text-[16px] font-[400] transition duration-200">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="w-full p-4  shadow-sm rounded-xl ">
+            <div className="md:py-7 py-4  w-full border-b border-gray-300">
+              <h1 className="text-xl font-bold text-gray-900">
+                Aadhar details
+              </h1>
+            </div>
+
+            <div className="md:py-7 py-4 w-full flex-col flex gap-4">
+              <div className="md:flex-row flex-col flex gap-4 w-full">
+                <div className="md:w-[50%] w-full">
+                  <Input
+                    label="Name as per Aadhar"
+                    placeholder={"Name as per Aadhar"}
+                  />
+                </div>
+                <div className="md:w-[50%] w-full">
+                  <Input
+                    label="Aadhar Number"
+                    placeholder={"Aadhar Number"}
+                  />
+                </div>
+              </div>
+              <div className=" w-full">
+                <Input
+                  label="Address"
+                  placeholder={
+                    "abc House,  PO,abc, Kannur, Kannur, Kerala, India"
+                  }
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+          <div className="w-full  shadow-sm rounded-xl p-4">
+          <div className="md:py-7 py-4  w-full border-b border-gray-300">
+              <h1 className="text-xl font-bold text-gray-900">
+              Office Photo
+              </h1>
+            </div>
+            <div>
+              <FileComponent head={"Office Photo"} />
+            </div>
+            </div>
+          </div>
+        </div>
+        </div>
         );
       case "Transactions":
         return <Transaction />;
@@ -558,7 +736,7 @@ const Index = () => {
       case "Training":
         return <Training />;
       case "changepassword":
-        return <Password />;
+        return <PasswordChangeDialog />;
       case "passport":
         return (
           <div>
