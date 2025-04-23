@@ -388,7 +388,7 @@ const BankTransferTab = ({ accounts, handleCopy, copiedText }) => {
                     {copiedText === `account-${index}` ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </button>
                 }
-                className="bg-gray-50"
+                className=""
               />
               
               <Input
@@ -403,7 +403,7 @@ const BankTransferTab = ({ accounts, handleCopy, copiedText }) => {
                     {copiedText === `ifsc-${index}` ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </button>
                 }
-                className="bg-gray-50"
+                className=""
               />
               
               <Input
@@ -418,7 +418,7 @@ const BankTransferTab = ({ accounts, handleCopy, copiedText }) => {
                     {copiedText === `beneficiary-${index}` ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </button>
                 }
-                className="bg-gray-50"
+                className=""
               />
             </div>
           </div>
