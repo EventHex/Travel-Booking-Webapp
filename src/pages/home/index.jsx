@@ -296,6 +296,7 @@ const HeroSection = () => {
                     className={`text-white py-2 px-5 rounded-xl bg-[#000099] border text-[16px] ${
                       !searchData.destination ||
                       !searchData.goingTo ||
+                      !searchData.returnDate ||
                       !searchData.travelDate
                         ? "opacity-50 cursor-not-allowed"
                         : "hover:bg-[#0000cc]"
@@ -304,7 +305,8 @@ const HeroSection = () => {
                     disabled={
                       !searchData.destination ||
                       !searchData.goingTo ||
-                      !searchData.travelDate
+                      !searchData.travelDate||
+                      !searchData.returnDate
                     }
                   >
                     Search
@@ -352,6 +354,7 @@ const HeroSection = () => {
                         </span>
                       </p>
                     </div>
+                    <div></div>
                   </div>
                 ))}
               </div>

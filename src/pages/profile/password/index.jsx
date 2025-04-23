@@ -3,6 +3,7 @@ import { X, Eye, EyeOff } from "lucide-react";
 import instance from "../../../instance";
 import { useNavigate } from "react-router-dom";
 import Input from "../../../components/input";
+import Loader from "../../../components/Loader";
 
 const password = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -112,7 +113,7 @@ export const PasswordChangeDialog = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md relative">
         <div className="flex justify-between items-center mb-8">
           
@@ -228,7 +229,7 @@ export const PasswordChangeDialog = ({ onClose }) => {
           <div className="flex justify-end space-x-3 mt-8">
             <button
               type="button"
-              className="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-[14px] font-medium"
+              className="px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-base font-medium"
               onClick={handleClose}
               disabled={isLoading}
             >
@@ -236,33 +237,11 @@ export const PasswordChangeDialog = ({ onClose }) => {
             </button>
             <button
               type="submit"
-              className="px-2 py-2 rounded-[14px] bg-indigo-600 text-white hover:bg-indigo-700 text-[14px] font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-base font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading}
             >
               {isLoading ? (
-                <>
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Changing...
-                </>
+                <Loader />
               ) : (
                 <>
                   <svg
