@@ -60,7 +60,7 @@ const AtlysWallet = () => {
     <div className="w-full max-w-5xl min-w-[300px] bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       {/* Header Section */}
       <div className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Atlys Wallet</h1>
+        <h1 className="text-xl font-[500] text-gray-900">Atlys Wallet</h1>
 
         <div className="flex flex-col sm:flex-row mt-4 sm:mt-0 gap-4 w-full sm:w-auto">
           {/* Current Balance */}
@@ -85,12 +85,12 @@ const AtlysWallet = () => {
               {/* Fixed Header */}
               <thead className="sticky top-0 bg-indigo-800 text-white">
                 <tr>
-                  <th className="p-4 text-left font-medium w-1/6">DATE/TIME</th>
-                  <th className="p-4 text-left font-medium w-1/6">DESCRIPTION</th>
-                  <th className="p-4 text-left font-medium w-1/6">TRANSACTION TYPE</th>
-                  <th className="p-4 text-left font-medium w-1/6">PREVIOUS BALANCE</th>
-                  <th className="p-4 text-right font-medium w-1/6">AMOUNT</th>
-                  <th className="p-4 text-right font-medium w-1/6">CURRENT BALANCE</th>
+                  <th className="p-4 text-left  text-[12px] font-medium w-1/6">DATE/TIME</th>
+                  <th className="p-4 text-left  text-[12px] font-medium w-1/6">DESCRIPTION</th>
+                  <th className="p-4 text-left  text-[12px] font-medium w-1/6">TRANSACTION TYPE</th>
+                  <th className="p-4 text-left  text-[12px] font-medium w-1/6">PREVIOUS BALANCE</th>
+                  <th className="p-4 text-right  text-[12px] font-medium w-1/6">AMOUNT</th>
+                  <th className="p-4 text-right  text-[12px] font-medium w-1/6">CURRENT BALANCE</th>
                 </tr>
               </thead>
 
