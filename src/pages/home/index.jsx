@@ -29,7 +29,7 @@ const HeroSection = () => {
   const [activeTab, setActiveTab] = useState("Visas");
   const [citizenOptions, setCitizenOptions] = useState([]);
   const [dropDownPlace, setDropDownPlace] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   // const location = useLocation();
   const [searchParams, setSearchParams] = useState({
     destination: "",
@@ -354,7 +354,7 @@ const HeroSection = () => {
                         </span>
                       </p>
                     </div>
-                    <div></div>
+                
                   </div>
                 ))}
               </div>
@@ -443,8 +443,11 @@ const HeroSection = () => {
     <div
       style={{
         backgroundImage: `url(${MainBackground})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundSize: "100%", // Don't scale the image
+        backgroundPosition: "center", // Start from top left
+        backgroundRepeat: "repeat",
+        width: "100%",
+
       }}
       className="w-full flex items-center justify-center"
     >
