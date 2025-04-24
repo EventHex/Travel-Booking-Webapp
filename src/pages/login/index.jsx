@@ -192,14 +192,14 @@ const Index = () => {
                         <ChevronDown className="h-4 w-4 text-gray-400" />
                       </button>
                     </div>
-                    <div className="w-px  h-6 bg-gray-300 mx-3"></div>
+                    {/* <div className="w-px  h-6 bg-gray-300 mx-3"></div> */}
                     <input
                       type="tel"
                       id="phone"
                       placeholder="234567890"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="flex-1 text-sm md:text-base text-gray-700 focus:outline-none bg-transparent"
+                      className="text-sm md:text-base bg-transparent text-gray-700 focus:outline-none "
                       disabled={isOtpSent}
                     />
                   </div>
@@ -287,7 +287,7 @@ const Index = () => {
                   type="submit"
                   className="   md:py-3 w-[65%]   md:px-4 text-[14px] font-[400] bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  {isOtpSent ? "Verify Your One-Time Password" : "Get WhatsApp Verification Code"}
+                  {isOtpSent ? "Verify OTP" : "Get OTP"}
                 </button>
                 <button
                   type="button"
