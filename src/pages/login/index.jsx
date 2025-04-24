@@ -285,9 +285,9 @@ const Index = () => {
               <div className="flex w-[full] justify-center gap-12 md:gap-4 ">
                 <button
                   type="submit"
-                  className="md:py-3 w-[65%] md:px-4 text-[14px] font-[400] bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="   md:py-3 w-[65%]   md:px-4 text-[14px] font-[400] bg-blue-500 hover:bg-blue-600 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
-                  {isOtpSent ? "Verify Your One-Time Password" : "Get WhatsApp Verification Code"}
+                  {isOtpSent ? "Verify OTP" : "Get OTP"}
                 </button>
                 <button
                   type="button"
