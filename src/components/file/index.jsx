@@ -55,7 +55,7 @@ const FileComponent = ({ className, head, onFileSelect, loading }) => {
           {head}
           <span className="text-red-500">*</span>
         </label>
-        <div className="bg-white border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-6 text-center">
+        <div className="bg-white border-2 border-dashed border-gray-300 rounded-[14px] p-4 md:p-6 text-center">
           {!selectedFile ? (
             <>
               <input
