@@ -86,7 +86,7 @@ useEffect(() => {
     const fetchVisaData = async () => {
       try {
         setIsSearching(true);
-        const response = await instance.get(`/get-visa?origin_country=${searchParams.get("destination")}&destination_country=${searchParams.get("goingTo")}&travel_date=${searchParams.get("returnDate")}`);
+        const response = await instance.get(`/get-visa?origin_country=${searchParams.get("destination")}&destination_country=${searchParams.get("goingTo")}&travel_date=${searchParams.get("travelDate")}`);
 
         console.log(response, "response");
         if (response.data.success && response.data.response) {
@@ -349,7 +349,7 @@ useEffect(() => {
                           : "bg-gradient-to-r from-blue-600 to-blue-500"
                       }`}
                     >
-                      {option.title}
+                      {option.purpose}
                     </div>
                     <div className="p-4 sm:p-6">
                       <div className="flex items-start space-x-3 mb-4 sm:mb-6">
@@ -416,7 +416,11 @@ useEffect(() => {
                             price: parseFloat(option.price.discounted.split(' ')[0]),
                             currency: option.price.discounted.split(' ')[1],
                             title: option.title,
-                            details: option.details
+                            details: option.details,
+                            fromCountry: searchParams.get("destination"),
+                            toCountry: searchParams.get("goingTo"),
+                            travelDate: searchParams.get("travelDate"),
+                            returnDate: searchParams.get("returnDate"),
                           }}
                           className="flex justify-end sm:justify-start"
                         >
