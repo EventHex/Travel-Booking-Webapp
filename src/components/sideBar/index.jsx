@@ -249,7 +249,7 @@ const Index = ({ isNarrow, onClose, onFilterSelect }) => {
         onClick={(e) => sidebarOpen(e)}
         className="w-full rounded-xl  overflow-hidden cursor-pointer"
       >
-        <div className="rounded-xl bg-gradient-to-b">
+        <div className="rounded-xl flex flex-col gap-2 bg-gradient-to-b">
           <div className="space-y-1">
             <div className="p-3 flex justify-center text-gray-500">
               <img src={Search} alt="" className="mx-auto" /> 
@@ -278,7 +278,7 @@ const Index = ({ isNarrow, onClose, onFilterSelect }) => {
             </div>
           ))}
         </div>
-        <div className="rounded-xl bg-gradient-to-b">
+        <div className="rounded-xl flex flex-col gap-2 mb-5 bg-gradient-to-b">
           <div className="space-y-1">
             <div className="p-3 flex justify-center text-gray-500">
               <img src={Filter} alt="" className="mx-auto" /> 
