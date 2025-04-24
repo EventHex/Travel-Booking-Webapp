@@ -105,7 +105,7 @@ const TravelVisaBooking = () => {
   };
 
   const [applicationType, setApplicationType] = useState("individual");
-  const [visaType, setVisaType] = useState("Tourist Visa");
+  const [visaType, setVisaType] = useState(purpose);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -171,24 +171,6 @@ const TravelVisaBooking = () => {
       formData.append("hotelBooking", documents.hotelBooking);
     }
 
-    // const response = await fetch(
-    //   "http://localhost:8078/api/v1/visa-application",
-    //   {
-    //     method: "POST",
-    //     body: formData,
-    //   }
-    // );
-
-    // if (!response.ok) {
-    //   throw new Error("Failed to submit documents");
-    // }
-
-    // const result = await response;
-    // console.log("Documents submitted successfully:", result);
-    // } catch (error) {
-    // console.error("Error submitting documents:", error);
-    // alert("Failed to submit documents. Please try again.");
-    // }
   };
 
   const handleSubmit = async () => {
