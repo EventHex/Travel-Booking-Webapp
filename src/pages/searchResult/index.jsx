@@ -86,7 +86,7 @@ useEffect(() => {
     const fetchVisaData = async () => {
       try {
         setIsSearching(true);
-        const response = await instance.get(`/get-visa?origin_country=${searchParams.get("destination")}&destination_country=${searchParams.get("goingTo")}&travel_date=${searchParams.get("returnDate")}`);
+        const response = await instance.get(`/get-visa?origin_country=${searchParams.get("destination")}&destination_country=${searchParams.get("goingTo")}&travel_date=${searchParams.get("travelDate")}`);
 
         console.log(response, "response");
         if (response.data.success && response.data.response) {
@@ -419,7 +419,8 @@ useEffect(() => {
                             details: option.details,
                             fromCountry: searchParams.get("destination"),
                             toCountry: searchParams.get("goingTo"),
-                            travelDate: searchParams.get("returnDate"),
+                            travelDate: searchParams.get("travelDate"),
+                            returnDate: searchParams.get("returnDate"),
                           }}
                           className="flex justify-end sm:justify-start"
                         >
