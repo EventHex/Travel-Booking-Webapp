@@ -3,7 +3,7 @@ import { X, Eye, EyeOff } from "lucide-react";
 import instance from "../../../instance";
 import { useNavigate } from "react-router-dom";
 import Input from "../../../components/input";
-import Loader from "../../../components/Loader";
+import Loader from "../../../components/loader";
 
 const password = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
