@@ -37,6 +37,8 @@ const TravelVisaBooking = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const [selectedPassport, setSelectedPassport] = useState("");
+  const [passports, setPassports] = useState([]);
   
   // Destructure with default empty object to prevent errors if state is undefined
   const { 
@@ -58,6 +60,29 @@ const TravelVisaBooking = () => {
       navigate("/");
     }
   }, [fromCountry, toCountry, travelDate, returnDate, purpose, price, navigate]);
+
+  useEffect(() => {
+    const fetchPassports = async () => {
+      try {
+        const response = await instance.get('/traveller-information/select');
+        console.log(response.data, "response.data");
+        setPassports(response.data);
+      } catch (error) {
+        console.error('Error fetching passports:', error);
+      }
+    };
+    fetchPassports();
+  }, []);
+
+  // useEffect(() => {
+  //   const fetchPassportData = async () => {
+  //     const response = await instance.get(`/traveller-information?id=${selectedPassport}`);
+  //     console.log(response.data, "response.data");
+  //   };
+  //   if (selectedPassport) {
+  //     fetchPassportData();
+  //   }
+  // }, [selectedPassport, passports]);
 
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
@@ -189,6 +214,8 @@ const TravelVisaBooking = () => {
 
     try {
       // Create FormData for traveler information
+      let travelerId = '';
+      if(selectedPassport === ""){
       const passportInfo = new FormData();
 
       // Append all text fields
@@ -228,8 +255,10 @@ const TravelVisaBooking = () => {
       if (travelerResponse.status !== 200) {
         throw new Error("Failed to create traveler");
       }
-
-      const travelerId = travelerResponse.data.data._id;
+      travelerId = travelerResponse.data.data._id;
+      } else {
+        travelerId = selectedPassport;
+      }
 
       // Create FormData for visa application
       const formData = new FormData();
@@ -299,17 +328,62 @@ const TravelVisaBooking = () => {
     }
   };
 
+  const handlePassportChange = async (selectedOption) => {
+    setSelectedPassport(selectedOption);
+    
+    try {
+      // Fetch traveler information using the selected passport ID
+      const response = await instance.get(`/traveller-information?id=${selectedOption}`);
+      const travelerData = response.data.response;
+
+      // Update front form data
+      setFrontFormData({
+        passportNumber: travelerData.passportNumber || '',
+        firstName: travelerData.firstName || '',
+        lastName: travelerData.lastName || '',
+        nationality: travelerData.nationality || '',
+        sex: travelerData.sex || '',
+        dateOfBirth: travelerData.dateOfBirth ? travelerData.dateOfBirth.split('T')[0] : '',
+        placeOfBirth: travelerData.placeOfBirth || '',
+        placeOfIssue: travelerData.placeOfIssue || '',
+        maritalStatus: travelerData.maritalStatus || '',
+        dateOfIssue: travelerData.dateOfIssue ? travelerData.dateOfIssue.split('T')[0] : '',
+        dateOfExpiry: travelerData.dateOfExpiry ? travelerData.dateOfExpiry.split('T')[0] : '',
+      });
+
+      // Update back form data
+      setBackFormData({
+        fathersName: travelerData.fathersName || '',
+        mothersName: travelerData.mothersName || '',
+      });
+
+      // Set passport images if they exist
+      if (travelerData.passportImageFront) {
+        setFrontImage(travelerData.passportImageFront);
+      }
+      if (travelerData.passportImageBack) {
+        setPreviewUrl(travelerData.passportImageBack);
+      }
+      if (travelerData.travellerPhoto) {
+        setTravelerPhoto(travelerData.travellerPhoto);
+      }
+
+    } catch (error) {
+      console.error('Error fetching traveler information:', error);
+      // Optionally show an error message to the user
+      alert('Failed to fetch traveler information');
+    }
+  };
+
   const UploadForm = () => {
     const Visa = [
-      { value : purpose, label : purpose},
+      { value: purpose, label: purpose },
     ];
 
-    // console.log(frontFormData);
-    // console.log(backFormData);
-
-    console.log(travelerPhoto);
-    console.log(flightTicket);
-    console.log(hotelBooking);
+    const passportOptions = passports.map(passport => ({
+      value: passport.id,
+      label: passport.value
+    }));
 
     return (
       <>
@@ -352,6 +426,19 @@ const TravelVisaBooking = () => {
           </div>
 
           <div className="grid grid-cols-1 items-center md:grid-cols-3 gap-4">
+            <div className="relative">
+              <div className="relative mb-4 md:mb-5">
+                <CustomSelect
+                  labelClass={"12px"}
+                  className={"py-[11px]"}
+                  placeholder={"Select Passport"}
+                  label={"Passport Number"}
+                  options={passportOptions}
+                  value={passportOptions.find(option => option.value === selectedPassport) || ''}
+                  onChange={handlePassportChange}
+                />
+              </div>
+            </div>
             <div className="relative">
               <div className="relative mb-4 md:mb-5">
                 <CustomSelect
@@ -574,6 +661,7 @@ const TravelVisaBooking = () => {
                   setFrontImage={setFrontImage}
                   formData={frontFormData}
                   setFormData={setFrontFormData}
+                  setSelectedPassport={setSelectedPassport}
                 />
                 <BackPassportForm
                   formData={backFormData}

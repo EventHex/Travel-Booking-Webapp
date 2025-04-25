@@ -21,7 +21,7 @@ const CustomSelect = ({
         <select
           name={name}
           value={value}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.value)}
           className={`${className} w-full px-3 py-2  text-[#B2B5C0] text-[14px] pr-10 border border-gray-300 rounded-[14px] focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none`}
         >
           <option value="">{placeholder}</option>
