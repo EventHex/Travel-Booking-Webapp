@@ -254,6 +254,19 @@ const SearchInputDate = ({
     }
   };
 
+  // Added input click handlers
+  const handleTravelDateInputClick = () => {
+    if (travelDateInputRef.current) {
+      travelDateInputRef.current.showPicker();
+    }
+  };
+
+  const handleReturnDateInputClick = () => {
+    if (returnDateInputRef.current) {
+      returnDateInputRef.current.showPicker();
+    }
+  };
+
   return (
     <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
       <div className="w-full">
@@ -275,6 +288,7 @@ const SearchInputDate = ({
             onFocus={() => setTravelDateIsFocused(true)}
             onBlur={() => setTravelDateIsFocused(false)}
             onChange={(e) => onDateChange("travelDate", e.target.value)}
+            onClick={handleTravelDateInputClick}
           />
         </div>
       </div>
@@ -297,6 +311,7 @@ const SearchInputDate = ({
             onFocus={() => setReturnDateIsFocused(true)}
             onBlur={() => setReturnDateIsFocused(false)}
             onChange={(e) => onDateChange("returnDate", e.target.value)}
+            onClick={handleReturnDateInputClick}
           />
         </div>
       </div>
@@ -304,4 +319,5 @@ const SearchInputDate = ({
   );
 };
 
-export { SearchInputText, SearchInputDate };
+export { SearchInputText,
+   SearchInputDate };
