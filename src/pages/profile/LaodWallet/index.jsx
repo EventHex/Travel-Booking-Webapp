@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CreditCard, Building2, Wifi, ArrowDownToLine, Building, Copy, Check } from 'lucide-react';
-import Input from "../../../components/Input";
+import Input from "../../../components/input";
 
 const LoadWallet = () => {
   const [selectedTab, setSelectedTab] = useState('bank');

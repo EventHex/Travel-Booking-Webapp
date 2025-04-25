@@ -4,7 +4,7 @@ import { FrontPassportForm } from "./passportFrontForm";
 import { BackPassportForm } from "./passportBackForm";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
 import File from "../../components/file";
-import { useSearchParams, useLocation } from "react-router-dom";
+import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 import { SingleSelect } from "../../components/dropdown";
 import { FlightHotelBooking } from "./FlightHotalBooking";
 import { UploadTravelerPhoto } from "./travelBooking";
@@ -36,25 +36,28 @@ import instance from "../../instance";
 const TravelVisaBooking = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const { purpose, price, title, details } = location.state || {};
+  const navigate = useNavigate();
   
-  const goingTo = searchParams.get("goingTo") || "";
-  const destination = searchParams.get("destination") || "";
-  const travelDate = searchParams.get("travelDate") || "";
-  const returnDate = searchParams.get("returnDate") || "";
+  // Destructure with default empty object to prevent errors if state is undefined
+  const { 
+    purpose = '', 
+    price = '', 
+    currency = '', 
+    title = '', 
+    details = '', 
+    fromCountry = '', 
+    toCountry = '', 
+    travelDate = '', 
+    returnDate = '' 
+  } = location.state || {};
 
-  const searchData = {
-    goingTo,
-    destination,
-    travelDate,
-    returnDate,
-    purpose,
-    price
-  };
-
+  // Remove unused searchData object since we're using location.state
   useEffect(() => {
-    console.log("Received search data:", searchData);
-  }, [goingTo, destination, travelDate, returnDate, purpose, price]);
+    console.log(fromCountry, toCountry, travelDate, returnDate, purpose, price, "fromCountry, toCountry, travelDate, returnDate, purpose, price");
+    if (!fromCountry || !toCountry || !travelDate || !returnDate || !purpose || !price) {
+      navigate("/");
+    }
+  }, [fromCountry, toCountry, travelDate, returnDate, purpose, price, navigate]);
 
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
@@ -105,7 +108,7 @@ const TravelVisaBooking = () => {
   };
 
   const [applicationType, setApplicationType] = useState("individual");
-  const [visaType, setVisaType] = useState("Tourist Visa");
+  const [visaType, setVisaType] = useState(purpose || '');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -171,24 +174,6 @@ const TravelVisaBooking = () => {
       formData.append("hotelBooking", documents.hotelBooking);
     }
 
-    // const response = await fetch(
-    //   "http://localhost:8078/api/v1/visa-application",
-    //   {
-    //     method: "POST",
-    //     body: formData,
-    //   }
-    // );
-
-    // if (!response.ok) {
-    //   throw new Error("Failed to submit documents");
-    // }
-
-    // const result = await response;
-    // console.log("Documents submitted successfully:", result);
-    // } catch (error) {
-    // console.error("Error submitting documents:", error);
-    // alert("Failed to submit documents. Please try again.");
-    // }
   };
 
   const handleSubmit = async () => {
@@ -253,16 +238,14 @@ const TravelVisaBooking = () => {
       formData.append("travellerInformation", travelerId);
 
       // Add visa details
-      formData.append("visaFor", "Individual");
-      formData.append("visaType", visaType);
       formData.append("purpose", purpose);
       formData.append("price", price);
-      formData.append("visaCountry", destination);
+      formData.append("toCountry", toCountry);
+      formData.append("fromCountry", fromCountry);
       formData.append("travelDateFrom", travelDate);
       formData.append("travelDateTo", returnDate);
       formData.append("dateOfApply", new Date().toISOString());
       formData.append("status", "Submitted");
-      formData.append("applicationDetails", "Application Complete");
 
       console.log(formData, "formData");
       // Add all files
@@ -276,6 +259,7 @@ const TravelVisaBooking = () => {
         formData.append("hotelBooking", hotelBooking);
       }
 
+      console.log(formData, "formData");
       // Submit to visa application API
       const response = await instance.post("/visa-application", formData, {
         headers: {
