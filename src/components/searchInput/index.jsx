@@ -221,6 +221,8 @@ const SearchInputDate = ({
   onDateChange,
   initialTravelDate = "",
   initialReturnDate = "",
+  travelDatePlaceholder = "Travelling Starting Date",
+  returnDatePlaceholder = "Travelling Ending Date",
 }) => {
   const travelDateValue = initialTravelDate || (data && data.travelDate) || "";
   const returnDateValue = initialReturnDate || (data && data.returnDate) || "";
@@ -230,13 +232,28 @@ const SearchInputDate = ({
   const returnDateInputRef = useRef(null);
   const [returnDateIsFocused, setReturnDateIsFocused] = useState(false);
   
+  // States to track if dates are selected
+  const [travelDateSelected, setTravelDateSelected] = useState(!!travelDateValue);
+  const [returnDateSelected, setReturnDateSelected] = useState(!!returnDateValue);
+
+  // Format date for display (could be customized as needed)
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
+    
+    return date.toLocaleDateString();
+  };
+  
   useEffect(() => {
     if (travelDateInputRef.current) {
       travelDateInputRef.current.value = travelDateValue;
+      setTravelDateSelected(!!travelDateValue);
     }
 
     if (returnDateInputRef.current) {
       returnDateInputRef.current.value = returnDateValue;
+      setReturnDateSelected(!!returnDateValue);
     }
   }, [travelDateValue, returnDateValue]);
 
@@ -254,6 +271,33 @@ const SearchInputDate = ({
     }
   };
 
+  // Handle travel date change
+  const handleTravelDateChange = (e) => {
+    const newValue = e.target.value;
+    setTravelDateSelected(!!newValue);
+    onDateChange("travelDate", newValue);
+  };
+
+  // Handle return date change
+  const handleReturnDateChange = (e) => {
+    const newValue = e.target.value;
+    setReturnDateSelected(!!newValue);
+    onDateChange("returnDate", newValue);
+  };
+
+  // Input click handlers
+  const handleTravelDateInputClick = () => {
+    if (travelDateInputRef.current) {
+      travelDateInputRef.current.showPicker();
+    }
+  };
+
+  const handleReturnDateInputClick = () => {
+    if (returnDateInputRef.current) {
+      returnDateInputRef.current.showPicker();
+    }
+  };
+
   return (
     <div className="flex bg-[#BBC2FF29] border-[#A6BFFF82] border-1 rounded-2xl md:flex-row">
       <div className="w-full">
@@ -266,16 +310,27 @@ const SearchInputDate = ({
           >
             <img src={CalenderUp} alt="Calendar icon" />
           </span>
-          <input
-            ref={travelDateInputRef}
-            type="date"
-            placeholder="Travel Date"
-            className="w-full bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:hidden"
-            style={{ border: "none" }}
-            onFocus={() => setTravelDateIsFocused(true)}
-            onBlur={() => setTravelDateIsFocused(false)}
-            onChange={(e) => onDateChange("travelDate", e.target.value)}
-          />
+          <div className="relative w-full">
+            {/* Custom placeholder or formatted date display */}
+            <div className="absolute inset-0 pointer-events-none flex items-center">
+              {travelDateSelected ? (
+                <span>{formatDate(travelDateValue)}</span>
+              ) : (
+                <span className="text-gray-500">{travelDatePlaceholder}</span>
+              )}
+            </div>
+            {/* Hidden actual input */}
+            <input
+              ref={travelDateInputRef}
+              type="date"
+              className="w-full bg-transparent outline-none opacity-0"
+              style={{ border: "none" }}
+              onFocus={() => setTravelDateIsFocused(true)}
+              onBlur={() => setTravelDateIsFocused(false)}
+              onChange={handleTravelDateChange}
+              onClick={handleTravelDateInputClick}
+            />
+          </div>
         </div>
       </div>
       <div className="w-full">
@@ -288,20 +343,32 @@ const SearchInputDate = ({
           >
             <img src={CalenderDown} alt="Calendar icon" />
           </span>
-          <input
-            ref={returnDateInputRef}
-            type="date"
-            placeholder="Return Date"
-            className="w-full bg-transparent outline-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:hidden"
-            style={{ border: "none" }}
-            onFocus={() => setReturnDateIsFocused(true)}
-            onBlur={() => setReturnDateIsFocused(false)}
-            onChange={(e) => onDateChange("returnDate", e.target.value)}
-          />
+          <div className="relative w-full">
+            {/* Custom placeholder or formatted date display */}
+            <div className="absolute inset-0 pointer-events-none flex items-center">
+              {returnDateSelected ? (
+                <span>{formatDate(returnDateValue)}</span>
+              ) : (
+                <span className="text-gray-500">{returnDatePlaceholder}</span>
+              )}
+            </div>
+            {/* Hidden actual input */}
+            <input
+              ref={returnDateInputRef}
+              type="date"
+              className="w-full bg-transparent outline-none opacity-0"
+              style={{ border: "none" }}
+              onFocus={() => setReturnDateIsFocused(true)}
+              onBlur={() => setReturnDateIsFocused(false)}
+              onChange={handleReturnDateChange}
+              onClick={handleReturnDateInputClick}
+            />
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export { SearchInputText, SearchInputDate };
+export { SearchInputText,
+   SearchInputDate };

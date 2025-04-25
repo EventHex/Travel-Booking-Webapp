@@ -10,6 +10,7 @@ import {
   CalenderDown,
   MainBackground,
 } from "../../assets";
+import Loader from "../../components/loader";
 import { Link, useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { SearchInputDate, SearchInputText } from "../../components/searchInput";
@@ -236,10 +237,18 @@ useEffect(() => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+
+ <div 
+    style={{
+      backgroundImage: `url(${MainBackground})`,
+      backgroundSize: "100%",
+      backgroundPosition: "center",
+      backgroundRepeat: "repeat",
+      width: "100%",
+    }}
+    className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
+    <Loader />
+    </div>    );
   }
 
   if (error) {

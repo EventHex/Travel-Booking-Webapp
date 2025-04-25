@@ -583,7 +583,7 @@ export const FrontPassportForm = ({
                       {isProcessing && (
                         <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10">
                           <div className="flex flex-col items-center">
-                            <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                            <Loader2 className="w-8 h-8 text-red-600 animate-spin" />
                             <p className="mt-2 text-sm text-gray-600">
                               Processing passport...
                             </p>
