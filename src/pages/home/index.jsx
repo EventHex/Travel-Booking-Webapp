@@ -226,7 +226,7 @@ const HeroSection = () => {
         ...prevState,
         [field]: value,
       }));
-      
+
       console.log(searchData, "searchData");
     };
 
@@ -246,7 +246,6 @@ const HeroSection = () => {
 
     console.log(searchData.destination, "destination");
 
-
     const User = "user-icon-placeholder";
     const handleSearchOptionSelect = (option) => {
       setSearchQuery(option.title);
@@ -254,8 +253,6 @@ const HeroSection = () => {
       // Add any additional actions you want to perform when an option is selected
     };
 
-
-    
     switch (activeTab) {
       case "Visas":
         return (
@@ -268,16 +265,18 @@ const HeroSection = () => {
                 value={{
                   destination: searchData.destination,
                   goingTo: searchData.goingTo,
-                  
                 }}
                 isLoading={isLoading}
               />
+
               <SearchInputDate
                 onDateChange={handleInputChange}
-                value={{
+                data={{
                   travelDate: searchData.travelDate,
                   returnDate: searchData.returnDate,
                 }}
+                travelDatePlaceholder="Travelling Starting Date"
+                returnDatePlaceholder="Travelling Ending Date"
               />
               <div className="flex justify-end">
                 <Link
@@ -305,7 +304,7 @@ const HeroSection = () => {
                     disabled={
                       !searchData.destination ||
                       !searchData.goingTo ||
-                      !searchData.travelDate||
+                      !searchData.travelDate ||
                       !searchData.returnDate
                     }
                   >
@@ -354,7 +353,6 @@ const HeroSection = () => {
                         </span>
                       </p>
                     </div>
-                
                   </div>
                 ))}
               </div>
@@ -447,7 +445,6 @@ const HeroSection = () => {
         backgroundPosition: "center", // Start from top left
         backgroundRepeat: "repeat",
         width: "100%",
-
       }}
       className="w-full flex items-center justify-center"
     >
