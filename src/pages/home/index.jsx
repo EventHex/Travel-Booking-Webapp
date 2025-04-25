@@ -275,8 +275,8 @@ const HeroSection = () => {
                   travelDate: searchData.travelDate,
                   returnDate: searchData.returnDate,
                 }}
-                travelDatePlaceholder="Travelling Starting Date"
-                returnDatePlaceholder="Travelling Ending Date"
+                travelDatePlaceholder="mm/dd/yyyy"
+                returnDatePlaceholder="mm/dd/yyyy"
               />
               <div className="flex justify-end">
                 <Link
