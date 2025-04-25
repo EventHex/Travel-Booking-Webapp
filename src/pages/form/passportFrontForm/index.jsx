@@ -83,6 +83,7 @@ export const FrontPassportForm = ({
     if (file) {
       setIsProcessing(true);
       setProcessingError(null);
+      setSelectedPassport("");
 
       // Create FormData for API request
       const formData = new FormData();
