@@ -15,8 +15,6 @@ export const BackPassportForm = ({
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
-    console.log("File selected:", file);
-
     if (!file) return;
 
     // Create a preview URL for the file before uploading
@@ -31,11 +29,14 @@ export const BackPassportForm = ({
       formData.append("passportImage", file);
       formData.append("side", "back");
 
-      // Add this line to include the passport ID:
+      // Get the current passport ID
       const passportId = localStorage.getItem("currentPassportId");
-      if (passportId) {
-        formData.append("passportId", passportId);
+      
+      if (!passportId) {
+        throw new Error("Please upload the front page of the passport first");
       }
+      
+      formData.append("passportId", passportId);
 
       const response = await instance.post("/passport/process", formData, {
         headers: {
@@ -50,18 +51,18 @@ export const BackPassportForm = ({
       const result = response.data;
 
       if (result.success && result.data) {
-        // Only update back passport specific fields
         setFormData({
           fathersName: result.data.fathersName || "",
           mothersName: result.data.mothersName || "",
         });
       } else {
         setProcessingError(result.error || "Failed to process passport");
-        console.error("Error processing passport:", result.error);
       }
     } catch (error) {
-      setProcessingError("Failed to upload file");
+      setProcessingError(error.message || "Failed to upload file");
       console.error("Error uploading file:", error);
+      // Clear preview if there's an error
+      setPreviewUrl(null);
     } finally {
       setIsProcessing(false);
     }
@@ -88,6 +89,13 @@ export const BackPassportForm = ({
   const handleCancelPreview = () => {
     setPreviewUrl(null);
   };
+
+  // Add cleanup for passport ID when component unmounts
+  React.useEffect(() => {
+    return () => {
+      localStorage.removeItem("currentPassportId");
+    };
+  }, []);
 
   return (
     <div className="border-b border-t py-6">

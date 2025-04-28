@@ -79,11 +79,13 @@ export const FrontPassportForm = ({
   };
 
   const handleFileChange = async (e) => {
+    console.log("handleFileChange");
     const file = e.target.files[0];
     if (file) {
       setIsProcessing(true);
       setProcessingError(null);
-      setSelectedPassport("");
+      // Clear selected passport when uploading new image
+      // setSelectedPassport("");
 
       // Create FormData for API request
       const formData = new FormData();
@@ -91,12 +93,17 @@ export const FrontPassportForm = ({
       formData.append("side", "front");
 
       try {
+        console.log("try");
+        // First clear any existing passport ID to start fresh
+        localStorage.removeItem("currentPassportId");
+        
         const response = await instance.post("/passport/process", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
-        console.log(response, "response");
+        console.log("response", response);
+
         if (response.status !== 200) {
           throw new Error("Failed to process passport");
         }
@@ -106,6 +113,7 @@ export const FrontPassportForm = ({
         if (data.passportId) {
           localStorage.setItem("currentPassportId", data.passportId);
         }
+        
         console.log(data, "data");
         console.log("Response data:", data);
 

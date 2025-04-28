@@ -201,113 +201,127 @@ const TravelVisaBooking = () => {
 
   };
 
+  // Add new state for multiple travelers
+  const [travelers, setTravelers] = useState([
+    {
+      id: 0,
+      frontFormData: {
+        passportNumber: "",
+        firstName: "",
+        lastName: "",
+        nationality: "",
+        sex: "",
+        dateOfBirth: "",
+        placeOfBirth: "",
+        placeOfIssue: "",
+        maritalStatus: "",
+        dateOfIssue: "",
+        dateOfExpiry: "",
+      },
+      backFormData: {
+        fathersName: "",
+        mothersName: "",
+      },
+      frontImage: null,
+      previewUrl: null,
+      travelerPhoto: null,
+      selectedPassport: "",
+    }
+  ]);
+
+  // Add function to handle adding new traveler
+  const addTraveler = () => {
+    setTravelers([...travelers, {
+      id: travelers.length,
+      frontFormData: {
+        passportNumber: "",
+        firstName: "",
+        lastName: "",
+        nationality: "",
+        sex: "",
+        dateOfBirth: "",
+        placeOfBirth: "",
+        placeOfIssue: "",
+        maritalStatus: "",
+        dateOfIssue: "",
+        dateOfExpiry: "",
+      },
+      backFormData: {
+        fathersName: "",
+        mothersName: "",
+      },
+      frontImage: null,
+      previewUrl: null,
+      travelerPhoto: null,
+      selectedPassport: "",
+    }]);
+  };
+
+  // Modify handleSubmit for multiple travelers
   const handleSubmit = async () => {
-    console.log(frontFormData, "frontFormData");
-    console.log(backFormData, "backFormData");
-
-    const travelerDatas = {
-      ...frontFormData,
-      ...backFormData,
-    };
-
-    console.log(travelerDatas, "travelerData");
-
     try {
-      // Create FormData for traveler information
-      let travelerId = '';
-      if(selectedPassport === ""){
-      const passportInfo = new FormData();
+      const submissionResults = await Promise.all(travelers.map(async (traveler) => {
+        let travelerId = '';
+        
+        if (!traveler.selectedPassport) {
+          // Create new traveler information
+          const passportInfo = new FormData();
+          Object.entries(traveler.frontFormData).forEach(([key, value]) => {
+            passportInfo.append(key, value);
+          });
+          Object.entries(traveler.backFormData).forEach(([key, value]) => {
+            passportInfo.append(key, value);
+          });
 
-      // Append all text fields
-      passportInfo.append("passportNumber", frontFormData.passportNumber);
-      passportInfo.append("firstName", frontFormData.firstName);
-      passportInfo.append("lastName", frontFormData.lastName);
-      passportInfo.append("nationality", frontFormData.nationality);
-      passportInfo.append("sex", frontFormData.sex);
-      passportInfo.append("dateOfBirth", frontFormData.dateOfBirth);
-      passportInfo.append("placeOfBirth", frontFormData.placeOfBirth);
-      passportInfo.append("placeOfIssue", frontFormData.placeOfIssue);
-      passportInfo.append("dateOfIssue", frontFormData.dateOfIssue);
-      passportInfo.append("dateOfExpiry", frontFormData.dateOfExpiry);
-      passportInfo.append("maritalStatus", frontFormData.maritalStatus);
-      passportInfo.append("fathersName", backFormData.fathersName);
-      passportInfo.append("mothersName", backFormData.mothersName);
+          if (traveler.frontImage) {
+            passportInfo.append("passportImageFront", traveler.frontImage);
+          }
+          if (traveler.previewUrl) {
+            passportInfo.append("passportImageBack", traveler.previewUrl);
+          }
 
-      // Append files if they exist
-      if (frontImage) {
-        passportInfo.append("passportImageFront", frontImage);
-      }
-      if (previewUrl) {
-        passportInfo.append("passportImageBack", previewUrl);
-      }
+          const travelerResponse = await instance.post(
+            "/traveller-information",
+            passportInfo,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }
+          );
 
-      // First create the traveler document
-      const travelerResponse = await instance.post(
-        "/traveller-information",
-        passportInfo,
-        {
+          travelerId = travelerResponse.data.data._id;
+        } else {
+          travelerId = traveler.selectedPassport;
+        }
+
+        // Create visa application for each traveler
+        const formData = new FormData();
+        formData.append("travellerInformation", travelerId);
+        formData.append("purpose", purpose);
+        formData.append("price", price);
+        formData.append("toCountry", toCountry);
+        formData.append("fromCountry", fromCountry);
+        formData.append("travelDateFrom", travelDate);
+        formData.append("travelDateTo", returnDate);
+        formData.append("dateOfApply", new Date().toISOString());
+        formData.append("status", "Submitted");
+
+        if (traveler.travelerPhoto) {
+          formData.append("travelerPhoto", traveler.travelerPhoto);
+        }
+
+        return instance.post("/visa-application", formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
-        }
-      );
+        });
+      }));
 
-      if (travelerResponse.status !== 200) {
-        throw new Error("Failed to create traveler");
-      }
-      travelerId = travelerResponse.data.data._id;
-      } else {
-        travelerId = selectedPassport;
-      }
-
-      // Create FormData for visa application
-      const formData = new FormData();
-
-      // Add traveler information
-      formData.append("travellerInformation", travelerId);
-
-      // Add visa details
-      formData.append("purpose", purpose);
-      formData.append("price", price);
-      formData.append("toCountry", toCountry);
-      formData.append("fromCountry", fromCountry);
-      formData.append("travelDateFrom", travelDate);
-      formData.append("travelDateTo", returnDate);
-      formData.append("dateOfApply", new Date().toISOString());
-      formData.append("status", "Submitted");
-
-      console.log(formData, "formData");
-      // Add all files
-      if (travelerPhoto) {
-        formData.append("travelerPhoto", travelerPhoto);
-      }
-      if (flightTicket) {
-        formData.append("roundTripFlightTicket", flightTicket);
-      }
-      if (hotelBooking) {
-        formData.append("hotelBooking", hotelBooking);
-      }
-
-      console.log(formData, "formData");
-      // Submit to visa application API
-      const response = await instance.post("/visa-application", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      if (response.status !== 200) {
-        throw new Error("Failed to submit visa application");
-      }
-
-      const result = await response;
-      console.log("Visa application submitted successfully:", result);
-
-      // Show success message or redirect
-      alert("Visa application submitted successfully!");
+      alert("All visa applications submitted successfully!");
     } catch (error) {
-      console.error("Error submitting visa application:", error);
-      alert("Failed to submit visa application. Please try again.");
+      console.error("Error submitting visa applications:", error);
+      alert("Failed to submit visa applications. Please try again.");
     }
   };
 
@@ -328,62 +342,16 @@ const TravelVisaBooking = () => {
     }
   };
 
-  const handlePassportChange = async (selectedOption) => {
-    setSelectedPassport(selectedOption);
-    
-    try {
-      // Fetch traveler information using the selected passport ID
-      const response = await instance.get(`/traveller-information?id=${selectedOption}`);
-      const travelerData = response.data.response;
-
-      // Update front form data
-      setFrontFormData({
-        passportNumber: travelerData.passportNumber || '',
-        firstName: travelerData.firstName || '',
-        lastName: travelerData.lastName || '',
-        nationality: travelerData.nationality || '',
-        sex: travelerData.sex || '',
-        dateOfBirth: travelerData.dateOfBirth ? travelerData.dateOfBirth.split('T')[0] : '',
-        placeOfBirth: travelerData.placeOfBirth || '',
-        placeOfIssue: travelerData.placeOfIssue || '',
-        maritalStatus: travelerData.maritalStatus || '',
-        dateOfIssue: travelerData.dateOfIssue ? travelerData.dateOfIssue.split('T')[0] : '',
-        dateOfExpiry: travelerData.dateOfExpiry ? travelerData.dateOfExpiry.split('T')[0] : '',
-      });
-
-      // Update back form data
-      setBackFormData({
-        fathersName: travelerData.fathersName || '',
-        mothersName: travelerData.mothersName || '',
-      });
-
-      // Set passport images if they exist
-      if (travelerData.passportImageFront) {
-        setFrontImage(travelerData.passportImageFront);
-      }
-      if (travelerData.passportImageBack) {
-        setPreviewUrl(travelerData.passportImageBack);
-      }
-      if (travelerData.travellerPhoto) {
-        setTravelerPhoto(travelerData.travellerPhoto);
-      }
-
-    } catch (error) {
-      console.error('Error fetching traveler information:', error);
-      // Optionally show an error message to the user
-      alert('Failed to fetch traveler information');
-    }
-  };
+  // Move passportOptions definition outside of UploadForm
+  const passportOptions = passports.map(passport => ({
+    value: passport.id,
+    label: passport.value
+  }));
 
   const UploadForm = () => {
     const Visa = [
       { value: purpose, label: purpose },
     ];
-
-    const passportOptions = passports.map(passport => ({
-      value: passport.id,
-      label: passport.value
-    }));
 
     return (
       <>
@@ -426,19 +394,6 @@ const TravelVisaBooking = () => {
           </div>
 
           <div className="grid grid-cols-1 items-center md:grid-cols-3 gap-4">
-            <div className="relative">
-              <div className="relative mb-4 md:mb-5">
-                <CustomSelect
-                  labelClass={"12px"}
-                  className={"py-[11px]"}
-                  placeholder={"Select Passport"}
-                  label={"Passport Number"}
-                  options={passportOptions}
-                  value={passportOptions.find(option => option.value === selectedPassport) || ''}
-                  onChange={handlePassportChange}
-                />
-              </div>
-            </div>
             <div className="relative">
               <div className="relative mb-4 md:mb-5">
                 <CustomSelect
@@ -628,6 +583,57 @@ const TravelVisaBooking = () => {
     }
   };
 
+  // Modify handlePassportChange to accept index parameter
+  const handlePassportChange = async (selectedOption, index) => {
+    try {
+      // Fetch traveler information using the selected passport ID
+      const response = await instance.get(`/traveller-information?id=${selectedOption}`);
+      const travelerData = response.data.response;
+
+      // Update the specific traveler's data
+      const newTravelers = [...travelers];
+      const traveler = newTravelers[index];
+
+      // Update front form data
+      traveler.frontFormData = {
+        passportNumber: travelerData.passportNumber || '',
+        firstName: travelerData.firstName || '',
+        lastName: travelerData.lastName || '',
+        nationality: travelerData.nationality || '',
+        sex: travelerData.sex || '',
+        dateOfBirth: travelerData.dateOfBirth ? travelerData.dateOfBirth.split('T')[0] : '',
+        placeOfBirth: travelerData.placeOfBirth || '',
+        placeOfIssue: travelerData.placeOfIssue || '',
+        maritalStatus: travelerData.maritalStatus || '',
+        dateOfIssue: travelerData.dateOfIssue ? travelerData.dateOfIssue.split('T')[0] : '',
+        dateOfExpiry: travelerData.dateOfExpiry ? travelerData.dateOfExpiry.split('T')[0] : '',
+      };
+
+      // Update back form data
+      traveler.backFormData = {
+        fathersName: travelerData.fathersName || '',
+        mothersName: travelerData.mothersName || '',
+      };
+
+      // Set passport images if they exist
+      if (travelerData.passportImageFront) {
+        traveler.frontImage = travelerData.passportImageFront;
+      }
+      if (travelerData.passportImageBack) {
+        traveler.previewUrl = travelerData.passportImageBack;
+      }
+      if (travelerData.travellerPhoto) {
+        traveler.travelerPhoto = travelerData.travellerPhoto;
+      }
+
+      setTravelers(newTravelers);
+
+    } catch (error) {
+      console.error('Error fetching traveler information:', error);
+      alert('Failed to fetch traveler information');
+    }
+  };
+
   return (
     <>
       <div
@@ -656,37 +662,89 @@ const TravelVisaBooking = () => {
             </div>
             <div className="w-full md:w-[70%] border-l border-[#bbbdc2] flex flex-col justify-center">
               <div className="md:p-5">
-                <FrontPassportForm
-                  frontImage={frontImage}
-                  setFrontImage={setFrontImage}
-                  formData={frontFormData}
-                  setFormData={setFrontFormData}
-                  setSelectedPassport={setSelectedPassport}
-                />
-                <BackPassportForm
-                  formData={backFormData}
-                  setFormData={setBackFormData}
-                  previewUrl={previewUrl}
-                  setPreviewUrl={setPreviewUrl}
-                />
-                <UploadTravelerPhoto
-                  photo={travelerPhoto}
-                  setPhoto={setTravelerPhoto}
-                />
-                  <FlightHotelBooking
-                    isGroup={isGroup}
-                    flightTicket={flightTicket}
-                    setFlightTicket={setFlightTicket}
-                    hotelBooking={hotelBooking}
-                    setHotelBooking={setHotelBooking}
-                  /> 
+                {travelers.map((traveler, index) => (
+                  <div key={traveler.id} className="mb-8 border-b pb-8">
+                    <h3 className="text-xl font-bold mb-4">Traveler {index + 1}</h3>
+                    <div className="mb-4">
+                      <CustomSelect
+                        labelClass={"12px"}
+                        className={"py-[11px]"}
+                        placeholder={"Select Passport"}
+                        label={"Passport Number"}
+                        options={passportOptions}
+                        value={passportOptions.find(option => option.value === traveler.selectedPassport) || ''}
+                        onChange={(value) => {
+                          const newTravelers = [...travelers];
+                          newTravelers[index].selectedPassport = value;
+                          setTravelers(newTravelers);
+                          handlePassportChange(value, index);
+                        }}
+                      />
+                    </div>
+                    <FrontPassportForm
+                      frontImage={traveler.frontImage}
+                      setFrontImage={(image) => {
+                        const newTravelers = [...travelers];
+                        newTravelers[index].frontImage = image;
+                        setTravelers(newTravelers);
+                      }}
+                      formData={traveler.frontFormData}
+                      setFormData={(data) => {
+                        const newTravelers = [...travelers];
+                        newTravelers[index].frontFormData = data;
+                        setTravelers(newTravelers);
+                      }}
+                    />
+                    <BackPassportForm
+                      formData={traveler.backFormData}
+                      setFormData={(data) => {
+                        const newTravelers = [...travelers];
+                        newTravelers[index].backFormData = data;
+                        setTravelers(newTravelers);
+                      }}
+                      previewUrl={traveler.previewUrl}
+                      setPreviewUrl={(url) => {
+                        const newTravelers = [...travelers];
+                        newTravelers[index].previewUrl = url;
+                        setTravelers(newTravelers);
+                      }}
+                    />
+                    <UploadTravelerPhoto
+                      photo={traveler.travelerPhoto}
+                      setPhoto={(photo) => {
+                        const newTravelers = [...travelers];
+                        newTravelers[index].travelerPhoto = photo;
+                        setTravelers(newTravelers);
+                      }}
+                    />
+                    {index === travelers.length - 1 && (
+                      <FlightHotelBooking
+                        isGroup={isGroup}
+                        flightTicket={flightTicket}
+                        setFlightTicket={setFlightTicket}
+                        hotelBooking={hotelBooking}
+                        setHotelBooking={setHotelBooking}
+                      />
+                    )}
+                  </div>
+                ))}
+                
+                {isGroup && (
+                  <button
+                    onClick={addTraveler}
+                    className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Add Another Traveler
+                  </button>
+                )}
+                
                 <VisaInformation />
                 <div className="flex justify-end mt-6">
                   <button
                     onClick={handleSubmit}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                   >
-                    Submit Application
+                    Submit Applications
                   </button>
                 </div>
               </div>
