@@ -260,65 +260,163 @@ const TravelVisaBooking = () => {
   // Modify handleSubmit for multiple travelers
   const handleSubmit = async () => {
     try {
-      const submissionResults = await Promise.all(travelers.map(async (traveler) => {
-        let travelerId = '';
-        
-        if (!traveler.selectedPassport) {
-          // Create new traveler information
-          const passportInfo = new FormData();
-          Object.entries(traveler.frontFormData).forEach(([key, value]) => {
-            passportInfo.append(key, value);
-          });
-          Object.entries(traveler.backFormData).forEach(([key, value]) => {
-            passportInfo.append(key, value);
-          });
+      if (travelers.length > 1) {
+        // Group visa application
+        const travellerIds = await Promise.all(travelers.map(async (traveler) => {
+          let travelerId = '';
+          
+          if (!traveler.selectedPassport) {
+            // Create new traveler information
+            const passportInfo = new FormData();
+            Object.entries(traveler.frontFormData).forEach(([key, value]) => {
+              passportInfo.append(key, value);
+            });
+            Object.entries(traveler.backFormData).forEach(([key, value]) => {
+              passportInfo.append(key, value);
+            });
 
-          if (traveler.frontImage) {
-            passportInfo.append("passportImageFront", traveler.frontImage);
-          }
-          if (traveler.previewUrl) {
-            passportInfo.append("passportImageBack", traveler.previewUrl);
-          }
-
-          const travelerResponse = await instance.post(
-            "/traveller-information",
-            passportInfo,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
+            if (traveler.frontImage) {
+              passportInfo.append("passportImageFront", traveler.frontImage);
             }
-          );
+            if (traveler.previewUrl) {
+              passportInfo.append("passportImageBack", traveler.previewUrl);
+            }
+            if (traveler.travelerPhoto) {
+              passportInfo.append("travellerPhoto", traveler.travelerPhoto);
+            }
+            if(documents.flightTicket) {
+              passportInfo.append("roundTripFlightTicket", documents.flightTicket);
+            }
+            if(documents.hotelBooking) {
+              passportInfo.append("hotelBooking", documents.hotelBooking);
+            }
+            // if(traveler.flightTicket) {
+            //   passportInfo.append("roundTripFlightTicket", traveler.flightTicket);
+            // }
+            // if(traveler.hotelBooking) {
+            //   passportInfo.append("hotelBooking", traveler.hotelBooking);
+            // }
 
-          travelerId = travelerResponse.data.data._id;
-        } else {
-          travelerId = traveler.selectedPassport;
+            const travelerResponse = await instance.post(
+              "/traveller-information",
+              passportInfo,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              }
+            );
+
+            travelerId = travelerResponse.data.data._id;
+          } else {
+            travelerId = traveler.selectedPassport;
+          }
+          
+          return travelerId;
+        }));
+
+        // Create group visa application
+        const groupFormData = new FormData();
+        groupFormData.append("travellerInformation", JSON.stringify(travellerIds));
+        groupFormData.append("purpose", purpose);
+        groupFormData.append("price", price);
+        groupFormData.append("toCountry", toCountry);
+        groupFormData.append("fromCountry", fromCountry);
+        groupFormData.append("travelDateFrom", travelDate);
+        groupFormData.append("travelDateTo", returnDate);
+        groupFormData.append("dateOfApply", new Date().toISOString());
+        groupFormData.append("status", "Submitted");
+        groupFormData.append("isGroup", "true");
+
+        // Add traveler photos for each traveler
+        travelers.forEach((traveler, index) => {
+          if (traveler.travelerPhoto) {
+            groupFormData.append(`travelerPhotos[${index}]`, traveler.travelerPhoto);
+          }
+        });
+
+        // Add flight and hotel booking documents
+        if (flightTicket) {
+          groupFormData.append("flightTicket", flightTicket);
+        }
+        if (hotelBooking) {
+          groupFormData.append("hotelBooking", hotelBooking);
         }
 
-        // Create visa application for each traveler
-        const formData = new FormData();
-        formData.append("travellerInformation", travelerId);
-        formData.append("purpose", purpose);
-        formData.append("price", price);
-        formData.append("toCountry", toCountry);
-        formData.append("fromCountry", fromCountry);
-        formData.append("travelDateFrom", travelDate);
-        formData.append("travelDateTo", returnDate);
-        formData.append("dateOfApply", new Date().toISOString());
-        formData.append("status", "Submitted");
-
-        if (traveler.travelerPhoto) {
-          formData.append("travelerPhoto", traveler.travelerPhoto);
-        }
-
-        return instance.post("/visa-application", formData, {
+        // Call group visa application endpoint
+        await instance.post("/visa-application/group-visa-application", groupFormData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
-      }));
 
-      alert("All visa applications submitted successfully!");
+      } else {
+        // Original single traveler logic
+        const submissionResults = await Promise.all(travelers.map(async (traveler) => {
+          let travelerId = '';
+          
+          if (!traveler.selectedPassport) {
+            // Create new traveler information
+            const passportInfo = new FormData();
+            Object.entries(traveler.frontFormData).forEach(([key, value]) => {
+              passportInfo.append(key, value);
+            });
+            Object.entries(traveler.backFormData).forEach(([key, value]) => {
+              passportInfo.append(key, value);
+            });
+
+            if (traveler.frontImage) {
+              passportInfo.append("passportImageFront", traveler.frontImage);
+            }
+            if (traveler.previewUrl) {
+              passportInfo.append("passportImageBack", traveler.previewUrl);
+            }
+
+            const travelerResponse = await instance.post(
+              "/traveller-information",
+              passportInfo,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              }
+            );
+
+            travelerId = travelerResponse.data.data._id;
+          } else {
+            travelerId = traveler.selectedPassport;
+          }
+
+          const formData = new FormData();
+          formData.append("travellerInformation", travelerId);
+          formData.append("purpose", purpose);
+          formData.append("price", price);
+          formData.append("toCountry", toCountry);
+          formData.append("fromCountry", fromCountry);
+          formData.append("travelDateFrom", travelDate);
+          formData.append("travelDateTo", returnDate);
+          formData.append("dateOfApply", new Date().toISOString());
+          formData.append("status", "Submitted");
+
+          if (traveler.travelerPhoto) {
+            formData.append("travelerPhoto", traveler.travelerPhoto);
+          }
+          if(flightTicket) {
+            formData.append("roundTripFlightTicket", flightTicket);
+          }
+          if(hotelBooking) {
+            formData.append("hotelBooking", hotelBooking);
+          }
+
+          return instance.post("/visa-application", formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+        }));
+      }
+
+      alert("Visa application(s) submitted successfully!");
     } catch (error) {
       console.error("Error submitting visa applications:", error);
       alert("Failed to submit visa applications. Please try again.");
@@ -665,6 +763,8 @@ const TravelVisaBooking = () => {
                 {travelers.map((traveler, index) => (
                   <div key={traveler.id} className="mb-8 border-b pb-8">
                     <h3 className="text-xl font-bold mb-4">Traveler {index + 1}</h3>
+                    
+                    {/* Passport Selection - Always show for each traveler */}
                     <div className="mb-4">
                       <CustomSelect
                         labelClass={"12px"}
@@ -681,7 +781,10 @@ const TravelVisaBooking = () => {
                         }}
                       />
                     </div>
+
+                    {/* Front Passport Form - Always show */}
                     <FrontPassportForm
+                      travelerNumber={index + 1}
                       frontImage={traveler.frontImage}
                       setFrontImage={(image) => {
                         const newTravelers = [...travelers];
@@ -695,6 +798,8 @@ const TravelVisaBooking = () => {
                         setTravelers(newTravelers);
                       }}
                     />
+
+                    {/* Back Passport Form - Always show */}
                     <BackPassportForm
                       formData={traveler.backFormData}
                       setFormData={(data) => {
@@ -709,6 +814,8 @@ const TravelVisaBooking = () => {
                         setTravelers(newTravelers);
                       }}
                     />
+
+                    {/* Traveler Photo Upload - Always show */}
                     <UploadTravelerPhoto
                       photo={traveler.travelerPhoto}
                       setPhoto={(photo) => {
@@ -717,18 +824,10 @@ const TravelVisaBooking = () => {
                         setTravelers(newTravelers);
                       }}
                     />
-                    {index === travelers.length - 1 && (
-                      <FlightHotelBooking
-                        isGroup={isGroup}
-                        flightTicket={flightTicket}
-                        setFlightTicket={setFlightTicket}
-                        hotelBooking={hotelBooking}
-                        setHotelBooking={setHotelBooking}
-                      />
-                    )}
                   </div>
                 ))}
                 
+                {/* Add Traveler Button - Show only in group mode */}
                 {isGroup && (
                   <button
                     onClick={addTraveler}
@@ -737,6 +836,15 @@ const TravelVisaBooking = () => {
                     Add Another Traveler
                   </button>
                 )}
+                
+                {/* Flight and Hotel Booking - Show only once outside the travelers mapping */}
+                <FlightHotelBooking
+                  isGroup={isGroup}
+                  flightTicket={flightTicket}
+                  setFlightTicket={setFlightTicket}
+                  hotelBooking={hotelBooking}
+                  setHotelBooking={setHotelBooking}
+                />
                 
                 <VisaInformation />
                 <div className="flex justify-end mt-6">
