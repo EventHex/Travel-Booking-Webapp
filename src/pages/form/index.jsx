@@ -50,12 +50,13 @@ const TravelVisaBooking = () => {
     fromCountry = '', 
     toCountry = '', 
     travelDate = '', 
-    returnDate = '' 
+    returnDate = '' ,
+    visaId = ''
   } = location.state || {};
 
   // Remove unused searchData object since we're using location.state
   useEffect(() => {
-    console.log(fromCountry, toCountry, travelDate, returnDate, purpose, price, "fromCountry, toCountry, travelDate, returnDate, purpose, price");
+    console.log(fromCountry, toCountry, travelDate, returnDate, purpose, price, visaId, "fromCountry, toCountry, travelDate, returnDate, purpose, price, visaId ");
     if (!fromCountry || !toCountry || !travelDate || !returnDate || !purpose || !price) {
       navigate("/");
     }

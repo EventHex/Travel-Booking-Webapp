@@ -87,32 +87,42 @@ useEffect(() => {
     const fetchVisaData = async () => {
       try {
         setIsSearching(true);
-        const response = await instance.get(`/get-visa?origin_country=${searchParams.get("destination")}&destination_country=${searchParams.get("goingTo")}&travel_date=${searchParams.get("travelDate")}`);
+        const response = await instance.get(`/visa?country=${searchParams.get("destination")}&toCountry=${searchParams.get("goingTo")}&travel_date=${searchParams.get("travelDate")}`);
 
         console.log(response, "response");
         if (response.data.success && response.data.response) {
-          const visaDataArray = response.data.response.visa_types;
+          const visaDataArray = response.data.response;
           
           const visaData = visaDataArray.map((visa) => ({
-            title: visa.process_name,
-            purpose: visa.purpose,
-            status: "approved",
-            message: `Estimated visa arrival by ${new Date(visa.eta_timestamp * 1000).toLocaleDateString()}`,
+            id: visa._id,
+            title: visa.title || "Visa Application",
+            purpose: visa.description || "Travel Visa",
+            status: visa.status || "Active",
+            message: `Visa application available from ${new Date(visa.fromDate).toLocaleDateString()} to ${new Date(visa.toDate).toLocaleDateString()}`,
             details: {
-              entry: visa.process_details.is_multiple_entry ? "Multiple Entry" : "Single Entry",
-              validity: `${visa.process_details.entry_validity.amount} ${visa.process_details.entry_validity.units}`,
-              duration: `${visa.process_details.entry_length_stay.amount} ${visa.process_details.entry_length_stay.units}`,
-              processingTime: `${visa.processing_time.duration} ${visa.processing_time.unit}`,
-              absconding: "AED 5,000",
+              entry: visa.entry || "Not specified",
+              validity: visa.validity || "Not specified",
+              duration: visa.duration || "Not specified",
+              processingTime: visa.processingTime || "Not specified",
+              documents: visa.documents || "Not specified",
             },
             price: {
-              original: `${visa.visa_fee.amount} ${visa.visa_fee.currency}`,
-              discounted: `${visa.visa_fee.amount + visa.service_fee.amount} ${visa.visa_fee.currency}`,
-              savings: "Save up to 39%",
+              original: visa.publicPrice ? `${visa.publicPrice} AED` : "Price not available",
+              discounted: visa.publicOfferPrice ? `${visa.publicOfferPrice} AED` : "Price not available",
+              savings: "Special offer available",
+            },
+            agentPrice: {
+              original: visa.agentPrice ? `${visa.agentPrice} AED` : "Price not available",
+              discounted: visa.agentOfferPrice ? `${visa.agentOfferPrice} AED` : "Price not available",
+            },
+            fees: {
+              visaFee: visa.publicVisaFee || "Not specified",
+              atlysFee: visa.publicAtlysFee || "Not specified",
+              insuranceFee: visa.publicInsuranceFee || "Not specified",
             },
             variant: "green",
-            required_documents: visa.required_documents || [],
-            required_components: visa.required_components || []
+            required_documents: [],
+            required_components: []
           }));
 
           setVisaOptions(visaData);
@@ -415,12 +425,13 @@ useEffect(() => {
                             </button>
                           </div>
                           <span className="text-xs text-gray-400">
-                            (Includes Discounted Visa & Insurance)
+                            (Public Price - Includes Visa & Insurance)
                           </span>
                         </div>
                         <Link
                           to={`/form`}
-                          state={{ 
+                          state={{
+                            visaId: option.id,
                             purpose: option.purpose,
                             price: parseFloat(option.price.discounted.split(' ')[0]),
                             currency: option.price.discounted.split(' ')[1],
@@ -430,6 +441,8 @@ useEffect(() => {
                             toCountry: searchParams.get("goingTo"),
                             travelDate: searchParams.get("travelDate"),
                             returnDate: searchParams.get("returnDate"),
+                            agentPrice: option.agentPrice,
+                            fees: option.fees,
                           }}
                           className="flex justify-end sm:justify-start"
                         >
@@ -438,6 +451,42 @@ useEffect(() => {
                           </button>
                         </Link>
                       </div>
+                      
+                      {/* Agent Pricing Section */}
+                      {option.agentPrice && (
+                        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                          <h4 className="text-sm font-medium text-blue-900 mb-2">Agent Pricing:</h4>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-sm text-gray-400 line-through">
+                              {option.agentPrice.original}
+                            </span>
+                            <span className="text-lg font-semibold text-blue-900">
+                              {option.agentPrice.discounted}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Fees Breakdown */}
+                      {option.fees && (
+                        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                          <h4 className="text-sm font-medium text-gray-900 mb-2">Fee Breakdown:</h4>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                            <div>
+                              <span className="text-gray-500">Visa Fee:</span>
+                              <span className="ml-1 text-gray-700">{option.fees.visaFee}</span>
+                            </div>
+                            <div>
+                              <span className="text-gray-500">Atlys Fee:</span>
+                              <span className="ml-1 text-gray-700">{option.fees.atlysFee}</span>
+                            </div>
+                            <div>
+                              <span className="text-gray-500">Insurance Fee:</span>
+                              <span className="ml-1 text-gray-700">{option.fees.insuranceFee}</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))
