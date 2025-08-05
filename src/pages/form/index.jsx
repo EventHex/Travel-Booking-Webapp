@@ -568,7 +568,7 @@ const TravelVisaBooking = () => {
         });
         data.append("visaFormData", JSON.stringify(visaFormData));
         
-        const response = await instance.post("/group-visa-application", data, {
+        const response = await instance.post("/visa-application/group-visa-application", data, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
