@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Header from "../../components/header";
 import { FrontPassportForm } from "./passportFrontForm";
 import { BackPassportForm } from "./passportBackForm";
 import { SearchInputText, SearchInputDate } from "../../components/searchInput";
 import File from "../../components/file";
-import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SingleSelect } from "../../components/dropdown";
 import { FlightHotelBooking } from "./FlightHotalBooking";
-import { UploadTravelerPhoto } from "./travelBooking";
+
 import {
   Flight,
   Home,
@@ -35,7 +35,7 @@ import instance from "../../instance";
 import DynamicForm from "../../components/dynamicForm";
 
 const TravelVisaBooking = () => {
-  const [searchParams] = useSearchParams();
+
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedPassport, setSelectedPassport] = useState("");
@@ -46,9 +46,7 @@ const TravelVisaBooking = () => {
   const { 
     purpose = '', 
     price = '', 
-    currency = '', 
     title = '', 
-    details = '', 
     fromCountry = '', 
     toCountry = '', 
     travelDate = '', 
@@ -262,32 +260,18 @@ const TravelVisaBooking = () => {
     }
   }, [visaId, passports.length, presetFields]);
 
-  const citizenInputRef = useRef(null);
-  const goingToInputRef = useRef(null);
 
-  const [frontImage, setFrontImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
-  const [citizenIsFocused, setCitizenIsFocused] = useState(false);
-  const [goingToIsFocused, setGoingToIsFocused] = useState(false);
-  const [TravellingDateFocused, setTravellingDateFocused] = useState(false);
-  const [TravellingDateEndFocused, setTravellingDateEndFocused] = useState(false);
   const [isGroup, setIsGroup] = useState(false);
-  const [travelerPhoto, setTravelerPhoto] = useState(null);
+  const [travelerPhoto] = useState(null);
   const [flightTicket, setFlightTicket] = useState(null);
   const [hotelBooking, setHotelBooking] = useState(null);
   const [applicationType, setApplicationType] = useState("individual");
-  const [visaType, setVisaType] = useState(purpose || '');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({});
-  const [file, setFile] = useState(null);
   
-  const [documents, setDocuments] = useState({
-    flightTicket: null,
-    hotelBooking: null,
-  });
+  const [groupName, setGroupName] = useState("");
 
   // Initialize travelers state with proper structure
   const [travelers, setTravelers] = useState([
@@ -322,11 +306,7 @@ const TravelVisaBooking = () => {
   // Handle resize effect
   useEffect(() => {
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < 1024);
       setIsNarrowScreen(window.innerWidth < 880);
-      if (window.innerWidth >= 768) {
-        setSidebarOpen(true);
-      }
     };
 
     handleResize();
@@ -345,47 +325,7 @@ const TravelVisaBooking = () => {
     };
   }, [travelers.length]);
 
-  const handleCitizenIconClick = () => {
-    citizenInputRef.current.focus();
-  };
 
-  const handleGoingToIconClick = () => {
-    goingToInputRef.current.focus();
-  };
-
-  const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  const handleFileChangeTicketBooking = (type, file) => {
-    setDocuments((prev) => ({
-      ...prev,
-      [type]: file,
-    }));
-  };
-
-  const handleSubmitTicketBooking = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("travellerInformation", "travelerId");
-    formData.append("visaFor", "Individual");
-    formData.append("visaType", visaType);
-    formData.append("visaCountry", "destination");
-    formData.append("travelDateFrom", travelDate);
-    formData.append("travelDateTo", returnDate);
-    formData.append("dateOfApply", new Date().toISOString());
-    formData.append("status", "Submitted");
-    formData.append("applicationDetails", "Application Complete");
-
-    if (documents.flightTicket) {
-      formData.append("roundTripFlightTicket", documents.flightTicket);
-    }
-    if (documents.hotelBooking) {
-      formData.append("hotelBooking", documents.hotelBooking);
-    }
-  };
 
   // Fixed passport selection handler for DynamicForm
   const handlePassportSelection = useCallback(async (fieldName, selectedValue, newFormData) => {
@@ -412,6 +352,7 @@ const TravelVisaBooking = () => {
         };
 
         setFormData(updatedFormData);
+        setSelectedPassport(selectedValue); 
       } catch (error) {
         console.error('Error fetching traveler information:', error);
         alert('Failed to fetch traveler information');
@@ -507,123 +448,153 @@ const TravelVisaBooking = () => {
     }
   }, [travelers.length]);
 
-  // Fixed submit handler
+  // Fixed submit handler - matches DynamicForm expected signature
   const handleSubmit = useCallback(async (formDataObj, formDataRegular, isGroupSubmit = false) => {
     try {
-      console.log(formDataObj, "formDataObj");
-      console.log(formDataRegular, "formData");
+      console.log("Submitting visa application:", { formDataObj, formDataRegular, isGroupSubmit });
       
       if (isGroup || isGroupSubmit) {
-        // Group submission - process all travelers
-        const submissionResults = await Promise.all(travelers.map(async (traveler) => {
-          let travelerId = '';
-          
-          if (!traveler.selectedPassport) {
-            // Create new traveler information
-            const passportInfo = new FormData();
-            
-            // Add form data to passport info
-            Object.entries(traveler.formData).forEach(([key, value]) => {
-              if (value !== null && value !== undefined && value !== '') {
-                passportInfo.append(key, value);
-              }
-            });
-
-            if (traveler.frontImage) {
-              passportInfo.append("passportImageFront", traveler.frontImage);
-            }
-            if (traveler.previewUrl) {
-              passportInfo.append("passportImageBack", traveler.previewUrl);
-            }
-
-            const travelerResponse = await instance.post(
-              "/traveller-information",
-              passportInfo,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                }
-              }
-            );
-
-            travelerId = travelerResponse.data.data._id;
-          } else {
-            travelerId = traveler.selectedPassport;
-          }
-
-          // Create visa application for each traveler
-          const visaFormData = new FormData();
-          visaFormData.append("travellerInformation", travelerId);
-          visaFormData.append("purpose", purpose);
-          visaFormData.append("price", price);
-          visaFormData.append("toCountry", toCountry);
-          visaFormData.append("fromCountry", fromCountry);
-          visaFormData.append("travelDateFrom", travelDate);
-          visaFormData.append("travelDateTo", returnDate);
-          visaFormData.append("dateOfApply", new Date().toISOString());
-          visaFormData.append("status", "Submitted");
-
-          if (traveler.travelerPhoto) {
-            visaFormData.append("travelerPhoto", traveler.travelerPhoto);
-          }
-          
-          // Uncomment when ready to submit
-          // return instance.post("/visa-application", visaFormData, {
-          //   headers: {
-          //     'Content-Type': 'multipart/form-data'
-          //   }
-          // });
-          
-          return true;
-        }));
-
-        alert("All visa applications submitted successfully!");
-      } else {
-        // Individual submission
-        const visaFormData = new FormData();
+        // Group submission
+        const data = new FormData();
         
-        // Add all form fields to FormData
-        Object.keys(formDataRegular).forEach(key => {
-          const value = formDataRegular[key];
-          if (value !== null && value !== undefined && value !== '') {
-            if (value instanceof File) {
-              visaFormData.append(key, value);
-            } else {
-              visaFormData.append(key, value.toString());
-            }
+        // Define predefined model fields that should be sent directly
+        const modelFields = [
+          'travellerInformation', 'passportNumber', 'firstName', 'lastName', 
+          'nationality', 'sex', 'dob', 'placeOfBirth', 'placeOfIssue', 
+          'maritalStatus', 'dateOfIssue', 'dateOfExpiry', 'fathersName', 
+          'mothersName'
+        ];
+        
+        // Get traveler IDs for group submission
+        const travelerIds = travelers.map(traveler => 
+          traveler.selectedPassport || traveler.formData?.travellerInformation || traveler.formData?.passportNumber
+        ).filter(id => id); // Filter out empty values
+        
+        data.append("travellerInformation", JSON.stringify(travelerIds));
+        data.append("visaFor", "Group");
+        data.append("groupName", groupName);
+        
+        // Add files for each traveler
+        travelers.forEach((traveler, index) => {
+          if (traveler.travelerPhoto) {
+            data.append(`travelerPhotos[${index}]`, traveler.travelerPhoto);
           }
         });
         
-        visaFormData.append("purpose", purpose);
-        visaFormData.append("price", price);
-        visaFormData.append("toCountry", toCountry);
-        visaFormData.append("fromCountry", fromCountry);
-        visaFormData.append("travelDateFrom", travelDate);
-        visaFormData.append("travelDateTo", returnDate);
-        visaFormData.append("dateOfApply", new Date().toISOString());
-        visaFormData.append("status", "Submitted");
+        if (flightTicket) {
+          data.append("flightTicket", flightTicket);
+        }
+        if (hotelBooking) {
+          data.append("hotelBooking", hotelBooking);
+        }
         
-        // Uncomment when ready to submit
-        // const response = await instance.post("/visa-application", visaFormData, {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   }
-        // });
+        data.append("purpose", purpose);
+        data.append("price", price);
+        data.append("toCountry", toCountry);
+        data.append("fromCountry", fromCountry);
+        data.append("travelDateFrom", travelDate);
+        data.append("travelDateTo", returnDate);
+        data.append("dateOfApply", new Date().toISOString());
+        data.append("status", "Submitted");
         
+        // Append only dynamic visa form fields (not predefined model fields)
+        const visaFormData = {};
+        visaFields.forEach((field) => {
+          if (formDataRegular && formDataRegular[field.name] && !modelFields.includes(field.name)) {
+            visaFormData[field.name] = formDataRegular[field.name];
+          }
+        });
+        data.append("visaFormData", JSON.stringify(visaFormData));
+        
+        const response = await instance.post("/group-visa-application", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        
+        console.log("Group submission response:", response.data);
+        alert("Group visa applications submitted successfully!");
+        
+      } else {
+        // Individual submission
+        const data = new FormData();
+        
+        // Define predefined model fields that should be sent directly
+        const modelFields = [
+          'travellerInformation', 'passportNumber', 'firstName', 'lastName', 
+          'nationality', 'sex', 'dob', 'placeOfBirth', 'placeOfIssue', 
+          'maritalStatus', 'dateOfIssue', 'dateOfExpiry', 'fathersName', 
+          'mothersName'
+        ];
+        
+        // Add predefined model fields to FormData
+        if (formDataRegular) {
+          Object.keys(formDataRegular).forEach(key => {
+            const value = formDataRegular[key];
+            if (value !== null && value !== undefined && value !== '') {
+              if (modelFields.includes(key)) {
+                // Send predefined fields directly to the model
+                if (value instanceof File) {
+                  data.append(key, value);
+                } else {
+                  data.append(key, value.toString());
+                }
+              }
+            }
+          });
+        }
+        
+        // Add required visa application fields
+        data.append("purpose", purpose);
+        data.append("price", price);
+        data.append("toCountry", toCountry);
+        data.append("fromCountry", fromCountry);
+        data.append("travelDateFrom", travelDate);
+        data.append("travelDateTo", returnDate);
+        data.append("dateOfApply", new Date().toISOString());
+        data.append("status", "Submitted");
+        data.append("visaFor", "Individual");
+        
+        // Add files
+        if (travelerPhoto) {
+          data.append("travelerPhoto", travelerPhoto);
+        }
+        if (flightTicket) {
+          data.append("roundTripFlightTicket", flightTicket);
+        }
+        if (hotelBooking) {
+          data.append("hotelBooking", hotelBooking);
+        }
+        
+        // Append only dynamic visa form fields (not predefined model fields)
+        const visaFormData = {};
+        visaFields.forEach((field) => {
+          if (formDataRegular && formDataRegular[field.name] && !modelFields.includes(field.name)) {
+            visaFormData[field.name] = formDataRegular[field.name];
+          }
+        });
+        data.append("visaFormData", JSON.stringify(visaFormData));
+        
+        const response = await instance.post("/visa-application", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        
+        console.log("Individual submission response:", response.data);
         alert("Visa application submitted successfully!");
       }
     } catch (error) {
-      console.error("Error submitting visa applications:", error);
-      alert("Failed to submit visa applications. Please try again.");
+      console.error("Error submitting visa application:", error);
+      alert("Failed to submit visa application. Please try again.");
     }
-  }, [travelers, isGroup, purpose, price, toCountry, fromCountry, travelDate, returnDate]);
+  }, [travelers, selectedPassport, travelerPhoto, flightTicket, hotelBooking, purpose, price, toCountry, fromCountry, travelDate, returnDate, visaFields, groupName, isGroup]);
 
   // Separate handler for group submit
   const handleGroupSubmit = useCallback(() => {
-    const groupFormData = travelers.map((traveler) => traveler.formData);
-    console.log("Group submission data:", groupFormData);
+    // Call handleSubmit with the correct signature for group submission
     handleSubmit(null, null, true);
-  }, [handleSubmit, travelers]);
+  }, [handleSubmit]);
 
   const UploadForm = () => {
     const Visa = [
@@ -688,7 +659,6 @@ const TravelVisaBooking = () => {
                         key={option}
                         className="cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-blue-100"
                         onClick={() => {
-                          setVisaType(option);
                           setIsDropdownOpen(false);
                         }}
                       >
@@ -708,8 +678,10 @@ const TravelVisaBooking = () => {
             {isGroup && (
               <div className="mb-4 md:mb-5">
                 <Input
-                  placeholder={"Tourist Visa"}
+                  placeholder={"Enter Group Name"}
                   label={"Group Name"}
+                  value={groupName}
+                  onChange={(e) => setGroupName(e.target.value)}
                   required={applicationType === "group"}
                 />
               </div>
@@ -912,17 +884,7 @@ const TravelVisaBooking = () => {
                 
                 <VisaInformation />
                 
-                {/* Only show individual submit button when not in group mode */}
-                {!isGroup && (
-                  <div className="flex justify-end mt-6">
-                    <button
-                      onClick={() => handleSubmit(null, formData, false)}
-                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                    >
-                      Submit Application
-                    </button>
-                  </div>
-                )}
+
               </div>
             </div>
           </div>
