@@ -191,7 +191,7 @@ const TravelVisaBooking = () => {
     {
       _id: "travelerPhoto",
       type: "file",
-      placeholder: "Traveler Photo",
+      placeholder: "Traveller Photo",
       name: "travelerPhoto",
       label: "Traveler Photo",
       required: false,
@@ -620,8 +620,10 @@ const TravelVisaBooking = () => {
 
   // Separate handler for group submit
   const handleGroupSubmit = useCallback(() => {
+    const groupFormData = travelers.map((traveler) => traveler.formData);
+    console.log("Group submission data:", groupFormData);
     handleSubmit(null, null, true);
-  }, [handleSubmit]);
+  }, [handleSubmit, travelers]);
 
   const UploadForm = () => {
     const Visa = [
