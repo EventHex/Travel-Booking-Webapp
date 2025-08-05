@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Upload, Calendar, ChevronDown } from 'lucide-react';
 import Input from '../input';
 import { CustomSelect } from '../dropdown';
@@ -15,120 +15,203 @@ const DynamicForm = ({
   groupMode = false,
   travelers = [],
   onTravelerChange,
+  onGroupSubmit,
   currentTravelerIndex = 0
 }) => {
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
 
-  // Update form data when initialData changes
+  // Update form data when initialData changes, but avoid infinite loops
   useEffect(() => {
-    setFormData(initialData);
-  }, [initialData]);
-
-  const handleInputChange = (name, value) => {
-    const newFormData = {
-      ...formData,
-      [name]: value
-    };
-    
-    setFormData(newFormData);
-    
-    // Call onFieldChange callback if provided
-    if (onFieldChange) {
-      onFieldChange(name, value, newFormData);
+    if (JSON.stringify(initialData) !== JSON.stringify(formData)) {
+      setFormData(initialData);
     }
+  }, [initialData]); // Remove formData from dependencies to prevent loops
+
+  // Memoized input change handler to prevent recreation on every render
+  const handleInputChange = useCallback((name, value) => {
+    setFormData(prevFormData => {
+      const newFormData = {
+        ...prevFormData,
+        [name]: value
+      };
+      
+      // Call onFieldChange callback if provided
+      if (onFieldChange) {
+        onFieldChange(name, value, newFormData);
+      }
+      
+      return newFormData;
+    });
     
     // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
+    setErrors(prev => {
+      if (prev[name]) {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      }
+      return prev;
+    });
+  }, [onFieldChange]);
 
-  const handleFileUpload = async (name, file) => {
+  // Memoized file upload handler for individual mode
+  const handleFileUpload = useCallback(async (name, file) => {
     if (file) {
-      const newFormData = {
-        ...formData,
-        [name]: file
-      };
-      setFormData(newFormData);
-      
-      // Handle passport upload with API call
-      if (name === 'passportImageFront' || name === 'passportImageBack') {
-        try {
-          const uploadFormData = new FormData();
-          uploadFormData.append("passportImage", file);
-          uploadFormData.append("side", name === 'passportImageFront' ? "front" : "back");
-          
-          // For back passport, we need the passport ID from front
-        //   if (name === 'passportImageBack') {
-        //     const passportId = localStorage.getItem("currentPassportId");
-        //     if (!passportId) {
-        //       alert("Please upload the front page of the passport first");
-        //       return;
-        //     }
-        //     uploadFormData.append("passportId", passportId);
-        //   }
-          
-          const response = await instance.post("/passport/process", uploadFormData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
+      setFormData(prevFormData => {
+        const newFormData = {
+          ...prevFormData,
+          [name]: file
+        };
+        
+        // Handle passport upload with API call
+        if (name === 'passportImageFront' || name === 'passportImageBack') {
+          (async () => {
+            try {
+              const uploadFormData = new FormData();
+              uploadFormData.append("passportImage", file);
+              uploadFormData.append("side", name === 'passportImageFront' ? "front" : "back");
+              
+              const response = await instance.post("/passport/process", uploadFormData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              });
+              
+              console.log('Passport upload response:', response.data);
+              
+              // If upload successful, update form with extracted data
+              if (response.data.success && response.data.data) {
+                const extractedData = response.data.data;
+                
+                // Store passport ID for back passport processing
+                if (name === 'passportImageFront' && extractedData.passportId) {
+                  localStorage.setItem("currentPassportId", extractedData.passportId);
+                }
+                
+                const updatedFormData = {
+                  ...newFormData,
+                  // Front passport data
+                  passportNumber: extractedData.passportNumber || newFormData.passportNumber,
+                  firstName: extractedData.firstName || newFormData.firstName,
+                  lastName: extractedData.lastName || newFormData.lastName,
+                  nationality: extractedData.nationality || newFormData.nationality,
+                  sex: extractedData.sex || newFormData.sex,
+                  dob: extractedData.dateOfBirth ? extractedData.dateOfBirth.split('T')[0] : newFormData.dob,
+                  placeOfBirth: extractedData.placeOfBirth || newFormData.placeOfBirth,
+                  placeOfIssue: extractedData.placeOfIssue || newFormData.placeOfIssue,
+                  maritalStatus: extractedData.maritalStatus || newFormData.maritalStatus,
+                  dateOfIssue: extractedData.dateOfIssue ? extractedData.dateOfIssue.split('T')[0] : newFormData.dateOfIssue,
+                  dateOfExpiry: extractedData.dateOfExpiry ? extractedData.dateOfExpiry.split('T')[0] : newFormData.dateOfExpiry,
+                  // Back passport data
+                  fathersName: extractedData.fathersName || newFormData.fathersName,
+                  mothersName: extractedData.mothersName || newFormData.mothersName,
+                };
+                
+                setFormData(updatedFormData);
+                
+                // Call onFieldChange with updated data
+                if (onFieldChange) {
+                  onFieldChange(name, file, updatedFormData);
+                }
+              }
+            } catch (error) {
+              console.error('Error uploading passport:', error);
+              alert('Failed to upload passport. Please try again.');
             }
-          });
-          
-          console.log('Passport upload response:', response.data);
-          
-          // If upload successful, update form with extracted data
-          if (response.data.success && response.data.data) {
-            const extractedData = response.data.data;
-            
-            // Store passport ID for back passport processing
-            if (name === 'passportImageFront' && extractedData.passportId) {
-              localStorage.setItem("currentPassportId", extractedData.passportId);
-            }
-            
-            const updatedFormData = {
-              ...newFormData,
-              // Front passport data
-              passportNumber: extractedData.passportNumber || newFormData.passportNumber,
-              firstName: extractedData.firstName || newFormData.firstName,
-              lastName: extractedData.lastName || newFormData.lastName,
-              nationality: extractedData.nationality || newFormData.nationality,
-              sex: extractedData.sex || newFormData.sex,
-              dob: extractedData.dateOfBirth ? extractedData.dateOfBirth.split('T')[0] : newFormData.dob,
-              placeOfBirth: extractedData.placeOfBirth || newFormData.placeOfBirth,
-              placeOfIssue: extractedData.placeOfIssue || newFormData.placeOfIssue,
-              maritalStatus: extractedData.maritalStatus || newFormData.maritalStatus,
-              dateOfIssue: extractedData.dateOfIssue ? extractedData.dateOfIssue.split('T')[0] : newFormData.dateOfIssue,
-              dateOfExpiry: extractedData.dateOfExpiry ? extractedData.dateOfExpiry.split('T')[0] : newFormData.dateOfExpiry,
-              // Back passport data
-              fathersName: extractedData.fathersName || newFormData.fathersName,
-              mothersName: extractedData.mothersName || newFormData.mothersName,
-            };
-            
-            setFormData(updatedFormData);
-            
-            // Call onFieldChange with updated data
-            if (onFieldChange) {
-              onFieldChange(name, file, updatedFormData);
-            }
+          })();
+        } else {
+          // Call onFieldChange callback if provided for non-passport files
+          if (onFieldChange) {
+            onFieldChange(name, file, newFormData);
           }
-        } catch (error) {
-          console.error('Error uploading passport:', error);
-          alert('Failed to upload passport. Please try again.');
         }
-      } else {
-        // Call onFieldChange callback if provided
-        if (onFieldChange) {
-          onFieldChange(name, file, newFormData);
+        
+        return newFormData;
+      });
+    }
+  }, [onFieldChange]);
+
+  // Fixed file upload handler for group mode
+  const handleFileUploadForGroup = useCallback(async (travelerIndex, name, file) => {
+    if (!file || !onTravelerChange) return;
+
+    // First, immediately update the traveler with the file for preview
+    const currentTraveler = travelers[travelerIndex] || {};
+    const currentFormData = currentTraveler.formData || {};
+    
+    // Update with file immediately for preview
+    const immediateUpdate = {
+      ...currentFormData,
+      [name]: file
+    };
+    
+    onTravelerChange(travelerIndex, name, file, immediateUpdate);
+
+    // Handle passport upload with API call for group mode
+    if (name === 'passportImageFront' || name === 'passportImageBack') {
+      try {
+        const uploadFormData = new FormData();
+        uploadFormData.append("passportImage", file);
+        uploadFormData.append("side", name === 'passportImageFront' ? "front" : "back");
+        
+        // Add traveler-specific identifier to help with processing
+        uploadFormData.append("travelerIndex", travelerIndex.toString());
+        
+        const response = await instance.post("/passport/process", uploadFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        
+        console.log(`Passport upload response for traveler ${travelerIndex}:`, response.data);
+        
+        // If upload successful, update the SPECIFIC traveler's data with extracted data
+        if (response.data.success && response.data.data) {
+          const extractedData = response.data.data;
+          
+          // Store passport ID with traveler-specific key
+          if (name === 'passportImageFront' && extractedData.passportId) {
+            localStorage.setItem(`currentPassportId_traveler_${travelerIndex}`, extractedData.passportId);
+          }
+          
+          // Get the current traveler data again (in case it changed during async operation)
+          const latestTraveler = travelers[travelerIndex] || {};
+          const latestFormData = latestTraveler.formData || {};
+          
+          // Create updated form data with extracted passport information
+          const updatedFormData = {
+            ...latestFormData,
+            [name]: file, // Keep the file
+            // Front passport data - only update if field is empty or if this is the first upload
+            passportNumber: extractedData.passportNumber || latestFormData.passportNumber || '',
+            firstName: extractedData.firstName || latestFormData.firstName || '',
+            lastName: extractedData.lastName || latestFormData.lastName || '',
+            nationality: extractedData.nationality || latestFormData.nationality || '',
+            sex: extractedData.sex || latestFormData.sex || '',
+            dob: extractedData.dateOfBirth ? extractedData.dateOfBirth.split('T')[0] : latestFormData.dob || '',
+            placeOfBirth: extractedData.placeOfBirth || latestFormData.placeOfBirth || '',
+            placeOfIssue: extractedData.placeOfIssue || latestFormData.placeOfIssue || '',
+            maritalStatus: extractedData.maritalStatus || latestFormData.maritalStatus || '',
+            dateOfIssue: extractedData.dateOfIssue ? extractedData.dateOfIssue.split('T')[0] : latestFormData.dateOfIssue || '',
+            dateOfExpiry: extractedData.dateOfExpiry ? extractedData.dateOfExpiry.split('T')[0] : latestFormData.dateOfExpiry || '',
+            // Back passport data
+            fathersName: extractedData.fathersName || latestFormData.fathersName || '',
+            mothersName: extractedData.mothersName || latestFormData.mothersName || '',
+          };
+          
+          // Update the specific traveler with extracted data
+          onTravelerChange(travelerIndex, name, file, updatedFormData);
         }
+      } catch (error) {
+        console.error(`Error uploading passport for traveler ${travelerIndex}:`, error);
+        alert(`Failed to upload passport for traveler ${travelerIndex + 1}. Please try again.`);
       }
     }
-  };
+  }, [travelers, onTravelerChange]);
 
-  const validateForm = () => {
+  // Memoized validation function
+  const validateForm = useCallback(() => {
     const newErrors = {};
     
     attributes.forEach(attr => {
@@ -147,9 +230,10 @@ const DynamicForm = ({
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [attributes, formData]);
 
-  const handleSubmit = () => {
+  // Memoized submit handler
+  const handleSubmit = useCallback(() => {
     if (validateForm()) {
       // Create FormData for multipart submission (handles files)
       const formDataObj = new FormData();
@@ -166,11 +250,26 @@ const DynamicForm = ({
         }
       });
       
-      onSubmit && onSubmit(formDataObj, formData); // Pass both FormData and regular object
+      onSubmit && onSubmit(formDataObj, formData, false); // Pass both FormData and regular object
     }
-  };
+  }, [validateForm, formData, onSubmit]);
 
-  const renderField = (attr) => {
+  // Memoized individual traveler change handler
+  const handleIndividualTravelerChange = useCallback((index, name, value) => {
+    if (onTravelerChange) {
+      // Get current traveler data
+      const currentTraveler = travelers[index] || {};
+      const updatedFormData = {
+        ...currentTraveler.formData,
+        [name]: value
+      };
+      
+      onTravelerChange(index, name, value, updatedFormData);
+    }
+  }, [travelers, onTravelerChange]);
+
+  // Memoized field renderer
+  const renderField = useCallback((attr, travelerIndex = null) => {
     const { 
       type, 
       name, 
@@ -191,121 +290,66 @@ const DynamicForm = ({
       customClass,
       cssClass
     } = attr;
-    const value = formData[name] || attr.default || '';
+
+    // Get value based on whether we're in group mode or not
+    let value;
+    if (groupMode && travelerIndex !== null && travelers[travelerIndex]) {
+      value = travelers[travelerIndex].formData?.[name] || attr.default || '';
+    } else {
+      value = formData[name] || attr.default || '';
+    }
+
     const hasError = errors[name];
 
     // Create dynamic width style
     const widthStyle = width ? { width } : {};
     const containerClass = `mb-4 ${customClass || ''} ${cssClass || ''}`;
 
+    // Handler for input changes
+    const onChange = groupMode && travelerIndex !== null 
+      ? (newValue) => handleIndividualTravelerChange(travelerIndex, name, newValue)
+      : (newValue) => handleInputChange(name, newValue);
+
+    // Generate unique key for each field with traveler context
+    const fieldKey = `${name || 'field'}-${travelerIndex !== null ? `traveler-${travelerIndex}` : 'main'}`;
+
     switch (type) {
       case 'text':
-        return (
-          <div className={containerClass} style={widthStyle}>
-            <Input
-              value={value}
-              onChange={(e) => handleInputChange(name, e.target.value)}
-              placeholder={placeholder}
-              label={label}
-              required={required}
-              htmlType={name}
-              className={hasError ? 'border-red-500' : ''}
-            />
-          </div>
-        );
-
       case 'email':
-        return (
-          <div className={containerClass} style={widthStyle}>
-            <Input
-              value={value}
-              onChange={(e) => handleInputChange(name, e.target.value)}
-              placeholder={placeholder}
-              label={label}
-              required={required}
-              htmlType={name}
-              type="email"
-              className={hasError ? 'border-red-500' : ''}
-            />
-          </div>
-        );
-
       case 'password':
-        return (
-          <div className={containerClass} style={widthStyle}>
-            <Input
-              value={value}
-              onChange={(e) => handleInputChange(name, e.target.value)}
-              placeholder={placeholder}
-              label={label}
-              required={required}
-              htmlType={name}
-              type="password"
-              className={hasError ? 'border-red-500' : ''}
-            />
-          </div>
-        );
-
       case 'number':
-        return (
-          <div className={containerClass} style={widthStyle}>
-            <Input
-              value={value}
-              onChange={(e) => handleInputChange(name, e.target.value)}
-              placeholder={placeholder}
-              label={label}
-              required={required}
-              htmlType={name}
-              type="number"
-              min={minimum}
-              max={maximum}
-              className={hasError ? 'border-red-500' : ''}
-            />
-          </div>
-        );
-
       case 'tel':
-        return (
-          <div className={containerClass} style={widthStyle}>
-            <Input
-              value={value}
-              onChange={(e) => handleInputChange(name, e.target.value)}
-              placeholder={placeholder}
-              label={label}
-              required={required}
-              htmlType={name}
-              type="tel"
-              className={hasError ? 'border-red-500' : ''}
-            />
-          </div>
-        );
-
       case 'url':
         return (
-          <div className={containerClass} style={widthStyle}>
+          <div key={fieldKey} className={containerClass} style={widthStyle}>
             <Input
               value={value}
-              onChange={(e) => handleInputChange(name, e.target.value)}
+              onChange={(e) => onChange(e.target.value)}
               placeholder={placeholder}
               label={label}
               required={required}
               htmlType={name}
-              type="url"
+              type={type === 'text' ? 'text' : type}
+              min={type === 'number' ? minimum : undefined}
+              max={type === 'number' ? maximum : undefined}
               className={hasError ? 'border-red-500' : ''}
             />
+            {hasError && (
+              <p className="text-red-500 text-xs mt-1">{hasError}</p>
+            )}
           </div>
         );
 
       case 'textarea':
         return (
-          <div className={containerClass} style={widthStyle}>
+          <div key={fieldKey} className={containerClass} style={widthStyle}>
             <label className="block text-[16px] py-1 font-[400] text-gray-700 mb-1">
               {label}
               {required && <span className="text-red-500">*</span>}
             </label>
             <textarea
               value={value}
-              onChange={(e) => handleInputChange(name, e.target.value)}
+              onChange={(e) => onChange(e.target.value)}
               placeholder={placeholder}
               className={`w-full px-3 py-3 border border-gray-300 rounded-[14px] focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 text-gray-500 bg-transparent min-h-[80px] resize-vertical ${
                 hasError ? 'border-red-500' : ''
@@ -328,7 +372,6 @@ const DynamicForm = ({
           }));
         } else if (apiType === 'API') {
           // In a real app, you'd fetch from the API endpoint
-          // For demo, showing placeholder options
           if (selectApi === 'country/select') {
             selectOptions = ['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Japan', 'India'].map(country => ({
               value: country,
@@ -364,23 +407,26 @@ const DynamicForm = ({
         }
 
         return (
-          <div className={containerClass} style={widthStyle}>
+          <div key={fieldKey} className={containerClass} style={widthStyle}>
             <CustomSelect
               name={name}
               value={value}
-              onChange={(selectedValue) => handleInputChange(name, selectedValue)}
+              onChange={(selectedValue) => onChange(selectedValue)}
               options={selectOptions}
               placeholder={placeholder}
               label={label}
               required={required}
               className={hasError ? 'border-red-500' : ''}
             />
+            {hasError && (
+              <p className="text-red-500 text-xs mt-1">{hasError}</p>
+            )}
           </div>
         );
 
       case 'date':
         return (
-          <div className={containerClass} style={widthStyle}>
+          <div key={fieldKey} className={containerClass} style={widthStyle}>
             <label className="block text-[16px] py-1 font-[400] text-gray-700 mb-1">
               {label}
               {required && <span className="text-red-500">*</span>}
@@ -389,7 +435,7 @@ const DynamicForm = ({
               <input
                 type="date"
                 value={value}
-                onChange={(e) => handleInputChange(name, e.target.value)}
+                onChange={(e) => onChange(e.target.value)}
                 min={minDate}
                 max={maxDate}
                 className={`w-full px-3 py-3 border border-gray-300 rounded-[14px] focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 text-gray-500 bg-transparent ${
@@ -406,17 +452,17 @@ const DynamicForm = ({
 
       case 'checkbox':
         return (
-          <div className={containerClass} style={widthStyle}>
+          <div key={fieldKey} className={containerClass} style={widthStyle}>
             <div className="flex items-center">
               <input
                 type="checkbox"
-                id={name}
+                id={`${fieldKey}-checkbox`}
                 name={name}
                 checked={value === true || value === 'true'}
-                onChange={(e) => handleInputChange(name, e.target.checked)}
+                onChange={(e) => onChange(e.target.checked)}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label htmlFor={name} className="ml-2 block text-sm text-gray-700">
+              <label htmlFor={`${fieldKey}-checkbox`} className="ml-2 block text-sm text-gray-700">
                 {placeholder || label}
                 {required && <span className="text-red-500 ml-1">*</span>}
               </label>
@@ -429,18 +475,31 @@ const DynamicForm = ({
 
       case 'file':
         return (
-          <div className={containerClass} style={widthStyle}>
+          <div key={fieldKey} className={containerClass} style={widthStyle}>
             <FileComponent
               head={label}
-              onFileSelect={(file) => handleFileUpload(name, file)}
+              key={`${fieldKey}-file-component`} // Additional key for FileComponent
+              onFileSelect={(file) => {
+                if (groupMode && travelerIndex !== null) {
+                  // Handle file upload for group mode with specific traveler index
+                  handleFileUploadForGroup(travelerIndex, name, file);
+                } else {
+                  handleFileUpload(name, file);
+                }
+              }}
               className="mb-4"
+              // Pass current file value if needed for preview
+              currentFile={value instanceof File ? value : null}
             />
+            {hasError && (
+              <p className="text-red-500 text-xs mt-1">{hasError}</p>
+            )}
           </div>
         );
 
       case 'section':
         return (
-          <div className="mb-6" style={widthStyle}>
+          <div key={fieldKey} className="mb-6" style={widthStyle}>
             <div className="flex items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-800 mr-3">{label}</h3>
               <div className="flex-1 border-t border-gray-300"></div>
@@ -453,29 +512,33 @@ const DynamicForm = ({
 
       case 'divider':
         return (
-          <div className="my-6" style={widthStyle}>
+          <div key={fieldKey} className="my-6" style={widthStyle}>
             <div className="border-t border-gray-300"></div>
           </div>
         );
 
       default:
         return (
-          <div className={containerClass} style={widthStyle}>
+          <div key={fieldKey} className={containerClass} style={widthStyle}>
             <Input
               value={value}
-              onChange={(e) => handleInputChange(name, e.target.value)}
+              onChange={(e) => onChange(e.target.value)}
               placeholder={placeholder}
               label={label}
               required={required}
               htmlType={name}
               className={hasError ? 'border-red-500' : ''}
             />
+            {hasError && (
+              <p className="text-red-500 text-xs mt-1">{hasError}</p>
+            )}
           </div>
         );
     }
-  };
+  }, [formData, errors, travelers, groupMode, handleInputChange, handleFileUpload, handleFileUploadForGroup, handleIndividualTravelerChange]);
 
-  const renderFormFields = () => {
+  // Memoized form fields rendering
+  const renderFormFields = useMemo(() => {
     const fieldsToShow = attributes.filter(attr => attr.add !== false);
     
     if (formMode === 'double') {
@@ -493,24 +556,10 @@ const DynamicForm = ({
       return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-4">
-            {leftFields.map((attr, index) => (
-              <div key={`${attr.name}-${index}`}>
-                {renderField(attr)}
-                {errors[attr.name] && (
-                  <p className="text-red-500 text-xs mt-1">{errors[attr.name]}</p>
-                )}
-              </div>
-            ))}
+            {leftFields.map((attr, index) => renderField(attr))}
           </div>
           <div className="space-y-4">
-            {rightFields.map((attr, index) => (
-              <div key={`${attr.name}-${index}`}>
-                {renderField(attr)}
-                {errors[attr.name] && (
-                  <p className="text-red-500 text-xs mt-1">{errors[attr.name]}</p>
-                )}
-              </div>
-            ))}
+            {rightFields.map((attr, index) => renderField(attr))}
           </div>
         </div>
       );
@@ -518,45 +567,99 @@ const DynamicForm = ({
 
     return (
       <div className="space-y-4">
-        {fieldsToShow.map((attr, index) => (
-          <div key={`${attr.name}-${index}`}>
-            {renderField(attr)}
-            {errors[attr.name] && (
-              <p className="text-red-500 text-xs mt-1">{errors[attr.name]}</p>
-            )}
-          </div>
-        ))}
+        {fieldsToShow.map((attr, index) => renderField(attr))}
       </div>
     );
-  };
+  }, [attributes, formMode, renderField]);
+
+  // Memoized individual traveler form
+  const renderTravelerForm = useCallback((traveler, index) => {
+    const fieldsToShow = attributes.filter(attr => attr.add !== false);
+    
+    if (formMode === 'double') {
+      const leftFields = [];
+      const rightFields = [];
+      
+      fieldsToShow.forEach((field, fieldIndex) => {
+        if (fieldIndex % 2 === 0) {
+          leftFields.push(field);
+        } else {
+          rightFields.push(field);
+        }
+      });
+
+      return (
+        <div key={`traveler-form-${traveler.id || index}`} className="mb-8 border-b pb-8 last:border-b-0">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold">Traveler {index + 1}</h3>
+            {travelers.length > 1 && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (onTravelerChange) {
+                    const newTravelers = travelers.filter((_, i) => i !== index);
+                    // Update all travelers with new indexes
+                    newTravelers.forEach((t, i) => {
+                      t.id = i;
+                    });
+                    // This would need to be handled differently - you might need a remove traveler function
+                    console.log('Remove traveler at index:', index);
+                  }
+                }}
+                className="text-red-600 hover:text-red-800 text-sm"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              {leftFields.map((attr) => renderField(attr, index))}
+            </div>
+            <div className="space-y-4">
+              {rightFields.map((attr) => renderField(attr, index))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div key={`traveler-form-${traveler.id || index}`} className="mb-8 border-b pb-8 last:border-b-0">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold">Traveler {index + 1}</h3>
+          {travelers.length > 1 && (
+            <button
+              type="button"
+              onClick={() => {
+                if (onTravelerChange) {
+                  // This would need to be handled differently - you might need a remove traveler function
+                  console.log('Remove traveler at index:', index);
+                }
+              }}
+              className="text-red-600 hover:text-red-800 text-sm"
+            >
+              Remove
+            </button>
+          )}
+        </div>
+        <div className="space-y-4">
+          {fieldsToShow.map((attr) => renderField(attr, index))}
+        </div>
+      </div>
+    );
+  }, [attributes, formMode, renderField, travelers.length, onTravelerChange]);
 
   // Render group mode with multiple travelers
   if (groupMode && travelers && travelers.length > 0) {
     return (
       <div className={`bg-white p-6 rounded-lg shadow-sm ${className}`}>
-        {travelers.map((traveler, index) => (
-          <div key={traveler.id} className="mb-8 border-b pb-8">
-            <h3 className="text-xl font-bold mb-4">Traveler {index + 1}</h3>
-            <DynamicForm
-              attributes={attributes}
-              formMode={formMode}
-              onSubmit={onSubmit}
-              initialData={traveler.formData || {}}
-              onFieldChange={(name, value, newFormData) => {
-                if (onTravelerChange) {
-                  onTravelerChange(index, name, value, newFormData);
-                }
-              }}
-              className=""
-            />
-          </div>
-        ))}
+        {travelers.map((traveler, index) => renderTravelerForm(traveler, index))}
         
         <div className="mt-6 flex justify-end space-x-3">
           <button
             type="button"
             onClick={() => {
-              // Add new traveler functionality
               if (onTravelerChange) {
                 onTravelerChange('add', null, null, null);
               }
@@ -567,19 +670,26 @@ const DynamicForm = ({
           </button>
           <button
             type="button"
-            onClick={handleSubmit}
+            onClick={() => {
+              if (onGroupSubmit) {
+                onGroupSubmit();
+              } else if (onSubmit) {
+                onSubmit(null, null, true); // Pass true to indicate group submission
+              }
+            }}
             className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            Submit All
+            Submit All Applications
           </button>
         </div>
       </div>
     );
   }
 
+  // Regular individual form
   return (
     <div className={`bg-white p-6 rounded-lg shadow-sm ${className}`}>
-      {renderFormFields()}
+      {renderFormFields}
       
       <div className="mt-6 flex justify-end space-x-3">
         <button
@@ -593,7 +703,7 @@ const DynamicForm = ({
           onClick={handleSubmit}
           className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          Submit
+          Submit Application
         </button>
       </div>
     </div>

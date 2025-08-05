@@ -31,7 +31,7 @@ const Input = ({
           </div>
         )}
         <input
-          value={value}
+          value={value || ''}
           onChange={onChange}
           placeholder={placeholder}
           className={`mb-1 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 block w-full sm:text-sm border-gray-300 rounded-[14px] ${

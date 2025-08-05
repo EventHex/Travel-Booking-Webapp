@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Header from "../../components/header";
 import { FrontPassportForm } from "./passportFrontForm";
 import { BackPassportForm } from "./passportBackForm";
@@ -56,14 +56,15 @@ const TravelVisaBooking = () => {
     visaId = ''
   } = location.state || {};
 
-  // Remove unused searchData object since we're using location.state
+  // Validation useEffect with proper dependencies
   useEffect(() => {
     console.log(fromCountry, toCountry, travelDate, returnDate, purpose, price, visaId, "fromCountry, toCountry, travelDate, returnDate, purpose, price, visaId ");
     if (!fromCountry || !toCountry || !travelDate || !returnDate || !purpose || !price) {
       navigate("/");
     }
-  }, [fromCountry, toCountry, travelDate, returnDate, purpose, price, navigate]);
+  }, []); // Remove dependencies to prevent re-navigation loops
 
+  // Fetch passports only once on mount
   useEffect(() => {
     const fetchPassports = async () => {
       try {
@@ -77,7 +78,8 @@ const TravelVisaBooking = () => {
     fetchPassports();
   }, []);
 
-  const presetFields = [
+  // Memoize preset fields to prevent recreation on every render
+  const presetFields = useCallback(() => [
     {
       type: "text",
       placeholder: "Passport Number",
@@ -180,268 +182,95 @@ const TravelVisaBooking = () => {
       label: "Traveler Photo",
       required: false,
     }
-  ];
+  ], []);
   
-
+  // Fetch visa fields when dependencies change
   useEffect(() => {
     const fetchVisaFields = async () => {
-      const response = await instance.get(`/visa-form-fields?visa=${visaId}`);
-      console.log(response.data, "response.data");
-      setVisaFields([     {
-        type: "section",
-        label: "Traveller Information",
-        // placeholder: "Select Traveller",
-      },{
-        type: "select",
-        placeholder: "Passport Image",
-        name: "travellerInformation",
-        validation: "",
-        default: "",
-        label: "Select Traveller",
-        apiType: "JSON",
-        selectApi: passports,
-      },{
-        type: "file",
-        placeholder: "Passport Front Image",
-        name: "passportImageFront",
-        validation: "",
-        default: "",
-        label: "Passport Front Image",
-        required: false,
-      },{
-        type: "file",
-        placeholder: "Passport Back Image",
-        name: "passportImageBack",
-        validation: "",
-        default: "",
-        label: "Passport Back Image",
-        required: false,
-      },...presetFields,{
-        type: "section",
-        label: "Visa Information",
-        // placeholder: "Select Traveller",
-      }, ...response.data.response]);
+      try {
+        const response = await instance.get(`/visa-form-fields?visa=${visaId}`);
+        console.log(response.data, "response.data");
+        
+        const fields = [
+          {
+            type: "section",
+            label: "Traveller Information",
+          },
+          {
+            type: "select",
+            placeholder: "Passport Image",
+            name: "travellerInformation",
+            validation: "",
+            default: "",
+            label: "Select Traveller",
+            apiType: "JSON",
+            selectApi: passports,
+          },
+          {
+            type: "file",
+            placeholder: "Passport Front Image",
+            name: "passportImageFront",
+            validation: "",
+            default: "",
+            label: "Passport Front Image",
+            required: false,
+          },
+          {
+            type: "file",
+            placeholder: "Passport Back Image",
+            name: "passportImageBack",
+            validation: "",
+            default: "",
+            label: "Passport Back Image",
+            required: false,
+          },
+          ...presetFields(),
+          {
+            type: "section",
+            label: "Visa Information",
+          }, 
+          ...response.data.response
+        ];
+        
+        setVisaFields(fields);
+      } catch (error) {
+        console.error('Error fetching visa fields:', error);
+      }
     };
+    
     if (visaId && passports.length > 0) {
       fetchVisaFields();
     }
-  }, [visaId, passports.length]);
-
-  // Add passport selection handler for DynamicForm
-  const handlePassportSelection = async (fieldName, selectedValue, newFormData) => {
-    if (fieldName === 'travellerInformation' && selectedValue) {
-      try {
-        // Fetch traveler information using the selected passport ID
-        const response = await instance.get(`/traveller-information?id=${selectedValue}`);
-        const travelerData = response.data.response;
-
-        // Update form data with traveler information
-        const updatedFormData = {
-          ...newFormData,
-          passportNumber: travelerData.passportNumber || '',
-          firstName: travelerData.firstName || '',
-          lastName: travelerData.lastName || '',
-          nationality: travelerData.nationality || '',
-          sex: travelerData.sex || '',
-          dob: travelerData.dateOfBirth ? travelerData.dateOfBirth.split('T')[0] : '',
-          placeOfBirth: travelerData.placeOfBirth || '',
-          placeOfIssue: travelerData.placeOfIssue || '',
-          maritalStatus: travelerData.maritalStatus || '',
-          dateOfIssue: travelerData.dateOfIssue ? travelerData.dateOfIssue.split('T')[0] : '',
-          dateOfExpiry: travelerData.dateOfExpiry ? travelerData.dateOfExpiry.split('T')[0] : '',
-          fathersName: travelerData.fathersName || '',
-          mothersName: travelerData.mothersName || '',
-        };
-
-        // Update the form data
-        setFormData(updatedFormData);
-
-      } catch (error) {
-        console.error('Error fetching traveler information:', error);
-        alert('Failed to fetch traveler information');
-      }
-    }
-  };
-
-  // Add traveler change handler for group mode
-  const handleTravelerChange = async (index, fieldName, value, newFormData) => {
-    if (index === 'add') {
-      // Add new traveler
-      addTraveler();
-    } else {
-      // Update existing traveler
-      const newTravelers = [...travelers];
-      if (newTravelers[index]) {
-        // Handle passport selection in group mode
-        if (fieldName === 'travellerInformation' && value) {
-          try {
-            // Fetch traveler information using the selected passport ID
-            const response = await instance.get(`/traveller-information?id=${value}`);
-            const travelerData = response.data.response;
-
-            // Update traveler data with fetched information
-            const updatedTravelerData = {
-              ...newFormData,
-              passportNumber: travelerData.passportNumber || '',
-              firstName: travelerData.firstName || '',
-              lastName: travelerData.lastName || '',
-              nationality: travelerData.nationality || '',
-              sex: travelerData.sex || '',
-              dob: travelerData.dateOfBirth ? travelerData.dateOfBirth.split('T')[0] : '',
-              placeOfBirth: travelerData.placeOfBirth || '',
-              placeOfIssue: travelerData.placeOfIssue || '',
-              maritalStatus: travelerData.maritalStatus || '',
-              dateOfIssue: travelerData.dateOfIssue ? travelerData.dateOfIssue.split('T')[0] : '',
-              dateOfExpiry: travelerData.dateOfExpiry ? travelerData.dateOfExpiry.split('T')[0] : '',
-              fathersName: travelerData.fathersName || '',
-              mothersName: travelerData.mothersName || '',
-            };
-
-            newTravelers[index].formData = updatedTravelerData;
-            setTravelers(newTravelers);
-
-          } catch (error) {
-            console.error('Error fetching traveler information:', error);
-            alert('Failed to fetch traveler information');
-          }
-        } else {
-          // For other field changes, just update the form data
-          newTravelers[index].formData = newFormData;
-          setTravelers(newTravelers);
-        }
-      }
-    }
-  };
-
-  // useEffect(() => {
-  //   const fetchPassportData = async () => {
-  //     const response = await instance.get(`/traveller-information?id=${selectedPassport}`);
-  //     console.log(response.data, "response.data");
-  //   };
-  //   if (selectedPassport) {
-  //     fetchPassportData();
-  //   }
-  // }, [selectedPassport, passports]);
+  }, [visaId, passports.length, presetFields]);
 
   const citizenInputRef = useRef(null);
   const goingToInputRef = useRef(null);
 
   const [frontImage, setFrontImage] = useState(null);
-  // const [backImageUrl, setBackImageUrl] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [citizenIsFocused, setCitizenIsFocused] = useState(false);
   const [goingToIsFocused, setGoingToIsFocused] = useState(false);
   const [TravellingDateFocused, setTravellingDateFocused] = useState(false);
-  const [TravellingDateEndFocused, setTravellingDateEndFocused] =
-    useState(false);
-  // ************  hiding grp btn ************
+  const [TravellingDateEndFocused, setTravellingDateEndFocused] = useState(false);
   const [isGroup, setIsGroup] = useState(false);
-  // Add state for all form data
-  const [frontFormData, setFrontFormData] = useState({
-    passportNumber: "",
-    firstName: "",
-    lastName: "",
-    nationality: "",
-    sex: "",
-    dateOfBirth: "",
-    placeOfBirth: "",
-    placeOfIssue: "",
-    maritalStatus: "",
-    dateOfIssue: "",
-    dateOfExpiry: "",
-  });
-
-  const [backFormData, setBackFormData] = useState({
-    fathersName: "",
-    mothersName: "",
-  });
-
   const [travelerPhoto, setTravelerPhoto] = useState(null);
   const [flightTicket, setFlightTicket] = useState(null);
   const [hotelBooking, setHotelBooking] = useState(null);
-  
-
-  const handleCitizenIconClick = () => {
-    citizenInputRef.current.focus();
-  };
-
-  const handleGoingToIconClick = () => {
-    goingToInputRef.current.focus();
-  };
-
   const [applicationType, setApplicationType] = useState("individual");
   const [visaType, setVisaType] = useState(purpose || '');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({});
-
-  const visaOptions = [
-   purpose
-  ];
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallScreen(window.innerWidth < 1024);
-      setIsNarrowScreen(window.innerWidth < 880); // Set the new state based on width
-      if (window.innerWidth >= 768) {
-        setSidebarOpen(true);
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // ***************passport photo*****************
   const [file, setFile] = useState(null);
-
-  const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  // *********************ticketBooking******************************
+  
   const [documents, setDocuments] = useState({
     flightTicket: null,
     hotelBooking: null,
   });
 
-  const handleFileChangeTicketBooking = (type, file) => {
-    setDocuments((prev) => ({
-      ...prev,
-      [type]: file,
-    }));
-  };
-
-  const handleSubmitTicketBooking = async (e) => {
-    e.preventDefault();
-    // try {
-    const formData = new FormData();
-    formData.append("travellerInformation", travelerId);
-    formData.append("visaFor", "Individual");
-    formData.append("visaType", visaType);
-    formData.append("visaCountry", destination);
-    formData.append("travelDateFrom", travelDate);
-    formData.append("travelDateTo", returnDate);
-    formData.append("dateOfApply", new Date().toISOString());
-    formData.append("status", "Submitted");
-    formData.append("applicationDetails", "Application Complete");
-
-    if (documents.flightTicket) {
-      formData.append("roundTripFlightTicket", documents.flightTicket);
-    }
-    if (documents.hotelBooking) {
-      formData.append("hotelBooking", documents.hotelBooking);
-    }
-
-  };
-
-  // Add new state for multiple travelers
+  // Initialize travelers state with proper structure
   const [travelers, setTravelers] = useState([
     {
       id: 0,
@@ -469,131 +298,311 @@ const TravelVisaBooking = () => {
     }
   ]);
 
-  // Cleanup passport ID when component unmounts
+  const visaOptions = [purpose];
+
+  // Handle resize effect
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 1024);
+      setIsNarrowScreen(window.innerWidth < 880);
+      if (window.innerWidth >= 768) {
+        setSidebarOpen(true);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Cleanup passport IDs when component unmounts
   useEffect(() => {
     return () => {
       localStorage.removeItem("currentPassportId");
+      // Clean up group passport IDs
+      travelers.forEach((_, index) => {
+        localStorage.removeItem(`currentPassportId_${index}`);
+      });
     };
-  }, []);
+  }, [travelers.length]);
 
-  // Add function to handle adding new traveler
-  const addTraveler = () => {
-    setTravelers([...travelers, {
-      id: travelers.length,
-      formData: {
-        travellerInformation: "",
-        passportNumber: "",
-        firstName: "",
-        lastName: "",
-        nationality: "",
-        sex: "",
-        dob: "",
-        placeOfBirth: "",
-        placeOfIssue: "",
-        maritalStatus: "",
-        dateOfIssue: "",
-        dateOfExpiry: "",
-        fathersName: "",
-        mothersName: "",
-        travelerPhoto: null,
-      },
-      frontImage: null,
-      previewUrl: null,
-      travelerPhoto: null,
-      selectedPassport: "",
-    }]);
+  const handleCitizenIconClick = () => {
+    citizenInputRef.current.focus();
   };
 
-  // Modify handleSubmit for multiple travelers
-  const handleSubmit = async () => {
-    try {
-      const submissionResults = await Promise.all(travelers.map(async (traveler) => {
-        let travelerId = '';
-        
-        if (!traveler.selectedPassport) {
-          // Create new traveler information
-          const passportInfo = new FormData();
-          Object.entries(traveler.frontFormData).forEach(([key, value]) => {
-            passportInfo.append(key, value);
-          });
-          Object.entries(traveler.backFormData).forEach(([key, value]) => {
-            passportInfo.append(key, value);
-          });
+  const handleGoingToIconClick = () => {
+    goingToInputRef.current.focus();
+  };
 
-          if (traveler.frontImage) {
-            passportInfo.append("passportImageFront", traveler.frontImage);
-          }
-          if (traveler.previewUrl) {
-            passportInfo.append("passportImageBack", traveler.previewUrl);
-          }
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
 
-          const travelerResponse = await instance.post(
-            "/traveller-information",
-            passportInfo,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
+  const handleFileChangeTicketBooking = (type, file) => {
+    setDocuments((prev) => ({
+      ...prev,
+      [type]: file,
+    }));
+  };
+
+  const handleSubmitTicketBooking = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("travellerInformation", "travelerId");
+    formData.append("visaFor", "Individual");
+    formData.append("visaType", visaType);
+    formData.append("visaCountry", "destination");
+    formData.append("travelDateFrom", travelDate);
+    formData.append("travelDateTo", returnDate);
+    formData.append("dateOfApply", new Date().toISOString());
+    formData.append("status", "Submitted");
+    formData.append("applicationDetails", "Application Complete");
+
+    if (documents.flightTicket) {
+      formData.append("roundTripFlightTicket", documents.flightTicket);
+    }
+    if (documents.hotelBooking) {
+      formData.append("hotelBooking", documents.hotelBooking);
+    }
+  };
+
+  // Fixed passport selection handler for DynamicForm
+  const handlePassportSelection = useCallback(async (fieldName, selectedValue, newFormData) => {
+    if (fieldName === 'travellerInformation' && selectedValue) {
+      try {
+        const response = await instance.get(`/traveller-information?id=${selectedValue}`);
+        const travelerData = response.data.response;
+
+        const updatedFormData = {
+          ...newFormData,
+          passportNumber: travelerData.passportNumber || '',
+          firstName: travelerData.firstName || '',
+          lastName: travelerData.lastName || '',
+          nationality: travelerData.nationality || '',
+          sex: travelerData.sex || '',
+          dob: travelerData.dateOfBirth ? travelerData.dateOfBirth.split('T')[0] : '',
+          placeOfBirth: travelerData.placeOfBirth || '',
+          placeOfIssue: travelerData.placeOfIssue || '',
+          maritalStatus: travelerData.maritalStatus || '',
+          dateOfIssue: travelerData.dateOfIssue ? travelerData.dateOfIssue.split('T')[0] : '',
+          dateOfExpiry: travelerData.dateOfExpiry ? travelerData.dateOfExpiry.split('T')[0] : '',
+          fathersName: travelerData.fathersName || '',
+          mothersName: travelerData.mothersName || '',
+        };
+
+        setFormData(updatedFormData);
+      } catch (error) {
+        console.error('Error fetching traveler information:', error);
+        alert('Failed to fetch traveler information');
+      }
+    }
+  }, []);
+
+  // Fixed traveler change handler for group mode
+  const handleTravelerChange = useCallback(async (index, fieldName, value, newFormData) => {
+    if (index === 'add') {
+      // Add new traveler
+      const newTraveler = {
+        id: travelers.length,
+        formData: {
+          travellerInformation: "",
+          passportNumber: "",
+          firstName: "",
+          lastName: "",
+          nationality: "",
+          sex: "",
+          dob: "",
+          placeOfBirth: "",
+          placeOfIssue: "",
+          maritalStatus: "",
+          dateOfIssue: "",
+          dateOfExpiry: "",
+          fathersName: "",
+          mothersName: "",
+          travelerPhoto: null,
+        },
+        frontImage: null,
+        previewUrl: null,
+        travelerPhoto: null,
+        selectedPassport: "",
+      };
+      setTravelers(prev => [...prev, newTraveler]);
+    } else {
+      // Update existing traveler
+      setTravelers(prevTravelers => {
+        const newTravelers = [...prevTravelers];
+        if (newTravelers[index]) {
+          // Handle passport selection in group mode
+          if (fieldName === 'travellerInformation' && value) {
+            try {
+              // Fetch traveler information using the selected passport ID
+              instance.get(`/traveller-information?id=${value}`)
+                .then(response => {
+                  const travelerData = response.data.response;
+                  
+                  setTravelers(currentTravelers => {
+                    const updatedTravelers = [...currentTravelers];
+                    updatedTravelers[index] = {
+                      ...updatedTravelers[index],
+                      selectedPassport: value,
+                      formData: {
+                        ...newFormData,
+                        passportNumber: travelerData.passportNumber || '',
+                        firstName: travelerData.firstName || '',
+                        lastName: travelerData.lastName || '',
+                        nationality: travelerData.nationality || '',
+                        sex: travelerData.sex || '',
+                        dob: travelerData.dateOfBirth ? travelerData.dateOfBirth.split('T')[0] : '',
+                        placeOfBirth: travelerData.placeOfBirth || '',
+                        placeOfIssue: travelerData.placeOfIssue || '',
+                        maritalStatus: travelerData.maritalStatus || '',
+                        dateOfIssue: travelerData.dateOfIssue ? travelerData.dateOfIssue.split('T')[0] : '',
+                        dateOfExpiry: travelerData.dateOfExpiry ? travelerData.dateOfExpiry.split('T')[0] : '',
+                        fathersName: travelerData.fathersName || '',
+                        mothersName: travelerData.mothersName || '',
+                      }
+                    };
+                    return updatedTravelers;
+                  });
+                })
+                .catch(error => {
+                  console.error('Error fetching traveler information:', error);
+                  alert('Failed to fetch traveler information');
+                });
+            } catch (error) {
+              console.error('Error fetching traveler information:', error);
+              alert('Failed to fetch traveler information');
             }
-          );
-
-          travelerId = travelerResponse.data.data._id;
-        } else {
-          travelerId = traveler.selectedPassport;
+          } else {
+            // For other field changes, just update the form data
+            newTravelers[index] = {
+              ...newTravelers[index],
+              formData: newFormData
+            };
+          }
         }
+        return newTravelers;
+      });
+    }
+  }, [travelers.length]);
 
-        // Create visa application for each traveler
-        const formData = new FormData();
-        formData.append("travellerInformation", travelerId);
-        formData.append("purpose", purpose);
-        formData.append("price", price);
-        formData.append("toCountry", toCountry);
-        formData.append("fromCountry", fromCountry);
-        formData.append("travelDateFrom", travelDate);
-        formData.append("travelDateTo", returnDate);
-        formData.append("dateOfApply", new Date().toISOString());
-        formData.append("status", "Submitted");
+  // Fixed submit handler
+  const handleSubmit = useCallback(async (formDataObj, formDataRegular, isGroupSubmit = false) => {
+    try {
+      console.log(formDataObj, "formDataObj");
+      console.log(formDataRegular, "formData");
+      
+      if (isGroup || isGroupSubmit) {
+        // Group submission - process all travelers
+        const submissionResults = await Promise.all(travelers.map(async (traveler) => {
+          let travelerId = '';
+          
+          if (!traveler.selectedPassport) {
+            // Create new traveler information
+            const passportInfo = new FormData();
+            
+            // Add form data to passport info
+            Object.entries(traveler.formData).forEach(([key, value]) => {
+              if (value !== null && value !== undefined && value !== '') {
+                passportInfo.append(key, value);
+              }
+            });
 
-        if (traveler.travelerPhoto) {
-          formData.append("travelerPhoto", traveler.travelerPhoto);
-        }
+            if (traveler.frontImage) {
+              passportInfo.append("passportImageFront", traveler.frontImage);
+            }
+            if (traveler.previewUrl) {
+              passportInfo.append("passportImageBack", traveler.previewUrl);
+            }
 
-        return instance.post("/visa-application", formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+            const travelerResponse = await instance.post(
+              "/traveller-information",
+              passportInfo,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              }
+            );
+
+            travelerId = travelerResponse.data.data._id;
+          } else {
+            travelerId = traveler.selectedPassport;
+          }
+
+          // Create visa application for each traveler
+          const visaFormData = new FormData();
+          visaFormData.append("travellerInformation", travelerId);
+          visaFormData.append("purpose", purpose);
+          visaFormData.append("price", price);
+          visaFormData.append("toCountry", toCountry);
+          visaFormData.append("fromCountry", fromCountry);
+          visaFormData.append("travelDateFrom", travelDate);
+          visaFormData.append("travelDateTo", returnDate);
+          visaFormData.append("dateOfApply", new Date().toISOString());
+          visaFormData.append("status", "Submitted");
+
+          if (traveler.travelerPhoto) {
+            visaFormData.append("travelerPhoto", traveler.travelerPhoto);
+          }
+          
+          // Uncomment when ready to submit
+          // return instance.post("/visa-application", visaFormData, {
+          //   headers: {
+          //     'Content-Type': 'multipart/form-data'
+          //   }
+          // });
+          
+          return true;
+        }));
+
+        alert("All visa applications submitted successfully!");
+      } else {
+        // Individual submission
+        const visaFormData = new FormData();
+        
+        // Add all form fields to FormData
+        Object.keys(formDataRegular).forEach(key => {
+          const value = formDataRegular[key];
+          if (value !== null && value !== undefined && value !== '') {
+            if (value instanceof File) {
+              visaFormData.append(key, value);
+            } else {
+              visaFormData.append(key, value.toString());
+            }
           }
         });
-      }));
-
-      alert("All visa applications submitted successfully!");
+        
+        visaFormData.append("purpose", purpose);
+        visaFormData.append("price", price);
+        visaFormData.append("toCountry", toCountry);
+        visaFormData.append("fromCountry", fromCountry);
+        visaFormData.append("travelDateFrom", travelDate);
+        visaFormData.append("travelDateTo", returnDate);
+        visaFormData.append("dateOfApply", new Date().toISOString());
+        visaFormData.append("status", "Submitted");
+        
+        // Uncomment when ready to submit
+        // const response = await instance.post("/visa-application", visaFormData, {
+        //   headers: {
+        //     'Content-Type': 'multipart/form-data'
+        //   }
+        // });
+        
+        alert("Visa application submitted successfully!");
+      }
     } catch (error) {
       console.error("Error submitting visa applications:", error);
       alert("Failed to submit visa applications. Please try again.");
     }
-  };
+  }, [travelers, isGroup, purpose, price, toCountry, fromCountry, travelDate, returnDate]);
 
-  // Add this new function
-  const getTravelerInfo = async (id) => {
-    try {
-      const response = await instance.get(`/traveller-information?id=${id}`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch traveler information");
-      }
-
-      const data = await response;
-      return data.response; // Assuming the API returns the data in response field
-    } catch (error) {
-      console.error("Error fetching traveler information:", error);
-      throw error;
-    }
-  };
-
-  // Move passportOptions definition outside of UploadForm
-  const passportOptions = passports.map(passport => ({
-    value: passport.id,
-    label: passport.value
-  }));
+  // Separate handler for group submit
+  const handleGroupSubmit = useCallback(() => {
+    handleSubmit(null, null, true);
+  }, [handleSubmit]);
 
   const UploadForm = () => {
     const Visa = [
@@ -617,9 +626,9 @@ const TravelVisaBooking = () => {
                     ? "bg-blue-600 text-white"
                     : "text-gray-700"
                 }`}
-                onClick={() =>{ setApplicationType("individual")
+                onClick={() => {
+                  setApplicationType("individual");
                   setIsGroup(false);
-
                 }}
               >
                 Individual
@@ -675,26 +684,25 @@ const TravelVisaBooking = () => {
               <Input placeholder={"Internal Id"} label={"Internal Id"} />
             </div>
 
-          {isGroup &&  <div className="mb-4 md:mb-5">
-              <Input
-                placeholder={"Tourist Visa"}
-                label={"Group Name"}
-                required={applicationType === "group"}
-              />
-            </div>}
+            {isGroup && (
+              <div className="mb-4 md:mb-5">
+                <Input
+                  placeholder={"Tourist Visa"}
+                  label={"Group Name"}
+                  required={applicationType === "group"}
+                />
+              </div>
+            )}
           </div>
         </div>
       </>
     );
   };
 
-  // Front passport page component
-
   const VisaInformation = () => {
     return (
-      <div className=" flex items-center  border rounded-[26px] border-[#CDD0D5] justify-center p-4">
-        <div className="w-full  rounded-2xl  overflow-hidden">
-          {/* Visa Information Section */}
+      <div className="flex items-center border rounded-[26px] border-[#CDD0D5] justify-center p-4">
+        <div className="w-full rounded-2xl overflow-hidden">
           <div className="p-6 space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="border-r p-5 border-[#868C98]">
@@ -705,7 +713,9 @@ const TravelVisaBooking = () => {
                   <p className="text-gray-600">{title || "Visa Information"}</p>
                   <p className="text-gray-600">{purpose || "Visa Purpose"}</p>
                   <div className="mt-4">
-                    <p className="text-gray-600">Travelers: 1</p>
+                    <p className="text-gray-600">
+                      Travelers: {isGroup ? travelers.length : 1}
+                    </p>
                     <p className="text-gray-600">
                       Travel Dates: {travelDate} - {returnDate}
                     </p>
@@ -728,10 +738,8 @@ const TravelVisaBooking = () => {
                   Know Before You Pay
                 </h2>
                 <div className="relative pl-8 space-y-12">
-                  {/* Timeline line */}
                   <div className="absolute left-[9px] top-2 bottom-2 w-0.5 bg-gray-200"></div>
 
-                  {/* Auto-validation item */}
                   <div className="relative">
                     <div className="absolute -left-8 mt-1.5">
                       <div className="w-4 h-4 rounded-full bg-green-500"></div>
@@ -748,7 +756,6 @@ const TravelVisaBooking = () => {
                     </div>
                   </div>
 
-                  {/* Visa processed item */}
                   <div className="relative">
                     <div className="absolute -left-8 mt-1.5">
                       <div className="w-4 h-4 rounded-full bg-green-500"></div>
@@ -763,7 +770,6 @@ const TravelVisaBooking = () => {
                     </div>
                   </div>
 
-                  {/* Non-refundable item */}
                   <div className="relative">
                     <div className="absolute -left-8 mt-1.5">
                       <div className="w-4 h-4 rounded-full bg-red-500"></div>
@@ -781,27 +787,37 @@ const TravelVisaBooking = () => {
               </div>
             </div>
 
-            {/* Price Details Section */}
-            <div className="mt-8 border-[#CDD0D5] border  rounded-[21px]  p-6">
+            <div className="mt-8 border-[#CDD0D5] border rounded-[21px] p-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 Price Details
               </h2>
               <div className="space-y-4">
-                <div className="flex justify-between border-b pb-2 border-[#868C98] items-center">
-                  <span className="text-gray-600">Traveller 1</span>
-                  <span className="text-gray-800">{price || "₹0"}</span>
-                </div>
+                {isGroup ? (
+                  travelers.map((_, index) => (
+                    <div key={index} className="flex justify-between border-b pb-2 border-[#868C98] items-center">
+                      <span className="text-gray-600">Traveller {index + 1}</span>
+                      <span className="text-gray-800">{price || "₹0"}</span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex justify-between border-b pb-2 border-[#868C98] items-center">
+                    <span className="text-gray-600">Traveller 1</span>
+                    <span className="text-gray-800">{price || "₹0"}</span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center border-b pb-2 border-[#868C98] font-medium">
                   <span className="text-gray-800">Total</span>
-                  <span className="text-gray-800">{price || "₹0"}</span>
+                  <span className="text-gray-800">
+                    {isGroup ? `₹${(parseInt(String(price || '0').replace('₹', '') || '0') * travelers.length)}` : (price || "₹0")}
+                  </span>
                 </div>
-                <div className="flex justify-betweenitems-center text-sm">
+                <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600">Current Wallet Balance</span>
                   <span className="text-gray-800">{price || "₹0"}</span>
                 </div>
               </div>
-              <div className="  flex justify-end">
-                <button className="mt-6  w-full  md:w-auto bg-blue-600 text-white py-2 px-4 rounded-lg font-[400] text-[14px] hover:bg-blue-700 transition-colors flex items-center justify-center">
+              <div className="flex justify-end">
+                <button className="mt-6 w-full md:w-auto bg-blue-600 text-white py-2 px-4 rounded-lg font-[400] text-[14px] hover:bg-blue-700 transition-colors flex items-center justify-center">
                   <Info className="w-4 h-4 mr-2" />
                   Select Insurance date
                 </button>
@@ -813,87 +829,14 @@ const TravelVisaBooking = () => {
     );
   };
 
-  // Define all states at the top of your component
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeOption, setActiveOption] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  // Your existing handleImageChange function
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Modify handlePassportChange to accept index parameter
-  const handlePassportChange = async (selectedOption, index) => {
-    try {
-      // Fetch traveler information using the selected passport ID
-      const response = await instance.get(`/traveller-information?id=${selectedOption}`);
-      const travelerData = response.data.response;
-
-      // Update the specific traveler's data
-      const newTravelers = [...travelers];
-      const traveler = newTravelers[index];
-
-      // Update front form data
-      traveler.frontFormData = {
-        passportNumber: travelerData.passportNumber || '',
-        firstName: travelerData.firstName || '',
-        lastName: travelerData.lastName || '',
-        nationality: travelerData.nationality || '',
-        sex: travelerData.sex || '',
-        dateOfBirth: travelerData.dateOfBirth ? travelerData.dateOfBirth.split('T')[0] : '',
-        placeOfBirth: travelerData.placeOfBirth || '',
-        placeOfIssue: travelerData.placeOfIssue || '',
-        maritalStatus: travelerData.maritalStatus || '',
-        dateOfIssue: travelerData.dateOfIssue ? travelerData.dateOfIssue.split('T')[0] : '',
-        dateOfExpiry: travelerData.dateOfExpiry ? travelerData.dateOfExpiry.split('T')[0] : '',
-      };
-
-      // Update back form data
-      traveler.backFormData = {
-        fathersName: travelerData.fathersName || '',
-        mothersName: travelerData.mothersName || '',
-      };
-
-      // Set passport images if they exist
-      if (travelerData.passportImageFront) {
-        traveler.frontImage = travelerData.passportImageFront;
-      }
-      if (travelerData.passportImageBack) {
-        traveler.previewUrl = travelerData.passportImageBack;
-      }
-      if (travelerData.travellerPhoto) {
-        traveler.travelerPhoto = travelerData.travellerPhoto;
-      }
-
-      setTravelers(newTravelers);
-
-    } catch (error) {
-      console.error('Error fetching traveler information:', error);
-      alert('Failed to fetch traveler information');
-    }
-  };
-
-  const handleFormSubmit = (formData) => {
-    console.log('Form submitted:', formData);
-    alert('Form submitted successfully! Check console for data.');
-  };
-
   return (
     <>
       <div
         style={{
           backgroundImage: `url(${MainBackground})`,
-          backgroundSize: "100%", // Don't scale the image
-          backgroundPosition: "center", // Start from top left
-          backgroundRepeat: "repeat", // Repeat in both directions
+          backgroundSize: "100%",
+          backgroundPosition: "center",
+          backgroundRepeat: "repeat",
           width: "100%",
         }}
       >
@@ -921,16 +864,9 @@ const TravelVisaBooking = () => {
                     formMode="double"
                     onSubmit={handleSubmit}
                     groupMode={true}
-                    travelers={travelers.map(traveler => ({
-                      id: traveler.id,
-                      formData: {
-                        ...traveler.frontFormData,
-                        ...traveler.backFormData,
-                        travellerInformation: traveler.selectedPassport,
-                        travelerPhoto: traveler.travelerPhoto
-                      }
-                    }))}
+                    travelers={travelers}
                     onTravelerChange={handleTravelerChange}
+                    onGroupSubmit={handleGroupSubmit}
                     className=""
                   />
                 ) : (
@@ -954,14 +890,18 @@ const TravelVisaBooking = () => {
                 />
                 
                 <VisaInformation />
-                <div className="flex justify-end mt-6">
-                  <button
-                    onClick={handleSubmit}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  >
-                    Submit Applications
-                  </button>
-                </div>
+                
+                {/* Only show individual submit button when not in group mode */}
+                {!isGroup && (
+                  <div className="flex justify-end mt-6">
+                    <button
+                      onClick={() => handleSubmit(null, formData, false)}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                      Submit Application
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -972,226 +912,3 @@ const TravelVisaBooking = () => {
 };
 
 export default TravelVisaBooking;
-
-
-// Demo component showing how to use DynamicForm
-// const FormDemo = () => {
-//   const [attributes] = useState([
-//     {
-//       type: "text",
-//       placeholder: "Visa Title",
-//       name: "title",
-//       validation: "",
-//       default: "",
-//       label: "Visa Title",
-//       tag: true,
-//       required: true,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "textarea",
-//       placeholder: "Visa Description",
-//       name: "description",
-//       validation: "",
-//       default: "",
-//       label: "Visa Description",
-//       required: false,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "text",
-//       placeholder: "Entry Type",
-//       name: "entry",
-//       validation: "",
-//       default: "",
-//       label: "Entry Type",
-//       required: false,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "text",
-//       placeholder: "Visa Validity",
-//       name: "validity",
-//       validation: "",
-//       default: "",
-//       tag: true,
-//       label: "Visa Validity",
-//       required: false,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "text",
-//       placeholder: "Stay Duration",
-//       name: "duration",
-//       validation: "",
-//       default: "",
-//       tag: true,
-//       label: "Stay Duration",
-//       required: false,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "text",
-//       placeholder: "Processing Time",
-//       name: "processingTime",
-//       validation: "",
-//       default: "",
-//       label: "Processing Time",
-//       required: false,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "text",
-//       placeholder: "Agent Visa Fee",
-//       name: "agentVisaFee",
-//       validation: "",
-//       default: "",
-//       tag: false,
-//       label: "Agent Visa Fee",
-//       required: false,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "text",
-//       placeholder: "Public Price",
-//       name: "publicPrice",
-//       validation: "",
-//       default: "",
-//       tag: false,
-//       label: "Public Price",
-//       required: false,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "select",
-//       apiType: "CSV",
-//       selectApi: "Active, Inactive",
-//       placeholder: "Status",
-//       name: "status",
-//       validation: "",
-//       default: "",
-//       tag: true,
-//       label: "Status",
-//       required: true,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "select",
-//       apiType: "API",
-//       selectApi: "country/select",
-//       placeholder: "Country",
-//       name: "country",
-//       showItem: "countryName",
-//       validation: "",
-//       default: "",
-//       tag: true,
-//       label: "Country",
-//       required: true,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "date",
-//       placeholder: "From Date",
-//       name: "fromDate",
-//       validation: "",
-//       default: "",
-//       tag: false,
-//       label: "From Date",
-//       required: false,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "date",
-//       placeholder: "To Date",
-//       name: "toDate",
-//       validation: "",
-//       default: "",
-//       tag: false,
-//       label: "To Date",
-//       required: false,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//     {
-//       type: "file",
-//       placeholder: "Passport Image",
-//       name: "passportImage",
-//       validation: "",
-//       default: "",
-//       label: "Passport Front Page Image",
-//       required: true,
-//       view: true,
-//       add: true,
-//       update: true,
-//     },
-//   ]);
-
-//   const handleFormSubmit = (formData) => {
-//     console.log('Form submitted:', formData);
-//     alert('Form submitted successfully! Check console for data.');
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gray-50 py-8">
-//       <div className="max-w-4xl mx-auto px-4">
-//         <div className="mb-8">
-//           <h1 className="text-3xl font-bold text-gray-900 mb-2">Dynamic Form Component</h1>
-//           <p className="text-gray-600">A reusable form component that generates forms based on attribute configuration</p>
-//         </div>
-
-//         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-//           <h2 className="text-xl font-semibold text-gray-900 mb-4">Visa Application Form</h2>
-//           <DynamicForm
-//             attributes={attributes}
-//             formMode="double"
-//             onSubmit={handleFormSubmit}
-//             initialData={{
-//               title: "Tourist Visa",
-//               status: "Active"
-//             }}
-//           />
-//         </div>
-
-//         <div className="bg-blue-50 rounded-lg p-6">
-//           <h3 className="text-lg font-semibold text-blue-900 mb-3">How to Use</h3>
-//           <div className="text-blue-800 space-y-2">
-//             <p>Simply import and use the DynamicForm component with your attributes:</p>
-//             <pre className="bg-blue-100 p-3 rounded text-sm overflow-x-auto">
-// {`<DynamicForm
-//   attributes={attributes}
-//   formMode="double" // or "single"
-//   onSubmit={handleSubmit}
-//   initialData={defaultValues}
-// />`}
-//             </pre>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default FormDemo;
