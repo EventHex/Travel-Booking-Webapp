@@ -187,10 +187,10 @@ const TravelVisaBooking = () => {
       required: false,
     },
     {
-      _id: "travelerPhoto",
+      _id: "travellerPhoto",
       type: "file",
       placeholder: "Traveller Photo",
-      name: "travelerPhoto",
+      name: "travellerPhoto",
       label: "Traveler Photo",
       required: false,
     }
@@ -473,11 +473,20 @@ const TravelVisaBooking = () => {
               'dateOfExpiry', 'fathersName', 'mothersName'
             ];
             
-            passportFields.forEach(field => {
-              if (traveler.formData[field]) {
-                passportData.append(field, traveler.formData[field]);
+                      passportFields.forEach(field => {
+            if (traveler.formData[field]) {
+              let value = traveler.formData[field];
+              
+              // Map sex values to backend format
+              if (field === 'sex') {
+                if (value === 'Male') value = 'M';
+                else if (value === 'Female') value = 'F';
+                else if (value === 'Other') value = 'M'; // Default to M for Other
               }
-            });
+              
+              passportData.append(field, value);
+            }
+          });
             
             // Add passport images if available
             if (traveler.formData.passportImageFront) {
@@ -489,6 +498,8 @@ const TravelVisaBooking = () => {
             if (traveler.formData.travellerPhoto) {
               passportData.append("travellerPhoto", traveler.formData.travellerPhoto);
             }
+            console.log("Group - Sending passport data:", passportData);
+            console.log("Group - Traveler form data:", traveler.formData);
             
             try {
               const travellerResponse = await instance.post("/traveller-information", passportData, {
@@ -583,7 +594,16 @@ const TravelVisaBooking = () => {
           
           passportFields.forEach(field => {
             if (formDataRegular[field]) {
-              passportData.append(field, formDataRegular[field]);
+              let value = formDataRegular[field];
+              
+              // Map sex values to backend format
+              if (field === 'sex') {
+                if (value === 'Male') value = 'M';
+                else if (value === 'Female') value = 'F';
+                else if (value === 'Other') value = 'M'; // Default to M for Other
+              }
+              
+              passportData.append(field, value);
             }
           });
           
@@ -597,6 +617,9 @@ const TravelVisaBooking = () => {
           if (formDataRegular.travellerPhoto) {
             passportData.append("travellerPhoto", formDataRegular.travellerPhoto);
           }
+
+          console.log("Individual - Sending passport data:", passportData);
+          console.log("Individual - Form data:", formDataRegular);
           
           try {
             const travellerResponse = await instance.post("/traveller-information", passportData, {

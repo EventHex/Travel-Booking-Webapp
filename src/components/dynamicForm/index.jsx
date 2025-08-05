@@ -56,12 +56,14 @@ const DynamicForm = ({
 
   // Memoized file upload handler for individual mode
   const handleFileUpload = useCallback(async (name, file) => {
+    console.log('DynamicForm - File upload:', name, file);
     if (file) {
       setFormData(prevFormData => {
         const newFormData = {
           ...prevFormData,
           [name]: file
         };
+        console.log('DynamicForm - Updated form data:', newFormData);
         
         // Handle passport upload with API call
         if (name === 'passportImageFront' || name === 'passportImageBack') {
@@ -90,12 +92,13 @@ const DynamicForm = ({
                 
                 const updatedFormData = {
                   ...newFormData,
+                  [name]: file, // Keep the original file
                   // Front passport data
                   passportNumber: extractedData.passportNumber || newFormData.passportNumber,
                   firstName: extractedData.firstName || newFormData.firstName,
                   lastName: extractedData.lastName || newFormData.lastName,
                   nationality: extractedData.nationality || newFormData.nationality,
-                  sex: extractedData.sex || newFormData.sex,
+                  sex: (extractedData.sex || newFormData.sex) === 'Male' ? 'M' : (extractedData.sex || newFormData.sex) === 'Female' ? 'F' : (extractedData.sex || newFormData.sex),
                   dob: extractedData.dob ? extractedData.dob.split('T')[0] : newFormData.dob,
                   placeOfBirth: extractedData.placeOfBirth || newFormData.placeOfBirth,
                   placeOfIssue: extractedData.placeOfIssue || newFormData.placeOfIssue,
@@ -121,6 +124,7 @@ const DynamicForm = ({
           })();
         } else {
           // Call onFieldChange callback if provided for non-passport files
+          console.log('DynamicForm - Non-passport file upload:', name, file);
           if (onFieldChange) {
             onFieldChange(name, file, newFormData);
           }
@@ -133,7 +137,7 @@ const DynamicForm = ({
 
   // Fixed file upload handler for group mode
   const handleFileUploadForGroup = useCallback(async (travelerIndex, name, file) => {
-    // console.log("File upload, changing of traveler", travelerIndex);
+    console.log('DynamicForm - Group file upload:', travelerIndex, name, file);
     if (!file || !onTravelerChange) return;
     // console.log("File upload, changing of traveler", travelerIndex);
     // First, immediately update the traveler with the file for preview
@@ -188,7 +192,7 @@ const DynamicForm = ({
             firstName: extractedData.firstName || latestFormData.firstName || '',
             lastName: extractedData.lastName || latestFormData.lastName || '',
             nationality: extractedData.nationality || latestFormData.nationality || '',
-            sex: extractedData.sex || latestFormData.sex || '',
+            sex: (extractedData.sex || latestFormData.sex || '') === 'Male' ? 'M' : (extractedData.sex || latestFormData.sex || '') === 'Female' ? 'F' : (extractedData.sex || latestFormData.sex || ''),
             dob: extractedData.dob ? extractedData.dob.split('T')[0] : latestFormData.dob || '',
             placeOfBirth: extractedData.placeOfBirth || latestFormData.placeOfBirth || '',
             placeOfIssue: extractedData.placeOfIssue || latestFormData.placeOfIssue || '',
@@ -207,6 +211,10 @@ const DynamicForm = ({
         console.error(`Error uploading passport for traveler ${travelerIndex}:`, error);
         alert(`Failed to upload passport for traveler ${travelerIndex + 1}. Please try again.`);
       }
+    } else {
+      // Handle non-passport files (like travellerPhoto) for group mode
+      console.log('DynamicForm - Group non-passport file upload:', travelerIndex, name, file);
+      // The file is already added to the traveler data via onTravelerChange above
     }
   }, [travelers, onTravelerChange]);
 
