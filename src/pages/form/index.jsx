@@ -550,23 +550,30 @@ const TravelVisaBooking = () => {
         data.append("dateOfApply", new Date().toISOString());
         data.append("status", "Submitted");
         
-        // Append only dynamic visa form fields (not predefined model fields)
-        const visaFormData = {};
-        visaFields.forEach((field) => {
-          if (formDataRegular && formDataRegular[field.name]) {
-            // Exclude passport fields and files from visa form data
-            const excludeFields = [
-              'passportNumber', 'firstName', 'lastName', 'nationality', 'sex', 
-              'dob', 'placeOfBirth', 'placeOfIssue', 'maritalStatus', 'dateOfIssue', 
-              'dateOfExpiry', 'fathersName', 'mothersName', 'passportImageFront', 
-              'passportImageBack', 'travellerPhoto'
-            ];
-            if (!excludeFields.includes(field.name)) {
-              visaFormData[field.name] = formDataRegular[field.name];
-            }
+        // For group applications, collect visa form data from each traveler
+        // Each traveler has their own visa form data
+        const visaFormDataArray = [];
+        travelers.forEach((traveler, index) => {
+          const travelerVisaFormData = {};
+          if (traveler.formData) {
+            visaFields.forEach((field) => {
+              if (traveler.formData[field.name]) {
+                // Exclude passport fields and files from visa form data
+                const excludeFields = [
+                  'passportNumber', 'firstName', 'lastName', 'nationality', 'sex', 
+                  'dob', 'placeOfBirth', 'placeOfIssue', 'maritalStatus', 'dateOfIssue', 
+                  'dateOfExpiry', 'fathersName', 'mothersName', 'passportImageFront', 
+                  'passportImageBack', 'travellerPhoto', 'travellerInformation'
+                ];
+                if (!excludeFields.includes(field.name)) {
+                  travelerVisaFormData[field.name] = traveler.formData[field.name];
+                }
+              }
+            });
           }
+          visaFormDataArray.push(travelerVisaFormData);
         });
-        data.append("visaFormData", JSON.stringify(visaFormData));
+        data.append("visaFormData", JSON.stringify(visaFormDataArray));
         
         const response = await instance.post("/visa-application/group-visa-application", data, {
           headers: {
