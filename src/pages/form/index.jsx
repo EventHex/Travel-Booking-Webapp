@@ -81,6 +81,7 @@ const TravelVisaBooking = () => {
   // Memoize preset fields to prevent recreation on every render
   const presetFields = useCallback(() => [
     {
+      _id: "passportNumber",
       type: "text",
       placeholder: "Passport Number",
       name: "passportNumber",
@@ -90,6 +91,7 @@ const TravelVisaBooking = () => {
       required: true,
     },
     {
+      _id: "firstName",
       type: "text",
       placeholder: "First Name",
       name: "firstName",
@@ -97,6 +99,7 @@ const TravelVisaBooking = () => {
       required: true,
     },
     {
+      _id: "lastName",
       type: "text",
       placeholder: "Last Name",
       name: "lastName",
@@ -104,6 +107,7 @@ const TravelVisaBooking = () => {
       required: true,
     },
     {
+      _id: "nationality",
       type: "text",
       placeholder: "Nationality",
       name: "nationality",
@@ -111,6 +115,7 @@ const TravelVisaBooking = () => {
       required: true,
     },
     {
+      _id: "sex",
       type: "select",
       placeholder: "Sex",
       name: "sex",
@@ -119,6 +124,7 @@ const TravelVisaBooking = () => {
       options: ["Male", "Female", "Other"],
     },
     {
+      _id: "dob",
       type: "date",
       placeholder: "Date of Birth",
       name: "dob",
@@ -126,6 +132,7 @@ const TravelVisaBooking = () => {
       required: true,
     },
     {
+      _id: "placeOfBirth",
       type: "text",
       placeholder: "Place of Birth",
       name: "placeOfBirth",
@@ -133,6 +140,7 @@ const TravelVisaBooking = () => {
       required: true,
     },
     {
+      _id: "placeOfIssue",
       type: "text",
       placeholder: "Place of Issue",
       name: "placeOfIssue",
@@ -140,6 +148,7 @@ const TravelVisaBooking = () => {
       required: true,
     },
     {
+      _id: "maritalStatus",
       type: "select",
       placeholder: "Marital Status",
       name: "maritalStatus",
@@ -148,6 +157,7 @@ const TravelVisaBooking = () => {
       options: ["Single", "Married", "Divorced", "Widowed"],
     },
     {
+      _id: "dateOfIssue",
       type: "date",
       placeholder: "Date of Issue",
       name: "dateOfIssue",
@@ -155,6 +165,7 @@ const TravelVisaBooking = () => {
       required: true,
     },
     {
+      _id: "dateOfExpiry",
       type: "date",
       placeholder: "Date of Expiry",
       name: "dateOfExpiry",
@@ -162,6 +173,7 @@ const TravelVisaBooking = () => {
       required: true,
     },
     {
+      _id: "fathersName",
       type: "text",
       placeholder: "Father's Name",
       name: "fathersName",
@@ -169,6 +181,7 @@ const TravelVisaBooking = () => {
       required: false,
     },
     {
+      _id: "mothersName",
       type: "text",
       placeholder: "Mother's Name",
       name: "mothersName",
@@ -176,6 +189,7 @@ const TravelVisaBooking = () => {
       required: false,
     },
     {
+      _id: "travelerPhoto",
       type: "file",
       placeholder: "Traveler Photo",
       name: "travelerPhoto",
@@ -193,10 +207,12 @@ const TravelVisaBooking = () => {
         
         const fields = [
           {
+            _id: "travelerInfoSection",
             type: "section",
             label: "Traveller Information",
           },
           {
+            _id: "travellerInformation",
             type: "select",
             placeholder: "Passport Image",
             name: "travellerInformation",
@@ -207,6 +223,7 @@ const TravelVisaBooking = () => {
             selectApi: passports,
           },
           {
+            _id: "passportImageFront",
             type: "file",
             placeholder: "Passport Front Image",
             name: "passportImageFront",
@@ -216,6 +233,7 @@ const TravelVisaBooking = () => {
             required: false,
           },
           {
+            _id: "passportImageBack",
             type: "file",
             placeholder: "Passport Back Image",
             name: "passportImageBack",
@@ -226,6 +244,7 @@ const TravelVisaBooking = () => {
           },
           ...presetFields(),
           {
+            _id: "visaInfoSection",
             type: "section",
             label: "Visa Information",
           }, 

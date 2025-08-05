@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Upload, Calendar, ChevronDown } from 'lucide-react';
 import Input from '../input';
 import { CustomSelect } from '../dropdown';
-import FileComponent from '../file';
 import instance from '../../instance';
 
 const DynamicForm = ({ 
@@ -85,8 +84,8 @@ const DynamicForm = ({
                 const extractedData = response.data.data;
                 
                 // Store passport ID for back passport processing
-                if (name === 'passportImageFront' && extractedData.passportId) {
-                  localStorage.setItem("currentPassportId", extractedData.passportId);
+                if (name === 'passportImageFront' && response.data.passportId) {
+                  localStorage.setItem("currentPassportId", response.data.passportId);
                 }
                 
                 const updatedFormData = {
@@ -97,12 +96,12 @@ const DynamicForm = ({
                   lastName: extractedData.lastName || newFormData.lastName,
                   nationality: extractedData.nationality || newFormData.nationality,
                   sex: extractedData.sex || newFormData.sex,
-                  dob: extractedData.dateOfBirth ? extractedData.dateOfBirth.split('T')[0] : newFormData.dob,
+                  dob: extractedData.dob ? extractedData.dob.split('T')[0] : newFormData.dob,
                   placeOfBirth: extractedData.placeOfBirth || newFormData.placeOfBirth,
                   placeOfIssue: extractedData.placeOfIssue || newFormData.placeOfIssue,
                   maritalStatus: extractedData.maritalStatus || newFormData.maritalStatus,
                   dateOfIssue: extractedData.dateOfIssue ? extractedData.dateOfIssue.split('T')[0] : newFormData.dateOfIssue,
-                  dateOfExpiry: extractedData.dateOfExpiry ? extractedData.dateOfExpiry.split('T')[0] : newFormData.dateOfExpiry,
+                  dateOfExpiry: extractedData.expiryDate ? extractedData.expiryDate.split('T')[0] : newFormData.dateOfExpiry,
                   // Back passport data
                   fathersName: extractedData.fathersName || newFormData.fathersName,
                   mothersName: extractedData.mothersName || newFormData.mothersName,
@@ -134,8 +133,9 @@ const DynamicForm = ({
 
   // Fixed file upload handler for group mode
   const handleFileUploadForGroup = useCallback(async (travelerIndex, name, file) => {
+    // console.log("File upload, changing of traveler", travelerIndex);
     if (!file || !onTravelerChange) return;
-
+    // console.log("File upload, changing of traveler", travelerIndex);
     // First, immediately update the traveler with the file for preview
     const currentTraveler = travelers[travelerIndex] || {};
     const currentFormData = currentTraveler.formData || {};
@@ -164,15 +164,15 @@ const DynamicForm = ({
           }
         });
         
-        console.log(`Passport upload response for traveler ${travelerIndex}:`, response.data);
+        // console.log(`Passport upload response for traveler ${travelerIndex}:`, response.data);
         
         // If upload successful, update the SPECIFIC traveler's data with extracted data
         if (response.data.success && response.data.data) {
           const extractedData = response.data.data;
           
           // Store passport ID with traveler-specific key
-          if (name === 'passportImageFront' && extractedData.passportId) {
-            localStorage.setItem(`currentPassportId_traveler_${travelerIndex}`, extractedData.passportId);
+          if (name === 'passportImageFront' && response.data.passportId) {
+            localStorage.setItem(`currentPassportId_traveler_${travelerIndex}`, response.data.passportId);
           }
           
           // Get the current traveler data again (in case it changed during async operation)
@@ -189,12 +189,12 @@ const DynamicForm = ({
             lastName: extractedData.lastName || latestFormData.lastName || '',
             nationality: extractedData.nationality || latestFormData.nationality || '',
             sex: extractedData.sex || latestFormData.sex || '',
-            dob: extractedData.dateOfBirth ? extractedData.dateOfBirth.split('T')[0] : latestFormData.dob || '',
+            dob: extractedData.dob ? extractedData.dob.split('T')[0] : latestFormData.dob || '',
             placeOfBirth: extractedData.placeOfBirth || latestFormData.placeOfBirth || '',
             placeOfIssue: extractedData.placeOfIssue || latestFormData.placeOfIssue || '',
             maritalStatus: extractedData.maritalStatus || latestFormData.maritalStatus || '',
             dateOfIssue: extractedData.dateOfIssue ? extractedData.dateOfIssue.split('T')[0] : latestFormData.dateOfIssue || '',
-            dateOfExpiry: extractedData.dateOfExpiry ? extractedData.dateOfExpiry.split('T')[0] : latestFormData.dateOfExpiry || '',
+            dateOfExpiry: extractedData.expiryDate ? extractedData.expiryDate.split('T')[0] : latestFormData.dateOfExpiry || '',
             // Back passport data
             fathersName: extractedData.fathersName || latestFormData.fathersName || '',
             mothersName: extractedData.mothersName || latestFormData.mothersName || '',
@@ -311,8 +311,8 @@ const DynamicForm = ({
       : (newValue) => handleInputChange(name, newValue);
 
     // Generate unique key for each field with traveler context
-    const fieldKey = `${name || 'field'}-${travelerIndex !== null ? `traveler-${travelerIndex}` : 'main'}`;
-
+    const fieldKey = `${attr._id}-${travelerIndex}`;
+    // console.log("fieldKey", fieldKey, attr._id, travelerIndex);
     switch (type) {
       case 'text':
       case 'email':
@@ -476,21 +476,42 @@ const DynamicForm = ({
       case 'file':
         return (
           <div key={fieldKey} className={containerClass} style={widthStyle}>
-            <FileComponent
-              head={label}
-              key={`${fieldKey}-file-component`} // Additional key for FileComponent
-              onFileSelect={(file) => {
-                if (groupMode && travelerIndex !== null) {
-                  // Handle file upload for group mode with specific traveler index
-                  handleFileUploadForGroup(travelerIndex, name, file);
-                } else {
-                  handleFileUpload(name, file);
-                }
-              }}
-              className="mb-4"
-              // Pass current file value if needed for preview
-              currentFile={value instanceof File ? value : null}
-            />
+            <label className="block text-[16px] py-1 font-[400] text-gray-700 mb-1">
+              {label}
+              {required && <span className="text-red-500">*</span>}
+            </label>
+            <div className="bg-white border-2 border-dashed border-gray-300 rounded-[14px] p-4 text-center">
+              <input
+                type="file"
+                id={`${fieldKey}-file-upload`}
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    if (groupMode && travelerIndex !== null) {
+                      handleFileUploadForGroup(travelerIndex, name, file);
+                    } else {
+                      handleFileUpload(name, file);
+                    }
+                  }
+                }}
+              />
+              <label
+                htmlFor={`${fieldKey}-file-upload`}
+                className="cursor-pointer flex flex-col items-center"
+              >
+                <Upload className="mx-auto h-8 w-8 text-gray-400" />
+                <span className="text-sm text-gray-600">
+                  {value ? value.name : 'Choose a file or drag & drop it here'}
+                </span>
+                <span className="text-xs text-gray-400 mt-1">
+                  JPEG, PNG, PDF formats
+                </span>
+                <span className="mt-3 px-4 py-2 bg-white border border-blue-500 rounded-md text-sm font-medium text-blue-500 hover:bg-gray-50">
+                  Browse File
+                </span>
+              </label>
+            </div>
             {hasError && (
               <p className="text-red-500 text-xs mt-1">{hasError}</p>
             )}
@@ -603,7 +624,7 @@ const DynamicForm = ({
                       t.id = i;
                     });
                     // This would need to be handled differently - you might need a remove traveler function
-                    console.log('Remove traveler at index:', index);
+                    // console.log('Remove traveler at index:', index);
                   }
                 }}
                 className="text-red-600 hover:text-red-800 text-sm"
@@ -634,7 +655,7 @@ const DynamicForm = ({
               onClick={() => {
                 if (onTravelerChange) {
                   // This would need to be handled differently - you might need a remove traveler function
-                  console.log('Remove traveler at index:', index);
+                  // console.log('Remove traveler at index:', index);
                 }
               }}
               className="text-red-600 hover:text-red-800 text-sm"
