@@ -454,29 +454,71 @@ const TravelVisaBooking = () => {
       console.log("Submitting visa application:", { formDataObj, formDataRegular, isGroupSubmit });
       
       if (isGroup || isGroupSubmit) {
-        // Group submission
+        // Group submission - process each traveler
+        const processedTravelerIds = [];
+        
+        // Process each traveler
+        for (let i = 0; i < travelers.length; i++) {
+          const traveler = travelers[i];
+          let travellerId = traveler.selectedPassport;
+          
+          // If no passport is selected but passport data is provided, create new traveller
+          if (!traveler.selectedPassport && traveler.formData) {
+            const passportData = new FormData();
+            
+            // Add passport fields to create new traveller
+            const passportFields = [
+              'passportNumber', 'firstName', 'lastName', 'nationality', 'sex', 
+              'dob', 'placeOfBirth', 'placeOfIssue', 'maritalStatus', 'dateOfIssue', 
+              'dateOfExpiry', 'fathersName', 'mothersName'
+            ];
+            
+            passportFields.forEach(field => {
+              if (traveler.formData[field]) {
+                passportData.append(field, traveler.formData[field]);
+              }
+            });
+            
+            // Add passport images if available
+            if (traveler.formData.passportImageFront) {
+              passportData.append("passportImageFront", traveler.formData.passportImageFront);
+            }
+            if (traveler.formData.passportImageBack) {
+              passportData.append("passportImageBack", traveler.formData.passportImageBack);
+            }
+            if (traveler.formData.travellerPhoto) {
+              passportData.append("travellerPhoto", traveler.formData.travellerPhoto);
+            }
+            
+            try {
+              const travellerResponse = await instance.post("/traveller-information", passportData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              });
+              
+              travellerId = travellerResponse.data.data._id;
+              console.log(`Created new traveller ${i + 1}:`, travellerId);
+            } catch (error) {
+              console.error(`Error creating traveller ${i + 1}:`, error);
+              alert(`Failed to create traveller ${i + 1} information. Please try again.`);
+              return;
+            }
+          }
+          
+          processedTravelerIds.push(travellerId);
+        }
+        
+        // Create group visa application FormData
         const data = new FormData();
         
-        // Define predefined model fields that should be sent directly
-        const modelFields = [
-          'travellerInformation', 'passportNumber', 'firstName', 'lastName', 
-          'nationality', 'sex', 'dob', 'placeOfBirth', 'placeOfIssue', 
-          'maritalStatus', 'dateOfIssue', 'dateOfExpiry', 'fathersName', 
-          'mothersName'
-        ];
-        
-        // Get traveler IDs for group submission
-        const travelerIds = travelers.map(traveler => 
-          traveler.selectedPassport || traveler.formData?.travellerInformation || traveler.formData?.passportNumber
-        ).filter(id => id); // Filter out empty values
-        
-        data.append("travellerInformation", JSON.stringify(travelerIds));
+        data.append("travellerInformation", JSON.stringify(processedTravelerIds));
         data.append("visaFor", "Group");
         data.append("groupName", groupName);
         
-        // Add files for each traveler
+        // Add files for each traveler (only if not already uploaded with passport)
         travelers.forEach((traveler, index) => {
-          if (traveler.travelerPhoto) {
+          if (traveler.travelerPhoto && !traveler.formData?.travellerPhoto) {
             data.append(`travelerPhotos[${index}]`, traveler.travelerPhoto);
           }
         });
@@ -500,8 +542,17 @@ const TravelVisaBooking = () => {
         // Append only dynamic visa form fields (not predefined model fields)
         const visaFormData = {};
         visaFields.forEach((field) => {
-          if (formDataRegular && formDataRegular[field.name] && !modelFields.includes(field.name)) {
-            visaFormData[field.name] = formDataRegular[field.name];
+          if (formDataRegular && formDataRegular[field.name]) {
+            // Exclude passport fields and files from visa form data
+            const excludeFields = [
+              'passportNumber', 'firstName', 'lastName', 'nationality', 'sex', 
+              'dob', 'placeOfBirth', 'placeOfIssue', 'maritalStatus', 'dateOfIssue', 
+              'dateOfExpiry', 'fathersName', 'mothersName', 'passportImageFront', 
+              'passportImageBack', 'travellerPhoto'
+            ];
+            if (!excludeFields.includes(field.name)) {
+              visaFormData[field.name] = formDataRegular[field.name];
+            }
           }
         });
         data.append("visaFormData", JSON.stringify(visaFormData));
@@ -517,32 +568,57 @@ const TravelVisaBooking = () => {
         
       } else {
         // Individual submission
-        const data = new FormData();
+        let travellerId = selectedPassport;
         
-        // Define predefined model fields that should be sent directly
-        const modelFields = [
-          'travellerInformation', 'passportNumber', 'firstName', 'lastName', 
-          'nationality', 'sex', 'dob', 'placeOfBirth', 'placeOfIssue', 
-          'maritalStatus', 'dateOfIssue', 'dateOfExpiry', 'fathersName', 
-          'mothersName'
-        ];
-        
-        // Add predefined model fields to FormData
-        if (formDataRegular) {
-          Object.keys(formDataRegular).forEach(key => {
-            const value = formDataRegular[key];
-            if (value !== null && value !== undefined && value !== '') {
-              if (modelFields.includes(key)) {
-                // Send predefined fields directly to the model
-                if (value instanceof File) {
-                  data.append(key, value);
-                } else {
-                  data.append(key, value.toString());
-                }
-              }
+        // If no passport is selected but passport data is provided, create new traveller
+        if (!selectedPassport && formDataRegular) {
+          const passportData = new FormData();
+          
+          // Add passport fields to create new traveller
+          const passportFields = [
+            'passportNumber', 'firstName', 'lastName', 'nationality', 'sex', 
+            'dob', 'placeOfBirth', 'placeOfIssue', 'maritalStatus', 'dateOfIssue', 
+            'dateOfExpiry', 'fathersName', 'mothersName'
+          ];
+          
+          passportFields.forEach(field => {
+            if (formDataRegular[field]) {
+              passportData.append(field, formDataRegular[field]);
             }
           });
+          
+          // Add passport images if available
+          if (formDataRegular.passportImageFront) {
+            passportData.append("passportImageFront", formDataRegular.passportImageFront);
+          }
+          if (formDataRegular.passportImageBack) {
+            passportData.append("passportImageBack", formDataRegular.passportImageBack);
+          }
+          if (formDataRegular.travellerPhoto) {
+            passportData.append("travellerPhoto", formDataRegular.travellerPhoto);
+          }
+          
+          try {
+            const travellerResponse = await instance.post("/traveller-information", passportData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+            
+            travellerId = travellerResponse.data.data._id;
+            console.log("Created new traveller:", travellerId);
+          } catch (error) {
+            console.error("Error creating traveller:", error);
+            alert("Failed to create traveller information. Please try again.");
+            return;
+          }
         }
+        
+        // Create visa application FormData
+        const data = new FormData();
+        
+        // Add traveller ID
+        data.append("travellerInformation", travellerId);
         
         // Add required visa application fields
         data.append("purpose", purpose);
@@ -555,8 +631,8 @@ const TravelVisaBooking = () => {
         data.append("status", "Submitted");
         data.append("visaFor", "Individual");
         
-        // Add files
-        if (travelerPhoto) {
+        // Add files (only if not already uploaded with passport)
+        if (travelerPhoto && !formDataRegular?.travellerPhoto) {
           data.append("travelerPhoto", travelerPhoto);
         }
         if (flightTicket) {
@@ -569,8 +645,17 @@ const TravelVisaBooking = () => {
         // Append only dynamic visa form fields (not predefined model fields)
         const visaFormData = {};
         visaFields.forEach((field) => {
-          if (formDataRegular && formDataRegular[field.name] && !modelFields.includes(field.name)) {
-            visaFormData[field.name] = formDataRegular[field.name];
+          if (formDataRegular && formDataRegular[field.name]) {
+            // Exclude passport fields and files from visa form data
+            const excludeFields = [
+              'passportNumber', 'firstName', 'lastName', 'nationality', 'sex', 
+              'dob', 'placeOfBirth', 'placeOfIssue', 'maritalStatus', 'dateOfIssue', 
+              'dateOfExpiry', 'fathersName', 'mothersName', 'passportImageFront', 
+              'passportImageBack', 'travellerPhoto'
+            ];
+            if (!excludeFields.includes(field.name)) {
+              visaFormData[field.name] = formDataRegular[field.name];
+            }
           }
         });
         data.append("visaFormData", JSON.stringify(visaFormData));
