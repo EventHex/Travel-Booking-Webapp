@@ -255,10 +255,10 @@ const TravelVisaBooking = () => {
       }
     };
     
-    if (visaId && passports.length > 0) {
+    if (visaId) {
       fetchVisaFields();
     }
-  }, [visaId, passports.length, presetFields]);
+  }, [visaId, presetFields]);
 
 
 
@@ -574,6 +574,7 @@ const TravelVisaBooking = () => {
           visaFormDataArray.push(travelerVisaFormData);
         });
         data.append("visaFormData", JSON.stringify(visaFormDataArray));
+        data.append("visaId", visaId);
         
         const response = await instance.post("/visa-application/group-visa-application", data, {
           headers: {
@@ -689,6 +690,7 @@ const TravelVisaBooking = () => {
           }
         });
         data.append("visaFormData", JSON.stringify(visaFormData));
+        data.append("visaId", visaId);
         
         const response = await instance.post("/visa-application", data, {
           headers: {
